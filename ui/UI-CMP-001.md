@@ -25,6 +25,8 @@
 
 Top Bar не є сторінкою налаштувань. Він може відкрити `UI-PAGE-008 Settings`, але не містить `UI-CMP-002 Game Switcher`, `UI-CMP-003 Language Switcher` або `UI-CMP-004 Display Mode Switcher`.
 
+Backup доступний усередині `UI-PAGE-008 Settings` через `UI-CMP-034 Backup Collapsible Block`; Top Bar не має окремого Backup action.
+
 ## Володіння
 
 `UI-PAGE-001 App Shell` володіє route, applied settings, controller state і активною UI-поверхнею.
@@ -125,7 +127,6 @@ Menu містить global navigation і utility actions:
 
 - перейти до `UI-PAGE-005 Named Lists`;
 - перейти до `UI-PAGE-006 Custom Combo Builder`;
-- перейти до `UI-PAGE-007 Backup Management`;
 - перейти до `UI-PAGE-008 Settings`;
 - optional глобальні actions, якщо App Shell їх дозволяє.
 
@@ -139,7 +140,7 @@ Menu не містить inline controls для `game`, `language` або `notat
 - `activeRouteLabel`: localized label активного route або surface.
 - `activeGameLabel`: `MKXL` або `MK1`.
 - `breadcrumbs`: ordered list breadcrumb items для active surface.
-- `navigationAvailability`: доступність breadcrumbs, lists, builder, backup management і settings.
+- `navigationAvailability`: доступність breadcrumbs, lists, builder і settings.
 - `controllerConnectionState`: стан підключення controller.
 - `activeControllerProfile`: active profile, наприклад DualSense, Xbox або Standard Gamepad fallback.
 - `localizedHints`: localized controller hints для active surface.
@@ -153,7 +154,6 @@ Menu не містить inline controls для `game`, `language` або `notat
 
 - `requestNavigateNamedLists`: перейти до `UI-PAGE-005 Named Lists`.
 - `requestNavigateBuilder`: перейти до `UI-PAGE-006 Custom Combo Builder`.
-- `requestNavigateBackupManagement`: перейти до `UI-PAGE-007 Backup Management`.
 - `requestNavigateSettings`: перейти до `UI-PAGE-008 Settings`.
 - `requestNavigateBreadcrumb`: перейти за navigable breadcrumb item, зокрема до `UI-PAGE-003 Catalog`.
 - `requestOpenHints`: відкрити hint panel у `UI-CMP-005`.
@@ -338,7 +338,7 @@ Right-pinned dropdown menu закритий.
 - `UI-CMP-032 Breadcrumbs` показує contextual trail для active surface.
 - Catalog відкривається з Top Bar через navigable breadcrumb item, а не через dropdown menu.
 - `UI-CMP-033 Top Bar Dropdown Menu` прибитий до правої сторони Top Bar.
-- Dropdown menu має actions до Named Lists, Custom Combo Builder, Backup Management і Settings, але не до Catalog.
+- Dropdown menu має actions до Named Lists, Custom Combo Builder і Settings, але не до Catalog і не до окремого Backup.
 - Top Bar не містить `UI-CMP-002`, `UI-CMP-003` або `UI-CMP-004`.
 - Top Bar не змінює `game`, `language` або `notation display mode` напряму.
 - Connected controller показує green indicator у `UI-CMP-005`.
@@ -357,7 +357,7 @@ Right-pinned dropdown menu закритий.
 - Catalog breadcrumb емітить `requestNavigateBreadcrumb` з target `UI-PAGE-003 Catalog`.
 - Current breadcrumb item позначений як current і не виконує navigation у той самий route.
 - Dropdown trigger лишається прибитим до правого краю на desktop і mobile widths.
-- Dropdown menu відкривається з trigger і містить Named Lists, Builder, Backup Management і Settings без Catalog.
+- Dropdown menu відкривається з trigger і містить Named Lists, Builder і Settings без Catalog або окремого Backup.
 - `Escape` закриває dropdown menu і повертає focus до trigger.
 - Click, tap, `Enter` або `Space` на controller indicator відкриває hint panel.
 - Top Bar не рендерить Game Switcher, Language Switcher або Display Mode Switcher.
