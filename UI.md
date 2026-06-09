@@ -20,7 +20,7 @@
 ### Pages
 
 - [`UI-PAGE-001`](./ui/UI-PAGE-001.md) App Shell.
-- `UI-PAGE-002` First-Launch Setup.
+- [`UI-PAGE-002`](./ui/UI-PAGE-002.md) First-Launch Setup.
 - `UI-PAGE-003` Catalog.
 - `UI-PAGE-004` Combo Detail.
 - `UI-PAGE-005` Named Lists.
@@ -121,6 +121,7 @@ App Shell є постійною рамкою застосунку, яка три
 - `ready`: shell показує активний surface і навігаційні controls.
 - `firstLaunchBlocked`: shell не дає перейти до робочих surfaces, поки setup не підтверджено.
 - `deepLinkResolved`: shell відкриває surface, який відповідає URL.
+- `deepLinkAutoConfigured`: shell відкриває valid deep link без setup, застосувавши URL-derived `game`, URL-derived `language` і `FGC`.
 - `settingsUnavailable`: local browser settings недоступні або працюють session-only.
 - `controllerConnected`: `UI-CMP-001 Global Top Bar` показує green controller indicator.
 - `controllerDisconnected`: nested indicator показує yellow disconnect state протягом 1 хв або прихований після завершення grace window.
@@ -140,9 +141,15 @@ App Shell є постійною рамкою застосунку, яка три
 
 ## UI-PAGE-002: First-Launch Setup
 
+Детальна специфікація: [ui/UI-PAGE-002.md](./ui/UI-PAGE-002.md).
+
 ### Призначення
 
-First-Launch Setup є обов'язковим стартовим станом для нового браузера. Він збирає мінімальні налаштування перед доступом до catalog.
+First-Launch Setup є обов'язковим стартовим станом для root first launch у новому браузері. Він коротко пояснює можливості застосунку й збирає initial settings перед доступом до catalog.
+
+`UI-PAGE-002` встановлює початкові `game`, `language` і `notation display mode`. Після завершення first launch подальше ручне редагування цих settings відбувається через `UI-PAGE-008 Settings`.
+
+Valid deep link bypasses `UI-PAGE-002`: app вираховує `game` і `language` з URL, ставить `notation display mode = FGC`, створює first-launch completion marker і одразу відкриває target route без confirmation.
 
 ### Умови входу
 
@@ -157,7 +164,9 @@ First-Launch Setup є обов'язковим стартовим станом д
 - `confirmable`: усі обов'язкові choices мають значення.
 - `saving`: app зберігає вибір у local browser settings.
 - `sessionOnly`: localStorage недоступний, settings діють тільки в поточній сесії.
+- `saveError`: settings або completion marker не вдалося зберегти.
 - `complete`: setup підтверджено, користувача переведено до `UI-PAGE-003 Catalog`.
+- `deepLinkBypassed`: valid deep link пропускає setup і відкриває target route з URL-derived settings.
 
 ### Компоненти
 
@@ -169,11 +178,13 @@ First-Launch Setup є обов'язковим стартовим станом д
 
 ### Важливі дії
 
+- Прочитати короткий опис можливостей: `catalog`, filters, `combo detail`, `named lists`, `custom combo builder`, `controller hints`, `import/export`.
 - Вибрати language `EN/UA`.
 - Вибрати game `MKXL/MK1`.
 - Вибрати display mode `FGC/PlayStation/Xbox`.
 - Підтвердити setup.
 - Побачити non-blocking повідомлення про session-only settings, якщо localStorage недоступний.
+- Не показувати setup для valid deep link із URL-derived `game` і `language`; у цьому flow використовується `FGC` без confirmation.
 
 ### Пов'язані UX сценарії
 

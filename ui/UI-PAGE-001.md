@@ -15,7 +15,7 @@
 
 `UI-PAGE-001 App Shell` є постійною рамкою застосунку. Вона тримає слот активної сторінки, навігаційний каркас, системні шари та передає команди контролера до поточної UI-поверхні.
 
-App Shell має бути присутнім після старту застосунку в усіх режимах, але може блокувати доступ до робочих сторінок, якщо `UI-PAGE-002 First-Launch Setup` ще не завершено.
+App Shell має бути присутнім після старту застосунку в усіх режимах, але може блокувати доступ до робочих сторінок, якщо `UI-PAGE-002 First-Launch Setup` ще не завершено. Valid deep link є винятком: App Shell може auto-configure initial settings із URL і відкрити target surface без показу setup.
 
 App Shell відповідає за:
 
@@ -233,6 +233,19 @@ App Shell має доступ до вже застосованих settings, act
 - active settings передані до active surface;
 - якщо частина context неповна, active surface показує найближчий валідний selection state.
 
+### `deepLinkAutoConfigured`
+
+Користувач уперше відкрив valid deep link, а в браузері ще немає local settings або first-launch completion marker.
+
+Очікуваний інтерфейс:
+
+- `UI-PAGE-002 First-Launch Setup` не показується;
+- App Shell вираховує `game` і `language` з URL;
+- App Shell застосовує `notation display mode = FGC`;
+- App Shell створює first-launch completion marker або session-only equivalent;
+- active surface відповідає target route з URL;
+- manual selectors для `game`, `language` і `notation display mode` не показуються.
+
 ### `settingsUnavailable`
 
 Local persistence недоступна або save operation не може бути завершена.
@@ -268,18 +281,21 @@ Controller відключено або більше не дає stable input.
 ### Блокування першим запуском
 
 1. App-level settings state завантажує local settings або session settings.
-2. Якщо required settings відсутні, shell переходить у `firstLaunchBlocked`.
+2. Якщо required settings відсутні і route не є valid deep link, shell переходить у `firstLaunchBlocked`.
 3. Слот активної сторінки показує `UI-PAGE-002 First-Launch Setup`.
 4. Після підтвердження setup app-level state отримує початкові settings.
 5. Користувач переходить до `UI-PAGE-003 Catalog`.
 
+Valid deep link є винятком із first-launch gate: якщо URL дозволяє вирахувати `game` і `language`, App Shell не показує `UI-PAGE-002`, застосовує URL-derived settings, ставить `notation display mode = FGC`, створює completion marker і відкриває target surface.
+
 ### Відновлення deep link
 
 1. App Shell отримує route або URL context.
-2. Shell перевіряє, чи first-launch gate дозволяє відкрити target surface.
-3. Shell відновлює game, character, combo id або builder context, якщо вони є в URL.
-4. Якщо context валідний, shell відкриває target surface.
-5. Якщо context неповний або stale, shell відкриває найближчий recoverable state і показує system message.
+2. Shell визначає, чи URL є valid deep link.
+3. Якщо local settings відсутні, shell вираховує `game` і `language` з URL, застосовує `notation display mode = FGC` і створює completion marker.
+4. Shell відновлює character, combo id або builder context, якщо вони є в URL.
+5. Якщо context валідний, shell відкриває target surface.
+6. Якщо context неповний або stale, shell відкриває найближчий recoverable state або `notFound` state і показує system message без показу `UI-PAGE-002`.
 
 ### Перемикання активної UI-поверхні
 
@@ -311,7 +327,12 @@ App-level settings state
   -> Display-only components, які потребують settings
 ```
 
-App Shell не створює і не змінює settings. Ручна зміна `game`, `language` і `notation display mode` відбувається тільки на `UI-PAGE-008 Settings`, а first-launch values встановлюються через `UI-PAGE-002 First-Launch Setup`.
+App Shell не створює і не змінює settings під час ручного редагування. Ручна зміна `game`, `language` і `notation display mode` відбувається тільки на `UI-PAGE-008 Settings`.
+
+Initial settings можуть з'явитися двома шляхами:
+
+- root first launch через `UI-PAGE-002 First-Launch Setup`;
+- valid deep link auto-config через URL-derived `game`, URL-derived `language` і default `notation display mode = FGC`.
 
 Settings не мають змінювати source of truth seeded або custom combo data. Наприклад, notation display mode впливає на rendering, але не змінює `movePath` або `cachedNotation`.
 
@@ -338,12 +359,13 @@ Settings не мають змінювати source of truth seeded або custom
 ## Критерії приймання
 
 - App Shell показує активну робочу сторінку після завершення first-launch setup.
-- Без завершеного first-launch setup App Shell не дозволяє перейти до catalog, detail, lists або builder.
+- Без завершеного first-launch setup App Shell не дозволяє перейти до catalog, detail, lists або builder, крім valid deep link auto-config.
 - App Shell дає navigation action для відкриття `UI-PAGE-008 Settings`.
 - Застосовані settings поширюються на активну сторінку через App Shell.
 - App Shell не мутує `game`, `language` або `notation display mode` напряму.
 - Session-only persistence state показує попередження, але не блокує основний flow.
 - Deep link відкриває відповідний surface або recoverable fallback state.
+- Valid deep link у fresh browser state не показує `UI-PAGE-002`, застосовує URL-derived `game`, URL-derived `language`, `FGC` і completion marker.
 - Controller connection оновлює `UI-CMP-001 Global Top Bar`, який рендерить green indicator у `UI-CMP-005 Controller Hint Strip`.
 - Controller disconnect показує yellow indicator протягом 1 хв, після чого indicator зникає, якщо reconnect не стався.
 - Hint panel відкривається тільки через interaction з indicator.
@@ -358,6 +380,7 @@ Settings не мають змінювати source of truth seeded або custom
 - Після зміни language у `UI-PAGE-008 Settings` App Shell отримує оновлений app-level state і передає language активній сторінці.
 - Після зміни notation display mode у `UI-PAGE-008 Settings` App Shell не змінює `movePath` або seeded data.
 - Deep link на combo detail відкриває `UI-PAGE-004 Combo Detail`, якщо context валідний.
+- Deep link на combo detail у fresh browser state обходить `UI-PAGE-002` і застосовує URL-derived `game`, URL-derived `language` та `FGC`.
 - Deep link з неповним context відкриває recoverable selection state і показує system message.
 - Відкритий overlay перехоплює `back`, якщо overlay може бути закритий.
 - Controller connect оновлює `UI-CMP-001`, який показує green indicator у `UI-CMP-005`.
