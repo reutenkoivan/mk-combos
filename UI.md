@@ -1,7 +1,7 @@
 # UI мапа екранів, компонентів і станів
 
 Цей документ є мапою основних екранів, панелей, overlay, компонентів і станів інтерфейсу `mk-combos`.
-На відміну від [ux.md](./ux.md), який описує користувацькі сценарії, `UI.md` фіксує структуру застосунку як набір UI surfaces зі стабільними кодами для посилань.
+На відміну від [UX.md](./UX.md), який описує користувацькі сценарії, `UI.md` фіксує структуру застосунку як набір UI surfaces зі стабільними кодами для посилань.
 
 Документ не є pixel-level дизайн-специфікацією. Його мета - допомогти реалізовувати `apps/web`, `@mk-combos/ui`, `@mk-combos/combo-builder` і controller navigation узгоджено.
 
@@ -19,7 +19,7 @@
 
 ### Pages
 
-- `UI-PAGE-001` App Shell.
+- [`UI-PAGE-001`](./ui/UI-PAGE-001.md) App Shell.
 - `UI-PAGE-002` First-Launch Setup.
 - `UI-PAGE-003` Catalog.
 - `UI-PAGE-004` Combo Detail.
@@ -93,6 +93,8 @@ UI-PAGE-001 App Shell
 ```
 
 ## UI-PAGE-001: App Shell
+
+Детальна специфікація: [ui/UI-PAGE-001.md](./ui/UI-PAGE-001.md).
 
 ### Призначення
 
