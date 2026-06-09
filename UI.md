@@ -26,14 +26,15 @@
 - `UI-PAGE-005` Named Lists.
 - `UI-PAGE-006` Custom Combo Builder.
 - `UI-PAGE-007` Backup Management.
+- `UI-PAGE-008` Settings.
 
 ### Components
 
-- `UI-CMP-001` Global Top Bar.
+- [`UI-CMP-001`](./ui/UI-CMP-001.md) Global Top Bar.
 - `UI-CMP-002` Game Switcher.
 - `UI-CMP-003` Language Switcher.
 - `UI-CMP-004` Display Mode Switcher.
-- `UI-CMP-005` Controller Hint Strip.
+- [`UI-CMP-005`](./ui/UI-CMP-005.md) Controller Hint Strip.
 - `UI-CMP-006` First-Launch Setup Form.
 - `UI-CMP-007` Character Picker.
 - `UI-CMP-008` Variation Picker.
@@ -60,28 +61,37 @@
 - `UI-CMP-029` Empty State.
 - `UI-CMP-030` Error State.
 - `UI-CMP-031` Stale/Invalid Combo Marker.
+- `UI-CMP-032` Breadcrumbs.
+- `UI-CMP-033` Top Bar Dropdown Menu.
 
 ## Глобальна структура
 
 Застосунок складається з таких UI surfaces:
 
-- `UI-PAGE-001` App Shell і глобальні controls.
+- `UI-PAGE-001` App Shell і навігаційна рамка.
 - `UI-PAGE-002` First-Launch Setup.
+- `UI-PAGE-008` Settings.
 - `UI-PAGE-003` Catalog.
 - `UI-CMP-012` Filters Panel.
 - `UI-PAGE-004` Combo Detail.
 - `UI-PAGE-005` Named Lists.
 - `UI-PAGE-006` Custom Combo Builder.
 - `UI-PAGE-007` Backup Management.
-- `UI-CMP-005` Controller Hint Strip.
 - `UI-CMP-029`, `UI-CMP-030`, `UI-CMP-031` System states: loading, empty, error, stale/invalid.
 
 Глобальний flow після першого налаштування:
 
 ```text
 UI-PAGE-001 App Shell
-  -> UI-PAGE-003 Catalog
+  -> UI-CMP-001 Global Top Bar
+     -> UI-CMP-005 Controller Hint Strip
+     -> UI-CMP-032 Breadcrumbs
+     -> UI-CMP-033 Top Bar Dropdown Menu
+  -> UI-PAGE-008 Settings
      -> UI-CMP-002 Game Switcher
+     -> UI-CMP-003 Language Switcher
+     -> UI-CMP-004 Display Mode Switcher
+  -> UI-PAGE-003 Catalog
      -> UI-CMP-007 Character Picker
      -> UI-CMP-008 Variation Picker або UI-CMP-009 Kameo Picker
      -> UI-CMP-010 Combo List
@@ -98,7 +108,7 @@ UI-PAGE-001 App Shell
 
 ### Призначення
 
-App Shell є постійною рамкою застосунку, яка тримає глобальну навігацію, поточний контекст і швидкі налаштування.
+App Shell є постійною рамкою застосунку, яка тримає глобальну навігацію, поточний контекст, слот активної сторінки й системні шари.
 
 ### Умови входу
 
@@ -108,27 +118,20 @@ App Shell є постійною рамкою застосунку, яка три
 
 ### Основні стани
 
-- `ready`: shell показує активний surface і глобальні controls.
+- `ready`: shell показує активний surface і навігаційні controls.
 - `firstLaunchBlocked`: shell не дає перейти до робочих surfaces, поки setup не підтверджено.
 - `deepLinkResolved`: shell відкриває surface, який відповідає URL.
 - `settingsUnavailable`: local browser settings недоступні або працюють session-only.
-- `controllerConnected`: показані contextual controller hints для активного surface.
-- `controllerDisconnected`: hints приховані або показують passive disconnected state.
+- `controllerConnected`: `UI-CMP-001 Global Top Bar` показує green controller indicator.
+- `controllerDisconnected`: nested indicator показує yellow disconnect state протягом 1 хв або прихований після завершення grace window.
 
 ### Компоненти
 
 - `UI-CMP-001` Global Top Bar.
-- `UI-CMP-002` Game Switcher.
-- `UI-CMP-003` Language Switcher.
-- `UI-CMP-004` Display Mode Switcher.
-- `UI-CMP-005` Controller Hint Strip.
 
 ### Важливі дії
 
-- Перемкнути game: `MKXL` або `MK1`.
-- Перемкнути language: `EN` або `UA`.
-- Перемкнути notation display mode: `FGC`, `PlayStation`, `Xbox`.
-- Відкрити `UI-PAGE-003 Catalog`, `UI-PAGE-005 Named Lists`, `UI-PAGE-006 Custom Combo Builder` або `UI-PAGE-007 Backup Management`.
+- Відкрити `UI-PAGE-003 Catalog`, `UI-PAGE-005 Named Lists`, `UI-PAGE-006 Custom Combo Builder`, `UI-PAGE-007 Backup Management` або `UI-PAGE-008 Settings`.
 - Приймати semantic controller commands і передавати їх активному surface.
 
 ### Пов'язані UX сценарії
@@ -162,7 +165,6 @@ First-Launch Setup є обов'язковим стартовим станом д
 - `UI-CMP-002` Game Switcher.
 - `UI-CMP-003` Language Switcher.
 - `UI-CMP-004` Display Mode Switcher.
-- `UI-CMP-005` Controller Hint Strip.
 - `UI-CMP-030` Error State.
 
 ### Важливі дії
@@ -181,17 +183,17 @@ First-Launch Setup є обов'язковим стартовим станом д
 
 ### Призначення
 
-Catalog дає користувачу пройти основний шлях `Game -> Character -> Combo list` і звузити контекст до variation або kameo, якщо це потрібно для гри.
+Catalog дає користувачу працювати в межах active game, пройти шлях `Character -> Combo list` і звузити контекст до variation або kameo, якщо це потрібно для гри.
 
 ### Умови входу
 
 - `UI-PAGE-002 First-Launch Setup` завершено або deep link успішно відновив контекст.
 - Seeded combo data завантажені та валідні для показу.
-- `UI-PAGE-001 App Shell` має активні language і notation display mode.
+- Active game, language і notation display mode уже застосовані через `UI-PAGE-002 First-Launch Setup` або `UI-PAGE-008 Settings`.
 
 ### Основні стани
 
-- `gameSelection`: користувач обирає `MKXL` або `MK1`.
+- `gameContextReady`: catalog має активну game з app-level settings.
 - `characterSelection`: користувач обирає персонажа активної гри.
 - `variationSelection`: для `MKXL` користувач обирає variation.
 - `kameoSelection`: для `MK1` користувач обирає kameo.
@@ -203,7 +205,6 @@ Catalog дає користувачу пройти основний шлях `Ga
 
 ### Компоненти
 
-- `UI-CMP-002` Game Switcher.
 - `UI-CMP-007` Character Picker.
 - `UI-CMP-008` Variation Picker.
 - `UI-CMP-009` Kameo Picker.
@@ -217,7 +218,6 @@ Catalog дає користувачу пройти основний шлях `Ga
 
 ### Важливі дії
 
-- Перемкнути game.
 - Вибрати character.
 - Вибрати variation для `MKXL`.
 - Вибрати kameo для `MK1`.
@@ -253,7 +253,6 @@ Filters Panel допомагає швидко звузити combo list за met
 ### Компоненти
 
 - `UI-CMP-013` Filter Control Group.
-- `UI-CMP-002` Game Switcher.
 - `UI-CMP-007` Character Picker.
 - `UI-CMP-008` Variation Picker.
 - `UI-CMP-009` Kameo Picker.
@@ -261,7 +260,7 @@ Filters Panel допомагає швидко звузити combo list за met
 
 ### Важливі дії
 
-- Змінити game, character, variation або kameo filter.
+- Змінити character, variation або kameo filter у межах active game.
 - Змінити starter, position, meter, damage, difficulty або route type.
 - Вибрати tags.
 - Виконати text search по notation, notes і metadata.
@@ -456,11 +455,161 @@ Backup Management керує full backup локальних settings, custom com
 
 - `US-017`, `US-018`, `US-024`
 
-## UI-CMP-005: Controller Hint Strip
+## UI-PAGE-008: Settings
 
 ### Призначення
 
-Controller Hint Strip показує активний DualSense, Xbox або Standard Gamepad profile і пояснює доступні contextual commands для поточного surface.
+Settings є єдиною сторінкою ручної зміни `game`, `language` і `notation display mode` після завершення first-launch setup.
+
+### Умови входу
+
+- `UI-PAGE-002 First-Launch Setup` завершено.
+- Користувач відкрив Settings через navigation action з `UI-PAGE-001 App Shell`.
+- Local settings доступні для читання, а persistence може бути permanent або session-only.
+
+### Основні стани
+
+- `ready`: поточні settings завантажені й доступні для редагування.
+- `editing`: користувач змінює `game`, `language` або `notation display mode`.
+- `saving`: app застосовує settings і намагається зберегти їх у local browser settings.
+- `sessionOnly`: settings застосовані тільки для поточної сесії.
+- `saveError`: settings застосовані або відхилені з recoverable помилкою persistence.
+
+### Компоненти
+
+- `UI-CMP-002` Game Switcher.
+- `UI-CMP-003` Language Switcher.
+- `UI-CMP-004` Display Mode Switcher.
+- `UI-CMP-030` Error State.
+
+### Важливі дії
+
+- Змінити default game для catalog і builder entry.
+- Змінити language для UI і localized content.
+- Змінити notation display mode для rendering notation.
+- Застосувати settings до active app state.
+- Повернутися до попередньої робочої сторінки або catalog.
+
+### Пов'язані UX сценарії
+
+- `US-002`, `US-008`, `US-009`
+
+## UI-CMP-001: Global Top Bar
+
+Детальна специфікація: [ui/UI-CMP-001.md](./ui/UI-CMP-001.md).
+
+### Призначення
+
+Global Top Bar є прямим компонентом `UI-PAGE-001 App Shell`: він показує active game label `MKXL` або `MK1`, controller indicator area, breadcrumbs і right-pinned dropdown menu.
+
+`UI-CMP-001` має navigation entry до `UI-PAGE-008 Settings`, але не містить `UI-CMP-002 Game Switcher`, `UI-CMP-003 Language Switcher` або `UI-CMP-004 Display Mode Switcher`.
+
+### Умови входу
+
+- `UI-PAGE-001 App Shell` рендерить верхню панель.
+- App Shell передав active surface code, active game label, breadcrumbs, navigation availability і controller state.
+- First-launch gate або active route визначили доступність navigation actions.
+
+### Основні стани
+
+- `ready`: game label, breadcrumbs, dropdown trigger і utility actions доступні.
+- `firstLaunchLimited`: navigation обмежена через first-launch gate.
+- `surfaceNavigationActive`: користувач взаємодіє з navigation або route змінюється.
+- `settingsEntryAvailable`: settings action доступний і веде до `UI-PAGE-008 Settings`.
+- `gameVersionVisible`: показано `MKXL` або `MK1`.
+- `breadcrumbsReady`: breadcrumbs відповідають active surface.
+- `controllerIndicatorHidden`: `UI-CMP-005` не відображається.
+- `controllerIndicatorConnected`: `UI-CMP-005` показує green connected indicator.
+- `controllerIndicatorDisconnectGrace`: `UI-CMP-005` показує yellow disconnected indicator протягом 1 хв.
+- `hintPanelOpen`: hint panel відкритий через interaction з indicator.
+- `topBarMenuClosed`: right-pinned dropdown menu закритий.
+- `topBarMenuOpen`: right-pinned dropdown menu відкритий.
+
+### Компоненти
+
+- `UI-CMP-005` Controller Hint Strip. Власник: `UI-CMP-001 Global Top Bar`.
+- `UI-CMP-032` Breadcrumbs.
+- `UI-CMP-033` Top Bar Dropdown Menu.
+
+### Важливі дії
+
+- Показати active game label `MKXL` або `MK1`.
+- Показати breadcrumbs для active surface і перейти до `UI-PAGE-003 Catalog` через navigable breadcrumb item.
+- Відкрити right-pinned dropdown menu з actions до `UI-PAGE-005 Named Lists`, `UI-PAGE-006 Custom Combo Builder`, `UI-PAGE-007 Backup Management` і `UI-PAGE-008 Settings`.
+- Відкрити, закрити або toggle hint panel у `UI-CMP-005`.
+- Закрити dropdown menu через `Escape` або після вибору action.
+
+### Пов'язані UX сценарії
+
+- `US-019`, `US-021`, `US-022`, `US-023`, `US-024`
+
+## UI-CMP-032: Breadcrumbs
+
+### Призначення
+
+Breadcrumbs показують contextual navigation trail у `UI-CMP-001 Global Top Bar` після game label і controller indicator area.
+
+Catalog breadcrumb є primary Top Bar access до `UI-PAGE-003 Catalog`.
+
+### Умови входу
+
+- `UI-CMP-001 Global Top Bar` отримав breadcrumbs для active surface.
+- Active route має щонайменше один current item.
+
+### Основні стани
+
+- `breadcrumbsReady`: trail відповідає active surface.
+- `breadcrumbItemNavigable`: item веде до попереднього route або selection level.
+- `breadcrumbItemCurrent`: item позначає поточний route і не виконує navigation.
+
+### Важливі дії
+
+- Показати trail для Catalog, character, combo detail, named list, builder context або settings path.
+- Перейти за navigable breadcrumb item, зокрема до `UI-PAGE-003 Catalog`.
+- Позначити current item без переходу в той самий route.
+
+### Пов'язані UX сценарії
+
+- `US-023`, `US-024`
+
+## UI-CMP-033: Top Bar Dropdown Menu
+
+### Призначення
+
+Top Bar Dropdown Menu є right-pinned menu у `UI-CMP-001 Global Top Bar` для global navigation і utility actions.
+
+### Умови входу
+
+- `UI-CMP-001 Global Top Bar` отримав navigation availability.
+- Користувач відкрив menu trigger через click, tap, `Enter` або `Space`.
+
+### Основні стани
+
+- `topBarMenuClosed`: menu trigger видимий праворуч, menu surface закритий.
+- `topBarMenuOpen`: menu surface відкритий і вирівняний відносно правого краю Top Bar.
+- `topBarMenuActionDisabled`: action недоступний через first-launch gate або поточний context.
+
+### Важливі дії
+
+- Відкрити `UI-PAGE-005 Named Lists`, `UI-PAGE-006 Custom Combo Builder`, `UI-PAGE-007 Backup Management` або `UI-PAGE-008 Settings`.
+- Закрити menu через `Escape`, outside click або після вибору action.
+- Повернути focus до menu trigger після закриття.
+
+### Пов'язані UX сценарії
+
+- `US-019`, `US-023`, `US-024`
+
+## UI-CMP-005: Controller Hint Strip
+
+Власник: `UI-CMP-001 Global Top Bar`.
+
+Детальна специфікація: [ui/UI-CMP-005.md](./ui/UI-CMP-005.md).
+
+### Призначення
+
+Controller Hint Strip показує compact controller indicator у `UI-CMP-001 Global Top Bar` і відкриває contextual hints тільки після взаємодії з indicator.
+
+`UI-CMP-005` не позиціонується самостійно в shell layout. Він завжди рендериться всередині `UI-CMP-001 Global Top Bar`, який керує його місцем, visibility і hint panel state.
 
 ### Умови входу
 
@@ -470,24 +619,19 @@ Controller Hint Strip показує активний DualSense, Xbox або Sta
 
 ### Основні стани
 
-- `unsupported`: Gamepad API недоступний або заблокований browser context.
-- `disconnected`: controller не підключено.
-- `connecting`: browser щойно отримав gamepad event або очікує перший stable poll.
-- `connectedDualSense`: активний DualSense-compatible profile.
-- `connectedXbox`: активний Xbox-compatible profile.
-- `connectedStandard`: active controller працює через Standard Gamepad fallback.
-- `reconnected`: controller повернувся після disconnect без втрати keyboard/mouse flow.
-- `hintsVisible`: показані contextual hints для active surface.
-- `hintsCollapsed`: hints доступні, але згорнуті.
+- `hiddenNoController`: controller не підключено і немає active disconnect grace window.
+- `connectedIndicator`: green indicator із controller icon.
+- `disconnectGraceIndicator`: yellow indicator із no-connection icon протягом 1 хв після disconnect.
+- `hintPanelClosed`: indicator видимий, hint panel закритий.
+- `hintPanelOpen`: contextual hints відкриті після взаємодії з indicator.
 
 ### Важливі дії
 
-- Показати active controller kind і labels.
-- Оновити hints при зміні active surface.
-- Мапити `navUp`, `navDown`, `navLeft`, `navRight`, `confirm`, `back` на поточний surface.
-- Мапити `openFilters`, `openActions`, `addToList`, `openDetail` для catalog/list/detail surfaces.
-- Мапити builder commands для custom combo builder.
-- Пережити disconnect/reconnect без скидання app state.
+- Не відображатися, якщо controller не підключено і немає active disconnect grace window.
+- Показати green indicator із controller icon, якщо controller підключено.
+- Показати yellow indicator із no-connection icon протягом 1 хв після disconnect.
+- Відкрити hint panel через click, tap, `Enter` або `Space` на indicator.
+- Закрити hint panel через `Escape` або відповідний close action.
 
 ### Пов'язані UX сценарії
 
