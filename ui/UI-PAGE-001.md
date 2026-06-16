@@ -103,9 +103,9 @@ Top Bar має:
 
 У першому релізі в цьому шарі можуть з'являтися:
 
-- `UI-CMP-012 Filters Panel`;
+- `UI-CMP-013 Filter Control Group` expanded/collapsed state;
 - `UI-CMP-018 Combo Actions Menu`;
-- `UI-CMP-021 Add-To-List Dialog`;
+- `UI-CMP-021 Add-To-List Dialog` як singleton dialog активної сторінки для combo context; App Shell може розміщувати overlay, але не володіє persistence;
 - `UI-CMP-022 List Edit Dialog`;
 - `UI-CMP-027 Export Dialog`;
 - `UI-CMP-028 Import Preview Dialog`.

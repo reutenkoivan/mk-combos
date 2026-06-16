@@ -168,18 +168,18 @@ Hover сам по собі не відкриває hint panel.
 У відкритому hint panel для catalog, combo list, named list і detail surfaces показувати тільки актуальні commands:
 
 - `openDetail`, якщо focus на combo item;
-- `addToList`, якщо combo можна додати в list;
+- `addToList`, якщо focus на `UI-CMP-011 Combo Card` і combo можна додати в list; команда просить активну сторінку відкрити singleton `UI-CMP-021`;
 - `removeFromList`, якщо item уже в list context;
 - `openActions`, якщо є contextual actions menu;
 - `back`, якщо detail або panel можна закрити.
 
-### Фільтри й меню дій
+### Конфігурація combo list і меню дій
 
-У відкритому hint panel для filters panel або actions menu показувати:
+У відкритому hint panel для `UI-CMP-012 Combo List Config Module` або actions menu показувати:
 
 - navigation між controls;
 - `confirm` для вибору або apply;
-- `back` або `closePanel`;
+- `back` або `closePanel` для закриття module, actions menu або page-level dialog і повернення focus;
 - clear/reset command тільки якщо він доступний.
 
 ### Створення custom combo
@@ -191,6 +191,22 @@ Hover сам по собі не відкриває hint panel.
 - `builderFinish`, якщо combo можна завершити;
 - `builderCancel`;
 - `builderNextGroup` і `builderPreviousGroup`, якщо є move groups.
+
+Якщо focus перебуває у `UI-CMP-035 Combo Whiteboard`, hint panel має показувати contextual whiteboard actions без додавання нових semantic commands:
+
+- navigation між steps і gaps;
+- `confirm` або `openActions` для local step/gap menu;
+- pick up/drop reorder, якщо step можна переносити;
+- confirm або cancel pending truncate, якщо replay повернув invalid tail;
+- `back` для закриття menu, cancel pick up/drop або повернення focus до safe builder control.
+
+Якщо focus перебуває у `UI-CMP-036 Combo Frame Meter`, hint panel має показувати contextual frame inspection actions без додавання нових semantic commands:
+
+- navigation між timeline segments;
+- `confirm` або `openActions` для відкриття readable segment details;
+- `back` для закриття segment details і повернення focus на source segment;
+- перехід focus між Frame Meter, Whiteboard, Move Picker і Action Bar відповідно до layout;
+- invalid transition details, якщо replay повернув pending truncate або stale boundary.
 
 ## Доступність
 
