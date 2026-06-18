@@ -194,7 +194,9 @@ Hover сам по собі не відкриває hint panel.
 
 Якщо focus перебуває у `UI-CMP-035 Combo Whiteboard`, hint panel має показувати contextual whiteboard actions без додавання нових semantic commands:
 
-- navigation між steps і gaps;
+- navigation між internal move candidates, steps і gaps;
+- `builderSelectMove` для focused valid candidate;
+- `builderNextGroup` і `builderPreviousGroup` для internal move groups, якщо вони є;
 - `confirm` або `openActions` для local step/gap menu;
 - pick up/drop reorder, якщо step можна переносити;
 - confirm або cancel pending truncate, якщо replay повернув invalid tail;
@@ -205,7 +207,7 @@ Hover сам по собі не відкриває hint panel.
 - navigation між timeline segments;
 - `confirm` або `openActions` для відкриття readable segment details;
 - `back` для закриття segment details і повернення focus на source segment;
-- перехід focus між Frame Meter, Whiteboard, Move Picker і Action Bar відповідно до layout;
+- перехід focus між Frame Meter, Whiteboard і Action Bar відповідно до layout;
 - invalid transition details, якщо replay повернув pending truncate або stale boundary.
 
 ## Доступність

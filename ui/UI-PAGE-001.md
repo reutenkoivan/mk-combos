@@ -15,14 +15,28 @@
 
 `UI-PAGE-001 App Shell` є постійною рамкою застосунку. Вона тримає слот активної сторінки, навігаційний каркас, системні шари та передає команди контролера до поточної UI-поверхні.
 
-App Shell має бути присутнім після старту застосунку в усіх режимах, але може блокувати доступ до робочих сторінок, якщо `UI-PAGE-002 First-Launch Setup` ще не завершено. Valid deep link є винятком: App Shell може auto-configure initial settings із URL і відкрити target surface без показу setup.
+App Shell має бути присутнім після старту застосунку в усіх режимах, але може блокувати доступ до робочих сторінок, якщо `UI-PAGE-002 First-Launch Setup` ще не завершено. Valid route-prefixed deep link є винятком: App Shell бере `gameId` із URL, знаходить installed business entry point і відкриває target surface без показу setup.
+
+## Архітектурний контекст
+
+App Shell є єдиним місцем, де route prefix перетворюється на active game context для UI surfaces.
+
+Rules:
+
+- installed games приходять із `apps/web/src/game-business/installed-games.ts`;
+- route prefix `/:gameId/...` є source of truth для active game на deep links;
+- App Shell вибирає active business entry point і передає page-level flows підготовлені game capabilities;
+- App Shell не імпортує game data/rules напряму і не реалізує MKXL або MK1 бізнес-логіку.
 
 App Shell відповідає за:
 
 - глобальну розмітку застосунку;
+- резолв `gameId` із route prefix;
+- вибір active game business entry point;
 - показ активної сторінки або обов'язкового first-launch gate;
 - читання вже застосованих settings з app-level state;
 - передавання active settings до активної сторінки;
+- передавання active game business capabilities до route-level flows;
 - передавання controller connection state і contextual controller hints у `UI-CMP-001`;
 - маршрутизацію semantic controller commands до активної сторінки;
 - показ спільних системних повідомлень, якщо вони не належать конкретній сторінці.
@@ -46,6 +60,7 @@ UI-PAGE-001 App Shell
   │  ├─ UI-CMP-005 Controller Hint Strip
   │  ├─ UI-CMP-032 Breadcrumbs
   │  └─ UI-CMP-033 Top Bar Dropdown Menu
+  ├─ Installed game business registry
   ├─ Слот активної сторінки
   ├─ Шар накладних панелей і діалогів
   ├─ Область системних повідомлень
@@ -71,7 +86,7 @@ UI-PAGE-001 App Shell
 
 Top Bar має:
 
-- показувати active game label `MKXL` або `MK1`;
+- показувати active game label із active business entry point;
 - рендерити `UI-CMP-005 Controller Hint Strip` поруч із game label;
 - рендерити breadcrumbs для active surface і відкривати `UI-PAGE-003 Catalog` через breadcrumb navigation;
 - тримати dropdown menu прибитим до правої сторони;
@@ -139,7 +154,7 @@ App Shell має забезпечити, що накладний елемент:
 Вхідні дані:
 
 - active route або active surface code;
-- active game label `MKXL` або `MK1`;
+- active game label із active business entry point;
 - breadcrumbs для active surface;
 - availability основних actions;
 - controller connection state;
@@ -242,7 +257,8 @@ App Shell має доступ до вже застосованих settings, act
 Очікуваний інтерфейс:
 
 - `UI-PAGE-002 First-Launch Setup` не показується;
-- App Shell вираховує `game` і `language` з URL;
+- App Shell бере installed `gameId` із route prefix;
+- App Shell застосовує URL-derived active game;
 - App Shell застосовує `notation display mode = FGC`;
 - App Shell створює first-launch completion marker або session-only equivalent;
 - active surface відповідає target route з URL;
@@ -288,16 +304,17 @@ Controller відключено або більше не дає stable input.
 4. Після підтвердження setup app-level state отримує початкові settings.
 5. Користувач переходить до `UI-PAGE-003 Catalog`.
 
-Valid deep link є винятком із first-launch gate: якщо URL дозволяє вирахувати `game` і `language`, App Shell не показує `UI-PAGE-002`, застосовує URL-derived settings, ставить `notation display mode = FGC`, створює completion marker і відкриває target surface.
+Valid route-prefixed deep link є винятком із first-launch gate: якщо URL містить installed `gameId`, App Shell не показує `UI-PAGE-002`, застосовує URL-derived active game, ставить `notation display mode = FGC`, створює completion marker і відкриває target surface.
 
 ### Відновлення deep link
 
 1. App Shell отримує route або URL context.
-2. Shell визначає, чи URL є valid deep link.
-3. Якщо local settings відсутні, shell вираховує `game` і `language` з URL, застосовує `notation display mode = FGC` і створює completion marker.
-4. Shell відновлює character, combo id або builder context, якщо вони є в URL.
-5. Якщо context валідний, shell відкриває target surface.
-6. Якщо context неповний або stale, shell відкриває найближчий recoverable state або `notFound` state і показує system message без показу `UI-PAGE-002`.
+2. Shell визначає, чи URL є valid route-prefixed deep link.
+3. Shell бере `gameId` із route prefix і знаходить active business entry point.
+4. Якщо local settings відсутні, shell застосовує URL-derived active game, `notation display mode = FGC` і створює completion marker.
+5. Shell відновлює character, combo id або builder context через active business entry point, якщо вони є в URL.
+6. Якщо context валідний, shell відкриває target surface.
+7. Якщо context неповний або stale, shell відкриває найближчий recoverable state або `notFound` state і показує system message без показу `UI-PAGE-002`.
 
 ### Deprecated перенаправлення для UI-PAGE-007
 
@@ -342,7 +359,7 @@ App Shell не створює і не змінює settings під час руч
 Initial settings можуть з'явитися двома шляхами:
 
 - root first launch через `UI-PAGE-002 First-Launch Setup`;
-- valid deep link auto-config через URL-derived `game`, URL-derived `language` і default `notation display mode = FGC`.
+- valid route-prefixed deep link через URL-derived `gameId` і default `notation display mode = FGC`.
 
 Settings не мають змінювати source of truth seeded або custom combo data. Наприклад, notation display mode впливає на rendering, але не змінює `movePath` або `cachedNotation`.
 
@@ -375,7 +392,7 @@ Settings не мають змінювати source of truth seeded або custom
 - App Shell не мутує `game`, `language` або `notation display mode` напряму.
 - Session-only persistence state показує попередження, але не блокує основний flow.
 - Deep link відкриває відповідний surface або recoverable fallback state.
-- Valid deep link у fresh browser state не показує `UI-PAGE-002`, застосовує URL-derived `game`, URL-derived `language`, `FGC` і completion marker.
+- Valid route-prefixed deep link у fresh browser state не показує `UI-PAGE-002`, застосовує URL-derived `gameId`, `FGC` і completion marker.
 - Controller connection оновлює `UI-CMP-001 Global Top Bar`, який рендерить green indicator у `UI-CMP-005 Controller Hint Strip`.
 - Controller disconnect показує yellow indicator протягом 1 хв, після чого indicator зникає, якщо reconnect не стався.
 - Hint panel відкривається тільки через interaction з indicator.
@@ -392,7 +409,7 @@ Settings не мають змінювати source of truth seeded або custom
 - Після зміни language у `UI-PAGE-008 Settings` App Shell отримує оновлений app-level state і передає language активній сторінці.
 - Після зміни notation display mode у `UI-PAGE-008 Settings` App Shell не змінює `movePath` або seeded data.
 - Deep link на combo detail відкриває `UI-PAGE-004 Combo Detail`, якщо context валідний.
-- Deep link на combo detail у fresh browser state обходить `UI-PAGE-002` і застосовує URL-derived `game`, URL-derived `language` та `FGC`.
+- Deep link на combo detail у fresh browser state обходить `UI-PAGE-002` і застосовує URL-derived `gameId` та `FGC`.
 - Deep link з неповним context відкриває recoverable selection state і показує system message.
 - Відкритий overlay перехоплює `back`, якщо overlay може бути закритий.
 - Controller connect оновлює `UI-CMP-001`, який показує green indicator у `UI-CMP-005`.
@@ -403,6 +420,6 @@ Settings не мають змінювати source of truth seeded або custom
 
 ## Відкриті уточнення
 
-- Точний набір route paths для активних UI-поверхонь буде визначено під час реалізації `apps/web`.
+- Route paths для робочих surfaces використовують generic `/:gameId/...` форму, описану в [ARCHITECTURE.md](../ARCHITECTURE.md).
 - Візуальна щільність Top Bar із вкладеним Controller Hint Strip має бути перевірена на desktop і mobile layouts.
 - Custom controller button remapping не входить у перший реліз, якщо це не буде додано окремим UX сценарієм.

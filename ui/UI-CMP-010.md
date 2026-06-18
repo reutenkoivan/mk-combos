@@ -9,8 +9,8 @@
 - Батьківська мапа: [UI.md](../UI.md)
 - Батьківська сторінка: [UI-PAGE-003 Catalog](./UI-PAGE-003.md)
 - Власник: `UI-PAGE-003 Catalog`
-- Child components: `UI-CMP-011 Combo Card`
-- Пов'язані компоненти: [`UI-CMP-012 Combo List Config Module`](./UI-CMP-012.md), [`UI-CMP-013 Filter Control Group`](./UI-CMP-013.md), `UI-CMP-015 Notation Renderer`, `UI-CMP-021 Add-To-List Dialog`, `UI-CMP-029 Empty State`, `UI-CMP-030 Error State`
+- Child components: [`UI-CMP-011 Combo Card`](./UI-CMP-011.md)
+- Пов'язані компоненти: [`UI-CMP-012 Combo List Config Module`](./UI-CMP-012.md), [`UI-CMP-013 Filter Control Group`](./UI-CMP-013.md), [`UI-CMP-015 Notation Renderer`](./UI-CMP-015.md), `UI-CMP-021 Add-To-List Dialog`, `UI-CMP-029 Empty State`, `UI-CMP-030 Error State`
 - Variant docs: [MKXL](./UI-PAGE-003-MKXL.md), [MK1](./UI-PAGE-003-MK1.md)
 - Пов'язані UX сценарії: `US-003`, `US-004`, `US-005`, `US-006`, `US-007`, `US-012`, `US-014`, `US-019`
 
@@ -18,18 +18,18 @@
 
 `UI-CMP-010 Combo List` показує visible combo results для поточного Catalog context.
 
-Компонент розташований після `UI-CMP-012 Combo List Config Module` і є контейнером для `UI-CMP-011 Combo Card`. Він отримує вже підготовлений список `visible combos` від `UI-PAGE-003 Catalog`, рендерить cards у переданому порядку і передає user actions нагору.
+Компонент розташований після `UI-CMP-012 Combo List Config Module` і є контейнером для [`UI-CMP-011 Combo Card`](./UI-CMP-011.md). Він отримує вже підготовлений список `visible combos` від `UI-PAGE-003 Catalog`, рендерить cards у переданому порядку і передає user actions нагору.
 
 `UI-CMP-010` не є selector-ом, filter engine, route handler або persistence surface.
 
 ## Роль і межі
 
-`UI-PAGE-003 Catalog` володіє active game, selected character, selected game-specific context, optional filters, seeded combo data, page-level dialogs і routing.
+`UI-PAGE-003 Catalog` володіє active `gameId`, selected character, selected game-specific context, optional filters, page-level dialogs і routing. Visible combo summaries приходять із active game catalog business.
 
 `UI-CMP-010` відповідає за:
 
 - рендер list region для visible combos;
-- рендер одного `UI-CMP-011 Combo Card` для кожного visible combo summary;
+- рендер одного [`UI-CMP-011 Combo Card`](./UI-CMP-011.md) для кожного visible combo summary;
 - підтримку stable reading order і focus order для поточного списку;
 - показ loading, disabled або empty presentation, якщо відповідний state передано Catalog;
 - keyboard і semantic controller focus між combo cards;
@@ -38,7 +38,7 @@
 
 `UI-CMP-010` не відповідає за:
 
-- фільтрацію global combo data;
+- фільтрацію game-owned combo data;
 - обчислення result count або available facets;
 - зміну selected character, variation, kameo або optional filters;
 - зміну route напряму;
@@ -77,7 +77,7 @@ Root має:
 
 ### `comboCardCollection`
 
-`comboCardCollection` містить один `UI-CMP-011 Combo Card` для кожного item із `visible combos`.
+`comboCardCollection` містить один [`UI-CMP-011 Combo Card`](./UI-CMP-011.md) для кожного item із `visible combos`.
 
 Порядок cards відповідає порядку, який передав Catalog. У v1 `UI-CMP-010` не додає власні rules для sorting, pagination або virtualization.
 
@@ -146,7 +146,7 @@ Rules:
 - не застосовувати optional filters повторно;
 - не сортувати combos самостійно;
 - не приховувати cards через local UI-only filters;
-- не змінювати combo summary перед передачею в `UI-CMP-011`, окрім presentation props.
+- не змінювати combo summary перед передачею в [`UI-CMP-011`](./UI-CMP-011.md), окрім presentation props.
 
 ### Empty And Loading States
 
@@ -178,12 +178,12 @@ Catalog визначає причину empty state і передає її в `U
 
 ### Card Delegation
 
-`UI-CMP-010` передає card presentation у `UI-CMP-011`.
+`UI-CMP-010` передає card presentation у [`UI-CMP-011`](./UI-CMP-011.md).
 
 Card actions bubble up так:
 
 1. Користувач активує card або card action.
-2. `UI-CMP-011` емітить intent у `UI-CMP-010`.
+2. [`UI-CMP-011`](./UI-CMP-011.md) емітить intent у `UI-CMP-010`.
 3. `UI-CMP-010` додає source focus target, якщо потрібно.
 4. Catalog отримує request і виконує page/app-level flow.
 
@@ -238,7 +238,7 @@ Focus може рухатися:
 - `navLeft` / `navRight`: рух між card action targets, якщо card підтримує inline actions.
 - `confirm`: активує focused combo або focused card action.
 - `openDetail`: відкриває detail тільки для focused valid combo.
-- `addToList`: просить focused `UI-CMP-011` емітити add-to-list request.
+- `addToList`: просить focused [`UI-CMP-011`](./UI-CMP-011.md) емітити add-to-list request.
 - `openActions`: відкриває contextual actions для focused combo.
 - `openFilters`: передається Catalog, щоб сфокусувати `UI-CMP-013`.
 - `back`: повертає focus до попереднього safe Catalog level або закриває відкриті card actions.
@@ -269,7 +269,7 @@ Guard rails:
 - `UI-CMP-010` має окремий повний spec.
 - `UI.md` і `UI-PAGE-003` посилаються на цей spec.
 - Combo List отримує `visibleCombos` від Catalog і не фільтрує global combo data самостійно.
-- Valid context із combos рендерить `UI-CMP-011 Combo Card` для кожного visible combo.
+- Valid context із combos рендерить [`UI-CMP-011 Combo Card`](./UI-CMP-011.md) для кожного visible combo.
 - Optional filters оновлюють list через Catalog-selected `visibleCombos`.
 - `noCombos` і `noFilterResults` показують `UI-CMP-029 Empty State`.
 - `noFilterResults` має clear filters recovery без скидання selected character і variation/kameo.
@@ -301,4 +301,4 @@ Guard rails:
 
 - Sorting, pagination і virtualization не входять у v1 contract `UI-CMP-010`.
 - Catalog лишається owner-ом data preparation, filters, route changes і page-level dialogs.
-- `UI-CMP-011 Combo Card` має власний детальний contract окремо від list container.
+- [`UI-CMP-011 Combo Card`](./UI-CMP-011.md) має власний детальний contract окремо від list container.

@@ -23,7 +23,7 @@ Picker не є generic dropdown або optional filter. Variation належит
 
 ## Володіння
 
-`UI-PAGE-003 MKXL Catalog Variant` володіє selected character, selected variation, available variation data і combo availability.
+`UI-PAGE-003 MKXL Catalog Variant` володіє selected character і selected variation. Available variation data, disabled reasons, layout descriptors і combo availability приходять із `mkxl/catalog` через `@mk-combos/mkxl-business`.
 
 `UI-CMP-012 Combo List Config Module` володіє placement picker-а у `contextRow` і focus handoff після character selection.
 
@@ -33,6 +33,8 @@ Picker не є generic dropdown або optional filter. Variation належит
 - selected, focused, disabled і placeholder state variation slots;
 - keyboard/controller navigation усередині variation layout;
 - selection event для parent variant flow.
+
+Компонент не імпортує `mkxl/data` напряму і не виконує MKXL validation.
 
 ## Layout Data Contract
 

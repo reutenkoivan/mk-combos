@@ -26,7 +26,7 @@ Picker не є alphabetic list, dropdown або generic card grid. Позиці�
 
 ## Володіння
 
-`UI-PAGE-003 Catalog` володіє active game, selected character, seeded combo data і route context.
+`UI-PAGE-003 Catalog` володіє active `gameId`, selected character і route context. Character options, disabled reasons і layout data приходять із active game catalog business.
 
 `UI-CMP-012 Combo List Config Module` володіє placement picker-а у `contextRow`, focus zone і зв'язком із game-specific picker.
 
@@ -38,6 +38,8 @@ Picker не є alphabetic list, dropdown або generic card grid. Позиці�
 - selection event для parent flow.
 
 `UI-CMP-007` не змінює active game і не вибирає variation або kameo.
+
+Компонент не імпортує `mkxl/*` або `mk1/*` напряму; він рендерить descriptors, передані parent flow.
 
 ## Layout Data Contract
 

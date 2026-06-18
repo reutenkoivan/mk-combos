@@ -23,7 +23,7 @@ Kameo не є optional filter facet. Він належить до required `cont
 
 ## Володіння
 
-`UI-PAGE-003 MK1 Catalog Variant` володіє selected main character, selected kameo, kameo data і combo availability.
+`UI-PAGE-003 MK1 Catalog Variant` володіє selected main character і selected kameo. Available kameo data, disabled reasons, layout descriptors і combo availability приходять із `mk1/catalog` через `@mk-combos/mk1-business`.
 
 `UI-CMP-012 Combo List Config Module` володіє placement picker-а у `contextRow` і focus handoff після main character selection.
 
@@ -33,6 +33,8 @@ Kameo не є optional filter facet. Він належить до required `cont
 - selected, focused, disabled і placeholder state kameo slots;
 - keyboard/controller navigation усередині kameo grid;
 - selection event для parent variant flow.
+
+Компонент не імпортує `mk1/data` напряму і не виконує MK1 validation.
 
 ## Layout Data Contract
 

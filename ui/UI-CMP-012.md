@@ -23,6 +23,8 @@
 
 Optional filters застосовуються live до visible combo list. Explicit `Apply` не є частиною основного UX. `Clear filters` очищає optional filters, але не скидає selected `character + variation` для `MKXL` або selected `character + kameo` для `MK1`.
 
+Active game catalog business надає context descriptors, picker layout data, available facets, result count і compatibility messages. `UI-CMP-012` тільки рендерить ці descriptors і емітить config events.
+
 ## Роль і межі
 
 `UI-CMP-012` є compact work surface у Catalog, не route, не modal, не settings screen і не app-level toolbar.
@@ -39,7 +41,7 @@ Optional filters застосовуються live до visible combo list. Expl
 
 - зміну app-level `game`, `language` або `notation display mode`;
 - читання Browser Gamepad API;
-- фільтрацію global data самостійно, якщо Catalog володіє selectors;
+- фільтрацію global data самостійно; active game business володіє selectors;
 - відкриття combo detail;
 - зміну seeded combo data;
 - запис route state, localStorage або user data напряму.

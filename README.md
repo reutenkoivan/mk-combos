@@ -1,848 +1,430 @@
 # mk-combos
 
-`mk-combos` — статичний вебзастосунок для досвідчених гравців Mortal Kombat, який допомагає фільтрувати, переглядати, зберігати та організовувати комбо для `MKXL` і `MK1`.
+`mk-combos` is a static web application for experienced Mortal Kombat players who want to browse, inspect, build, save, and organize combos for multiple games from one app.
 
-Застосунок має бути побудований як `Turborepo` monorepo на `Bun`, з окремим пакетом для бази комбо, окремим UI-kit пакетом і web app на `TanStack Start`. Деплой виконується на `GitHub Pages`, без backend, auth, remote database або server-side персоналізації.
+The first supported games are `MKXL` and `MK1`. The application must stay local-first and static: no backend, no auth, no remote database, and no server-side personalization.
 
-## Цілі проєкту
+The canonical architecture document is [ARCHITECTURE.md](./ARCHITECTURE.md). This README is the project overview and implementation roadmap.
 
-- Створити швидкий статичний каталог комбо для `MKXL` і `MK1`.
-- Зберігати seeded базу комбо у JSON-файлах в окремому package.
-- Зберігати повний movelist і move graph для побудови валідних custom combos.
-- Дати користувачу можливість перемикати відображення інпутів між `FGC`, `PlayStation` і `Xbox`.
-- Дати користувачу можливість керувати застосунком через DualSense або Xbox controller.
-- Дати користувачу локальні персональні можливості: власні комбо, дублювання seeded комбо, named lists, імпорт та експорт backup.
-- Дати користувачу guided combo builder, де наступний прийом обирається тільки з валідних переходів.
-- Забезпечити двомовний інтерфейс і контент: `English` та `Українська`.
-- Налаштувати CI/CD так, щоб data validation, tests і static build проходили перед деплоєм на GitHub Pages.
+## Goals
 
-## Архітектура monorepo
+- Provide one fast web app for all installed games.
+- Keep game-specific business logic inside game-owned root scopes.
+- Keep shared packages generic and reusable.
+- Support direct links with route prefixes such as `/mkxl/catalog` and `/mk1/catalog`.
+- Support local settings, custom combos, named lists, full backup export/import, and stale combo recovery.
+- Support controller navigation through DualSense, Xbox-compatible, and Standard Gamepad API devices.
+- Render notation as `FGC`, `PlayStation`, or `Xbox` without changing the stored combo data.
+- Validate seeded data, graph data, local user data, and backup slices before release.
+- Deploy as a static TanStack Start app on GitHub Pages.
+
+## Repository Shape
 
 ```text
 mk-combos/
+  packages/
+    contracts/
+    builder-core/
+    builder-ui/
+    controller-bridge/
+    ui/
+
+  mkxl/
+    data/
+    rules/
+    catalog/
+    builder/
+    business/
+
+  mk1/
+    data/
+    rules/
+    catalog/
+    builder/
+    business/
+
   apps/
     web/
-      # TanStack Start застосунок
-  packages/
-    combo-data/
-      # JSON-бази MKXL/MK1, movelist, move graph, схеми, валідація
-    combo-builder/
-      # Headless builder logic, custom hook, builder UI
-    controller-bridge/
-      # Gamepad API bridge, controller profiles, semantic app commands
-    ui/
-      # Shared React UI-kit, tokens, generic компоненти, notation renderer
-  turbo.json
-  package.json
+
+  ARCHITECTURE.md
+  UI.md
+  UX.md
 ```
 
-### `apps/web`
+Root scopes have meaning:
 
-Web app відповідає за користувацький сценарій:
+- `packages/*` is the shared platform layer.
+- `mkxl/*` is the MKXL business scope.
+- `mk1/*` is the MK1 business scope.
+- `apps/web` is the single product shell that installs and renders game business entry points.
 
-- основний flow: `Game -> Character -> Combo list -> Combo detail`;
-- перемикач гри: `MKXL / MK1`;
-- перемикач мови: `EN / UA`;
-- перемикач відображення інпутів: `FGC / PlayStation / Xbox`;
-- керування через DualSense або Xbox controller;
-- catalog filters;
-- локальне збереження користувацьких даних;
-- import/export full backup JSON;
-- static SPA/prerender output для GitHub Pages.
+## Shared Packages
 
-Застосунок імпортує:
+### `packages/contracts`
 
-- `@mk-combos/combo-data` для seeded бази, типів і validation helpers;
-- `@mk-combos/combo-builder` для custom combo builder logic, hook і builder UI;
-- `@mk-combos/controller-bridge` для controller input, semantic commands і controller hints;
-- `@mk-combos/ui` для компонентів, tokens і notation renderer.
+Package name: `@mk-combos/contracts`.
 
-### `packages/combo-data`
+Contains stable cross-game contracts only: `GameId`, `ComboRef`, localized text, notation display mode, backup envelope shape, generic route/source identifiers, and shared result shapes.
 
-Пакет містить усі seeded дані та правила їх перевірки.
+It must not contain MKXL variation rules, MKXL stage rules, MK1 kameo rules, installed game lists, or concrete game schemas.
 
-Public API:
+### `packages/builder-core`
 
-- `mkxlData`;
-- `mk1Data`;
-- `validateComboData`;
-- `getCoverageReport`;
-- graph data і graph schemas;
-- типи для `MKXL`, `MK1`, notation, move graph, stage interaction schemas, tags, source, localized notes.
+Package name: `@mk-combos/builder-core`.
 
-`packages/combo-data` не містить builder state machine, React hooks або builder UI. Пакет відповідає за дані, типи, Zod-схеми, coverage targets і validation.
+Contains game-agnostic builder primitives: graph primitives, replay result shapes, runtime helper contracts, transition result contracts, and stale/invalid result shapes.
 
-Очікувана структура даних:
+It does not compose MKXL or MK1 graphs. Game graph composition belongs to the game scope.
 
-- `MKXL` має окрему JSON-схему з полями:
-  `id`, `game`, `character`, `variation`, `stageContext`, `movePath`, `cachedNotation`, `damage`, `meter`, `position`, `starter`, `routeType`, `difficulty`, `tags`, `notes.en`, `notes.uk`, `gameVersion`, `source`.
-- `MK1` має окрему JSON-схему з полями:
-  `id`, `game`, `character`, `kameo`, `stageContext`, `movePath`, `cachedNotation`, `damage`, `meter`, `position`, `starter`, `routeType`, `difficulty`, `tags`, `notes.en`, `notes.uk`, `gameVersion`, `source`.
-- `stageContext` має значення `stageAgnostic` для звичайних комбо або `stageSpecific` для routes, які залежать від конкретної карти.
-- Для `MKXL` `stageSpecific` включає `stageId`, optional `zoneId`, optional `segmentId` і список використаних `interactableIds`.
-- Для `MK1` у MVP використовується `stageAgnostic`; поле лишається у shared contract, щоб custom combo, backup і validation мали єдину форму.
-- Усі seeded combo мають стабільний `id`, бо локальні списки користувача посилаються саме на ці id.
-- Seeded і custom combo зберігають шлях по графу як source of truth, а FGC notation зберігається як кеш для відображення і validation.
+### `packages/builder-ui`
 
-Move graph має бути окремим шаром даних:
+Package name: `@mk-combos/builder-ui`.
 
-- повний movelist для кожного персонажа;
-- base graph для персонажа;
-- overlays для `MKXL` variations;
-- overlays для `MK1` kameos;
-- per-map interaction schemas для кожної `MKXL` карти;
-- transition edges між прийомами.
+Contains shared builder presentation: `ComboWhiteboard`, the internal `movePicker` region, `ComboFrameMeter`, builder layout, and read-only detail presentation.
 
-Move описує:
-
-- стабільний `id`;
-- офіційну англійську назву;
-- український alias або короткий опис;
-- canonical FGC notation;
-- тип прийому: `normal`, `special`, `string`, `throw`, `kameo`, `interactable` або інший доменний тип;
-- frame data для `ComboFrameMeter`: startup, active, recovery, hit/block advantage, cancel windows, link/juggle windows і meter cost/gain, якщо ці значення доступні для гри;
-- tags і metadata, потрібні для фільтрації та builder UX.
-
-Edge описує:
-
-- стабільний `id`;
-- `fromMoveId` і `toMoveId`;
-- transition type: `cancel`, `link`, `string`, `launcher`, `ender`, `kameo`, `interactable` або інший доменний тип;
-- `requires`: meter, stance, player state, opponent state, position, spacing і frame context;
-- `frameWindow`: explicit frame-aware constraint для переходу, наприклад allowed advantage range, cancel window або juggle window;
-- `effects`: meter delta, damage estimate delta, новий stance, player state, opponent state, position і frame context після переходу;
-- notes, source і gameVersion для складних або патч-залежних переходів.
-
-Builder-visible edges є strict frame-aware data. Builder не виводить валідність переходу з raw move formulas; кожен доступний перехід має explicit `frameWindow`, spacing constraints, `requires`, `effects`, `source` і `gameVersion`.
-
-`MKXLStageInteractionSchema` описує окрему карту MKXL:
-
-- стабільний `stageId`;
-- localized назву карти;
-- zones і segments карти;
-- interactables цієї карти;
-- interactable moves;
-- stage-specific edges;
-- usage policy для кожного interactable: `oncePerCombo`, `reusable` або `disabled`;
-- `requires`, `frameWindow`, `effects`, `source` і `gameVersion` для stage-specific transitions.
-
-Кожна карта `MKXL` має власну interaction schema. Interactable з однієї карти не може використовуватися в combo або stage overlay іншої карти.
-
-Opponent state є обов'язковою частиною constraints. Мінімальні стани:
-
-- `grounded`;
-- `airborne`;
-- `juggled`;
-- `knockdown`;
-- `stunned`.
-
-Builder package компонує актуальний граф так:
-
-- для `MKXL`: base character graph + variation overlay + optional selected stage interaction schema;
-- для `MK1`: base character graph + kameo overlay;
-- overlay може додавати moves, додавати edges або блокувати недоступні moves/edges.
-- explicit disable в overlay має пріоритет над add/modify;
-- конфлікт add/modify блокує validation, якщо overlay не має явного intentional override.
-
-Builder runtime state включає:
-
-- meter;
-- damage estimate;
-- stance;
-- player state;
-- opponent state;
-- position: `zoneId`, `segmentId`, `distanceBand`, `cornerSide`, `facing`;
-- frame context: current advantage, optional cancel window і optional juggle window;
-- used interactables.
-
-Вхідні значення впливають на граф так:
-
-- `game` вибирає ruleset, state enums, notation rules і дозволений overlay type.
-- `character` вибирає base movelist і base graph.
-- `variation` у `MKXL` додає, змінює або блокує character moves/edges.
-- `kameo` у `MK1` додає kameo moves/edges і kameo transition rules.
-- `stageId` у `MKXL` додає interaction schema конкретної карти; без stage builder не показує interactables.
-- `zoneId` і `segmentId` фільтрують stage interactables і spatial edges.
-- `distanceBand`, `cornerSide` і `facing` фільтрують spacing-sensitive transitions, corner routes, side switches і access до interactables.
-- `meter`, `stance`, `playerState`, `opponentState` і `frameContext` фільтрують valid next moves через `requires` і `frameWindow`.
-- `usedInteractableIds` застосовує usage policy для stage interactables.
-- `initialPath` replay-иться через composed graph; stale або invalid path повертає invalid reason і найближчий valid prefix без видалення combo.
-
-Coverage перед релізом:
-
-- `MKXL`: кожна character variation має curated набір практичних комбо.
-- `MK1`: кожна пара `main character x kameo` має curated набір практичних комбо.
-
-Data validation має перевіряти:
-
-- валідність JSON за Zod-схемами;
-- унікальність `id`;
-- унікальність move ids і edge ids;
-- наявність `notes.en` і `notes.uk`;
-- наявність `gameVersion` і `source`;
-- відповідність coverage matrix;
-- валідність move graph overlays;
-- наявність `MKXLStageInteractionSchema` для кожної `MKXL` карти;
-- валідність stage zones, segments, interactables і stage-specific edges;
-- відсутність cross-stage interactable references;
-- наявність `frameWindow`, spacing constraints, `requires`, `effects`, `source` і `gameVersion` для кожного builder-visible edge;
-- існування кожного `movePath` у composed graph;
-- відповідність `cachedNotation` до `movePath`;
-- відповідність `stageContext` до `movePath`: `stageAgnostic` не може містити interactable moves, а `stageSpecific` має посилатися на правильну карту;
-- наявність official EN name, UA alias/description і FGC notation для кожного move;
-- відсутність порожніх tags, move paths і критичних metadata.
-
-### `packages/combo-builder`
-
-Пакет містить бізнес-логіку та доменний UI для custom combo builder. Він залежить від:
-
-- `@mk-combos/combo-data` для graph data, типів і схем;
-- `@mk-combos/ui` для generic UI primitives і `NotationRenderer`.
-
-Public API:
-
-- `useComboBuilder`;
-- `ComboBuilder`;
-- `MovePicker`;
-- `ComboWhiteboard`;
-- `ComboFrameMeter`;
-- `createInitialBuilderState`;
-- `composeMoveGraph`;
-- `getValidNextMoves`;
-- `applyMoveTransition`;
-- `validateComboPath`;
-- `detectStaleCombo`;
-- типи `BuilderGraphInput`, `BuilderRuntimeState`, `ComboBuilderState`, `ComboBuilderAction`, `ComboBuilderContext`, `ValidNextMove`, `InvalidComboReason`.
-
-`BuilderGraphInput` включає active game, character, variation або kameo context, optional `MKXL` stage context, `startState`, optional initial combo path і `gameVersion`.
-
-`BuilderRuntimeState` включає meter, damage estimate, stance, player state, opponent state, structured position, frame context і used interactables.
-
-`useComboBuilder` приймає composed або raw graph input, стартовий context і optional initial combo path. Hook керує builder state, valid next moves, обраним `movePath`, `cachedNotation`, invalid reasons, runtime state і nearest valid prefix для stale/invalid paths.
-
-`ComboBuilder` може:
-
-- приймати hook state/actions через props;
-- або створювати state всередині через `useComboBuilder`;
-- не зберігати дані в `localStorage`;
-- не керувати named lists, import/export або app-level persistence.
-
-`MovePicker` показує тільки valid next moves або явно disabled недоступні moves, якщо це потрібно для UX. Для frame-aware transitions disabled reason має називати причину на рівні constraints: meter, spacing, stage zone, state або frame window.
-
-`ComboWhiteboard` показує selected `movePath`, `cachedNotation`, runtime summary і invalid markers у режимах `emptyActive`, `builderEditable`, `detailReadOnly`, `lockedPreview`, `repairReview`, `pendingTruncate` і `savingFrozen`. У builder mode він емітить edit proposals для append, insert, replace, remove, undo-to-step і pick up/drop reorder; `useComboBuilder` replay-ить proposed path і повертає accepted path або pending truncate з valid prefix, invalid tail і readable reason. У detail mode whiteboard є read-only inspection surface і не мутує combo data.
-
-`ComboFrameMeter` показує interactive frame inspection для focused whiteboard step, focused Move Picker candidate або whole combo. Він отримує derived frame meter snapshot із explicit move frame data, edge `frameWindow`, transition `effects`, runtime `frameContext` і replay result. Component підтримує controller focus між timeline segments, відкриває readable segment details через `confirm` або `openActions`, закриває їх через `back` і не емітить edit proposals, graph validation або persistence events.
+It renders prepared state and emits UI events. It does not decide whether a move is valid.
 
 ### `packages/controller-bridge`
 
-Пакет містить bridge між фізичним контролером і semantic app commands. Він читає Browser Gamepad API, нормалізує DualSense/Xbox-compatible input і віддає команди, які `apps/web` прив'язує до поточного екрана.
+Package name: `@mk-combos/controller-bridge`.
 
-Пакет підтримує в MVP:
+Contains Browser Gamepad API bridge logic, controller profiles, normalized input, semantic commands, repeat/dead-zone behavior, and controller hint metadata.
 
-- DualSense;
-- Xbox controller;
-- fallback на Standard Gamepad API compatible mapping.
-
-Public API:
-
-- `useControllerBridge`;
-- `useControllerCommands`;
-- `createControllerProfile`;
-- `getControllerHints`;
-- `normalizeGamepadInput`;
-- `defaultControllerBindings`;
-- типи `ControllerProfile`, `ControllerKind`, `ControllerCommand`, `ControllerBinding`, `ControllerState`, `ControllerHint`.
-
-Semantic commands:
-
-- navigation: `navUp`, `navDown`, `navLeft`, `navRight`, `confirm`, `back`;
-- workspace: `openFilters`, `closePanel`, `nextTab`, `previousTab`, `openActions`;
-- list/detail: `addToList`, `removeFromList`, `openDetail`, `closeDetail`;
-- builder: `builderSelectMove`, `builderUndoMove`, `builderFinish`, `builderCancel`, `builderNextGroup`, `builderPreviousGroup`.
-
-Default mapping:
-
-- D-pad / left stick: navigation;
-- Cross / A: confirm;
-- Circle / B: back;
-- Square / X: contextual action або add-to-list;
-- Triangle / Y: open filters/actions;
-- L1/R1 або LB/RB: previous/next tab або builder group;
-- Options/Menu: open actions menu;
-- Touchpad/View: secondary panel, якщо доступно.
-
-`packages/controller-bridge` не містить app-specific state, routing, localStorage, combo data або direct builder mutation. Пакет емiтить semantic commands, а `apps/web` вирішує, що команда означає для поточного surface.
+It does not know routes, game data, local storage, or builder rules.
 
 ### `packages/ui`
 
-UI-kit має бути незалежним від app state і придатним для повторного використання.
+Package name: `@mk-combos/ui`.
 
-Базові компоненти:
+Contains generic React primitives and display components: controls, dialogs, picker/list/filter primitives, cards where generic, semantic tokens, and `NotationRenderer`.
 
-- `Button`;
-- `IconButton`;
-- `SegmentedControl`;
-- `SelectField`;
-- `SearchField`;
-- `Dialog`;
-- `FilterControl`;
-- `ListControl`;
-- `ComboCard`;
-- `NotationRenderer`.
+It does not contain game-specific business logic.
 
-Design direction:
+## Game Business Scopes
 
-- стриманий desktop-first інтерфейс;
-- щільна, але читабельна інформаційна ієрархія;
-- stable dimensions для фільтрів, панелей, списків і toolbar;
-- семантичні CSS tokens для surfaces, text, accent, separators, controls;
-- keyboard-accessible controls;
-- видимий `focus-visible`;
-- controller hints можуть відображатися через generic UI primitives;
-- WCAG 2.2 AA як базовий рівень доступності.
+Each supported game has one app-facing business entry point.
 
-`NotationRenderer` приймає canonical FGC notation, згенеровану або перевірену через `movePath`, і режим відображення:
+### MKXL
 
-```ts
-type NotationDisplayMode = "fgc" | "playstation" | "xbox"
+```text
+mkxl/
+  data/       # seeded combos, movelists, graph data, coverage targets
+  rules/      # variation, stage, interactable, patch, notation, validation rules
+  catalog/    # catalog selectors, filters, summaries, route context helpers
+  builder/    # MKXL graph composition, replay, valid next moves, stale checks
+  business/   # @mk-combos/mkxl-business
 ```
 
-FGC залишається єдиним форматом зберігання, а PlayStation/Xbox є лише display mapping.
+`@mk-combos/mkxl-business` exports `mkxlBusiness`.
 
-`packages/ui` не містить Mortal Kombat-specific builder state, `MovePicker`, `ComboWhiteboard` або `ComboBuilder`. Ці доменні компоненти живуть у `@mk-combos/combo-builder`.
+MKXL owns variation context and optional stage/interactable behavior. Stage-specific routes, stage interactions, and interactable usage policy never live in shared packages.
 
-`packages/ui` не читає controller input напряму. Controller connection state, button labels і hints приходять із `@mk-combos/controller-bridge` через `apps/web`.
+### MK1
 
-## Користувацькі сценарії
+```text
+mk1/
+  data/       # seeded combos, main roster, kameos, movelists, graph data
+  rules/      # kameo pairing, patch, notation, validation rules
+  catalog/    # catalog selectors, filters, summaries, route context helpers
+  builder/    # MK1 graph composition, replay, valid next moves, stale checks
+  business/   # @mk-combos/mk1-business
+```
 
-Окремий UX-індекс сценаріїв ведеться в [UX.md](./UX.md).
-Окрема UI-мапа екранів, компонентів, станів і reference codes ведеться в [UI.md](./UI.md).
+`@mk-combos/mk1-business` exports `mk1Business`.
 
-### Перегляд каталогу
+MK1 owns main character + kameo context. MKXL variation/stage concepts must not appear in MK1 business contracts.
 
-1. Користувач відкриває застосунок.
-2. Обирає гру: `MKXL` або `MK1`.
-3. Обирає персонажа.
-4. Для `MKXL` бачить variation-specific комбо.
-5. Для `MK1` бачить комбо з урахуванням kameo.
-6. Фільтрує список за metadata.
-7. Відкриває detail view конкретного комбо.
+## Web App Integration
 
-### Керування контролером
+`apps/web` installs supported games in one local file:
 
-Користувач може керувати застосунком через DualSense або Xbox controller:
+```text
+apps/web/src/game-business/installed-games.ts
+```
 
-1. Користувач підключає контролер до браузера.
-2. `@mk-combos/controller-bridge` визначає controller profile або використовує Standard Gamepad fallback.
-3. Bridge нормалізує buttons/axes і застосовує dead zones та repeat delays.
-4. Bridge емiтить semantic commands.
-5. `apps/web` мапить commands на дії поточного surface: catalog, filters, detail view, named lists або custom combo builder.
-6. UI показує contextual controller hints для активного профілю.
+```ts
+import { mkxlBusiness } from "@mk-combos/mkxl-business"
+import { mk1Business } from "@mk-combos/mk1-business"
 
-Controller не замінює keyboard/mouse: disconnect/reconnect не має ламати інші способи керування.
+export const installedGames = [
+  mkxlBusiness,
+  mk1Business,
+] as const
+```
 
-### Catalog filters
+The web app may select a business entry point by `gameId`. It must not import `mkxl/data`, `mkxl/rules`, `mk1/data`, or `mk1/rules` directly from page code.
 
-Required catalog context:
+## Routes
 
-- game;
-- character;
-- variation для `MKXL`;
-- kameo для `MK1`.
+Routes are generic and game-prefixed:
 
-Optional filters першого релізу:
+```text
+/:gameId/catalog
+/:gameId/combos/:source/:comboId
+/:gameId/lists
+/:gameId/builder
+/settings
+```
 
-- starter;
-- position;
-- meter;
-- damage;
-- difficulty;
-- route type;
-- tags.
+The route prefix is the source of truth for active game on deep links. Settings store the default or last active game, but a valid route such as `/mk1/catalog` opens MK1 even in a fresh browser session.
 
-### Деталі комбо
+## Local State And Backup
 
-Detail view має показувати:
+Local state is keyed by `GameId`:
 
-- canonical FGC notation;
-- mapped notation для обраної платформи;
-- move path, з якого побудоване combo;
-- damage;
-- meter;
-- position;
-- starter;
-- route type;
-- difficulty;
-- tags;
-- notes поточною мовою;
-- game version;
-- source.
+```ts
+type LocalAppState = {
+  settings: AppSettings
+  games: Record<GameId, GameUserState>
+}
+```
 
-### Локальні named lists
+The web app owns the envelope and browser persistence. Each game business entry point owns validation and serialization for its game-specific slice.
 
-Замість одного `favorites` користувач може створювати багато списків.
+Full backup is also keyed by `GameId`:
 
-Список має підтримувати:
+```ts
+type BackupEnvelope = {
+  version: number
+  exportedAt: string
+  settings: AppSettings
+  games: Record<GameId, unknown>
+}
+```
 
-- створення;
-- перейменування;
-- видалення;
-- додавання seeded combo;
-- додавання custom combo;
-- видалення combo зі списку;
-- зміну порядку combo всередині списку.
+Seeded game data is never imported from backup.
 
-Приклади списків:
+## User Workflows
 
-- `Scorpion ranked`;
-- `Corner routes`;
-- `Need practice`;
-- `Tournament set`.
+### First Launch
 
-### Custom combos
+Root first launch shows required setup for default language, default game, and notation display mode. A valid route-prefixed deep link bypasses setup, derives active game from the URL, uses `FGC` display mode by default, and creates the first-launch marker or session-only equivalent.
 
-Користувач може:
+### Catalog
 
-- створити custom combo з нуля через guided builder;
-- дублювати seeded combo у custom collection;
-- редагувати custom combo через актуальний move graph;
-- додати custom combo в один або кілька named lists.
+`UI-PAGE-003 Catalog` is a shared page. It resolves active `gameId`, gets the corresponding business entry point, and delegates game-specific context selection and filtering to that entry point.
 
-Seeded база залишається read-only. Локальні зміни не змінюють JSON-базу, що деплоїться разом із сайтом.
+- MKXL flow: `Character -> Variation -> Combo list`.
+- MK1 flow: `Main character -> Kameo -> Combo list`.
 
-Custom combo editor:
+### Combo Detail
 
-1. Користувач обирає game, character і variation/kameo.
-2. Для `MKXL` користувач може optional обрати stage, zone і segment, якщо хоче будувати route з environment interactions.
-3. Користувач задає стартовий runtime context: meter, damage estimate, structured position, stance, player state, opponent state і frame context.
-4. `apps/web` передає graph input і стартовий context у `useComboBuilder` або `ComboBuilder` з `@mk-combos/combo-builder`.
-5. Builder package компонує base move graph, game overlay і optional `MKXL` stage interaction schema.
-6. Builder UI показує тільки валідні стартові moves і empty active `ComboWhiteboard`.
-7. Після вибору move hook оновлює runtime state через `effects`, а whiteboard показує selected path.
-8. Builder показує тільки наступні moves, які проходять `requires`, spacing constraints і `frameWindow`.
-9. Whiteboard edit proposals для insert, replace або reorder replay-яться через builder hook; invalid tail не відкидається без confirmation.
-10. Після завершення `apps/web` отримує `movePath`, `cachedNotation`, `stageContext` і runtime summary з builder state.
-11. `apps/web` зберігає custom combo у local state і додає його в named lists за потреби.
-
-У builder flow controller commands мапляться на builder actions:
-
-- `navUp/navDown/navLeft/navRight`: переміщення між доступними moves/groups;
-- `confirm` або `builderSelectMove`: вибір move;
-- `back` або `builderUndoMove`: відкат останнього move;
-- `builderFinish`: завершити combo;
-- `builderCancel`: закрити builder без збереження;
-- `builderNextGroup` і `builderPreviousGroup`: перемикати групи прийомів.
-
-Free text fallback не входить у MVP: користувач не може додати прийом, якого немає серед валідних наступних варіантів.
-
-Якщо після оновлення seeded move graph локальне custom combo стало невалідним:
-
-- combo не видаляється;
-- UI позначає його як invalid;
-- користувач бачить причину невалідності;
-- користувач може відредагувати combo через актуальний graph.
-
-### Import/export
-
-Перший реліз підтримує тільки full backup.
-
-Backup містить:
-
-- version;
-- exportedAt;
-- settings;
-- customCombos;
-- lists;
-- invalid combo markers, якщо локальні combo не проходять актуальну graph validation.
-
-Export:
-
-1. Користувач натискає export.
-2. Застосунок формує JSON backup.
-3. Браузер завантажує файл.
-
-Import:
-
-1. Користувач обирає JSON-файл.
-2. Застосунок валідить backup.
-3. Користувач бачить preview: кількість custom combos, lists, settings.
-4. Після підтвердження поточний local state повністю замінюється backup-даними.
-
-Merge import, remote sync і share links не входять у перший реліз.
-
-## Покроковий план імплементації
-
-### 1. Bootstrap monorepo
-
-- Ініціалізувати `Bun` workspaces.
-- Додати `Turborepo`.
-- Створити `apps/web`, `packages/combo-data`, `packages/combo-builder`, `packages/controller-bridge`, `packages/ui`.
-- Налаштувати root scripts:
-  `dev`, `build`, `test`, `lint`, `validate:data`.
-- Налаштувати TypeScript base config і project-level configs.
-- Додати базові gitignore правила для build output, cache, generated files.
-
-Acceptance criteria:
-
-- `bun install` встановлює всі workspace dependencies.
-- `bun run build` запускається через Turbo.
-- `bun run test` запускається через Turbo.
-- `bun run validate:data` делегує перевірку в `packages/combo-data`.
-
-### 2. Combo data package
-
-- Створити Zod-схеми для `MKXL` і `MK1`.
-- Створити Zod-схеми для movelist, base graph, overlays, stage interaction schemas, edges, `requires`, `frameWindow`, `effects`, `stageContext` і `movePath`.
-- Створити JSON-файли для seeded комбо.
-- Створити JSON-файли для повного movelist персонажів.
-- Створити base move graph для кожного персонажа.
-- Створити overlays для `MKXL` variations.
-- Створити overlays для `MK1` kameos.
-- Створити per-map interaction schemas для кожної `MKXL` карти.
-- Створити JSON або TS registry для roster/coverage targets.
-- Реалізувати `validateComboData`.
-- Реалізувати `getCoverageReport`.
-- Експортувати graph data і graph types для `@mk-combos/combo-builder`.
-- Реалізувати validation, що combo path існує в composed graph.
-- Додати CLI-команду `validate:data`.
-- Додати unit tests для schema validation, coverage checks і graph data integrity.
-
-Acceptance criteria:
-
-- Некоректний JSON блокує validation.
-- Дубльований `id` блокує validation.
-- Дубльований move id або edge id блокує validation.
-- Відсутній `notes.uk` або `notes.en` блокує validation.
-- Move без official EN name, UA alias/description або FGC notation блокує validation.
-- Overlay, який посилається на неіснуючий move або edge, блокує validation.
-- Відсутня `MKXL` stage interaction schema для карти блокує validation.
-- Stage schema з cross-stage interactable reference блокує validation.
-- Builder-visible edge без `frameWindow`, spacing constraints, `requires`, `effects`, `source` або `gameVersion` блокує validation.
-- Seeded combo з неіснуючим `movePath` блокує validation.
-- Stage-agnostic combo з interactable move блокує validation.
-- Stage-specific combo з interactable іншої карти блокує validation.
-- `cachedNotation`, що не відповідає `movePath`, блокує validation.
-- Відсутня coverage target пара блокує release validation.
-- Пакет експортує typed data для web app і combo builder package.
-
-### 3. Combo builder package
-
-- Створити workspace package `packages/combo-builder` з package name `@mk-combos/combo-builder`.
-- Налаштувати залежності від `@mk-combos/combo-data` і `@mk-combos/ui`.
-- Реалізувати `composeMoveGraph`, `getValidNextMoves`, `applyMoveTransition`, `validateComboPath`, `detectStaleCombo`.
-- Реалізувати `createInitialBuilderState`.
-- Реалізувати frame-aware filtering через explicit edge `frameWindow`, spacing constraints і runtime `frameContext`.
-- Реалізувати composition precedence: base graph, game overlay, optional MKXL stage schema, explicit disable over add/modify.
-- Реалізувати custom hook `useComboBuilder`.
-- Реалізувати доменні React-компоненти `ComboBuilder`, `MovePicker`, `ComboWhiteboard`, `ComboFrameMeter`.
-- Підтримати strict builder flow без free text fallback.
-- Підтримати stale local combo state через invalid reasons без видалення combo.
-
-Acceptance criteria:
-
-- `useComboBuilder` приймає `BuilderGraphInput`, стартовий runtime context і optional initial combo path.
-- Builder state містить current context, selected path, valid next moves, cached notation, runtime state, invalid reasons і valid prefix.
-- Builder state або derived selectors надають frame meter snapshot для selected move, Move Picker candidate і whole combo.
-- `getValidNextMoves` повертає тільки moves, які проходять `requires`, spacing constraints і `frameWindow`.
-- `applyMoveTransition` оновлює meter, damage estimate, position, stance, player/opponent state, frame context і used interactables через `effects`.
-- Builder без selected `MKXL` stage не показує interactable moves.
-- Builder із selected `MKXL` stage показує тільки interactables поточної карти, zone, segment і distance band.
-- `ComboBuilder` може працювати controlled через props або self-contained через hook.
-- `ComboFrameMeter` дозволяє controller focus timeline segment, readable segment details через `confirm`/`openActions` і close через `back` без path mutation.
-- Package не читає і не пише `localStorage`.
-- Package не керує named lists, import/export або app-level persistence.
-
-### 4. UI-kit package
-
-- Визначити semantic tokens.
-- Створити базові control components.
-- Створити form/filter components.
-- Створити `ComboCard`.
-- Створити `NotationRenderer`.
-- Створити generic controller hint components, які приймають label/state через props.
-- Додати mapping `FGC -> PlayStation/Xbox`.
-- Додати unit tests для notation mapping.
-
-Acceptance criteria:
-
-- UI components не залежать від state management web app.
-- Кожен interactive component має accessible name або visible label.
-- Keyboard focus видимий.
-- Notation renderer коректно відображає `FGC`, `PlayStation`, `Xbox`.
-- Controller hint components не читають Gamepad API напряму.
-- UI-kit не містить Mortal Kombat-specific builder state або builder components.
-
-### 5. Controller bridge package
-
-- Створити workspace package `packages/controller-bridge` з package name `@mk-combos/controller-bridge`.
-- Реалізувати Browser Gamepad API polling.
-- Реалізувати DualSense/Xbox-like controller detection через `gamepad.id` з fallback на Standard mapping.
-- Реалізувати `normalizeGamepadInput` для buttons/axes.
-- Додати dead zone handling для стіків.
-- Додати repeat delay handling для навігаційних команд.
-- Реалізувати `defaultControllerBindings`.
-- Реалізувати `createControllerProfile` і `getControllerHints`.
-- Реалізувати hooks `useControllerBridge` і `useControllerCommands`.
-- Емітити тільки semantic commands, без app routing або direct builder mutations.
-
-Acceptance criteria:
-
-- DualSense і Xbox controller отримують правильні profile labels.
-- Unknown compatible controller працює через Standard Gamepad fallback.
-- D-pad і left stick емiтять navigation commands.
-- Face buttons емiтять `confirm`, `back`, contextual action і filters/actions commands.
-- L1/R1 або LB/RB емiтять tab/group commands.
-- Hook повертає connection state, active controller, command stream і hints.
-- Package не читає/пише `localStorage` і не залежить від `apps/web` або `@mk-combos/combo-builder`.
-
-### 6. Web app shell
-
-- Налаштувати TanStack Start у `apps/web`.
-- Увімкнути static SPA/prerender strategy.
-- Налаштувати base path для `/mk-combos/`.
-- Створити app shell з game switcher, language switcher, display mode switcher.
-- Імпортувати стилі з UI-kit.
-- Підключити seeded data package.
-- Підключити `@mk-combos/combo-builder` для custom builder flow.
-- Підключити `@mk-combos/controller-bridge` для controller command handling і hints.
-- Передавати stage-aware builder route context у `UI-PAGE-006`, включно з optional `MKXL` stage, zone, segment і initial runtime state.
-
-Acceptance criteria:
-
-- App відкривається локально.
-- App збирається як static output.
-- UI працює без backend.
-- Controller disconnect/reconnect не ламає keyboard/mouse flow.
-- Reload на GitHub Pages subpath не ламає застосунок.
-
-### 7. Catalog UX
-
-- Реалізувати navigation `Game -> Character`.
-- Реалізувати список комбо.
-- Реалізувати detail view.
-- Реалізувати catalog filters.
-- Відображати move path у detail view поряд із notation і metadata.
-- Реалізувати controller command handlers для catalog, filters і detail view.
-- Реалізувати mobile layout для використання біля консолі.
-- Реалізувати desktop layout для щільного перегляду і фільтрації.
-
-Acceptance criteria:
-
-- Користувач може знайти combo через character navigation.
-- Користувач може звузити список через filters.
-- Detail view показує metadata, notes, source і gameVersion.
-- Language switch впливає на UI і notes.
-- Display mode switch впливає на notation.
-- Controller дозволяє navigати catalog, відкривати filters і detail view.
-
-### 8. Local personalization
-
-- Створити local state schema.
-- Реалізувати localStorage persistence.
-- Реалізувати named lists.
-- Реалізувати custom combo editor через `ComboBuilder` або `useComboBuilder` з `@mk-combos/combo-builder`.
-- Реалізувати controller command handlers для named lists і custom combo builder.
-- Реалізувати duplicate seeded combo -> custom combo.
-- Реалізувати duplicate stage-specific seeded combo -> custom combo з prefilled `stageContext` і runtime summary.
-- Реалізувати stale local combo validation після оновлення seeded graph.
-- Реалізувати full backup export.
-- Реалізувати full backup import з preview і replace.
-
-Acceptance criteria:
-
-- Локальні дані переживають refresh сторінки.
-- Seeded combo можна додати в кілька списків.
-- Custom combo можна створити й редагувати тільки через valid transitions.
-- Після завершення builder flow `apps/web` зберігає custom combo як `movePath`, `cachedNotation`, `stageContext` і curated metadata/runtime summary.
-- Controller commands можуть створити combo у builder і додати combo в named list.
-- Застаріле custom combo позначається як invalid, але не видаляється.
-- Export створює валідний backup JSON.
-- Import валідить JSON перед replace.
-
-### 9. Content completion
-
-- Заповнити повний movelist для персонажів `MKXL`.
-- Заповнити повний movelist для персонажів `MK1`.
-- Побудувати base move graphs для персонажів.
-- Побудувати overlays для `MKXL` variations.
-- Побудувати overlays для `MK1` kameos.
-- Побудувати `MKXLStageInteractionSchema` для кожної `MKXL` карти.
-- Заповнити curated практичну базу `MKXL`.
-- Заповнити curated практичну базу `MK1`.
-- Для кожного запису перевірити:
-  stageContext, movePath, cachedNotation, damage, meter, position, difficulty, tags, notes, source, gameVersion.
-- Для кожного edge перевірити:
-  transition type, requires, frameWindow, effects, spacing, opponent state, notes, source, gameVersion.
-- Для кожної `MKXL` карти перевірити:
-  zones, segments, interactables, usage policy і stage-specific edges.
-- Для `MKXL` закрити coverage по всіх character variations.
-- Для `MK1` закрити coverage по всіх `main character x kameo` парах.
-
-Acceptance criteria:
-
-- `validate:data` проходить без помилок.
-- Coverage report показує повне покриття.
-- Move graph validation проходить для base graphs, overlays і `MKXL` stage interaction schemas.
-- Усі seeded notes доступні англійською та українською.
-
-### 10. CI/CD і GitHub Pages
-
-- Додати GitHub Actions workflow.
-- Workflow має виконувати:
-  `bun install`, `bun run validate:data`, `bun run test`, `bun run build`.
-- Після успішного build завантажити static artifact.
-- Задеплоїти artifact на GitHub Pages.
-- Додати `.nojekyll`.
-- Додати fallback для SPA reload, якщо потрібен `404.html`.
-
-Acceptance criteria:
-
-- Push у `main` запускає CI.
-- CI блокує деплой при data validation або test failure.
-- GitHub Pages публікує static app.
-- URL з base path `/mk-combos/` працює після refresh.
-
-### 11. QA перед релізом
-
-- Перевірити desktop layout.
-- Перевірити mobile layout.
-- Перевірити keyboard navigation.
-- Перевірити contrast і focus states.
-- Перевірити import/export.
-- Перевірити локальні дані після refresh.
-- Перевірити strict custom combo builder.
-- Перевірити controller navigation через DualSense або Xbox controller.
-- Перевірити controller hints для active profile.
-- Перевірити disconnect/reconnect controller.
-- Перевірити invalid markers для застарілих local combos.
-- Перевірити build artifact без backend-залежностей.
-
-Acceptance criteria:
-
-- Застосунок usable на desktop і mobile.
-- Усі основні сценарії проходять e2e.
-- Немає критичних accessibility проблем.
-- Static build працює як самодостатній GitHub Pages сайт.
-
-## Тестовий план
-
-### Unit tests
-
-- Zod schemas для `MKXL` і `MK1`.
-- Zod schemas для movelist, move graph, overlays, edges, `requires`, `effects`.
-- Coverage checks.
-- Duplicate id detection.
-- Duplicate move id і edge id detection.
-- `useComboBuilder` initial state.
-- `createInitialBuilderState`.
-- Graph composition: base graph + `MKXL` variation overlay.
-- Graph composition: base graph + `MK1` kameo overlay.
-- Transition filtering через `requires` і `effects`.
-- `applyMoveTransition` оновлює player/opponent state через `effects`.
-- Combo path validation.
-- Cached notation validation.
-- Stale local combo detection.
-- `detectStaleCombo` повертає invalid reason.
-- DualSense/Xbox detection fallback.
-- Button/axis normalization.
-- Dead zone і repeat-delay behavior.
-- Default controller command bindings.
-- FGC -> PlayStation/Xbox mapping.
-- Local state reducers.
-- Backup schema validation.
-
-### Hook tests
-
-- `useControllerBridge` повертає connection/disconnection state.
-- `useControllerBridge` повертає active controller profile і hints.
-- `useControllerCommands` емiтить semantic commands.
-- Controller command stream не дублює held buttons поза repeat-delay rules.
-
-### Component tests
-
-- `MovePicker` не показує або disabled недоступні transitions.
-- `ComboBuilder` створює combo тільки через valid transitions.
-- `ComboWhiteboard` показує `FGC/PlayStation/Xbox` display, selected path, invalid boundary і pending truncate state.
-- `ComboBuilder` працює в controlled mode через hook state/actions.
-- `ComboBuilder` працює в self-contained mode через `useComboBuilder`.
-- Controller hint UI показує labels для DualSense і Xbox profiles.
-
-### Integration tests
-
-- `apps/web` імпортує `@mk-combos/combo-data`.
-- `apps/web` імпортує `@mk-combos/ui`.
-- `apps/web` імпортує `@mk-combos/combo-builder`.
-- `apps/web` імпортує `@mk-combos/controller-bridge`.
-- `@mk-combos/combo-builder` імпортує graph data/types із `@mk-combos/combo-data`.
-- `@mk-combos/combo-builder` використовує primitives із `@mk-combos/ui`.
-- `@mk-combos/controller-bridge` не залежить від `apps/web` або `@mk-combos/combo-builder`.
-- Controller commands керують catalog, detail, filters, lists і builder через app-level handlers.
-- Filters повертають очікувані combo.
-- Duplicate seeded combo створює custom combo.
-- Custom combo builder отримує valid next moves із composed graph.
-- Custom combo builder оновлює player/opponent state після кожного edge.
-- Builder controller commands створюють combo тільки через valid transitions.
-- Builder-created combo зберігається у local custom combos.
-- Controller hints match active DualSense/Xbox profile.
-- Invalid local combo лишається в state і отримує invalid marker.
-- Add-to-list працює для seeded і custom combo.
-- Import backup replace flow працює коректно.
-
-### E2E tests
-
-- Відкрити `MKXL`, обрати персонажа, відкрити combo detail.
-- Відкрити `MK1`, обрати персонажа/kameo, відфільтрувати combo.
-- Перемкнути `EN/UA`.
-- Перемкнути `FGC/PlayStation/Xbox`.
-- Створити custom combo тільки через valid transitions.
-- Переконатися, що недоступний наступний move не можна вибрати.
-- Navigate catalog with DualSense або Xbox controller.
-- Open filters і detail view через controller.
-- Create custom combo in builder через controller.
-- Add combo to named list через controller.
-- Disconnect/reconnect controller without breaking keyboard/mouse usage.
-- Перевірити invalid marker для застарілого local combo.
-- Створити named list.
-- Додати combo у named list.
-- Export backup.
-- Import backup.
-- Перевірити роботу з base path `/mk-combos/`.
-
-## Поза першим релізом
+`UI-PAGE-004 Combo Detail` is shared. Seeded/custom lookup, stale detection, detail model creation, and repair availability are delegated to the active game business entry point.
+
+### Named Lists
+
+`UI-PAGE-005 Named Lists` is shared. Lists are scoped by `gameId`. The add-to-list dialog shows only lists compatible with the active combo's game.
+
+### Custom Combo Builder
+
+`UI-PAGE-006 Custom Combo Builder` combines shared builder UI with the active game's builder adapter.
+
+- `@mk-combos/builder-ui` renders the whiteboard, internal move picker, and frame meter.
+- `mkxl/builder` decides MKXL graph composition, valid next moves, stage/interactable availability, replay, and stale state.
+- `mk1/builder` decides MK1 graph composition, valid next moves, kameo transition behavior, replay, and stale state.
+
+Free text fallback is out of scope for MVP.
+
+### Controller Navigation
+
+`@mk-combos/controller-bridge` emits semantic commands. `apps/web` maps those commands to the active page, and active game behavior is delegated through the selected business entry point where needed.
+
+## Implementation Roadmap
+
+### 1. Bootstrap Workspaces
+
+- Configure Bun workspaces with root patterns for `packages/*`, `mk*/*`, and `apps/*`.
+- Add Turborepo.
+- Create TypeScript base config and project configs.
+- Add root scripts:
+  - `dev`
+  - `build`
+  - `test`
+  - `lint`
+  - `validate:data`
+  - `validate:docs`
+
+Acceptance:
+
+- Workspace install succeeds.
+- `bun run build` runs through Turbo.
+- `bun run test` runs through Turbo.
+- Root workspace patterns do not need editing when a future `mk*` game scope is added.
+
+### 2. Shared Platform Packages
+
+- Implement `@mk-combos/contracts`.
+- Implement `@mk-combos/builder-core`.
+- Implement `@mk-combos/builder-ui`.
+- Implement `@mk-combos/ui`.
+- Implement `@mk-combos/controller-bridge`.
+
+Acceptance:
+
+- Shared packages do not import from `mkxl/*` or `mk1/*`.
+- Shared builder UI can render prepared builder state without knowing game-specific rules.
+- Controller bridge emits semantic commands only.
+- UI package remains game-agnostic.
+
+### 3. MKXL Business Scope
+
+- Create `mkxl/data`, `mkxl/rules`, `mkxl/catalog`, `mkxl/builder`, and `mkxl/business`.
+- Define MKXL schemas for combos, movelists, graph data, variation overlays, stage interaction schemas, and coverage targets.
+- Implement MKXL catalog selectors and optional stage/interactable filters.
+- Implement MKXL builder composition: base character graph + variation overlay + optional stage interaction data.
+- Export `mkxlBusiness`.
+
+Acceptance:
+
+- MKXL seeded data validates.
+- MKXL stage-specific data cannot reference interactables from another stage.
+- MKXL builder without selected stage does not expose interactable moves.
+- MKXL business entry point can serve catalog, detail, builder, backup, and validation flows.
+
+### 4. MK1 Business Scope
+
+- Create `mk1/data`, `mk1/rules`, `mk1/catalog`, `mk1/builder`, and `mk1/business`.
+- Define MK1 schemas for combos, main roster, kameos, movelists, graph data, kameo overlays, and coverage targets.
+- Implement MK1 catalog selectors and kameo context behavior.
+- Implement MK1 builder composition: base character graph + kameo overlay.
+- Export `mk1Business`.
+
+Acceptance:
+
+- MK1 seeded data validates.
+- MK1 data rejects MKXL-only stage/interactable fields.
+- MK1 builder exposes kameo moves according to MK1 rules.
+- MK1 business entry point can serve catalog, detail, builder, backup, and validation flows.
+
+### 5. Web Shell
+
+- Configure TanStack Start in `apps/web`.
+- Add static output for GitHub Pages.
+- Add `apps/web/src/game-business/installed-games.ts`.
+- Implement route resolution for `/:gameId/...`.
+- Implement app shell, first-launch setup, settings, local persistence, backup import/export, and controller command routing.
+- Render shared pages through active business entry point.
+
+Acceptance:
+
+- `/mkxl/catalog` and `/mk1/catalog` open from fresh browser state.
+- Game switcher is built from `installedGames`.
+- Direct links do not depend on previous local settings.
+- Local data is isolated by `gameId`.
+
+### 6. UI And UX Surfaces
+
+- Implement `UI-PAGE-001` through `UI-PAGE-008` according to [UI.md](./UI.md).
+- Keep stable UI codes.
+- Keep MKXL and MK1 catalog variants as documentation variants of `UI-PAGE-003`.
+- Use `@mk-combos/builder-ui` for whiteboard and frame meter.
+
+Acceptance:
+
+- Catalog, detail, lists, builder, settings, first launch, controller hints, and system states are usable with keyboard, pointer, and controller.
+- Notation display mode changes rendering only.
+- Long notation and dense metadata do not overlap.
+
+### 7. Local Personalization
+
+- Implement local state envelope keyed by `GameId`.
+- Implement custom combos and named lists through active game business validation.
+- Implement stale custom combo detection without deleting user data.
+- Implement full backup export/import with per-game slice validation.
+
+Acceptance:
+
+- Local data survives refresh.
+- MKXL and MK1 lists/custom combos do not mix.
+- Backup import validates known game slices before replace.
+- Stale custom combos remain visible and repairable.
+
+### 8. CI/CD
+
+- Add GitHub Actions workflow.
+- Run:
+  - `bun install`
+  - `bun run validate:data`
+  - `bun run validate:docs`
+  - `bun run test`
+  - `bun run build`
+- Deploy static artifact to GitHub Pages with correct base path and SPA fallback.
+
+Acceptance:
+
+- CI blocks deploy on data validation, docs validation, tests, or build failure.
+- GitHub Pages serves `/mk-combos/` and route-prefixed deep links.
+
+## Test Plan
+
+### Unit
+
+- Shared contracts compile without importing game scopes.
+- Builder-core primitives work without game-specific imports.
+- MKXL schemas validate variation/stage/interactable data.
+- MK1 schemas validate main character + kameo data.
+- Backup envelope validates known game slices through business entry points.
+- Notation rendering maps FGC to PlayStation/Xbox display without mutating source notation.
+
+### Integration
+
+- `apps/web` resolves installed games from `installed-games.ts`.
+- `/mkxl/catalog` uses `mkxlBusiness`.
+- `/mk1/catalog` uses `mk1Business`.
+- Combo detail delegates lookup and stale detection to active game business.
+- Builder delegates valid next moves to active game builder.
+- Lists are scoped by `gameId`.
+
+### E2E
+
+- First launch root setup opens default game catalog after confirmation.
+- Fresh browser direct link `/mkxl/catalog` bypasses setup and opens MKXL.
+- Fresh browser direct link `/mk1/catalog` bypasses setup and opens MK1.
+- User switches games and each game restores its own last catalog context.
+- User creates a custom combo through valid transitions only.
+- User exports and imports full backup.
+- Controller navigation works across catalog, detail, lists, builder, and settings.
+
+## Adding Another Game
+
+Add a new root scope:
+
+```text
+mk-new/
+  data/
+  rules/
+  catalog/
+  builder/
+  business/
+```
+
+Export one new business entry point, then register it in:
+
+```text
+apps/web/src/game-business/installed-games.ts
+```
+
+Shared packages and existing docs should not require broad rewrites for a normal new game. Only add shared primitives when the new game introduces a reusable platform concept.
+
+## Out Of Scope For MVP
 
 - Remote sync.
-- Auth.
-- User accounts.
-- Public combo sharing.
+- Auth and user accounts.
+- Public sharing.
 - Merge import.
-- Share links.
-- In-app seeded database editor.
 - Server-side moderation.
+- Seeded database editor.
 - Video embeds.
-- Archived/deprecated combo history по старих patch versions.
+- Custom controller remapping.
+- Free text custom combo input.
 
-## Технічні припущення
+## Technical Assumptions
 
-- Package manager: `Bun`.
-- Monorepo: `Turborepo`.
-- Web framework: `TanStack Start`.
-- Static hosting: `GitHub Pages`.
-- Data validation: `Zod`.
-- Tests: `Vitest` і `Playwright`.
-- UI: React package `@mk-combos/ui`.
-- Data package: `@mk-combos/combo-data`.
-- Builder package: `@mk-combos/combo-builder`.
-- Controller bridge package: `@mk-combos/controller-bridge`.
-- Full movelist входить у релізний scope.
-- Move graph є глобальним для персонажа, а не деревом всередині кожного combo.
-- Builder у MVP суворий: користувач не може додати прийом, якого немає серед valid next moves.
-- `@mk-combos/combo-builder` не відповідає за localStorage, import/export або named lists.
-- `@mk-combos/controller-bridge` не відповідає за routing, localStorage, combo data або direct builder mutation.
-- Controller bridge емiтить semantic commands; `apps/web` вирішує, що команда робить у поточному surface.
-- MVP використовує Browser Gamepad API.
-- DualSense і Xbox controllers підтримуються через Standard Gamepad API mapping plus profile labels.
-- Custom button remapping не входить у MVP.
-- `@mk-combos/ui` лишається generic UI-kit без Mortal Kombat-specific builder state.
-- Seeded і custom combo зберігають `movePath` як source of truth і `cachedNotation` для display.
-- Backend не використовується.
-- Персональні дані зберігаються тільки в браузері.
+- Package manager: Bun.
+- Monorepo orchestration: Turborepo.
+- Web framework: TanStack Start.
+- Hosting: GitHub Pages.
+- Validation: Zod.
+- Tests: Vitest and Playwright.
+- Personal data: browser-local only.
+- Seeded and custom combos store `movePath` as source of truth and `cachedNotation` as display cache.

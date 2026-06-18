@@ -17,7 +17,7 @@
 
 Компонент дає користувачу:
 
-- поточну версію гри як label `MKXL` або `MK1`;
+- active game label із installed business entry point;
 - controller indicator area поруч із game label;
 - contextual breadcrumbs для active surface;
 - праворуч закріплене dropdown menu для global navigation і utility actions;
@@ -29,11 +29,11 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 
 ## Володіння
 
-`UI-PAGE-001 App Shell` володіє route, applied settings, controller state і активною UI-поверхнею.
+`UI-PAGE-001 App Shell` володіє route, applied settings, controller state, active `gameId`, active business entry point і активною UI-поверхнею.
 
 `UI-CMP-001 Global Top Bar` отримує цей стан через inputs і відповідає тільки за верхню навігаційну панель:
 
-- рендерить game version label `MKXL` або `MK1`;
+- рендерить active game label;
 - рендерить `UI-CMP-005 Controller Hint Strip` поруч із game label;
 - рендерить `UI-CMP-032 Breadcrumbs` після game/controller блоку;
 - рендерить `UI-CMP-033 Top Bar Dropdown Menu` як right-pinned menu;
@@ -47,7 +47,7 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 ```text
 UI-CMP-001 Global Top Bar
   ├─ Root bar
-  ├─ Game version label
+  ├─ Active game label
   ├─ Controller indicator area
   │  └─ UI-CMP-005 Controller Hint Strip
   ├─ UI-CMP-032 Breadcrumbs
@@ -57,7 +57,7 @@ UI-CMP-001 Global Top Bar
 Горизонтальний порядок зон є стабільним:
 
 ```text
-Game version label -> Controller indicator area -> Breadcrumbs -> right-pinned dropdown menu
+Active game label -> Controller indicator area -> Breadcrumbs -> right-pinned dropdown menu
 ```
 
 ### Root bar
@@ -72,20 +72,17 @@ Root bar є container верхньої панелі. Він має:
 - підтримувати mouse, touch і keyboard input;
 - давати помітний `focus-visible` для всіх interactive controls.
 
-### Game version label
+### Active game label
 
-Game version label показує active game з app-level settings.
+Active game label показує active game із route prefix або app-level default.
 
-Дозволені значення:
-
-- `MKXL`;
-- `MK1`.
+Label value приходить із active business entry point, наприклад `MKXL` або `MK1`.
 
 Label не є switcher. Ручна зміна game відбувається тільки через `UI-PAGE-008 Settings`, де рендериться `UI-CMP-002 Game Switcher`.
 
 ### Controller indicator area
 
-Controller indicator area розташована одразу поруч із game version label.
+Controller indicator area розташована одразу поруч із active game label.
 
 Top Bar контролює:
 
@@ -138,7 +135,7 @@ Menu не містить inline controls для `game`, `language` або `notat
 
 - `activeSurfaceCode`: code активної UI-поверхні.
 - `activeRouteLabel`: localized label активного route або surface.
-- `activeGameLabel`: `MKXL` або `MK1`.
+- `activeGameLabel`: label active business entry point, наприклад `MKXL` або `MK1`.
 - `breadcrumbs`: ordered list breadcrumb items для active surface.
 - `navigationAvailability`: доступність breadcrumbs, lists, builder і settings.
 - `controllerConnectionState`: стан підключення controller.
@@ -167,7 +164,7 @@ Menu не містить inline controls для `game`, `language` або `notat
 
 Компонент відповідає за:
 
-- показ active game label `MKXL` або `MK1`;
+- показ active game label;
 - розміщення `UI-CMP-005` поруч із game label;
 - показ `UI-CMP-032 Breadcrumbs`;
 - показ right-pinned `UI-CMP-033 Top Bar Dropdown Menu`;
@@ -196,7 +193,7 @@ Top Bar має всі потрібні inputs і може рендерити gam
 
 Очікуваний UI:
 
-- game label показує `MKXL` або `MK1`;
+- game label показує label active business entry point;
 - `UI-CMP-005` рендериться відповідно до controller state;
 - breadcrumbs показують route trail для active surface;
 - dropdown menu trigger прибитий до правого краю.
@@ -218,7 +215,7 @@ Active game відомий і переданий у Top Bar.
 
 Очікуваний UI:
 
-- показано тільки `MKXL` або `MK1`;
+- показано readable label active installed game;
 - label не поводиться як switcher;
 - поруч із label зарезервована позиція для visible controller indicator.
 
@@ -318,8 +315,8 @@ Right-pinned dropdown menu закритий.
 ## Доступність і поведінка вводу
 
 - Top Bar має бути keyboard reachable.
-- Game version label має readable text `MKXL` або `MK1`.
-- Game version label не має role button, якщо він не відкриває navigation.
+- Active game label має readable text із active business entry point.
+- Active game label не має role button, якщо він не відкриває navigation.
 - Breadcrumbs мають navigation semantics і current item.
 - Dropdown trigger має accessible name.
 - Dropdown menu має menu або navigation semantics відповідно до implementation pattern.
@@ -333,7 +330,7 @@ Right-pinned dropdown menu закритий.
 ## Критерії приймання
 
 - `UI-CMP-001` рендериться як прямий компонент `UI-PAGE-001 App Shell`.
-- Top Bar показує active game label `MKXL` або `MK1` замість окремої назви застосунку.
+- Top Bar показує active game label замість окремої назви застосунку.
 - `UI-CMP-005` розташований поруч із game label і не переноситься в dropdown menu.
 - `UI-CMP-032 Breadcrumbs` показує contextual trail для active surface.
 - Catalog відкривається з Top Bar через navigable breadcrumb item, а не через dropdown menu.
@@ -348,8 +345,8 @@ Right-pinned dropdown menu закритий.
 
 ## Тестові сценарії
 
-- Active game `MKXL` показує label `MKXL` у лівій частині Top Bar.
-- Active game `MK1` показує label `MK1` у лівій частині Top Bar.
+- Route `/mkxl/...` показує label `MKXL` у лівій частині Top Bar.
+- Route `/mk1/...` показує label `MK1` у лівій частині Top Bar.
 - Top Bar не показує окрему назву застосунку замість game label.
 - Controller connected показує `UI-CMP-005` поруч із game label.
 - Controller disconnected після active connection показує yellow indicator протягом 1 хв.
