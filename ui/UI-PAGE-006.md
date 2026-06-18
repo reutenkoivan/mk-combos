@@ -94,7 +94,7 @@ UI-PAGE-006 Custom Combo Builder
 
 Підсумок має показувати:
 
-- active game label із active business entry point;
+- active game context label із active business entry point;
 - character;
 - variation для `MKXL`, якщо потрібна;
 - kameo для `MK1`, якщо потрібний;

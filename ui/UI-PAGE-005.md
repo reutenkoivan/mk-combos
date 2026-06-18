@@ -31,7 +31,7 @@ Named Lists підтримує:
 Named lists є локальними user data і scoped by active `gameId`.
 
 - list може містити тільки combos тієї самої гри;
-- зміна active/default game у [`UI-PAGE-008 Settings`](./UI-PAGE-008.md) перемикає visible `games[gameId]` collection, але не видаляє lists іншої гри.
+- зміна game через [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md) у breadcrumbs перемикає visible `games[gameId]` collection, але не видаляє lists іншої гри.
 
 Сторінка працює з already applied app-level settings:
 
@@ -40,7 +40,7 @@ Named lists є локальними user data і scoped by active `gameId`.
 - active `language`: `EN` або `UA`;
 - active `notation display mode`: `FGC`, `PlayStation` або `Xbox`.
 
-Named Lists не змінює ці settings. Ручна зміна `game`, `language` і `notation display mode` належить [`UI-PAGE-008 Settings`](./UI-PAGE-008.md), а initial setup належить [`UI-PAGE-002 First-Launch Setup`](./UI-PAGE-002.md).
+Named Lists не змінює ці settings. Ручна зміна game належить [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md) у breadcrumbs, ручна зміна `language` і `notation display mode` належить [`UI-PAGE-008 Settings`](./UI-PAGE-008.md), а initial setup належить [`UI-PAGE-002 First-Launch Setup`](./UI-PAGE-002.md).
 
 ## Володіння
 
@@ -88,7 +88,7 @@ Named Lists є shared page. Route має форму `/:gameId/lists`. App-level 
 UI-PAGE-005 Named Lists
   ├─ Named Lists root
   ├─ Lists header / toolbar
-  │  ├─ active game label
+  │  ├─ active game context label
   │  ├─ create list action
   │  └─ optional session-only persistence message
   ├─ UI-CMP-019 Named List Index
@@ -113,7 +113,7 @@ Root має:
 - показувати lists collection для active game;
 - не бути modal, dropdown panel або settings screen;
 - не дублювати `UI-CMP-001 Global Top Bar`;
-- не містити switchers для game, language або notation display mode;
+- не містити локальні switchers для game, language або notation display mode;
 - тримати стабільну структуру: header/toolbar, list index, list detail, system/modal surfaces;
 - підтримувати index-only layout для narrow viewport і side-by-side index/detail layout для desktop, якщо UI implementation це обере;
 - не змішувати lists різних games в одному visible collection.
@@ -125,7 +125,7 @@ Lists header дає page-level orientation і основні list actions.
 Header має показувати:
 
 - page heading `Named Lists` або localized equivalent;
-- active game label із active business entry point;
+- active game context label із active business entry point;
 - count visible lists для active game, якщо доступно;
 - primary create list action;
 - optional session-only persistence або recoverable save message;
@@ -537,8 +537,8 @@ Rules:
 - list create використовує current active game;
 - add-to-list показує compatible lists by combo game;
 - combo game і list game мають збігатися;
-- Settings game change refreshes visible collection без delete іншої collection;
-- breadcrumbs/top bar можуть показувати active game label, але не змішують list state.
+- breadcrumb game switch refreshes visible collection без delete іншої collection;
+- breadcrumbs/top bar показують active game через `UI-CMP-002`, але не змішують list state.
 
 ### Create list
 
@@ -715,9 +715,9 @@ Controller commands не мають:
 ## Критерії приймання
 
 - `UI-PAGE-005` є route-level сторінкою, не modal і не dropdown panel.
-- `UI-PAGE-005` працює з active app settings і не рендерить game/language/display mode switchers.
+- `UI-PAGE-005` працює з active app settings і не рендерить локальні game/language/display mode switchers.
 - Named lists scoped by `gameId`; lists містять тільки combos тієї самої гри.
-- Зміна active/default game у Settings перемикає visible list collection без видалення lists іншої гри.
+- Зміна game через breadcrumbs перемикає visible list collection без видалення lists іншої гри.
 - Empty active-game collection показує `UI-CMP-029 Empty State`.
 - Create list створює list для route `gameId`.
 - Rename list змінює тільки name selected list.

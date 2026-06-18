@@ -122,7 +122,7 @@ Root має:
 - показувати active game context;
 - не бути modal, dropdown panel або settings screen;
 - не дублювати `UI-CMP-001 Global Top Bar`;
-- не містити switchers для game, language або notation display mode;
+- не містити локальні switchers для game, language або notation display mode;
 - тримати стабільну структуру для config module і combo list;
 - показувати system states без втрати валідного catalog context;
 - дозволяти deep link або route context відновити character, game-specific context і filters, якщо вони валідні.
@@ -513,7 +513,7 @@ Seeded combo data або catalog indexes ще готуються до показ
 Очікуваний UI:
 
 - pickers і combo list показують loading або disabled state;
-- active game label лишається видимим через App Shell;
+- active game лишається видимим через `UI-CMP-002` у App Shell breadcrumbs;
 - user не може відкрити detail для combo, якого ще немає у visible data.
 
 ### `gameContextReady`
@@ -524,7 +524,7 @@ Catalog отримав active game, language і notation display mode з app-lev
 
 - active game зрозумілий користувачу;
 - character picker готовий або переходить у loading;
-- catalog не показує game/language/display mode switchers;
+- catalog не показує локальні game/language/display mode switchers;
 - активний variant визначено як `MKXL` або `MK1`.
 
 ### `noCharacterSelected`
@@ -760,7 +760,7 @@ Controller commands не мають:
 - `MKXL` і `MK1` описані як variant docs, а не нові `UI-PAGE-###` codes.
 - Catalog відкривається після completion `UI-PAGE-002 First-Launch Setup`.
 - Catalog може відкриватися через navigable `Catalog` breadcrumb.
-- Catalog працює з active app settings і не рендерить game/language/display mode switchers.
+- Catalog працює з active app settings і не рендерить локальні game/language/display mode switchers.
 - Active game вибирає відповідний variant flow.
 - Required pickers використовують in-game layout data для active variant.
 - Combo list показує тільки combos active game і selected context.

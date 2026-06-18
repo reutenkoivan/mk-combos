@@ -4,6 +4,53 @@
 
 This document is the canonical source for package ownership, import direction, route shape, local state shape, backup ownership, and the process for adding another game.
 
+## Selected Technology Stack
+
+The application is implemented with TypeScript and React.
+
+- Package manager: Bun.
+- Monorepo orchestration: Turborepo.
+- Web framework: TanStack Start.
+- Form state: `@tanstack/react-form`.
+- Data table engine: [TanStack Table](https://tanstack.com/table/latest) through `@tanstack/react-table`.
+- CSS layer: Tailwind CSS v4 stable with `@tailwindcss/vite`.
+- UI styling recipes: `tailwind-variants`, with `clsx` and `tailwind-merge` for class composition.
+- UI foundation: Base UI through `@base-ui/react`.
+- Icon foundation: `lucide-react`.
+- Global state manager: Zustand.
+- Combo builder canvas: React Flow through `@xyflow/react`.
+- Package builds: `tsdown`.
+- Component workshop and documentation: Storybook.
+- Tests: Vitest, Playwright, Testing Library, and jsdom.
+- Development and security tooling: Biome, Knip, Lefthook, Sherif, Sheriff, and Gitleaks.
+- Hosting: GitHub Pages.
+- Validation: Zod.
+- Personal data: browser-local only.
+
+Shared build and test configuration belongs in internal contract packages:
+
+- `contracts/build` centralizes shared `tsdown`, Vite, Tailwind, React, and Storybook Vite configuration.
+- `contracts/test` centralizes shared Vitest, React Testing Library, Playwright configuration, and test setup.
+
+Tooling ownership:
+
+- Biome owns formatting, linting, and restricted import enforcement.
+- Knip detects unused files, dependencies, and exports.
+- Lefthook runs local Git hooks.
+- Sherif checks monorepo package and dependency consistency.
+- Sheriff (`@softarc/sheriff-core`) checks architecture import-boundary rules.
+- Gitleaks scans for committed or staged secrets.
+
+UI and app import boundaries:
+
+- `packages/ui` wraps Base UI primitives and exposes project-owned React components.
+- `packages/ui` implements shared component styling through `tailwind-variants` recipes.
+- `packages/ui` owns the icon facade. App pages, game scopes, and builder UI consumers import icons only from `@mk-combos/ui/icons/{icon-name}`.
+- Direct `lucide-react` imports are allowed inside `packages/ui` icon modules only.
+- App-level forms use `@tanstack/react-form` for form state. Zod remains the schema and validation layer.
+- `packages/builder-ui` may use React Flow for the visual combo builder canvas.
+- `packages/builder-core` and game business scopes own combo graph rules, validation, replay, and persistence shape.
+
 ## Root Scopes
 
 The repository is split by ownership:

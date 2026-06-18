@@ -108,7 +108,7 @@ Root має:
 - показувати detail content для одного active combo;
 - не бути modal, dropdown panel або settings screen;
 - не дублювати `UI-CMP-001 Global Top Bar`;
-- не містити switchers для game, language або notation display mode;
+- не містити локальні switchers для game, language або notation display mode;
 - тримати стабільну лінійну структуру: header, whiteboard, frame meter, description, metadata, system/modal surfaces;
 - дозволяти previous source context для return action;
 - показувати recoverable system states без втрати валідного combo context.
@@ -607,7 +607,7 @@ Controller commands не мають:
 
 - `UI-PAGE-004` є route-level сторінкою, не modal і не dropdown panel.
 - Combo Detail відкривається з Catalog, filtered list, Named Lists або valid deep link.
-- Combo Detail працює з active app settings і не рендерить game/language/display mode switchers.
+- Combo Detail працює з active app settings і не рендерить локальні game/language/display mode switchers.
 - Seeded detail є read-only.
 - Custom detail є read-only, доки користувач не запускає edit або repair через builder.
 - Invalid custom combo показує `UI-CMP-031`, original path, valid prefix і invalid boundary.

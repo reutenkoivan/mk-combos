@@ -9,14 +9,14 @@
 - Батьківська мапа: [UI.md](../UI.md)
 - Батьківські поверхні: [UI-PAGE-003 Catalog](./UI-PAGE-003.md), `UI-PAGE-004 Combo Detail`, [`UI-PAGE-006 Custom Combo Builder`](./UI-PAGE-006.md)
 - Батьківські компоненти: [`UI-CMP-011 Combo Card`](./UI-CMP-011.md), [`UI-CMP-035 Combo Whiteboard`](./UI-CMP-035.md)
-- Пов'язані компоненти: `UI-CMP-004 Display Mode Switcher`, `UI-CMP-005 Controller Hint Strip`
+- Пов'язані компоненти: [`UI-CMP-004 Display Mode Switcher`](./UI-CMP-004.md), [`UI-CMP-037 Notation Legend Table`](./UI-CMP-037.md), `UI-CMP-005 Controller Hint Strip`
 - Пов'язані UX сценарії: `US-007`, `US-009`, `US-013`, `US-014`, `US-015`, `US-019`, `US-020`, `US-024`
 
 ## Призначення
 
 `UI-CMP-015 Notation Renderer` показує combo input notation у вибраному display mode.
 
-Renderer є shared display-only component для Catalog, Combo Detail і Custom Combo Builder. Він приймає canonical FGC notation або `cachedNotation`, active `notationDisplayMode`, active language і presentation context, після чого рендерить readable input tokens.
+Renderer є shared display-only component для Catalog, Combo Detail і Custom Combo Builder. Він приймає canonical FGC notation або `cachedNotation`, active `notationDisplayMode`, active language і presentation context, після чого рендерить readable input tokens через UI-owned SVG notation icon registry.
 
 FGC лишається єдиним storage/cache форматом для combo data. `PlayStation` і `Xbox` є лише display mapping і не змінюють `movePath`, `cachedNotation`, seeded data або custom data.
 
@@ -28,6 +28,7 @@ App Shell і Settings володіють active `notationDisplayMode`. Active ga
 
 - parsing або отримання prepared notation tokens для display;
 - mapping canonical FGC input labels у `FGC`, `PlayStation` або `Xbox` presentation;
+- rendering notation tokens через той самий UI-owned SVG icon registry, який використовує [`UI-CMP-037 Notation Legend Table`](./UI-CMP-037.md);
 - рендер notation sequence у compact або expanded context;
 - readable grouping для sequences, pauses, cancels або separators, якщо вони є у source notation;
 - localized labels для token names або assistive text, якщо active language передано;
@@ -83,7 +84,7 @@ Tokens можуть представляти:
 - separators між moves або steps;
 - unavailable/invalid token marker, якщо parent передав stale або invalid state.
 
-Token semantics мають лишатися readable у всіх display modes. Visual styling не має бути єдиним носієм змісту.
+Token semantics мають лишатися readable у всіх display modes. Visual styling або color не мають бути єдиним носієм змісту, а icon-only markers мають мати accessible names або valid adjacent-label relationships.
 
 ## Interface Contract
 
@@ -221,6 +222,7 @@ Rules:
 - Notation має readable text equivalent для assistive technologies.
 - Input tokens не мають відрізнятися тільки кольором.
 - Platform-specific button labels мають мати readable accessible names.
+- UI-owned SVG icons мають accessible names або valid adjacent-label relationships.
 - Unknown або unmapped token показує readable fallback.
 - Invalid/stale token marker не має покладатися тільки на color.
 - Long notation має wrap-итися без overlap і без horizontal-only доступу на mobile.
@@ -233,6 +235,7 @@ Rules:
 - `UI.md`, `UI-PAGE-003`, `UI-PAGE-006`, `UI-CMP-011` і `UI-CMP-035` посилаються на цей spec або згадують його як shared renderer.
 - Renderer приймає canonical FGC notation або `cachedNotation`.
 - Renderer підтримує display modes `FGC`, `PlayStation` і `Xbox`.
+- Renderer використовує той самий UI-owned SVG icon registry, що й [`UI-CMP-037 Notation Legend Table`](./UI-CMP-037.md).
 - Display mode змінює тільки rendering і не змінює `movePath`, `cachedNotation`, seeded data або custom data.
 - Renderer не вирішує active display mode самостійно.
 - Renderer не має mutation outputs.
@@ -244,6 +247,7 @@ Rules:
 - `FGC` mode показує canonical FGC notation.
 - `PlayStation` mode показує mapped platform labels без зміни source notation.
 - `Xbox` mode показує mapped platform labels без зміни source notation.
+- Renderer використовує той самий UI-owned SVG icon registry, що й [`UI-CMP-037`](./UI-CMP-037.md).
 - Зміна display mode у Settings оновлює renderer presentation без зміни `movePath` або `cachedNotation`.
 - Combo Card compact renderer не overlap-иться з metadata badges.
 - Combo Detail renderer показує read-only notation для seeded combo.
@@ -255,5 +259,5 @@ Rules:
 ## Припущення
 
 - Точний visual style input tokens буде визначено в `@mk-combos/ui`.
-- Mapping dictionary `FGC -> PlayStation/Xbox` належить shared UI/data layer, але renderer не змінює stored notation.
+- Mapping dictionary `FGC -> PlayStation/Xbox` і UI-owned SVG icon registry належать shared UI/data layer, але renderer не змінює stored notation.
 - Token-level inspection є optional parent capability, а не required renderer behavior у v1.

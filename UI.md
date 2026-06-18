@@ -69,9 +69,9 @@ Game-specific UI behavior belongs to `mkxl/*` or `mk1/*` through the game busine
 ### Components
 
 - [`UI-CMP-001`](./ui/UI-CMP-001.md) Global Top Bar.
-- `UI-CMP-002` Game Switcher.
-- `UI-CMP-003` Language Switcher.
-- `UI-CMP-004` Display Mode Switcher.
+- [`UI-CMP-002`](./ui/UI-CMP-002.md) Game Switcher.
+- [`UI-CMP-003`](./ui/UI-CMP-003.md) Language Switcher.
+- [`UI-CMP-004`](./ui/UI-CMP-004.md) Display Mode Switcher.
 - [`UI-CMP-005`](./ui/UI-CMP-005.md) Controller Hint Strip.
 - `UI-CMP-006` First-Launch Setup Form.
 - [`UI-CMP-007`](./ui/UI-CMP-007.md) Character Picker.
@@ -100,10 +100,11 @@ Game-specific UI behavior belongs to `mkxl/*` or `mk1/*` through the game busine
 - `UI-CMP-030` Error State.
 - `UI-CMP-031` Stale/Invalid Combo Marker.
 - `UI-CMP-032` Breadcrumbs.
-- `UI-CMP-033` Top Bar Dropdown Menu.
-- `UI-CMP-034` Backup Collapsible Block.
+- [`UI-CMP-033`](./ui/UI-CMP-033.md) Top Bar Dropdown Menu.
+- [`UI-CMP-034`](./ui/UI-CMP-034.md) Backup Collapsible Block.
 - [`UI-CMP-035`](./ui/UI-CMP-035.md) Combo Whiteboard.
 - [`UI-CMP-036`](./ui/UI-CMP-036.md) Combo Frame Meter.
+- [`UI-CMP-037`](./ui/UI-CMP-037.md) Notation Legend Table.
 
 ## Глобальна структура
 
@@ -112,6 +113,7 @@ UI-PAGE-001 App Shell
   -> UI-CMP-001 Global Top Bar
      -> UI-CMP-005 Controller Hint Strip
      -> UI-CMP-032 Breadcrumbs
+        -> UI-CMP-002 Game Switcher
      -> UI-CMP-033 Top Bar Dropdown Menu
   -> installed game business registry
      -> @mk-combos/mkxl-business
@@ -158,14 +160,17 @@ Shared builder page. It uses `@mk-combos/builder-ui` for whiteboard/frame UI and
 
 ### `UI-PAGE-008` Settings
 
-Global settings page. Game switcher options come from `installedGames`, not from hardcoded MKXL/MK1 branches. Backup import/export works with a `games: Record<GameId, unknown>` envelope.
+Global settings page. Language/display mode settings and backup import/export live here. Game switching after first launch happens through `UI-CMP-002 Game Switcher` inside global breadcrumbs.
 
 ## Component Ownership Summary
 
 - `UI-CMP-001` and `UI-CMP-005` render shell/controller state from `apps/web` and `@mk-combos/controller-bridge`.
+- `UI-CMP-002` renders installed games from App Shell or First Launch inputs. In global use it is the first `UI-CMP-032 Breadcrumbs` item on wide layouts or the compact menu game switcher, and emits game-switch intents to App Shell.
+- `UI-CMP-004` renders display mode selection from First Launch or Settings inputs. `UI-CMP-037` renders the reusable UI-owned SVG notation legend table.
+- `UI-CMP-033` renders the Top Bar burger menu. On compact layouts it owns the menu equivalents for hidden inline breadcrumbs/game switcher/navigation, while the visible controller connection indicator remains outside the menu.
 - `UI-CMP-007`, `UI-CMP-008`, and `UI-CMP-009` are picker surfaces. Their option descriptors and layout data come from active game business or game-specific catalog packages.
 - `UI-CMP-010`, `UI-CMP-011`, `UI-CMP-012`, and `UI-CMP-013` render prepared catalog models and emit events to the page.
-- `UI-CMP-015` renders notation from provided notation data and display mode; it does not mutate combo data.
+- `UI-CMP-015` renders notation from provided notation data and display mode using the UI-owned notation icon registry; it does not mutate combo data.
 - `UI-CMP-035` and `UI-CMP-036` are owned by `@mk-combos/builder-ui`; graph validity and replay are owned by active game builder logic.
 
 ## System States
