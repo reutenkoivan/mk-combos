@@ -85,17 +85,24 @@ Recommended option labels:
 
 Візуальний компонент не має будувати readable label із enum value самостійно. Якщо parent передає інші локалізовані labels, control рендерить їх без зміни selection semantics.
 
-## Зони розмітки
+## Анатомія
+
+Розміщення є form-control row: label стоїть перед segmented control, а status message завжди нижче control group.
 
 ```text
 UI-CMP-003 Language Switcher
-  ├─ Root field/group
-  ├─ Visible label або accessible name
-  ├─ Segmented language control
-  │  ├─ Language segment: EN
-  │  └─ Language segment: UA
-  └─ Optional validation або status message
+  └─ (inside First Launch або Settings form) Root field/group
+     ├─ (top/left) Visible label або accessible name
+     ├─ (below/right) Segmented language control
+     │  ├─ (left/top) Language segment: EN
+     │  └─ (right/below) Language segment: UA
+     └─ (below control, conditional) Optional validation або status message
 ```
+
+Правила розміщення:
+
+- На wide form layouts label і segmented control можуть стояти поруч; на `compact` label і control stack-яться згори вниз.
+- Status message ніколи не стоїть між segments і не змінює selected state; він рендерить prepared validation/status input.
 
 ### Root field/group
 

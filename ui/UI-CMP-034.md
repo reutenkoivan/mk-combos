@@ -45,7 +45,7 @@ type BackupEnvelope = {
 
 Кожен registered game business entry point володіє validation і serialization для власної game slice.
 
-`UI-CMP-034` володіє тільки UI contract-ом backup block:
+`UI-CMP-034` отримує controlled backup block model і відповідає тільки за UI contract backup block:
 
 - disclosure trigger і expanded/collapsed presentation;
 - local state summary presentation;
@@ -56,6 +56,7 @@ type BackupEnvelope = {
 - focus return після close/cancel/complete.
 
 Компонент не читає game-specific packages напряму і не hardcode-ить properties конкретних installed games.
+Expanded/collapsed state, operation state, validation result, parsed backup summary і dialog state належать `UI-PAGE-008 Settings` або page-level backup hook.
 
 ## Володіння
 
@@ -94,24 +95,35 @@ Game business entry points відповідають за:
 
 `packages/ui` може надавати reusable disclosure, button, status, dialog, panel і recipe primitives. Backup-specific persistence, file IO і validation logic не належать `packages/ui`.
 
-## Зони розмітки
+## Анатомія
+
+Розміщення є disclosure-блоком усередині Settings content: header завжди зверху, expanded panel відкривається під ним; export/import dialogs є page-owned sibling overlays у `UI-PAGE-008`, а не вкладені children block-а.
 
 ```text
 UI-CMP-034 Backup Collapsible Block
-  ├─ Root disclosure region
-  ├─ Disclosure header / trigger
-  │  ├─ Backup title
-  │  ├─ Compact local-state summary
-  │  └─ Expanded/collapsed indicator
-  ├─ Expanded panel
-  │  ├─ Local state summary rows
-  │  ├─ Export action group
-  │  ├─ Import action group
-  │  ├─ Validation / status message area
-  │  └─ Optional hidden file selection control
-  ├─ UI-CMP-027 Export Dialog
-  └─ UI-CMP-028 Import Preview Dialog
+  └─ (below UI-CMP-037 in UI-PAGE-008) Root disclosure region
+     ├─ (top, always visible) Disclosure header / trigger
+     │  ├─ (left/top) Backup title
+     │  ├─ (below/right) Compact local-state summary
+     │  └─ (right) Expanded/collapsed indicator
+     └─ (below header, conditional expanded) Expanded panel
+        ├─ (top) Local state summary rows
+        ├─ (below summary) Export action group
+        ├─ (below export) Import action group
+        ├─ (below affected action, conditional) Validation / status message area
+        └─ (inside import action group, non-visual intent target) Affordance вибору файла
+
+UI-PAGE-008 Settings
+  ├─ (overlay, page-owned singleton) UI-CMP-027 Export Dialog
+  └─ (overlay, page-owned singleton) UI-CMP-028 Import Preview Dialog
 ```
+
+Правила розміщення:
+
+- Collapsed state показує тільки header; expanded panel не лишає focusable children у collapsed layout.
+- Export і import action groups є sibling rows усередині expanded panel; validation/status message стоїть біля відповідної action.
+- File picker flow описується як page/app-level intent/result, не як `<input>` change event у public handler.
+- `UI-CMP-027` і `UI-CMP-028` монтуються як Settings-owned overlays, а не як repeated або nested disclosure children.
 
 ### Root disclosure region
 
@@ -249,19 +261,21 @@ type BackupValidationResult = {
 
 ## Вихідні події
 
-- `requestToggleBackupBlock`: toggle disclosure state.
-- `requestExpandBackupBlock`: explicit expand, зокрема після redirect.
-- `requestCollapseBackupBlock`: explicit collapse, якщо no blocking dialog active.
-- `requestExportFullBackup`: generate і download full backup JSON.
-- `requestOpenExportDialog`: open `UI-CMP-027 Export Dialog`, якщо implementation використовує confirmation/details dialog.
-- `requestCloseExportDialog`: close export dialog and restore focus.
-- `requestOpenBackupFilePicker`: open parent-owned file picker.
-- `requestValidateSelectedBackup`: validate selected backup JSON file.
-- `requestOpenImportPreview`: open `UI-CMP-028 Import Preview Dialog` for valid backup.
-- `requestConfirmReplaceFromBackup`: explicit destructive replace confirmation.
-- `requestCancelImport`: cancel import без mutation.
-- `requestCloseBackupDialogs`: close export/import dialogs and restore focus.
-- `requestRetryBackupFileSelection`: clear invalid file state enough to choose another file.
+- `requestToggleBackupBlock(payload)`: toggle disclosure state.
+- `requestExpandBackupBlock(payload)`: explicit expand, зокрема після redirect.
+- `requestCollapseBackupBlock(payload)`: explicit collapse, якщо no blocking dialog active.
+- `requestExportFullBackup(payload)`: generate і download full backup JSON.
+- `requestOpenExportDialog(payload)`: open `UI-CMP-027 Export Dialog`, якщо implementation використовує confirmation/details dialog.
+- `requestCloseExportDialog(payload)`: close export dialog and restore focus.
+- `requestOpenBackupFilePicker(payload)`: open parent-owned file picker.
+- `requestValidateSelectedBackup(payload)`: validate selected backup candidate, який уже нормалізовано page/app flow.
+- `requestOpenImportPreview(payload)`: open `UI-CMP-028 Import Preview Dialog` для valid backup.
+- `requestConfirmReplaceFromBackup(payload)`: explicit destructive replace confirmation.
+- `requestCancelImport(payload)`: cancel import без mutation.
+- `requestCloseBackupDialogs(payload)`: close export/import dialogs and restore focus.
+- `requestRetryBackupFileSelection(payload)`: clear invalid file state enough to choose another file.
+
+Payload не містить native file input event. File picker result нормалізується у Settings/App Shell flow до backup candidate або validation result.
 
 Parent flow decides whether a requested action is accepted based on availability, operation state and validation state.
 
@@ -570,7 +584,7 @@ Forbidden primary public axes:
 - Success, validation error, long-running busy and import complete messages are announced when they affect task completion.
 - Focus-visible is obvious in light, dark, standard contrast and increased contrast.
 - Reduced motion removes or shortens disclosure and busy indicator transitions.
-- Layout remains usable at browser zoom and increased text size.
+- Розміщення має лишатися придатним при browser zoom і increased text size.
 
 ## Критерії приймання
 

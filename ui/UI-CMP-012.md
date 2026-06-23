@@ -31,11 +31,11 @@ Active game catalog business надає context descriptors, picker layout data,
 
 Модуль відповідає за:
 
-- показ і зміну required catalog context;
+- показ controlled required catalog context;
 - рендер `UI-CMP-013 Filter Control Group`;
 - передачу selected optional filters, available facets, result count і collapse state у `UI-CMP-013`;
-- передачу live config events у Catalog;
-- controller focus handoff між required context selectors, `UI-CMP-013` і combo list.
+- емісію live config intents у Catalog;
+- controlled controller focus handoff між required context selectors, `UI-CMP-013` і combo list.
 
 Модуль не відповідає за:
 
@@ -46,17 +46,28 @@ Active game catalog business надає context descriptors, picker layout data,
 - зміну seeded combo data;
 - запис route state, localStorage або user data напряму.
 
-## Anatomy
+Якщо Catalog config mechanics винесені в custom hook, цей hook викликається у `UI-PAGE-003 Catalog`. `UI-CMP-012` отримує prepared model і semantic handlers як props.
+
+## Анатомія
+
+Розміщення є верхнім Catalog configuration block: required context selectors стоять у `contextRow`, а optional filters завжди нижче них.
 
 ```text
 UI-CMP-012 Combo List Config Module
-  ├─ contextRow
-  │  ├─ UI-CMP-007 Character Picker
-  │  └─ Game-specific context picker
-  │     ├─ MKXL: UI-CMP-008 Variation Picker
-  │     └─ MK1: UI-CMP-009 Kameo Picker
-  └─ UI-CMP-013 Filter Control Group
+  └─ (top of UI-PAGE-003 Catalog content) Config root
+     ├─ (top) contextRow
+     │  ├─ (left/top) UI-CMP-007 Character Picker
+     │  └─ (right/below) Game-specific context picker
+     │     ├─ MKXL: UI-CMP-008 Variation Picker
+     │     └─ MK1: UI-CMP-009 Kameo Picker
+     └─ (below contextRow) UI-CMP-013 Filter Control Group
 ```
+
+Правила розміщення:
+
+- На `wide13_6Plus` character picker і game-specific picker можуть бути sibling columns; на `compact` вони stack-яться.
+- `UI-CMP-013` завжди стоїть нижче required context і не містить character/variation/kameo як duplicate facets.
+- Config root не містить combo cards; results починаються у `UI-CMP-010` нижче module.
 
 ### `contextRow`
 
@@ -154,14 +165,16 @@ Rules:
 
 ### Outputs
 
-- select character;
-- select variation або kameo;
-- update optional filter facet;
-- remove active filter chip;
-- clear filters;
-- toggle filter group expanded/collapsed;
-- close або collapse filter group;
-- request focus return to safe Catalog target;
+- `requestSelectCharacter(payload)`;
+- `requestSelectGameContext(payload)`;
+- `requestUpdateOptionalFilter(payload)`;
+- `requestRemoveActiveFilter(payload)`;
+- `requestClearFilters(payload)`;
+- `requestToggleFilterGroup(payload)`;
+- `requestCloseFilterGroup(payload)`;
+- `requestReturnFocusToCatalog(payload)`.
+
+Output payloads містять identifiers для target control/filter і не містять browser event objects.
 - request focus handoff між character picker, game-specific picker, `UI-CMP-013` і combo list.
 
 ### State Tokens
@@ -280,7 +293,7 @@ Rules:
 - Invalid dependent context має видимий і програмний invalid/error relationship.
 - Focus-visible має бути помітний у light, dark, standard contrast і increased contrast.
 - No-results state дає clear filters без втрати selected context.
-- Layout має лишатися usable на mobile/narrow viewport: context, `UI-CMP-013` header/body і list.
+- Розміщення має лишатися usable на mobile/narrow viewport: context, `UI-CMP-013` header/body і list.
 
 ## Acceptance Criteria
 

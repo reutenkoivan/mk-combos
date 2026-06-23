@@ -37,6 +37,38 @@ Variant відповідає за:
 
 MK1 variant не рендерить `UI-CMP-008 Variation Picker` і не використовує `variation` як filter facet або combo context field.
 
+## Контракт Стану Variant На Рівні Сторінки
+
+Стан у власності сторінки:
+
+- selected MK1 main character, selected kameo і optional MK1 filters;
+- kameo picker focus target і filter focus target;
+- MK1 route context recovery state;
+- page-level add-to-list і duplicate source context.
+
+Підготовлені UI models для дочірніх компонентів:
+
+- `UI-CMP-007` character picker model для `MK1.character`;
+- `UI-CMP-009` kameo picker model для `MK1.kameo`;
+- `UI-CMP-012` config model із MK1 required context і optional facets;
+- combo card context із `character` і `kameo`.
+
+Сторінкові handlers / intents:
+
+- `requestSelectCharacter(payload)`, `requestSelectKameo(payload)`;
+- `requestUpdateMk1Filter(payload)`, `requestClearMk1Filters(payload)`;
+- `requestOpenMk1Detail(payload)`, `requestOpenMk1AddToList(payload)`, `requestDuplicateMk1Combo(payload)`.
+
+Бізнес-залежності:
+
+- `@mk-combos/mk1-business` catalog capabilities для options, route parsing, filtering і summaries.
+
+Не відповідає за:
+
+- direct `mk1/data` import у shared Catalog page;
+- variation або stage fields у MK1 page model;
+- browser event payloads у kameo/filter callbacks.
+
 ## Дані та контекст
 
 MK1 combo data contract належить `mk1/data` і `mk1/rules`. UI variant очікує prepared summary/context із такими полями:
@@ -66,26 +98,34 @@ MK1 Catalog context вважається валідним, коли:
 - selected kameo існує у MK1 kameo options;
 - visible combo list побудований тільки із combo, які відповідають selected `character + kameo`.
 
-## Зони розмітки
+## Анатомія
+
+Розміщення читається згори вниз як MK1 specialization загальної Catalog сторінки: required selectors стоять над filters, results ідуть нижче, add-to-list dialog відкривається поверх page content.
 
 ```text
 UI-PAGE-003 Catalog / MK1 Variant
-  ├─ MK1 catalog root
-  ├─ UI-CMP-012 Combo List Config Module
-  │  ├─ UI-CMP-007 Character Picker
-  │  ├─ UI-CMP-009 Kameo Picker
-  │  └─ UI-CMP-013 Filter Control Group
-  │     ├─ filterHeader / result count / active chips
-  │     └─ filterBody
-  │        └─ Shared optional filter facets
-  ├─ UI-CMP-010 Combo List
-  │  └─ UI-CMP-011 Combo Card
-  │     └─ UI-CMP-015 Notation Renderer
-  ├─ UI-CMP-021 Add-To-List Dialog
-  └─ System state area
-     ├─ UI-CMP-029 Empty State
-     └─ UI-CMP-030 Error State
+  └─ (inside UI-PAGE-001 active route slot) MK1 catalog root
+     ├─ (top) UI-CMP-012 Combo List Config Module
+     │  ├─ (top/left) UI-CMP-007 Character Picker
+     │  ├─ (right/below) UI-CMP-009 Kameo Picker
+     │  └─ (below both pickers) UI-CMP-013 Filter Control Group
+     │     ├─ (top) filterHeader / result count / active chips
+     │     └─ (below) filterBody
+     │        └─ (inside) Shared optional filter facets
+     ├─ (below config) UI-CMP-010 Combo List
+     │  └─ (inside list) UI-CMP-011 Combo Card
+     │     └─ (inside card summary) UI-CMP-015 Notation Renderer
+     ├─ (below list, conditional) System state area
+     │  ├─ UI-CMP-029 Empty State
+     │  └─ UI-CMP-030 Error State
+     └─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
 ```
+
+Правила розміщення:
+
+- `UI-CMP-009` стоїть після selected main character context і не дублюється як optional filter.
+- На `wide13_6Plus` `UI-CMP-007` і `UI-CMP-009` можуть бути сусідніми у `contextRow`; на `compact` вони stack-яться згори вниз.
+- `UI-CMP-021` монтується як singleton overlay для focused card, а не як child кожної card.
 
 ### MK1 Combo List Config Module
 

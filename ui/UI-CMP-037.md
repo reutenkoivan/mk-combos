@@ -104,21 +104,29 @@ Icon registry має покривати:
 - invalid, unavailable, stale, focused і highlighted states;
 - compact frame-window markers для cancel/link/juggle windows, якщо вони рендеряться як notation або timeline badges.
 
-## Зони розмітки
+## Анатомія
+
+Розміщення legend є read-only table/reference block: caption стоїть зверху, header row над legend rows, optional modifier columns додаються праворуч або як compact rows.
 
 ```text
 UI-CMP-037 Notation Legend Table
-  ├─ Root reference region
-  ├─ Caption або accessible name
-  ├─ Header row
-  │  ├─ Mode column
-  │  ├─ Attack marker columns
-  │  └─ Optional modifier columns
-  └─ Legend rows
-     ├─ FGC row
-     ├─ PlayStation row
-     └─ Xbox row
+  └─ (inside First Launch або Settings reference region) Root reference region
+     ├─ (top) Caption або accessible name
+     ├─ (below caption) Header row
+     │  ├─ (left) Mode column
+     │  ├─ (right) Attack marker columns
+     │  └─ (right/end, optional) Modifier columns
+     └─ (below header) Legend rows
+        ├─ FGC row
+        ├─ PlayStation row
+        └─ Xbox row
 ```
+
+Правила розміщення:
+
+- Table стоїть нижче settings/setup controls як reference companion, не як selectable mode control.
+- На `compact` optional modifier columns можуть перейти в rows/details під base attack markers.
+- Row order follows prepared display modes and does not mutate selected notation display mode.
 
 ### Root reference region
 

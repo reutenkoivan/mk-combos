@@ -46,18 +46,26 @@ App Shell і Settings володіють active `notationDisplayMode`. Active ga
 - читання Browser Gamepad API;
 - показ controller hint bindings для app commands.
 
-## Anatomy
+## Анатомія
+
+Розміщення renderer є inline або compact block sequence: accessible summary стоїть перед token sequence, а tokens читаються зліва направо з wrap на наступний рядок.
 
 ```text
 UI-CMP-015 Notation Renderer
-  ├─ notationRoot
-  ├─ optional accessible summary
-  └─ tokenSequence
-     ├─ input token
-     ├─ separator token
-     ├─ modifier token
-     └─ optional invalid/unavailable marker
+  └─ (inside parent notation slot) notationRoot
+     ├─ (top/visually hidden, conditional) optional accessible summary
+     └─ (below/inline) tokenSequence
+        ├─ (left-to-right) input token
+        ├─ (between tokens) separator token
+        ├─ (adjacent to input) modifier token
+        └─ (overlay/adjacent, conditional) optional invalid/unavailable marker
 ```
+
+Правила розміщення:
+
+- Token order follows prepared notation tokens and does not re-parse or reorder combo path.
+- Invalid/unavailable markers stay adjacent to the affected token or group, not detached into a separate status block.
+- Wrapping may move tokens to the next line, but source order remains left-to-right.
 
 ### `notationRoot`
 

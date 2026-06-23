@@ -9,7 +9,7 @@
 - Батьківська мапа: [UI.md](../UI.md)
 - Власник: [`UI-CMP-001 Global Top Bar`](./UI-CMP-001.md)
 - Батьківська сторінка: [`UI-PAGE-001 App Shell`](./UI-PAGE-001.md)
-- Пов'язані компоненти: [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md), [`UI-CMP-005 Controller Hint Strip`](./UI-CMP-005.md), `UI-CMP-032 Breadcrumbs`
+- Пов'язані компоненти: [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md), [`UI-CMP-005 Controller Hint Strip`](./UI-CMP-005.md), [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md)
 - Пов'язані UX сценарії: `US-019`, `US-021`, `US-022`, `US-023`, `US-024`
 
 ## Призначення
@@ -39,7 +39,7 @@
 
 ## Володіння
 
-`UI-CMP-001 Global Top Bar` володіє місцем `UI-CMP-033`, open/closed state menu і responsive JSX composition.
+`UI-CMP-001 Global Top Bar` володіє місцем `UI-CMP-033` і responsive JSX composition, але `menuState` приходить як controlled input із `UI-PAGE-001 App Shell` або page-level top-bar hook.
 
 `UI-PAGE-001 App Shell` володіє:
 
@@ -61,19 +61,30 @@
 - focus return до opener;
 - intent events до Top Bar/App Shell.
 
-## Зони розмітки
+`UI-CMP-033` не мутує route або menu source of truth напряму. Усі вихідні події мають semantic payload і не передають browser event objects.
+
+## Анатомія
+
+Розміщення є праворуч anchored menu: burger opener стоїть у Top Bar, menu surface відкривається під/поруч із ним і містить compact navigation blocks згори вниз.
 
 ```text
 UI-CMP-033 Top Bar Dropdown Menu
-  ├─ Burger opener button
-  └─ Menu surface
-     ├─ Optional compact game switcher region
-     │  └─ UI-CMP-002 Game Switcher
-     ├─ Optional compact breadcrumb/navigation region
-     ├─ Global navigation item group
-     ├─ Optional utility item group
-     └─ Optional disabled/status item
+  └─ (right, inside UI-CMP-001) Menu root
+     ├─ (inside Top Bar, pinned right) Burger opener button
+     └─ (overlay/anchored below opener, conditional) Menu surface
+        ├─ (top, compact only) Optional compact game switcher region
+        │  └─ UI-CMP-002 Game Switcher
+        ├─ (below game switcher, compact only) Optional compact breadcrumb/navigation region
+        ├─ (below compact navigation) Global navigation item group
+        ├─ (below navigation, optional) Utility item group
+        └─ (bottom, optional) Disabled/status item
 ```
+
+Правила розміщення:
+
+- Opener завжди лишається праворуч у Top Bar; surface не займає місце в normal bar flow.
+- На `wide13_6Plus` menu не дублює breadcrumbs або inline game switcher; на `compact` ці equivalents стоять у верхній частині surface.
+- Status/disabled items стоять унизу surface і не змішуються з primary navigation group.
 
 ### Burger opener button
 
@@ -339,7 +350,7 @@ Action переданий, але тимчасово unavailable.
 - Outside click/tap закриває menu без виконання action.
 - Route change закриває menu без domain mutation активної сторінки.
 - Focus order у compact layout: visible controller indicator, burger opener, opened menu items, потім active surface або safe shell target.
-- Layout має лишатися usable за browser zoom і increased text size.
+- Розміщення має лишатися usable за browser zoom і increased text size.
 - Meaningful transition має reduced-motion behavior.
 
 ## Recipe і variant requirements

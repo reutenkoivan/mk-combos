@@ -89,18 +89,26 @@ Recommended option labels:
 
 Візуальний компонент не має будувати readable label із enum value самостійно. Якщо parent передає інші localized labels, control рендерить їх без зміни selection semantics.
 
-## Зони розмітки
+## Анатомія
+
+Розміщення є form-control row: label стоїть перед display-mode segmented control, а validation/status region завжди нижче control group.
 
 ```text
 UI-CMP-004 Display Mode Switcher
-  ├─ Root field/group
-  ├─ Visible label або accessible name
-  ├─ Segmented display mode control
-  │  ├─ Display mode segment: FGC
-  │  ├─ Display mode segment: PlayStation
-  │  └─ Display mode segment: Xbox
-  └─ Optional validation або status message
+  └─ (inside First Launch або Settings form) Root field/group
+     ├─ (top/left) Visible label або accessible name
+     ├─ (below/right) Segmented display mode control
+     │  ├─ (left/top) Display mode segment: FGC
+     │  ├─ (right/below) Display mode segment: PlayStation
+     │  └─ (right/below) Display mode segment: Xbox
+     └─ (below control, conditional) Optional validation або status message
 ```
+
+Правила розміщення:
+
+- На wide form layouts label і segmented control можуть стояти поруч; на `compact` label і control stack-яться згори вниз.
+- Segments читаються в переданому parent order зліва направо або згори вниз після compact wrap.
+- Status message не є source of truth; він рендерить page-prepared validation/status input.
 
 ### Root field/group
 

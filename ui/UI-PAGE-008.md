@@ -54,21 +54,68 @@ Backup flow є частиною Settings і рендериться в `UI-CMP-03
 
 `UI-CMP-001 Global Top Bar` може відкрити `UI-PAGE-008 Settings` через `UI-CMP-033 Top Bar Dropdown Menu`. Той самий Top Bar рендерить `UI-CMP-002 Game Switcher` у breadcrumbs і передає game-switch intent в App Shell.
 
-## Зони розмітки
+## Контракт Стану Сторінки
+
+Стан у власності сторінки:
+
+- settings draft values, validation state, dirty state і save/apply state;
+- previous surface або return target;
+- backup block expanded/collapsed state, export/import operation state і validation result;
+- export dialog state, import preview dialog state і source focus target;
+- session-only persistence і system message state.
+
+Підготовлені UI models для дочірніх компонентів:
+
+- `UI-CMP-003` language switcher model;
+- `UI-CMP-004` display mode switcher model;
+- `UI-CMP-037` read-only notation legend model;
+- `UI-CMP-034` backup block model і nested `UI-CMP-027`/`UI-CMP-028` dialog models.
+
+Сторінкові handlers / intents:
+
+- `requestSelectLanguage(payload)`, `requestSelectDisplayMode(payload)`, `requestApplySettings(payload)`;
+- `requestToggleBackupBlock(payload)`, `requestExportFullBackup(payload)`, `requestOpenBackupFilePicker(payload)`;
+- `requestValidateBackupSelection(payload)`, `requestConfirmBackupReplace(payload)`, `requestCancelImport(payload)`;
+- `requestReturnFromSettings(payload)`.
+
+Бізнес-залежності:
+
+- app-level settings state і persistence;
+- local state envelope serialization і backup validation;
+- registered game business entry points для per-game backup slice validation.
+
+Не відповідає за:
+
+- page-owned game switcher rendering;
+- direct file input event payloads у backup UI callbacks;
+- local state replacement до explicit page-level confirmation.
+
+## Анатомія
+
+Розміщення Settings читається згори вниз: applied settings form і notation reference стоять перед backup block, а import/export dialogs відкриваються як page-owned overlays від Settings flow.
 
 ```text
 UI-PAGE-008 Settings
-  ├─ Settings root
-  ├─ Settings form
-  │  ├─ UI-CMP-003 Language Switcher
-  │  └─ UI-CMP-004 Display Mode Switcher
-  ├─ UI-CMP-037 Notation Legend Table
-  ├─ UI-CMP-034 Backup Collapsible Block
-  │  ├─ UI-CMP-027 Export Dialog
-  │  └─ UI-CMP-028 Import Preview Dialog
-  ├─ Persistence / system message area
-  └─ Navigation / return action
+  └─ (inside UI-PAGE-001 active route slot) Settings root
+     ├─ (top) Settings form
+     │  ├─ (top) UI-CMP-003 Language Switcher
+     │  └─ (below) UI-CMP-004 Display Mode Switcher
+     ├─ (below form) UI-CMP-037 Notation Legend Table
+     ├─ (below notation reference) UI-CMP-034 Backup Collapsible Block
+     │  ├─ (top) disclosure header
+     │  └─ (below, conditional expanded panel) backup action groups
+     ├─ (below settings/backup content, conditional) Persistence / system message area
+     ├─ (below content) Navigation / return action
+     ├─ (overlay, page-owned singleton) UI-CMP-027 Export Dialog
+     └─ (overlay, page-owned singleton) UI-CMP-028 Import Preview Dialog
 ```
+
+Правила розміщення:
+
+- `UI-CMP-003` стоїть над `UI-CMP-004`, щоб form reading order збігався з first-launch setup.
+- `UI-CMP-037` є read-only companion нижче settings controls, а не control усередині segmented switcher.
+- `UI-CMP-034` стоїть після regular settings і містить тільки disclosure/panel structure; dialogs монтуються як singleton overlays на рівні Settings.
+- File picker result входить у Settings flow як prepared intent/result; anatomy не описує native `<input>` event.
 
 ### Settings root
 

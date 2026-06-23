@@ -8,9 +8,9 @@
 - Статус деталізації: `Описано`
 - Батьківська мапа: [UI.md](../UI.md)
 - Власники:
-  - [`UI-PAGE-001 App Shell`](./UI-PAGE-001.md) через `UI-CMP-001 -> UI-CMP-032 Breadcrumbs`
+  - [`UI-PAGE-001 App Shell`](./UI-PAGE-001.md) через [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md) у `UI-CMP-001`
   - [`UI-PAGE-002 First-Launch Setup`](./UI-PAGE-002.md) через `UI-CMP-006 First-Launch Setup Form`
-- Батьківські компоненти: [`UI-CMP-001 Global Top Bar`](./UI-CMP-001.md), `UI-CMP-032 Breadcrumbs`, `UI-CMP-006 First-Launch Setup Form`
+- Батьківські компоненти: [`UI-CMP-001 Global Top Bar`](./UI-CMP-001.md), [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md), `UI-CMP-006 First-Launch Setup Form`
 - Пов'язані UX сценарії: `US-001`, `US-002`, `US-023`, `US-024`
 
 ## Призначення
@@ -30,7 +30,7 @@
 
 `UI-PAGE-001 App Shell` володіє active `gameId`, route, active business entry point, navigation strategy, last active/default game persistence і recoverable fallback behavior.
 
-`UI-CMP-001 Global Top Bar` розміщує `UI-CMP-032 Breadcrumbs`. Breadcrumbs рендерить `UI-CMP-002` як перший game crumb і передає selection intent в App Shell.
+`UI-CMP-001 Global Top Bar` розміщує [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md). Breadcrumbs рендерить `UI-CMP-002` як перший game crumb і передає selection intent в App Shell.
 
 `UI-PAGE-002 First-Launch Setup` використовує `UI-CMP-002` тільки для pending initial game value. Completion marker, route redirect і persistence створюються після explicit confirmation.
 
@@ -63,15 +63,23 @@ type GameSwitcherOption = {
 
 `label` має бути readable label active business entry point, наприклад `MKXL` або `MK1`. `gameId` є stable route/persistence id і не залежить від localized label.
 
-## Зони розмітки
+## Анатомія
+
+Розміщення є single-select control, який змінює зовнішню оболонку залежно від parent context: inline crumb у breadcrumbs або form row у first-launch setup.
 
 ```text
 UI-CMP-002 Game Switcher
-  ├─ Root single-select control
-  ├─ Current game trigger / selected option
-  ├─ Available game options
-  └─ Optional validation або status message
+  └─ (inside parent slot) Root single-select control
+     ├─ (top/inline) Current game trigger / selected option
+     ├─ (below/overlay, якщо open model active) Available game options
+     └─ (below trigger/list, conditional) Optional validation або status message
 ```
+
+Правила розміщення:
+
+- У `breadcrumbs` context root займає перший crumb і стоїть лівіше за `Catalog`/current trail items.
+- У `firstLaunch` context root стоїть над language і display mode controls усередині `UI-CMP-006`.
+- Options list є controlled surface від parent model; selection state не зберігається всередині switcher.
 
 ### Breadcrumbs context
 
@@ -79,11 +87,11 @@ UI-CMP-002 Game Switcher
 
 ```text
 UI-CMP-032 Breadcrumbs
-  ├─ UI-CMP-002 Game Switcher
-  ├─ Catalog
-  ├─ Character
-  ├─ Variation або Kameo
-  └─ Current surface item
+  ├─ (left) UI-CMP-002 Game Switcher
+  ├─ (right) Catalog
+  ├─ (right) Character
+  ├─ (right) Variation або Kameo
+  └─ (right) Current surface item
 ```
 
 Switcher має виглядати як частина breadcrumb trail, але мати зрозумілий selected-game control affordance. Він не має змішуватися з `Catalog` crumb: game switch змінює route prefix, а `Catalog` crumb навігує в межах active game.
@@ -272,7 +280,7 @@ Valid route-prefixed deep link перемагає saved/default game.
 
 - `UI-CMP-002` має окрему повну специфікацію.
 - `UI.md` посилається на `ui/UI-CMP-002.md`.
-- Після first launch `UI-CMP-002` рендериться як перший item у `UI-CMP-032 Breadcrumbs`.
+- Після first launch `UI-CMP-002` рендериться як перший item у [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md).
 - `UI-PAGE-002` лишає `UI-CMP-002` у setup form як pending initial game choice.
 - `UI-PAGE-008 Settings` не рендерить page-owned `UI-CMP-002 Game Switcher`.
 - Game options приходять із installed games і не є hardcoded closed union.
@@ -303,4 +311,4 @@ Valid route-prefixed deep link перемагає saved/default game.
 
 - Exact visual primitive для breadcrumbs context може бути menu button, compact listbox або equivalent single-select control.
 - Exact persistence policy для last active/default game після breadcrumb switch належить App Shell implementation.
-- Full standalone `UI-CMP-032 Breadcrumbs` spec може бути описаний окремим pass; цей документ фіксує тільки Game Switcher contract усередині breadcrumbs.
+- Повний standalone contract [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md) описаний окремо; цей документ фіксує тільки Game Switcher contract усередині breadcrumbs.

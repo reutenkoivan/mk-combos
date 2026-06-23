@@ -82,27 +82,73 @@ Named Lists є shared page. Route має форму `/:gameId/lists`. App-level 
 
 [`UI-CMP-011 Combo Card`](./UI-CMP-011.md) використовується як item renderer для combo summary у list detail. Card не мутує named-list membership напряму: вона емітить intent events, а `UI-PAGE-005` координує page/app-level persistence flow.
 
-## Зони розмітки
+## Контракт Стану Сторінки
+
+Стан у власності сторінки:
+
+- active `gameId`, selected list id, list index/detail focus state і route context;
+- create/rename/delete dialog state, active add-to-list dialog state і source focus target;
+- reorder pending state, save/error state і session-only persistence state;
+- resolved combo summaries, stale/invalid item markers і not-found fallback state;
+- controller command mapping для lists surface.
+
+Підготовлені UI models для дочірніх компонентів:
+
+- `UI-CMP-019` list index model із selected/current list state і counts;
+- `UI-CMP-020` list detail model із ordered item summaries і focus state;
+- repeated `UI-CMP-011` card models із list-specific action availability;
+- singleton `UI-CMP-021` і `UI-CMP-022` dialog models;
+- `UI-CMP-029`, `UI-CMP-030` і `UI-CMP-031` system state models.
+
+Сторінкові handlers / intents:
+
+- `requestSelectList(payload)`, `requestCreateList(payload)`, `requestRenameList(payload)`, `requestDeleteList(payload)`;
+- `requestOpenComboDetail(payload)`, `requestOpenAddToList(payload)`, `requestSubmitAddToList(payload)`;
+- `requestRemoveFromList(payload)`, `requestReorderListItem(payload)`, `requestRepairCombo(payload)`.
+
+Бізнес-залежності:
+
+- active game business entry point для combo reference lookup і stale validation;
+- app-level local state envelope і named-list persistence;
+- applied language і notation display mode від App Shell.
+
+Не відповідає за:
+
+- custom combo path editing;
+- direct localStorage writes inside list/detail/dialog UI;
+- browser event payloads у list index, card, reorder або dialog callbacks.
+
+## Анатомія
+
+Розміщення починається з header/toolbar, після нього йде lists workspace: index і detail стоять поруч на широкому екрані або stack-яться на compact. Dialogs є page-owned singleton overlays поверх workspace.
 
 ```text
 UI-PAGE-005 Named Lists
-  ├─ Named Lists root
-  ├─ Lists header / toolbar
-  │  ├─ active game context label
-  │  ├─ create list action
-  │  └─ optional session-only persistence message
-  ├─ UI-CMP-019 Named List Index
-  ├─ UI-CMP-020 Named List Detail
-  │  ├─ list title / actions
-  │  ├─ combo item order controls
-  │  ├─ UI-CMP-011 Combo Card
-  │  └─ UI-CMP-031 Stale/Invalid Combo Marker
-  └─ System states і modal windows
-     ├─ UI-CMP-021 Add-To-List Dialog
-     ├─ UI-CMP-022 List Edit Dialog
-     ├─ UI-CMP-029 Empty State
-     └─ UI-CMP-030 Error State
+  └─ (inside UI-PAGE-001 active route slot) Named Lists root
+     ├─ (top) Lists header / toolbar
+     │  ├─ (left/top) active game context label
+     │  ├─ (right/below) create list action
+     │  └─ (below) optional session-only persistence message
+     ├─ (below header) Lists workspace
+     │  ├─ (left, wide13_6Plus / top, compact) UI-CMP-019 Named List Index
+     │  └─ (right, wide13_6Plus / below, compact) UI-CMP-020 Named List Detail
+     │     ├─ (top) list title / actions
+     │     ├─ (below) combo item list with order controls
+     │     │  └─ (inside row) UI-CMP-011 Combo Card
+     │     └─ (inside row/header, conditional) UI-CMP-031 Stale/Invalid Combo Marker
+     ├─ (below workspace, conditional) System state area
+     │  ├─ UI-CMP-029 Empty State
+     │  └─ UI-CMP-030 Error State
+     ├─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
+     └─ (overlay, page-owned singleton) UI-CMP-022 List Edit Dialog
 ```
+
+Правила розміщення:
+
+- На `wide13_6Plus` index лишається лівою navigation region, а detail - правою content region.
+- На `compact` index показується над detail або як окрема routed sub-surface, але component models лишаються page-owned.
+- `UI-CMP-021` і `UI-CMP-022` не повторюються всередині list rows; сторінка відкриває один активний dialog за prepared context.
+- Empty/error states займають workspace slot, якщо list/detail content відсутній, або стоять під workspace як recoverable status.
 
 ### Named Lists root
 

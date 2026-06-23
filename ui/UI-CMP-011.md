@@ -37,8 +37,8 @@ Card не імпортує game data напряму і не має game-specific
 - показ metadata badges: damage, meter, position, starter, route type, difficulty і tags;
 - показ localized notes snippet, якщо parent surface передав його для list UX;
 - показ current named-list membership або availability hint, якщо доступний;
-- local focus state для card і card actions;
-- емісію intent events для open detail, contextual actions, add-to-list і duplicate.
+- рендер controlled focus state для card і card actions;
+- емісію semantic intent events для open detail, contextual actions, add-to-list і duplicate.
 
 `UI-CMP-011` не відповідає за:
 
@@ -52,30 +52,38 @@ Card не імпортує game data напряму і не має game-specific
 - зміну route напряму;
 - читання Browser Gamepad API напряму.
 
-## Anatomy
+## Анатомія
+
+Розміщення card читається згори вниз: primary notation/context стоїть першим, metadata і optional notes нижче, action targets замикають card або переходять у contextual menu.
 
 ```text
 UI-CMP-011 Combo Card
-  ├─ cardRoot
-  ├─ primarySummary
-  │  ├─ UI-CMP-015 Notation Renderer
-  │  └─ context summary
-  ├─ metadataBadges
-  │  ├─ damage
-  │  ├─ meter
-  │  ├─ position
-  │  ├─ starter
-  │  ├─ route type
-  │  ├─ difficulty
-  │  └─ tags
-  ├─ optional notes snippet
-  ├─ optional membership hint
-  └─ action targets
-     ├─ open detail
-     ├─ add to list
-     ├─ duplicate to custom combo
-     └─ contextual actions
+  └─ (inside list/detail/saved-summary parent) cardRoot
+     ├─ (top) primarySummary
+     │  ├─ (top/left) UI-CMP-015 Notation Renderer
+     │  └─ (below/right) context summary
+     ├─ (below summary) metadataBadges
+     │  ├─ damage
+     │  ├─ meter
+     │  ├─ position
+     │  ├─ starter
+     │  ├─ route type
+     │  ├─ difficulty
+     │  └─ tags
+     ├─ (below badges, conditional) optional notes snippet
+     ├─ (below notes/badges, conditional) optional membership hint
+     └─ (right/bottom) action targets
+        ├─ open detail
+        ├─ add to list
+        ├─ duplicate to custom combo
+        └─ contextual actions
 ```
+
+Правила розміщення:
+
+- Primary summary лишається першою content region, щоб notation не губилася після metadata.
+- На `wide13_6Plus` actions можуть стояти праворуч від summary; на `compact` вони переходять нижче або в contextual menu.
+- Membership hint стоїть біля actions/metadata, але не стає list persistence owner.
 
 ### `cardRoot`
 
@@ -160,6 +168,8 @@ Actions можуть бути hidden, disabled або moved into contextual menu
 - `requestReturnFocusToList`: повернути focus до safe parent list target.
 
 Outputs є intent events. Route changes, dialog lifecycle, builder initialization і persistence виконуються на page/app рівні.
+
+Усі outputs приймають abstract payloads із combo id, source surface і source focus target. Component не передає browser event objects у parent/page handlers.
 
 ## State Tokens
 

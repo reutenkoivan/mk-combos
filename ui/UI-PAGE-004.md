@@ -77,27 +77,71 @@ Combo Detail є shared page. Route має форму `/:gameId/combos/:source/:c
 
 [`UI-CMP-035 Combo Whiteboard`](./UI-CMP-035.md) і [`UI-CMP-036 Combo Frame Meter`](./UI-CMP-036.md) є shared domain components. Combo Detail координує їхні inputs і focus sync, але не переносить builder mutation behavior у detail surface.
 
-## Зони розмітки
+## Контракт Стану Сторінки
+
+Стан у власності сторінки:
+
+- detail route context, combo source type, combo id і previous source context;
+- read-only detail loading/error state, source disclosure state і actions menu state;
+- active add-to-list dialog state і source focus target;
+- frame meter inspection focus, whiteboard read-only focus sync і segment details state;
+- duplicate/edit/repair route intent state.
+
+Підготовлені UI models для дочірніх компонентів:
+
+- `UI-CMP-014` header model із combo title, source, primary action availability і stale marker data;
+- `UI-CMP-035` read-only whiteboard model із page-level builder UI hook;
+- `UI-CMP-036` frame meter model із page-level builder UI hook;
+- `UI-CMP-017`, `UI-CMP-018`, `UI-CMP-021`, `UI-CMP-030` і `UI-CMP-031` models.
+
+Сторінкові handlers / intents:
+
+- `requestReturnToSource(payload)`, `requestOpenAddToList(payload)`, `requestSubmitAddToList(payload)`;
+- `requestDuplicateCombo(payload)`, `requestEditCustomCombo(payload)`, `requestRepairCustomCombo(payload)`;
+- `requestToggleSourceDetails(payload)`, `requestOpenActions(payload)`, `requestFocusDetailRegion(payload)`.
+
+Бізнес-залежності:
+
+- active game business entry point для lookup, stale detection, detail display model і repair availability;
+- app-level named-list availability і persistence flow;
+- page-level `@mk-combos/builder-ui` hooks для read-only whiteboard/frame models.
+
+Не відповідає за:
+
+- builder graph replay або mutation у detail UI;
+- named-list persistence inside `UI-CMP-021`;
+- browser event payloads у header/actions/whiteboard/frame callbacks.
+
+## Анатомія
+
+Розміщення починається з header, далі основний detail workspace; у широкому режимі whiteboard і frame meter стоять поруч, у compact вони стають вертикальною послідовністю. Page-owned dialogs і menus відкриваються поверх detail root.
 
 ```text
 UI-PAGE-004 Combo Detail
-  ├─ Detail root
-  ├─ UI-CMP-014 Combo Detail Header
-  │  ├─ title
-  │  ├─ combo characteristic chips
-  │  ├─ UI-CMP-031 Stale/Invalid Combo Marker
-  │  └─ primary Add-To-List action
-  ├─ UI-CMP-035 Combo Whiteboard
-  │  └─ UI-CMP-015 Notation Renderer
-  ├─ UI-CMP-036 Combo Frame Meter
-  ├─ Combo description
-  │  └─ localized notes, source і gameVersion
-  ├─ UI-CMP-017 Combo Metadata Grid
-  └─ System states і modal windows
-     ├─ UI-CMP-018 Combo Actions Menu
-     ├─ UI-CMP-021 Add-To-List Dialog
-     └─ UI-CMP-030 Error State
+  └─ (inside UI-PAGE-001 active route slot) Detail root
+     ├─ (top) UI-CMP-014 Combo Detail Header
+     │  ├─ (top) title / return action
+     │  ├─ (below) combo characteristic chips
+     │  ├─ (below, conditional) UI-CMP-031 Stale/Invalid Combo Marker
+     │  └─ (right/below) primary Add-To-List action
+     ├─ (below header) Detail workspace
+     │  ├─ (left, wide13_6Plus / top, compact) UI-CMP-035 Combo Whiteboard
+     │  │  └─ (inside path summary) UI-CMP-015 Notation Renderer
+     │  └─ (right, wide13_6Plus / below, compact) UI-CMP-036 Combo Frame Meter
+     ├─ (below workspace) Combo description
+     │  └─ (inside) localized notes, source і gameVersion
+     ├─ (below description) UI-CMP-017 Combo Metadata Grid
+     ├─ (below content, conditional) UI-CMP-030 Error State
+     ├─ (overlay, anchored to action source) UI-CMP-018 Combo Actions Menu
+     └─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
 ```
+
+Правила розміщення:
+
+- Header завжди передує read-only whiteboard/frame workspace, щоб combo identity була першою в reading order.
+- На `wide13_6Plus` `UI-CMP-035` є головною лівою region, а `UI-CMP-036` стоїть праворуч як inspection panel; на `compact` frame meter іде нижче whiteboard.
+- `UI-CMP-018` є anchored overlay від action source, а `UI-CMP-021` є singleton dialog на рівні сторінки.
+- Error state стоїть у page content або overlay layer залежно від severity, але його model і recovery intents належать сторінці.
 
 ### Detail root
 

@@ -25,18 +25,20 @@ Picker не є generic dropdown або optional filter. Variation належит
 
 `UI-PAGE-003 MKXL Catalog Variant` володіє selected character і selected variation. Available variation data, disabled reasons, layout descriptors і combo availability приходять із `mkxl/catalog` через `@mk-combos/mkxl-business`.
 
-`UI-CMP-012 Combo List Config Module` володіє placement picker-а у `contextRow` і focus handoff після character selection.
+`UI-CMP-012 Combo List Config Module` отримує placement picker-а у `contextRow` і controlled focus handoff після character selection від Catalog page model.
 
 `UI-CMP-008` відповідає тільки за:
 
 - рендер variation layout для selected MKXL character;
-- selected, focused, disabled і placeholder state variation slots;
-- keyboard/controller navigation усередині variation layout;
-- selection event для parent variant flow.
+- рендер controlled selected, focused, disabled і placeholder state variation slots;
+- keyboard/controller navigation intent усередині variation layout;
+- semantic selection intent для parent variant flow.
 
 Компонент не імпортує `mkxl/data` напряму і не виконує MKXL validation.
 
-## Layout Data Contract
+Вихідні handlers приймають abstract payloads із slot/variation identifiers і не передають browser event objects.
+
+## Контракт даних розміщення
 
 `UI-CMP-008` використовує shared picker layout contract із `UI-CMP-007`.
 
@@ -61,9 +63,9 @@ type PickerSlot = {
 
 - `MKXL.variation`.
 
-`optionId` є stable variation id для selected character. Layout registry має підтримувати per-character variation slots, якщо in-game placement або labels відрізняються між characters.
+`optionId` є stable variation id для selected character. Реєстр розміщення має підтримувати per-character variation slots, якщо in-game placement або labels відрізняються між characters.
 
-### Wide Layout
+### Широке розміщення
 
 Wide layout застосовується для viewport/device class від `13.6-inch` і більше.
 
@@ -74,7 +76,7 @@ Rules:
 - не сортувати variations alphabetically;
 - зберігати disabled або placeholder positions.
 
-### Compact Layout
+### Компактне розміщення
 
 Для менших екранів variation layout може реорганізовуватись.
 
@@ -85,21 +87,29 @@ Rules:
 - selected/focused state зберігається під час переходу між layouts;
 - усі selectable і disabled variation slots лишаються reachable або readable.
 
-## Anatomy
+## Анатомія
+
+Розміщення є picker surface після character picker: context label стоїть над variation slots, status region нижче layout.
 
 ```text
 UI-CMP-008 Variation Picker
-  ├─ Root picker surface
-  ├─ Visible label або accessible label
-  ├─ Selected character context label
-  ├─ Variation layout
-  │  └─ Variation slot
-  │     ├─ Variation label
-  │     ├─ Optional short description або icon
-  │     ├─ Selected/focused indicator
-  │     └─ Disabled або placeholder state
-  └─ Optional status/live region
+  └─ (inside UI-CMP-012 contextRow, after UI-CMP-007) Root picker surface
+     ├─ (top) Visible label або accessible label
+     ├─ (below label) Selected character context label
+     ├─ (below context) Variation layout
+     │  └─ (inside layout cell) Variation slot
+     │     ├─ (top) Variation label
+     │     ├─ (below label) Optional short description або icon
+     │     ├─ (overlay/inside slot) Selected/focused indicator
+     │     └─ (overlay/inside slot) Disabled або placeholder state
+     └─ (below layout, conditional) Optional status/live region
 ```
+
+Правила розміщення:
+
+- У `UI-CMP-012` компонент стоїть поруч із `UI-CMP-007` на `wide13_6Plus` або нижче нього на `compact`.
+- Variation slots використовують prepared `MKXL.variation` layout і не додають власне сортування.
+- Indicators і disabled state рендеряться всередині slot, не змінюючи геометрію сусідніх slots.
 
 ## Вхідні дані
 
@@ -253,7 +263,7 @@ Variation очищається тільки якщо:
 - Placeholder slot не має бути оголошений як selectable option.
 - Focus-visible має бути помітний у light, dark, standard contrast і increased contrast.
 - Variation description або icon не замінює текстовий label.
-- Layout не покладається тільки на колір.
+- Розміщення не покладається тільки на колір.
 
 ## Критерії приймання
 

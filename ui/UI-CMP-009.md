@@ -25,18 +25,20 @@ Kameo не є optional filter facet. Він належить до required `cont
 
 `UI-PAGE-003 MK1 Catalog Variant` володіє selected main character і selected kameo. Available kameo data, disabled reasons, layout descriptors і combo availability приходять із `mk1/catalog` через `@mk-combos/mk1-business`.
 
-`UI-CMP-012 Combo List Config Module` володіє placement picker-а у `contextRow` і focus handoff після main character selection.
+`UI-CMP-012 Combo List Config Module` отримує placement picker-а у `contextRow` і controlled focus handoff після main character selection від Catalog page model.
 
 `UI-CMP-009` відповідає тільки за:
 
 - рендер full MK1 kameo layout;
-- selected, focused, disabled і placeholder state kameo slots;
-- keyboard/controller navigation усередині kameo grid;
-- selection event для parent variant flow.
+- рендер controlled selected, focused, disabled і placeholder state kameo slots;
+- keyboard/controller navigation intent усередині kameo grid;
+- semantic selection intent для parent variant flow.
 
 Компонент не імпортує `mk1/data` напряму і не виконує MK1 validation.
 
-## Layout Data Contract
+Вихідні handlers приймають abstract payloads із slot/kameo identifiers і не передають browser event objects.
+
+## Контракт даних розміщення
 
 `UI-CMP-009` використовує shared picker layout contract із `UI-CMP-007`.
 
@@ -63,7 +65,7 @@ type PickerSlot = {
 
 `optionId` є stable kameo id із seeded/domain registry. Kameo layout не має використовувати main character roster coordinates.
 
-### Wide Layout
+### Широке розміщення
 
 Wide layout застосовується для viewport/device class від `13.6-inch` і більше.
 
@@ -74,7 +76,7 @@ Rules:
 - не сортувати kameos alphabetically;
 - зберігати disabled або placeholder positions.
 
-### Compact Layout
+### Компактне розміщення
 
 Для менших екранів kameo grid може реорганізовуватись.
 
@@ -85,21 +87,29 @@ Rules:
 - selected/focused state зберігається під час переходу між layouts;
 - усі non-placeholder kameo slots лишаються reachable або readable.
 
-## Anatomy
+## Анатомія
+
+Розміщення є picker surface після main character picker: context label стоїть над kameo grid, status region нижче grid.
 
 ```text
 UI-CMP-009 Kameo Picker
-  ├─ Root picker surface
-  ├─ Visible label або accessible label
-  ├─ Selected main character context label
-  ├─ Kameo grid
-  │  └─ Kameo slot
-  │     ├─ Portrait або fallback mark
-  │     ├─ Kameo label
-  │     ├─ Selected/focused indicator
-  │     └─ Disabled або placeholder state
-  └─ Optional status/live region
+  └─ (inside UI-CMP-012 contextRow, after UI-CMP-007) Root picker surface
+     ├─ (top) Visible label або accessible label
+     ├─ (below label) Selected main character context label
+     ├─ (below context) Kameo grid
+     │  └─ (inside grid cell) Kameo slot
+     │     ├─ (top/center) Portrait або fallback mark
+     │     ├─ (below portrait) Kameo label
+     │     ├─ (overlay/inside slot) Selected/focused indicator
+     │     └─ (overlay/inside slot) Disabled або placeholder state
+     └─ (below grid, conditional) Optional status/live region
 ```
+
+Правила розміщення:
+
+- У `UI-CMP-012` компонент стоїть поруч із `UI-CMP-007` на `wide13_6Plus` або нижче нього на `compact`.
+- Kameo slots використовують prepared `MK1.kameo` layout і не додають власне сортування.
+- Indicators і disabled state рендеряться всередині slot, не змінюючи геометрію сусідніх slots.
 
 ## Вхідні дані
 
@@ -253,7 +263,7 @@ Kameo очищається тільки якщо:
 - Placeholder slot не має бути оголошений як selectable option.
 - Focus-visible має бути помітний у light, dark, standard contrast і increased contrast.
 - Kameo portrait не є єдиним label.
-- Layout не покладається тільки на колір.
+- Розміщення не покладається тільки на колір.
 
 ## Критерії приймання
 

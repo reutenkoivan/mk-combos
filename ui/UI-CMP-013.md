@@ -35,9 +35,9 @@ Available facets, result count і compatibility messages приходять із
 - показ active optional-filter chips у header;
 - remove control для кожного active chip;
 - `Clear filters` для optional filters;
-- collapsible state filter group;
+- рендер controlled collapsible state filter group;
 - показ optional facet controls у body;
-- передачу filter update events у `UI-CMP-012` або Catalog.
+- передачу semantic filter update intents у `UI-CMP-012` або Catalog.
 
 `UI-CMP-013` не відповідає за:
 
@@ -48,27 +48,38 @@ Available facets, result count і compatibility messages приходять із
 - відкриття combo detail;
 - запис route state, localStorage або user data напряму.
 
-## Anatomy
+`UI-CMP-013` не володіє expanded/collapsed source of truth. Якщо filter mechanics винесені в custom hook, hook викликається в Catalog page flow, а компонент отримує prepared filter model і handlers як props.
+
+## Анатомія
+
+Розміщення є collapsible filter block: header завжди зверху і видимий, body розташований під ним тільки коли parent передав expanded model.
 
 ```text
 UI-CMP-013 Filter Control Group
-  ├─ filterHeader
-  │  ├─ expand/collapse trigger
-  │  ├─ result count
-  │  ├─ active optional-filter chips
-  │  └─ Clear filters control
-  └─ filterBody
-     └─ optional facet controls
-        ├─ starter
-        ├─ position
-        ├─ meter
-        ├─ damage
-        ├─ difficulty
-        ├─ route type
-        ├─ tags
-        ├─ MKXL only: stage
-        └─ MKXL only: interactable
+  └─ (inside UI-CMP-012, below contextRow) Filter root
+     ├─ (top, always visible) filterHeader
+     │  ├─ (left/top) expand/collapse trigger
+     │  ├─ (near trigger) result count
+     │  ├─ (below/right) active optional-filter chips
+     │  └─ (right/below) Clear filters control
+     └─ (below header, conditional expanded) filterBody
+        └─ (inside body) optional facet controls
+           ├─ starter
+           ├─ position
+           ├─ meter
+           ├─ damage
+           ├─ difficulty
+           ├─ route type
+           ├─ tags
+           ├─ MKXL only: stage
+           └─ MKXL only: interactable
 ```
+
+Правила розміщення:
+
+- Header лишається над body у `expanded` і `collapsed` states.
+- Active chips стоять у header, щоб applied filters лишалися видимими навіть коли body collapsed.
+- Facets у body читаються у prepared order; game-specific facets стоять після shared facets.
 
 ### `filterHeader`
 
@@ -124,12 +135,14 @@ Body містить optional facets:
 
 ### Outputs
 
-- update optional filter facet;
-- remove active filter chip;
-- clear filters;
-- toggle expanded або collapsed state;
-- close або collapse filter group;
-- request focus return to safe Catalog target.
+- `requestUpdateOptionalFilter(payload)`;
+- `requestRemoveActiveFilter(payload)`;
+- `requestClearFilters(payload)`;
+- `requestToggleFilterGroup(payload)`;
+- `requestCloseFilterGroup(payload)`;
+- `requestReturnFocusToCatalog(payload)`.
+
+Output payloads містять filter id/value/reason/source focus target і не містять browser event objects.
 
 ### State Tokens
 
@@ -218,7 +231,7 @@ Guard rails:
 - `Clear filters` має visible label або accessible name.
 - Invalid dependent filter має видимий і програмний invalid/error relationship.
 - Focus-visible має бути помітний у light, dark, standard contrast і increased contrast.
-- Layout має лишатися usable на mobile/narrow viewport: header, chips, result count, body controls і combo list не overlap-яться.
+- Розміщення має лишатися usable на mobile/narrow viewport: header, chips, result count, body controls і combo list не overlap-яться.
 
 ## Acceptance Criteria
 

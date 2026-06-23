@@ -38,6 +38,38 @@ Variant відповідає за:
 
 MKXL variant не рендерить `UI-CMP-009 Kameo Picker` і не використовує `kameo` як filter facet або combo context field.
 
+## Контракт Стану Variant На Рівні Сторінки
+
+Стан у власності сторінки:
+
+- selected MKXL character, selected variation і optional MKXL stage/interactable filters;
+- variation picker focus target і filter focus target;
+- MKXL route context recovery state;
+- page-level add-to-list і duplicate source context.
+
+Підготовлені UI models для дочірніх компонентів:
+
+- `UI-CMP-007` character picker model для `MKXL.character`;
+- `UI-CMP-008` variation picker model для `MKXL.variation`;
+- `UI-CMP-012` config model із MKXL required context і optional facets;
+- combo card context із `character`, `variation` і optional `stageContext`.
+
+Сторінкові handlers / intents:
+
+- `requestSelectCharacter(payload)`, `requestSelectVariation(payload)`;
+- `requestUpdateMkxlFilter(payload)`, `requestClearMkxlFilters(payload)`;
+- `requestOpenMkxlDetail(payload)`, `requestOpenMkxlAddToList(payload)`, `requestDuplicateMkxlCombo(payload)`.
+
+Бізнес-залежності:
+
+- `@mk-combos/mkxl-business` catalog capabilities для options, route parsing, filtering і summaries.
+
+Не відповідає за:
+
+- direct `mkxl/data` import у shared Catalog page;
+- kameo fields у MKXL page model;
+- browser event payloads у variation/filter callbacks.
+
 ## Дані та контекст
 
 MKXL combo data contract належить `mkxl/data` і `mkxl/rules`. UI variant очікує prepared summary/context із такими полями:
@@ -76,27 +108,36 @@ MKXL Catalog context вважається валідним, коли:
 
 Stage selection не є обов'язковим кроком MKXL catalog flow. Fresh MKXL Catalog лишається `Character -> Variation -> Combo list`; stage використовується як optional filter і metadata для stage-specific combos.
 
-## Зони розмітки
+## Анатомія
+
+Розміщення читається згори вниз як MKXL specialization загальної Catalog сторінки: character і variation формують required context над filters, optional stage/interactable facet живе всередині filter body, dialog відкривається поверх page content.
 
 ```text
 UI-PAGE-003 Catalog / MKXL Variant
-  ├─ MKXL catalog root
-  ├─ UI-CMP-012 Combo List Config Module
-  │  ├─ UI-CMP-007 Character Picker
-  │  ├─ UI-CMP-008 Variation Picker
-  │  └─ UI-CMP-013 Filter Control Group
-  │     ├─ filterHeader / result count / active chips
-  │     └─ filterBody
-  │        ├─ Shared optional filter facets
-  │        └─ Optional stage/interactable facet
-  ├─ UI-CMP-010 Combo List
-  │  └─ UI-CMP-011 Combo Card
-  │     └─ UI-CMP-015 Notation Renderer
-  ├─ UI-CMP-021 Add-To-List Dialog
-  └─ System state area
-     ├─ UI-CMP-029 Empty State
-     └─ UI-CMP-030 Error State
+  └─ (inside UI-PAGE-001 active route slot) MKXL catalog root
+     ├─ (top) UI-CMP-012 Combo List Config Module
+     │  ├─ (top/left) UI-CMP-007 Character Picker
+     │  ├─ (right/below) UI-CMP-008 Variation Picker
+     │  └─ (below both pickers) UI-CMP-013 Filter Control Group
+     │     ├─ (top) filterHeader / result count / active chips
+     │     └─ (below) filterBody
+     │        ├─ (inside) Shared optional filter facets
+     │        └─ (inside, after shared facets) Optional stage/interactable facet
+     ├─ (below config) UI-CMP-010 Combo List
+     │  └─ (inside list) UI-CMP-011 Combo Card
+     │     └─ (inside card summary) UI-CMP-015 Notation Renderer
+     ├─ (below list, conditional) System state area
+     │  ├─ UI-CMP-029 Empty State
+     │  └─ UI-CMP-030 Error State
+     └─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
 ```
+
+Правила розміщення:
+
+- `UI-CMP-008` стоїть після selected character context і не дублюється як optional filter.
+- На `wide13_6Plus` `UI-CMP-007` і `UI-CMP-008` можуть бути сусідніми у `contextRow`; на `compact` вони stack-яться згори вниз.
+- Stage/interactable controls лишаються всередині `UI-CMP-013`, нижче shared optional facets.
+- `UI-CMP-021` монтується як singleton overlay для focused card, а не як child кожної card.
 
 ### MKXL Combo List Config Module
 

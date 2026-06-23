@@ -51,6 +51,20 @@ UI and app import boundaries:
 - `packages/builder-ui` may use React Flow for the visual combo builder canvas.
 - `packages/builder-core` and game business scopes own combo graph rules, validation, replay, and persistence shape.
 
+## Стан На Рівні Сторінки І Pure UI Контракти
+
+Route-level сторінки в `apps/web` є source of truth для стану сторінки, handler-ів сторінки та business orchestration. Сторінка може тримати стан безпосередньо в page component або викликати page-level custom hook, але саме page component декларує цю бізнес-логіку і передає підготовлений результат у child UI components.
+
+Shared UI components є controlled/pure поверхнями:
+
+- component props містять prepared view models, selected/open/focused/expanded state, availability, validation messages і semantic handlers;
+- component handlers приймають abstract intent payloads, наприклад `{ id, value, mode, reason, sourceSurface, sourceFocusTarget }`;
+- public component handlers не приймають `MouseEvent`, `KeyboardEvent`, `PointerEvent`, `ChangeEvent`, `FormEvent`, raw DOM nodes, `event.target` або `event.currentTarget`;
+- browser, DOM, form-library, controller і native file-picker events нормалізуються всередині page, page-level hook або primitive wrapper до того, як потраплять у feature UI contracts;
+- component може використовувати internal DOM або Base UI mechanics для accessibility і focus implementation, але ця internal mechanics не може стати source of truth для route, business, persistence, selection, open/closed або validation state.
+
+Якщо механіку винесено в module, module експортує pure UI component і custom hook. Hook готує state, derived models і semantic handlers. Pages викликають hook і передають результат hook-а в pure UI component. UI component ніколи не імпортує game data, browser persistence, route mutation або controller bridge APIs напряму.
+
 ## Root Scopes
 
 The repository is split by ownership:
@@ -125,11 +139,13 @@ Package name: `@mk-combos/builder-ui`.
 Owns shared builder presentation:
 
 - `ComboWhiteboard`;
+- `useComboWhiteboardModel`;
 - internal `movePicker` region;
 - `ComboFrameMeter`;
+- `useComboFrameMeterModel`;
 - builder layout components and read-only detail rendering support.
 
-It receives prepared state, valid candidates, frame snapshots, invalid markers, and event handlers from the active game builder adapter. It does not decide whether a move is valid.
+Hooks готують builder UI view models і semantic handler payloads із page-provided builder adapter state. `UI-PAGE-006` і `UI-PAGE-004` викликають ці hooks на рівні сторінки, після чого рендерять pure UI components із prepared props. `@mk-combos/builder-ui` не вирішує, чи move валідний, і не пише local state.
 
 ### `packages/controller-bridge`
 
@@ -233,7 +249,7 @@ This shape is intentionally practical rather than heavily generic. The shared ex
 
 - list installed games;
 - resolve route context;
-- render catalog/detail/list/builder surfaces through prepared page models and handlers;
+- render catalog/detail/list/builder surfaces through prepared page models, page-level hooks і semantic handlers;
 - validate game-owned local data;
 - validate and serialize game-owned backup slices.
 

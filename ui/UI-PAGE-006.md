@@ -57,24 +57,72 @@
 - ручну зміну `game`, `language` або `notation display mode`;
 - визначення game-specific graph rules всередині сторінки.
 
-## Зони розмітки
+## Контракт Стану Сторінки
+
+Стан у власності сторінки:
+
+- builder mode: `create`, `duplicate`, `edit` або `repair`;
+- selected game context, optional MKXL stage context і runtime start state;
+- builder adapter state: `movePath`, `cachedNotation`, replay result, valid next moves, invalid boundary і pending truncate state;
+- whiteboard focus state, frame meter inspection state, action bar state і cancel/save dialog state;
+- saved custom combo context і optional add-to-list dialog state.
+
+Підготовлені UI models для дочірніх компонентів:
+
+- `UI-CMP-023` context setup model;
+- `UI-CMP-035` model із `useComboWhiteboardModel`;
+- `UI-CMP-036` model із `useComboFrameMeterModel`;
+- `UI-CMP-026` action bar model і `UI-CMP-031` stale marker model;
+- singleton `UI-CMP-021` add-to-list dialog model after save.
+
+Сторінкові handlers / intents:
+
+- `requestUpdateBuilderContext(payload)`, `requestInitializeBuilder(payload)`;
+- `requestApplyMoveProposal(payload)`, `requestUndoMove(payload)`, `requestConfirmTruncate(payload)`;
+- `requestFocusWhiteboard(payload)`, `requestFocusFrameSegment(payload)`, `requestPreviewCandidate(payload)`;
+- `requestFinishBuilder(payload)`, `requestSaveCustomCombo(payload)`, `requestCancelBuilder(payload)`;
+- `requestOpenSavedComboAddToList(payload)`.
+
+Бізнес-залежності:
+
+- active game business entry point і builder adapter;
+- `@mk-combos/builder-ui` hooks invoked at page level;
+- app-level custom combo persistence і named-list availability.
+
+Не відповідає за:
+
+- graph validation усередині pure UI components;
+- direct `localStorage` writes із builder UI;
+- browser/controller event payloads у whiteboard, frame meter або action bar callbacks.
+
+## Анатомія
+
+Розміщення веде користувача від context setup до builder workspace: спершу summary і setup, потім whiteboard/frame meter, нижче action bar і saved summary. Builder module hooks викликаються на сторінці, а overlays лишаються page-owned singleton surfaces.
 
 ```text
 UI-PAGE-006 Custom Combo Builder
-  ├─ Коренева зона конструктора
-  ├─ Підсумок режиму і контексту
-  ├─ UI-CMP-023 Builder Context Setup
-  ├─ UI-CMP-035 Combo Whiteboard
-  │  ├─ internal movePicker region
-  │  ├─ pathBoard region
-  │  └─ UI-CMP-015 Notation Renderer
-  ├─ UI-CMP-036 Combo Frame Meter
-  ├─ UI-CMP-026 Builder Action Bar
-  ├─ UI-CMP-031 Stale/Invalid Combo Marker
-  ├─ Saved combo summary / UI-CMP-011 Combo Card
-  ├─ UI-CMP-021 Add-To-List Dialog
-  └─ Системні повідомлення / UI-CMP-030 Error State
+  └─ (inside UI-PAGE-001 active route slot) Коренева зона конструктора
+     ├─ (top) Підсумок режиму і контексту
+     │  └─ (below, conditional) UI-CMP-031 Stale/Invalid Combo Marker
+     ├─ (below summary, conditional before ready workspace) UI-CMP-023 Builder Context Setup
+     ├─ (below setup/summary) Builder workspace
+     │  ├─ (left, wide13_6Plus / top, compact) UI-CMP-035 Combo Whiteboard
+     │  │  ├─ (inside) pathBoard region
+     │  │  ├─ (inside/right-or-below) internal movePicker region
+     │  │  └─ (inside path summary) UI-CMP-015 Notation Renderer
+     │  └─ (right, wide13_6Plus / below, compact) UI-CMP-036 Combo Frame Meter
+     ├─ (below workspace / sticky bottom where appropriate) UI-CMP-026 Builder Action Bar
+     ├─ (below action bar, conditional after save) Saved combo summary / UI-CMP-011 Combo Card
+     ├─ (below content, conditional) Системні повідомлення / UI-CMP-030 Error State
+     └─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
 ```
+
+Правила розміщення:
+
+- `UI-CMP-023` стоїть перед editable workspace і зникає або стискається до summary після підтвердження context.
+- На `wide13_6Plus` whiteboard є лівою primary region, frame meter - правою inspection region; на `compact` вони йдуть вертикально.
+- `UI-CMP-026` стоїть нижче workspace або закріплюється внизу viewport, але отримує availability із page-level builder flow.
+- `UI-CMP-021` відкривається тільки після saved combo context як singleton overlay, не всередині `@mk-combos/builder-ui`.
 
 ### Коренева зона конструктора
 

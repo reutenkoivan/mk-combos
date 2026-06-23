@@ -37,6 +37,28 @@ Contextual hints не показуються автоматично. Hint panel 
 
 `UI-CMP-005` не позиціонується самостійно в shell layout і не є direct child `UI-PAGE-001 App Shell`.
 
+## Анатомія
+
+Розміщення має compact indicator у Top Bar і conditional hint panel, який відкривається під/поруч із trigger без переміщення global navigation.
+
+```text
+UI-CMP-005 Controller Hint Strip
+  └─ (inside UI-CMP-001 controller indicator area) Indicator root
+     ├─ (left) Connection status icon
+     ├─ (right) Controller profile label
+     ├─ (right/inside indicator) Hint panel trigger
+     └─ (below/overlay, conditional) Hint panel, якщо `hintPanelState = open`
+        ├─ (top) Active surface command list
+        ├─ (below) Controller button labels
+        └─ (below, optional) Дія controller help
+```
+
+Правила розміщення:
+
+- Indicator root стоїть outside `UI-CMP-033` і не переноситься в dropdown menu.
+- Hint panel відкривається від trigger як overlay/anchored surface; його visibility, open/closed state і localized hint model приходять із `UI-CMP-001` / App Shell inputs.
+- Command labels усередині panel читаються згори вниз у тому порядку, який підготував controller command model.
+
 ## Вхідні дані
 
 - `controllerConnectionState`: стан підключення controller.

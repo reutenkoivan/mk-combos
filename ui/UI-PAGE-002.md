@@ -31,20 +31,62 @@ Valid route-prefixed deep link не рендерить `UI-PAGE-002`. Якщо U
 
 Game options у setup беруться з `apps/web/src/game-business/installed-games.ts`. Setup не хардкодить MKXL/MK1 як єдині можливі ігри, а рендерить installed games.
 
-## Зони розмітки
+## Контракт Стану Сторінки
+
+Стан у власності сторінки:
+
+- draft initial game, language і notation display mode;
+- validation state для required setup choices;
+- persistence/session-only acknowledgement state;
+- saving/completion state і post-completion route target;
+- focus target для setup form і confirmation action.
+
+Підготовлені UI models для дочірніх компонентів:
+
+- `UI-CMP-006` form model із draft values, validation, saving і persistence availability;
+- `UI-CMP-002`, `UI-CMP-003`, `UI-CMP-004` selector models;
+- `UI-CMP-037` read-only notation legend model.
+
+Сторінкові handlers / intents:
+
+- `requestSelectInitialGame(payload)`, `requestSelectInitialLanguage(payload)`, `requestSelectInitialDisplayMode(payload)`;
+- `requestConfirmFirstLaunch(payload)`;
+- `requestAcknowledgeSessionOnly(payload)`.
+
+Бізнес-залежності:
+
+- installed games registry;
+- app-level settings defaults і persistence availability;
+- first-launch completion marker.
+
+Не відповідає за:
+
+- route navigation усередині child selector components;
+- seeded data reads усередині setup controls;
+- public handlers із browser event payloads.
+
+## Анатомія
+
+Розміщення читається згори вниз у active route slot: короткий summary стоїть над формою, повідомлення про persistence нижче форми.
 
 ```text
 UI-PAGE-002 First-Launch Setup
-  ├─ Setup root
-  ├─ Capabilities summary
-  ├─ UI-CMP-006 First-Launch Setup Form
-  │  ├─ UI-CMP-002 Game Switcher
-  │  ├─ UI-CMP-003 Language Switcher
-  │  ├─ UI-CMP-004 Display Mode Switcher
-  │  ├─ UI-CMP-037 Notation Legend Table
-  │  └─ Confirmation action
-  └─ Session-only / system message area
+  └─ (inside UI-PAGE-001 active route slot) Setup root
+     ├─ (top) Capabilities summary
+     ├─ (below) UI-CMP-006 First-Launch Setup Form
+     │  ├─ (top) UI-CMP-002 Game Switcher
+     │  ├─ (below) UI-CMP-003 Language Switcher
+     │  ├─ (below) UI-CMP-004 Display Mode Switcher
+     │  ├─ (below) UI-CMP-037 Notation Legend Table
+     │  └─ (below) Confirmation action
+     └─ (below) Session-only / system message area
 ```
+
+Правила розміщення:
+
+- Setup root займає active route slot і блокує робочі surfaces до completion.
+- Confirmation action стоїть після required selectors, а не в Top Bar.
+- System message не перекриває form controls.
 
 ### Setup root
 

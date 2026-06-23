@@ -8,7 +8,7 @@
 - Статус деталізації: `Описано`
 - Батьківська мапа: [UI.md](../UI.md)
 - Пов'язані компоненти: [`UI-CMP-001`](./UI-CMP-001.md), [`UI-CMP-002`](./UI-CMP-002.md)
-- Вкладені компоненти: [`UI-CMP-005`](./UI-CMP-005.md), [`UI-CMP-002`](./UI-CMP-002.md), `UI-CMP-032`, [`UI-CMP-033`](./UI-CMP-033.md) всередині `UI-CMP-001`
+- Вкладені компоненти: [`UI-CMP-005`](./UI-CMP-005.md), [`UI-CMP-002`](./UI-CMP-002.md), [`UI-CMP-032`](./UI-CMP-032.md), [`UI-CMP-033`](./UI-CMP-033.md) всередині `UI-CMP-001`
 - Пов'язані UX сценарії: `US-001`, `US-008`, `US-009`, `US-019`, `US-021`, `US-022`, `US-023`, `US-024`
 
 ## Призначення
@@ -56,20 +56,63 @@ App Shell не відповідає за:
 - збереження settings у localStorage;
 - пряму зміну стану доменних компонентів.
 
-## Зони розмітки
+## Контракт Стану Сторінки
+
+Стан у власності сторінки:
+
+- active route, route params, active surface code і deprecated redirect state;
+- applied settings, first-launch completion, active/default game і active business entry point;
+- controller connection state, semantic command stream і shell-level focus target;
+- top bar layout mode, breadcrumbs model, top bar menu state і controller hint panel state;
+- shell overlays, system messages і safe fallback navigation target.
+
+Підготовлені UI models для дочірніх компонентів:
+
+- `UI-CMP-001` top bar model із breadcrumbs, game switcher data, controller indicator data, menu state і navigation availability;
+- active page model із applied settings, active business entry point, controller commands і route context;
+- overlay/system message models для page-level dialogs, яким потрібне shell placement.
+
+Сторінкові handlers / intents:
+
+- `requestNavigateSurface(payload)`, `requestNavigateBreadcrumb(payload)`, `requestSwitchGame(payload)`;
+- `requestOpenTopBarMenu(payload)`, `requestCloseTopBarMenu(payload)`, `requestToggleHints(payload)`;
+- `requestApplySettings(payload)`, `requestResolveDeepLink(payload)`, `requestHandleControllerCommand(payload)`.
+
+Бізнес-залежності:
+
+- installed game registry in `apps/web/src/game-business/installed-games.ts`;
+- app-level settings persistence and first-launch marker;
+- `@mk-combos/controller-bridge` semantic commands.
+
+Не відповідає за:
+
+- game-specific catalog/detail/list/builder rules;
+- direct child UI browser event payloads;
+- direct mutation of game-owned seeded data.
+
+## Анатомія
+
+Розміщення читається згори вниз: Top Bar завжди зверху, active route slot під ним, overlays і системні повідомлення накладаються поверх page content.
 
 ```text
 UI-PAGE-001 App Shell
-  ├─ UI-CMP-001 Global Top Bar
+  ├─ (top) UI-CMP-001 Global Top Bar
   │  ├─ UI-CMP-005 Controller Hint Strip
   │  ├─ UI-CMP-032 Breadcrumbs
   │  │  └─ UI-CMP-002 Game Switcher
   │  └─ UI-CMP-033 Top Bar Dropdown Menu
-  ├─ Installed game business registry
-  ├─ Слот активної сторінки
-  ├─ Шар накладних панелей і діалогів
-  ├─ Область системних повідомлень
+  ├─ (below) Active route slot
+  │  └─ UI-PAGE-002 / 003 / 004 / 005 / 006 / 008
+  ├─ (overlay) Шар накладних панелей і page-owned dialogs
+  ├─ (overlay) Область системних повідомлень
+  └─ (inside, non-visual) Installed game business registry
 ```
+
+Правила розміщення:
+
+- `UI-CMP-001` завжди розташований над active route slot.
+- Active page ніколи не рендерить власний global top bar.
+- Page-owned dialogs можуть фізично монтуватися в shell overlay layer, але ownership лишається у відповідної active page.
 
 ### Кореневий контейнер Shell
 
@@ -92,7 +135,7 @@ UI-PAGE-001 App Shell
 Top Bar має:
 
 - використовувати `topBarLayoutMode` для conditional JSX composition, а не CSS-only hiding;
-- у `wide13_6Plus` рендерити `UI-CMP-032 Breadcrumbs`, де першим item є [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md);
+- у `wide13_6Plus` рендерити [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md), де першим item є [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md);
 - у `compact` не монтувати inline breadcrumbs або inline game switcher;
 - передавати game-switch intent із breadcrumbs або compact menu до App Shell;
 - рендерити `UI-CMP-005 Controller Hint Strip` поруч із navigation block у `wide13_6Plus` або outside dropdown menu у `compact`;

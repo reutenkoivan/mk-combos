@@ -48,19 +48,27 @@
 - зміну `movePath`, `cachedNotation` або seeded combo data;
 - читання Browser Gamepad API напряму.
 
-## Anatomy
+## Анатомія
+
+Розміщення є results region після config module: optional status займає верхній/empty slot, а card collection читається згори вниз у порядку prepared visible combos.
 
 ```text
 UI-CMP-010 Combo List
-  ├─ listRoot / results region
-  ├─ optional list status
-  │  ├─ loading state
-  │  ├─ disabled/context guidance state
-  │  └─ UI-CMP-029 Empty State
-  └─ comboCardCollection
-     └─ UI-CMP-011 Combo Card
-        └─ UI-CMP-015 Notation Renderer
+  └─ (below UI-CMP-012 in Catalog) listRoot / results region
+     ├─ (top, conditional) optional list status
+     │  ├─ loading state
+     │  ├─ disabled/context guidance state
+     │  └─ UI-CMP-029 Empty State
+     └─ (below status / top if ready) comboCardCollection
+        └─ (inside collection item) UI-CMP-011 Combo Card
+           └─ (inside card summary) UI-CMP-015 Notation Renderer
 ```
+
+Правила розміщення:
+
+- `comboCardCollection` не стоїть поруч із config module; config завжди вище list.
+- Status slot займає місце перед collection або замінює її, якщо parent model не має visible combos.
+- Cards зберігають порядок, переданий Catalog page, без локального sorting/pagination ownership.
 
 ### `listRoot`
 

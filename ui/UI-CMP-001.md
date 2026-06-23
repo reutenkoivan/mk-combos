@@ -8,7 +8,7 @@
 - Статус деталізації: `Описано`
 - Батьківська мапа: [UI.md](../UI.md)
 - Батьківська сторінка: `UI-PAGE-001 App Shell`
-- Вкладені компоненти: [`UI-CMP-005 Controller Hint Strip`](./UI-CMP-005.md), `UI-CMP-032 Breadcrumbs`, [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md), [`UI-CMP-033 Top Bar Dropdown Menu`](./UI-CMP-033.md)
+- Вкладені компоненти: [`UI-CMP-005 Controller Hint Strip`](./UI-CMP-005.md), [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md), [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md), [`UI-CMP-033 Top Bar Dropdown Menu`](./UI-CMP-033.md)
 - Пов'язані UX сценарії: `US-019`, `US-021`, `US-022`, `US-023`, `US-024`
 
 ## Призначення
@@ -24,7 +24,7 @@
 - compact burger menu для top-bar navigation, коли viewport менший за desktop layout;
 - compact controller indicator і hint panel через вкладений `UI-CMP-005 Controller Hint Strip`.
 
-Top Bar не є сторінкою налаштувань. Він може відкрити `UI-PAGE-008 Settings`, але language і notation display mode лишаються page-owned settings controls. Game switching після first launch відбувається через [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md) усередині `UI-CMP-032 Breadcrumbs`.
+Top Bar не є сторінкою налаштувань. Він може відкрити `UI-PAGE-008 Settings`, але language і notation display mode лишаються page-owned settings controls. Game switching після first launch відбувається через [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md) усередині [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md).
 
 Backup доступний усередині `UI-PAGE-008 Settings` через `UI-CMP-034 Backup Collapsible Block`; Top Bar не має окремого Backup action.
 
@@ -34,26 +34,28 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 
 `UI-CMP-001 Global Top Bar` отримує цей стан через inputs і відповідає тільки за верхню навігаційну панель:
 
-- рендерить `UI-CMP-032 Breadcrumbs`, де першим item є [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md), тільки у `wide13_6Plus` layout;
+- рендерить [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md), де першим item є [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md), тільки у `wide13_6Plus` layout;
 - рендерить `UI-CMP-005 Controller Hint Strip` поруч із navigation block у `wide13_6Plus` або outside burger menu у `compact`;
 - рендерить [`UI-CMP-033 Top Bar Dropdown Menu`](./UI-CMP-033.md) як right-pinned burger menu;
 - керує responsive composition через conditional JSX на основі `topBarLayoutMode`;
 - передає breadcrumb game-switch intent в App Shell;
-- контролює місце, видимість і open/closed state hint panel для `UI-CMP-005`;
-- контролює open/closed state dropdown menu.
+- рендерить місце і видимість `UI-CMP-005` за controlled inputs від App Shell;
+- передає controlled `hintPanelState` і `topBarMenuState` у відповідні child components.
 
-`UI-CMP-001` не є owner для applied settings і не змінює `game`, `language` або `notation display mode` напряму.
+`UI-CMP-001` не є owner для applied settings, route, `game`, `language`, `notation display mode`, `hintPanelState` або `topBarMenuState`. Він емітить semantic intents із payload і не передає browser event objects назовні.
 
-## Зони розмітки
+## Анатомія
+
+Розміщення є горизонтальною верхньою панеллю: navigation починається ліворуч, controller indicator стоїть поруч із navigation, menu завжди прибитий праворуч.
 
 ```text
 UI-CMP-001 Global Top Bar
-  ├─ Root bar
-  ├─ UI-CMP-032 Breadcrumbs (wide13_6Plus only)
-  │  └─ UI-CMP-002 Game Switcher
-  ├─ Controller indicator area
-  │  └─ UI-CMP-005 Controller Hint Strip
-  └─ UI-CMP-033 Top Bar Dropdown Menu
+  └─ (top, inside UI-PAGE-001) Root bar
+     ├─ (left, wide13_6Plus only) UI-CMP-032 Breadcrumbs
+     │  └─ (inside first crumb) UI-CMP-002 Game Switcher
+     ├─ (right of breadcrumbs / left of menu) Controller indicator area
+     │  └─ (inside) UI-CMP-005 Controller Hint Strip
+     └─ (right, pinned) UI-CMP-033 Top Bar Dropdown Menu
 ```
 
 На `wide13_6Plus` горизонтальний порядок зон є стабільним:
@@ -69,6 +71,12 @@ Controller indicator area, якщо visible -> right-pinned burger menu
 ```
 
 У `compact` menu surface `UI-CMP-033` монтує equivalents для прихованих navigation affordances: game switcher, Catalog/current trail navigation, Named Lists, Builder і Settings.
+
+Правила розміщення:
+
+- На `wide13_6Plus` порядок завжди: breadcrumbs із game switcher зліва, controller indicator після них, dropdown menu праворуч.
+- На `compact` inline breadcrumbs і inline `UI-CMP-002` не монтуються; їхні equivalents живуть усередині `UI-CMP-033`.
+- Visible controller indicator лишається outside dropdown menu в обох layout modes.
 
 ### Root bar
 
@@ -135,6 +143,8 @@ CSS може стилізувати змонтовані гілки, але не
 У `compact` JSX не монтує inline `UI-CMP-032 Breadcrumbs` або inline `UI-CMP-002`; вони не мають бути hidden-but-focusable.
 
 ### UI-CMP-032 Breadcrumbs
+
+Детальна специфікація: [UI-CMP-032 Breadcrumbs](./UI-CMP-032.md).
 
 `UI-CMP-032 Breadcrumbs` показує contextual navigation trail для active surface.
 
@@ -233,8 +243,8 @@ Menu не містить inline controls для `language` або `notation disp
 - передачу game-switch intent в App Shell;
 - розміщення `UI-CMP-005` поруч із navigation block;
 - показ right-pinned `UI-CMP-033 Top Bar Dropdown Menu`;
-- open/closed state hint panel;
-- open/closed state dropdown menu;
+- рендер controlled open/closed state hint panel;
+- рендер controlled open/closed state dropdown menu;
 - keyboard accessibility для власних controls.
 
 Компонент не відповідає за:

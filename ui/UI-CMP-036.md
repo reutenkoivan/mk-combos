@@ -29,9 +29,16 @@ Frame Meter показує SF6-style frame timeline і числові значе
 Власники стану:
 
 - active game builder adapter володіє replay state, runtime state, valid next moves, invalid reasons і frame-aware transition results;
-- `UI-CMP-035 Combo Whiteboard` володіє path focus, candidate focus, selected group, selected gap і edit target;
-- `UI-CMP-036` володіє тільки inspection focus: selected timeline segment, open segment details і local scope selection;
+- `useComboWhiteboardModel` готує path focus, candidate focus, selected group, selected gap і edit target;
+- `useComboFrameMeterModel` викликається на рівні page flow і готує inspection focus: selected timeline segment, open segment details і local scope selection;
 - `UI-PAGE-004` і `UI-PAGE-006` координують, який frame snapshot передано компоненту.
+
+Пара module exports:
+
+- hook: `useComboFrameMeterModel`;
+- pure UI component: `ComboFrameMeter` / `UI-CMP-036`.
+
+Виклик hook-а належить `UI-PAGE-006` або `UI-PAGE-004`; pure UI component не імпортує builder adapter, route state, persistence або game packages напряму.
 
 Компонент не має:
 
@@ -42,6 +49,32 @@ Frame Meter показує SF6-style frame timeline і числові значе
 - писати `cachedNotation`;
 - зберігати custom combo;
 - змінювати seeded combo data.
+
+## Анатомія
+
+Розміщення frame meter є inspection panel: scope switch стоїть зверху, timeline під ним, selected segment details і frame summary розміщені нижче або поруч залежно від viewport, invalid/repair annotations лишаються біля відповідної timeline/detail area.
+
+```text
+UI-CMP-036 Combo Frame Meter
+  └─ (right/below inside builder/detail workspace) Корінь Frame Meter
+     ├─ (top) Scope switch region
+     │  ├─ (left/top) Selected move scope
+     │  └─ (right/below) Whole combo scope
+     ├─ (below scope switch) Timeline region
+     │  └─ (inside timeline order) Timeline segment
+     ├─ (below/right of timeline, conditional) Selected segment details
+     ├─ (below details/timeline) Frame value summary region
+     ├─ (inside timeline/detail, conditional) Transition gap / frame window annotation region
+     ├─ (below affected segment/details, conditional) Invalid/repair annotation region
+     └─ (bottom/inside panel, optional) Focus sync action slot
+```
+
+Правила розміщення:
+
+- Scope switch завжди передує timeline і визначає, який prepared inspection model показується.
+- На `wide13_6Plus` selected segment details можуть стояти праворуч від timeline; на `compact` вони йдуть нижче timeline.
+- Frame summary стоїть після selected details/timeline і не замінює invalid/repair annotations.
+- Selected segment, details open state і active scope готує `useComboFrameMeterModel`, який page component викликає на page рівні.
 
 ## Вхідні дані
 
@@ -65,13 +98,14 @@ Frame meter snapshot є derived state з explicit move frame data, edge `frameWi
 
 У всіх modes:
 
-- request focus timeline segment;
-- request open segment details;
-- request close segment details;
-- request switch scope між `selectedMove` і `wholeCombo`;
-- request focus matching whiteboard step, якщо segment відповідає step у `movePath`.
+- `requestFocusTimelineSegment(payload)`;
+- `requestOpenSegmentDetails(payload)`;
+- `requestCloseSegmentDetails(payload)`;
+- `requestSwitchFrameScope(payload)` між `selectedMove` і `wholeCombo`;
+- `requestFocusMatchingWhiteboardStep(payload)`, якщо segment відповідає step у `movePath`.
 
 Компонент не емітить mutation events, persistence events або graph validation events.
+Output payloads містять segment id, scope, reason і source focus target. Component не передає browser event objects у page-level handlers.
 
 ## Режими
 
