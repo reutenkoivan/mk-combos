@@ -20,17 +20,33 @@
 
 Розміщення є navigation index: header/action region зверху, list items нижче, empty/error slot займає list area, коли items відсутні або недоступні.
 
-```text
-UI-CMP-019 Named List Index
-  └─ (left/top region of UI-PAGE-005 workspace) Корінь index
-     ├─ (top) Header/action region
-     │  └─ (right/below) Create list action
-     ├─ (below header) Named list item list
-     │  └─ (inside list) Named list item
-     │     ├─ (left/top) List name
-     │     ├─ (right/below) Item count
-     │     └─ (right/bottom, optional) Rename/delete action affordances
-     └─ (inside list area, conditional) Empty/error slot
+```jsx
+<NamedListIndex ui="UI-CMP-019">
+  <NamedListIndexRegion slot="UI-PAGE-005 workspace">
+    <Stack name="IndexLayout">
+      <HeaderActionRegion>
+        <CreateListAction />
+      </HeaderActionRegion>
+
+      <NamedListItemList>
+        <NamedListItem>
+          <Group name="NamedListItemContent">
+            <ListName />
+            <ItemCount />
+
+            <Show when={hasRenameDeleteAffordances}>
+              <RenameDeleteActionAffordances />
+            </Show>
+          </Group>
+        </NamedListItem>
+      </NamedListItemList>
+
+      <Show when={hasEmptyErrorState}>
+        <EmptyErrorSlot />
+      </Show>
+    </Stack>
+  </NamedListIndexRegion>
+</NamedListIndex>
 ```
 
 Правила розміщення:

@@ -20,17 +20,38 @@ Active page і active game business володіють stale detection, invalid 
 
 Розміщення marker є inline/compact status block: status label стоїть перед readable reason, affected reference і recovery actions додаються нижче як optional rows.
 
-```text
-UI-CMP-031 Stale/Invalid Combo Marker
-  └─ (inside parent marker slot) Корінь marker
-     ├─ (top/left) Status icon/label region
-     ├─ (top/right або below label) Readable reason region
-     ├─ (below reason, optional) affected move/edge reference
-     ├─ (below affected reference, optional) valid prefix summary
-     └─ (below marker text, conditional) Recovery action region
-        ├─ Open detail action
-        ├─ Repair/edit action
-        └─ Remove/dismiss action, якщо дозволено page model
+```jsx
+<StaleInvalidComboMarker ui="UI-CMP-031">
+  <StaleInvalidMarkerSurface slot="parent marker">
+    <Stack name="MarkerLayout">
+      <Group name="MarkerSummaryRow">
+        <StatusIconLabelRegion />
+        <ReadableReasonRegion />
+      </Group>
+
+      <Show when={hasAffectedMoveEdgeReference}>
+        <AffectedMoveEdgeReference />
+      </Show>
+
+      <Show when={hasValidPrefixSummary}>
+        <ValidPrefixSummary />
+      </Show>
+
+      <Show when={hasRecoveryActions}>
+        <RecoveryActionRegion>
+          <Group name="MarkerRecoveryActions">
+            <OpenDetailAction />
+            <RepairEditAction />
+
+            <Show when={canRemoveOrDismiss}>
+              <RemoveDismissAction />
+            </Show>
+          </Group>
+        </RecoveryActionRegion>
+      </Show>
+    </Stack>
+  </StaleInvalidMarkerSurface>
+</StaleInvalidComboMarker>
 ```
 
 Правила розміщення:

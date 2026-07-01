@@ -89,14 +89,40 @@ Recommended option labels:
 
 Розміщення є form-control row: label стоїть перед segmented control, а status message завжди нижче control group.
 
-```text
-UI-CMP-003 Language Switcher
-  └─ (inside First Launch або Settings form) Root field/group
-     ├─ (top/left) Visible label або accessible name
-     ├─ (below/right) Segmented language control
-     │  ├─ (left/top) Language segment: EN
-     │  └─ (right/below) Language segment: UA
-     └─ (below control, conditional) Optional validation або status message
+```jsx
+<LanguageSwitcher ui="UI-CMP-003">
+  <LanguageFieldGroup slot="First Launch або Settings form">
+    <Stack name="FieldGroupLayout">
+      <Show when={isWideForm}>
+        <Group name="LanguageControlRow">
+          <VisibleLabel />
+          <SegmentedLanguageControl>
+            <Group name="LanguageSegments">
+              <EnglishLanguageSegment />
+              <UkrainianLanguageSegment />
+            </Group>
+          </SegmentedLanguageControl>
+        </Group>
+      </Show>
+
+      <Show when={isCompact}>
+        <Stack name="LanguageControlStack">
+          <VisibleLabel />
+          <SegmentedLanguageControl>
+            <Group name="LanguageSegments">
+              <EnglishLanguageSegment />
+              <UkrainianLanguageSegment />
+            </Group>
+          </SegmentedLanguageControl>
+        </Stack>
+      </Show>
+
+      <Show when={hasValidationStatusMessage}>
+        <ValidationStatusMessage />
+      </Show>
+    </Stack>
+  </LanguageFieldGroup>
+</LanguageSwitcher>
 ```
 
 Правила розміщення:
@@ -104,9 +130,9 @@ UI-CMP-003 Language Switcher
 - На wide form layouts label і segmented control можуть стояти поруч; на `compact` label і control stack-яться згори вниз.
 - Status message ніколи не стоїть між segments і не змінює selected state; він рендерить prepared validation/status input.
 
-### Root field/group
+### FieldGroup
 
-Root group є form-control region усередині First Launch або Settings form.
+FieldGroup є form-control region усередині First Launch або Settings form.
 
 Вимоги:
 
@@ -333,7 +359,7 @@ Implementation має використовувати semantic recipes у `packag
 Recommended shared recipes:
 
 - `control` для clickable segments;
-- `field` або segmented-control wrapper для root bordered group;
+- `field` або segmented-control wrapper для bordered `FieldGroup`;
 - `indicator` для selected/current mark;
 - `separator` для subtle segment division, якщо потрібно.
 

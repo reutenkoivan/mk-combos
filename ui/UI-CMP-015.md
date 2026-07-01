@@ -50,15 +50,28 @@ App Shell і Settings володіють active `notationDisplayMode`. Active ga
 
 Розміщення renderer є inline або compact block sequence: accessible summary стоїть перед token sequence, а tokens читаються зліва направо з wrap на наступний рядок.
 
-```text
-UI-CMP-015 Notation Renderer
-  └─ (inside parent notation slot) notationRoot
-     ├─ (top/visually hidden, conditional) optional accessible summary
-     └─ (below/inline) tokenSequence
-        ├─ (left-to-right) input token
-        ├─ (between tokens) separator token
-        ├─ (adjacent to input) modifier token
-        └─ (overlay/adjacent, conditional) optional invalid/unavailable marker
+```jsx
+<NotationRenderer ui="UI-CMP-015">
+  <NotationRegion slot="parent notation">
+    <Stack name="NotationLayout">
+      <Show when={hasAccessibleSummary}>
+        <AccessibleSummary visuallyHidden />
+      </Show>
+
+      <TokenSequence>
+        <Group name="NotationTokens">
+          <InputToken />
+          <SeparatorToken />
+          <ModifierToken />
+
+          <Show when={hasInvalidUnavailableMarker}>
+            <InvalidUnavailableMarker />
+          </Show>
+        </Group>
+      </TokenSequence>
+    </Stack>
+  </NotationRegion>
+</NotationRenderer>
 ```
 
 Правила розміщення:
@@ -67,11 +80,11 @@ UI-CMP-015 Notation Renderer
 - Invalid/unavailable markers stay adjacent to the affected token or group, not detached into a separate status block.
 - Wrapping may move tokens to the next line, but source order remains left-to-right.
 
-### `notationRoot`
+### `NotationRegion`
 
-`notationRoot` є display region усередині parent component.
+`NotationRegion` є display region усередині parent component.
 
-Root має:
+NotationRegion має:
 
 - readable label або accessible name, якщо notation не очевидна з parent;
 - stable inline або block layout залежно від density;

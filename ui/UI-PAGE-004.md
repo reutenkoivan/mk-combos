@@ -114,26 +114,63 @@ Combo Detail є shared page. Route має форму `/:gameId/combos/:source/:c
 
 ## Анатомія
 
-Розміщення починається з header, далі основний detail workspace; у широкому режимі whiteboard і frame meter стоять поруч, у compact вони стають вертикальною послідовністю. Page-owned dialogs і menus відкриваються поверх detail root.
+Розміщення починається з header, далі основний detail workspace; у широкому режимі whiteboard і frame meter стоять поруч, у compact вони стають вертикальною послідовністю. Page-owned dialogs і menus відкриваються поверх DetailSurface.
 
-```text
-UI-PAGE-004 Combo Detail
-  └─ (inside UI-PAGE-001 active route slot) Detail root
-     ├─ (top) UI-CMP-014 Combo Detail Header
-     │  ├─ (top) title / return action
-     │  ├─ (below) combo characteristic chips
-     │  ├─ (below, conditional) UI-CMP-031 Stale/Invalid Combo Marker
-     │  └─ (right/below) primary Add-To-List action
-     ├─ (below header) Detail workspace
-     │  ├─ (left, wide13_6Plus / top, compact) UI-CMP-035 Combo Whiteboard
-     │  │  └─ (inside path summary) UI-CMP-015 Notation Renderer
-     │  └─ (right, wide13_6Plus / below, compact) UI-CMP-036 Combo Frame Meter
-     ├─ (below workspace) Combo description
-     │  └─ (inside) localized notes, source і gameVersion
-     ├─ (below description) UI-CMP-017 Combo Metadata Grid
-     ├─ (below content, conditional) UI-CMP-030 Error State
-     ├─ (overlay, anchored to action source) UI-CMP-018 Combo Actions Menu
-     └─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
+```jsx
+<ComboDetailPage ui="UI-PAGE-004">
+  <DetailSurface slot="UI-PAGE-001 active route">
+    <Stack name="DetailLayout">
+      <ComboDetailHeader ui="UI-CMP-014">
+        <TitleReturnAction />
+        <ComboCharacteristicChips />
+
+        <Show when={hasStaleInvalidMarker}>
+          <StaleInvalidComboMarker ui="UI-CMP-031" />
+        </Show>
+
+        <PrimaryAddToListAction />
+      </ComboDetailHeader>
+
+      <Show when={isWide13_6Plus}>
+        <Group name="DetailWorkspace">
+          <ComboWhiteboard ui="UI-CMP-035">
+            <NotationRenderer ui="UI-CMP-015" />
+          </ComboWhiteboard>
+
+          <ComboFrameMeter ui="UI-CMP-036" />
+        </Group>
+      </Show>
+
+      <Show when={isCompact}>
+        <Stack name="DetailWorkspace">
+          <ComboWhiteboard ui="UI-CMP-035">
+            <NotationRenderer ui="UI-CMP-015" />
+          </ComboWhiteboard>
+
+          <ComboFrameMeter ui="UI-CMP-036" />
+        </Stack>
+      </Show>
+
+      <ComboDescription>
+        <LocalizedNotesSourceGameVersion />
+      </ComboDescription>
+
+      <ComboMetadataGrid ui="UI-CMP-017" />
+
+      <Show when={hasErrorState}>
+        <ErrorState ui="UI-CMP-030" />
+      </Show>
+
+      <Show when={comboActionsMenuOpen}>
+        <ComboActionsMenu ui="UI-CMP-018" />
+      </Show>
+
+      <Show when={isAddToListDialogOpen}>
+        <AddToListDialog ui="UI-CMP-021" />
+      </Show>
+    </Stack>
+  </DetailSurface>
+</ComboDetailPage>
 ```
 
 Правила розміщення:
@@ -143,11 +180,11 @@ UI-PAGE-004 Combo Detail
 - `UI-CMP-018` є anchored overlay від action source, а `UI-CMP-021` є singleton dialog на рівні сторінки.
 - Error state стоїть у page content або overlay layer залежно від severity, але його model і recovery intents належать сторінці.
 
-### Detail root
+### DetailSurface
 
-Detail root є page-level container, який рендериться в slot активної сторінки `UI-PAGE-001 App Shell`.
+DetailSurface є page-level container, який рендериться в slot активної сторінки `UI-PAGE-001 App Shell`.
 
-Root має:
+DetailSurface має:
 
 - показувати detail content для одного active combo;
 - не бути modal, dropdown panel або settings screen;
@@ -384,7 +421,7 @@ Route context прийнятий, але combo lookup або required data ще 
 
 Очікуваний UI:
 
-- header або detail root показує loading state;
+- header або DetailSurface показує loading state;
 - App Shell top bar лишається доступним;
 - actions disabled, доки combo identity не підтверджена;
 - previous source context не губиться.

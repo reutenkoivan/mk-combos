@@ -52,16 +52,36 @@
 
 Розміщення є results region після config module: optional status займає верхній/empty slot, а card collection читається згори вниз у порядку prepared visible combos.
 
-```text
-UI-CMP-010 Combo List
-  └─ (below UI-CMP-012 in Catalog) listRoot / results region
-     ├─ (top, conditional) optional list status
-     │  ├─ loading state
-     │  ├─ disabled/context guidance state
-     │  └─ UI-CMP-029 Empty State
-     └─ (below status / top if ready) comboCardCollection
-        └─ (inside collection item) UI-CMP-011 Combo Card
-           └─ (inside card summary) UI-CMP-015 Notation Renderer
+```jsx
+<ComboList ui="UI-CMP-010">
+  <ComboResultsRegion slot="Catalog after UI-CMP-012">
+    <Stack name="ResultsLayout">
+      <Show when={hasListStatus}>
+        <OptionalListStatus>
+          <Stack name="ListStatusContent">
+            <Show when={isLoading}>
+              <LoadingState />
+            </Show>
+
+            <Show when={hasDisabledContextGuidance}>
+              <DisabledContextGuidanceState />
+            </Show>
+
+            <Show when={isEmpty}>
+              <EmptyState ui="UI-CMP-029" />
+            </Show>
+          </Stack>
+        </OptionalListStatus>
+      </Show>
+
+      <ComboCardCollection>
+        <ComboCard ui="UI-CMP-011">
+          <NotationRenderer ui="UI-CMP-015" />
+        </ComboCard>
+      </ComboCardCollection>
+    </Stack>
+  </ComboResultsRegion>
+</ComboList>
 ```
 
 Правила розміщення:
@@ -70,11 +90,11 @@ UI-CMP-010 Combo List
 - Status slot займає місце перед collection або замінює її, якщо parent model не має visible combos.
 - Cards зберігають порядок, переданий Catalog page, без локального sorting/pagination ownership.
 
-### `listRoot`
+### `ResultsRegion`
 
-`listRoot` є focus zone після `UI-CMP-012 Combo List Config Module`.
+`ResultsRegion` є focus zone після `UI-CMP-012 Combo List Config Module`.
 
-Root має:
+ResultsRegion має:
 
 - readable label або accessible name для combo results;
 - stable layout для переходу між cards;

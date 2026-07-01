@@ -54,25 +54,45 @@ Available facets, result count і compatibility messages приходять із
 
 Розміщення є collapsible filter block: header завжди зверху і видимий, body розташований під ним тільки коли parent передав expanded model.
 
-```text
-UI-CMP-013 Filter Control Group
-  └─ (inside UI-CMP-012, below contextRow) Filter root
-     ├─ (top, always visible) filterHeader
-     │  ├─ (left/top) expand/collapse trigger
-     │  ├─ (near trigger) result count
-     │  ├─ (below/right) active optional-filter chips
-     │  └─ (right/below) Clear filters control
-     └─ (below header, conditional expanded) filterBody
-        └─ (inside body) optional facet controls
-           ├─ starter
-           ├─ position
-           ├─ meter
-           ├─ damage
-           ├─ difficulty
-           ├─ route type
-           ├─ tags
-           ├─ MKXL only: stage
-           └─ MKXL only: interactable
+```jsx
+<FilterControlGroup ui="UI-CMP-013">
+  <FilterControlRegion slot="UI-CMP-012">
+    <Stack name="FilterLayout">
+      <FilterHeader>
+        <Stack name="FilterHeaderLayout">
+          <Group name="FilterHeaderMainRow">
+            <ExpandCollapseTrigger />
+            <ResultCount />
+            <ClearFiltersControl />
+          </Group>
+
+          <ActiveOptionalFilterChips />
+        </Stack>
+      </FilterHeader>
+
+      <Show when={filterGroupExpanded}>
+        <FilterBody>
+          <OptionalFacetControls>
+            <Stack name="OptionalFacetList">
+              <StarterFacet />
+              <PositionFacet />
+              <MeterFacet />
+              <DamageFacet />
+              <DifficultyFacet />
+              <RouteTypeFacet />
+              <TagsFacet />
+
+              <Show when={activeGame === "MKXL"}>
+                <StageFacet />
+                <InteractableFacet />
+              </Show>
+            </Stack>
+          </OptionalFacetControls>
+        </FilterBody>
+      </Show>
+    </Stack>
+  </FilterControlRegion>
+</FilterControlGroup>
 ```
 
 Правила розміщення:

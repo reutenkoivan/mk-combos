@@ -99,23 +99,50 @@ Game business entry points відповідають за:
 
 Розміщення є disclosure-блоком усередині Settings content: header завжди зверху, expanded panel відкривається під ним; export/import dialogs є page-owned sibling overlays у `UI-PAGE-008`, а не вкладені children block-а.
 
-```text
-UI-CMP-034 Backup Collapsible Block
-  └─ (below UI-CMP-037 in UI-PAGE-008) Root disclosure region
-     ├─ (top, always visible) Disclosure header / trigger
-     │  ├─ (left/top) Backup title
-     │  ├─ (below/right) Compact local-state summary
-     │  └─ (right) Expanded/collapsed indicator
-     └─ (below header, conditional expanded) Expanded panel
-        ├─ (top) Local state summary rows
-        ├─ (below summary) Export action group
-        ├─ (below export) Import action group
-        ├─ (below affected action, conditional) Validation / status message area
-        └─ (inside import action group, non-visual intent target) Affordance вибору файла
+```jsx
+<BackupCollapsibleBlock ui="UI-CMP-034">
+  <BackupDisclosureRegion slot="UI-PAGE-008 after UI-CMP-037">
+    <Stack name="BackupDisclosureLayout">
+      <DisclosureHeaderTrigger>
+        <Stack name="DisclosureHeaderLayout">
+          <Group name="DisclosureHeaderMainRow">
+            <BackupTitle />
+            <ExpandedCollapsedIndicator />
+          </Group>
 
-UI-PAGE-008 Settings
-  ├─ (overlay, page-owned singleton) UI-CMP-027 Export Dialog
-  └─ (overlay, page-owned singleton) UI-CMP-028 Import Preview Dialog
+          <CompactLocalStateSummary />
+        </Stack>
+      </DisclosureHeaderTrigger>
+
+      <Show when={isExpanded}>
+        <ExpandedPanel>
+          <Stack name="BackupExpandedPanelLayout">
+            <LocalStateSummaryRows />
+            <ExportActionGroup />
+
+            <ImportActionGroup>
+              <FilePickerAffordance nonVisual />
+            </ImportActionGroup>
+
+            <Show when={hasValidationStatusMessage}>
+              <ValidationStatusMessageArea />
+            </Show>
+          </Stack>
+        </ExpandedPanel>
+      </Show>
+    </Stack>
+  </BackupDisclosureRegion>
+</BackupCollapsibleBlock>
+
+<SettingsPage ui="UI-PAGE-008">
+  <Show when={isExportDialogOpen}>
+    <ExportDialog ui="UI-CMP-027" />
+  </Show>
+
+  <Show when={isImportPreviewDialogOpen}>
+    <ImportPreviewDialog ui="UI-CMP-028" />
+  </Show>
+</SettingsPage>
 ```
 
 Правила розміщення:
@@ -125,9 +152,9 @@ UI-PAGE-008 Settings
 - File picker flow описується як page/app-level intent/result, не як `<input>` change event у public handler.
 - `UI-CMP-027` і `UI-CMP-028` монтуються як Settings-owned overlays, а не як repeated або nested disclosure children.
 
-### Root disclosure region
+### DisclosureRegion
 
-Root region рендериться всередині Settings page content, після settings controls і notation reference.
+DisclosureRegion рендериться всередині Settings page content, після settings controls і notation reference.
 
 Вимоги:
 

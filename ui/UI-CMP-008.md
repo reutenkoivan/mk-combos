@@ -91,18 +91,39 @@ Rules:
 
 Розміщення є picker surface після character picker: context label стоїть над variation slots, status region нижче layout.
 
-```text
-UI-CMP-008 Variation Picker
-  └─ (inside UI-CMP-012 contextRow, after UI-CMP-007) Root picker surface
-     ├─ (top) Visible label або accessible label
-     ├─ (below label) Selected character context label
-     ├─ (below context) Variation layout
-     │  └─ (inside layout cell) Variation slot
-     │     ├─ (top) Variation label
-     │     ├─ (below label) Optional short description або icon
-     │     ├─ (overlay/inside slot) Selected/focused indicator
-     │     └─ (overlay/inside slot) Disabled або placeholder state
-     └─ (below layout, conditional) Optional status/live region
+```jsx
+<VariationPicker ui="UI-CMP-008">
+  <VariationPickerSurface slot="UI-CMP-012 contextRow">
+    <Stack name="VariationPickerLayout">
+      <PickerLabel />
+      <SelectedCharacterContextLabel />
+
+      <VariationLayout>
+        <VariationSlot>
+          <Stack name="VariationSlotContent">
+            <VariationLabel />
+
+            <Show when={hasShortDescriptionOrIcon}>
+              <ShortDescriptionOrIcon />
+            </Show>
+          </Stack>
+
+          <Show when={isSelectedOrFocused}>
+            <SelectedFocusedIndicator />
+          </Show>
+
+          <Show when={isDisabledOrPlaceholder}>
+            <DisabledPlaceholderState />
+          </Show>
+        </VariationSlot>
+      </VariationLayout>
+
+      <Show when={hasStatusLiveRegion}>
+        <StatusLiveRegion />
+      </Show>
+    </Stack>
+  </VariationPickerSurface>
+</VariationPicker>
 ```
 
 Правила розміщення:

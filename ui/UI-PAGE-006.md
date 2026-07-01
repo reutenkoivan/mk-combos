@@ -99,22 +99,64 @@
 
 Розміщення веде користувача від context setup до builder workspace: спершу summary і setup, потім whiteboard/frame meter, нижче action bar і saved summary. Builder module hooks викликаються на сторінці, а overlays лишаються page-owned singleton surfaces.
 
-```text
-UI-PAGE-006 Custom Combo Builder
-  └─ (inside UI-PAGE-001 active route slot) Коренева зона конструктора
-     ├─ (top) Підсумок режиму і контексту
-     │  └─ (below, conditional) UI-CMP-031 Stale/Invalid Combo Marker
-     ├─ (below summary, conditional before ready workspace) UI-CMP-023 Builder Context Setup
-     ├─ (below setup/summary) Builder workspace
-     │  ├─ (left, wide13_6Plus / top, compact) UI-CMP-035 Combo Whiteboard
-     │  │  ├─ (inside) pathBoard region
-     │  │  ├─ (inside/right-or-below) internal movePicker region
-     │  │  └─ (inside path summary) UI-CMP-015 Notation Renderer
-     │  └─ (right, wide13_6Plus / below, compact) UI-CMP-036 Combo Frame Meter
-     ├─ (below workspace / sticky bottom where appropriate) UI-CMP-026 Builder Action Bar
-     ├─ (below action bar, conditional after save) Saved combo summary / UI-CMP-011 Combo Card
-     ├─ (below content, conditional) Системні повідомлення / UI-CMP-030 Error State
-     └─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
+```jsx
+<CustomComboBuilderPage ui="UI-PAGE-006">
+  <BuilderSurface slot="UI-PAGE-001 active route">
+    <Stack name="BuilderLayout">
+      <ModeContextSummary>
+        <Show when={hasStaleInvalidMarker}>
+          <StaleInvalidComboMarker ui="UI-CMP-031" />
+        </Show>
+      </ModeContextSummary>
+
+      <Show when={needsBuilderContextSetup}>
+        <BuilderContextSetup ui="UI-CMP-023" />
+      </Show>
+
+      <Show when={isWide13_6Plus}>
+        <Group name="BuilderWorkspace">
+          <ComboWhiteboard ui="UI-CMP-035">
+            <PathBoardRegion />
+            <InternalMovePickerRegion />
+            <NotationRenderer ui="UI-CMP-015" />
+          </ComboWhiteboard>
+
+          <ComboFrameMeter ui="UI-CMP-036" />
+        </Group>
+      </Show>
+
+      <Show when={isCompact}>
+        <Stack name="BuilderWorkspace">
+          <ComboWhiteboard ui="UI-CMP-035">
+            <PathBoardRegion />
+            <InternalMovePickerRegion />
+            <NotationRenderer ui="UI-CMP-015" />
+          </ComboWhiteboard>
+
+          <ComboFrameMeter ui="UI-CMP-036" />
+        </Stack>
+      </Show>
+
+      <BuilderActionBar ui="UI-CMP-026" />
+
+      <Show when={hasSavedComboSummary}>
+        <SavedComboSummary>
+          <ComboCard ui="UI-CMP-011" />
+        </SavedComboSummary>
+      </Show>
+
+      <Show when={hasSystemMessageOrErrorState}>
+        <SystemMessagesRegion>
+          <ErrorState ui="UI-CMP-030" />
+        </SystemMessagesRegion>
+      </Show>
+
+      <Show when={isAddToListDialogOpen}>
+        <AddToListDialog ui="UI-CMP-021" />
+      </Show>
+    </Stack>
+  </BuilderSurface>
+</CustomComboBuilderPage>
 ```
 
 Правила розміщення:
@@ -124,11 +166,11 @@ UI-PAGE-006 Custom Combo Builder
 - `UI-CMP-026` стоїть нижче workspace або закріплюється внизу viewport, але отримує availability із page-level builder flow.
 - `UI-CMP-021` відкривається тільки після saved combo context як singleton overlay, не всередині `@mk-combos/builder-ui`.
 
-### Коренева зона конструктора
+### BuilderSurface
 
-Коренева зона конструктора є page-level container, який рендериться в slot активної сторінки `UI-PAGE-001 App Shell`.
+BuilderSurface є page-level container, який рендериться в slot активної сторінки `UI-PAGE-001 App Shell`.
 
-Коренева зона має:
+BuilderSurface має:
 
 - показувати режим конструктора: `create`, `duplicate`, `edit` або `repair`;
 - тримати стабільну розмітку для context setup, combo whiteboard із internal `movePicker`, combo frame meter і action bar;

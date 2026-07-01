@@ -122,25 +122,54 @@ Named Lists є shared page. Route має форму `/:gameId/lists`. App-level 
 
 Розміщення починається з header/toolbar, після нього йде lists workspace: index і detail стоять поруч на широкому екрані або stack-яться на compact. Dialogs є page-owned singleton overlays поверх workspace.
 
-```text
-UI-PAGE-005 Named Lists
-  └─ (inside UI-PAGE-001 active route slot) Named Lists root
-     ├─ (top) Lists header / toolbar
-     │  ├─ (left/top) active game context label
-     │  ├─ (right/below) create list action
-     │  └─ (below) optional session-only persistence message
-     ├─ (below header) Lists workspace
-     │  ├─ (left, wide13_6Plus / top, compact) UI-CMP-019 Named List Index
-     │  └─ (right, wide13_6Plus / below, compact) UI-CMP-020 Named List Detail
-     │     ├─ (top) list title / actions
-     │     ├─ (below) combo item list with order controls
-     │     │  └─ (inside row) UI-CMP-011 Combo Card
-     │     └─ (inside row/header, conditional) UI-CMP-031 Stale/Invalid Combo Marker
-     ├─ (below workspace, conditional) System state area
-     │  ├─ UI-CMP-029 Empty State
-     │  └─ UI-CMP-030 Error State
-     ├─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
-     └─ (overlay, page-owned singleton) UI-CMP-022 List Edit Dialog
+```jsx
+<NamedListsPage ui="UI-PAGE-005">
+  <NamedListsSurface slot="UI-PAGE-001 active route">
+    <Stack name="NamedListsLayout">
+      <ListsHeaderToolbar>
+        <Stack name="ListsHeaderLayout">
+          <Group name="ListsHeaderMainRow">
+            <ActiveGameContextLabel />
+            <CreateListAction />
+          </Group>
+
+          <Show when={hasSessionOnlyPersistenceMessage}>
+            <SessionOnlyPersistenceMessage />
+          </Show>
+        </Stack>
+      </ListsHeaderToolbar>
+
+      <Show when={isWide13_6Plus}>
+        <Group name="ListsWorkspace">
+          <NamedListIndex ui="UI-CMP-019" />
+          <NamedListDetail ui="UI-CMP-020" />
+        </Group>
+      </Show>
+
+      <Show when={isCompact}>
+        <Stack name="ListsWorkspace">
+          <NamedListIndex ui="UI-CMP-019" />
+          <NamedListDetail ui="UI-CMP-020" />
+        </Stack>
+      </Show>
+
+      <Show when={hasSystemState}>
+        <SystemStateArea>
+          <EmptyState ui="UI-CMP-029" />
+          <ErrorState ui="UI-CMP-030" />
+        </SystemStateArea>
+      </Show>
+
+      <Show when={isAddToListDialogOpen}>
+        <AddToListDialog ui="UI-CMP-021" />
+      </Show>
+
+      <Show when={isListEditDialogOpen}>
+        <ListEditDialog ui="UI-CMP-022" />
+      </Show>
+    </Stack>
+  </NamedListsSurface>
+</NamedListsPage>
 ```
 
 Правила розміщення:
@@ -150,11 +179,11 @@ UI-PAGE-005 Named Lists
 - `UI-CMP-021` і `UI-CMP-022` не повторюються всередині list rows; сторінка відкриває один активний dialog за prepared context.
 - Empty/error states займають workspace slot, якщо list/detail content відсутній, або стоять під workspace як recoverable status.
 
-### Named Lists root
+### NamedListsSurface
 
-Named Lists root є page-level container, який рендериться в slot активної сторінки `UI-PAGE-001 App Shell`.
+NamedListsSurface є page-level container, який рендериться в slot активної сторінки `UI-PAGE-001 App Shell`.
 
-Root має:
+NamedListsSurface має:
 
 - показувати lists collection для active game;
 - не бути modal, dropdown panel або settings screen;
@@ -432,7 +461,7 @@ Route context не має:
 
 Очікуваний UI:
 
-- root і page heading доступні;
+- NamedListsSurface і page heading доступні;
 - list index/detail показують busy або skeleton/equivalent state;
 - destructive actions disabled;
 - controller commands не мутують state.

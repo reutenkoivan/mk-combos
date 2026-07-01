@@ -22,19 +22,34 @@
 
 Розміщення є вертикальною setup form: game selector стоїть першим, потім language, display mode, notation reference, status і confirmation action.
 
-```text
-UI-CMP-006 First-Launch Setup Form
-  └─ (inside UI-PAGE-002 setup root) Form root
-     ├─ (top) Game selector region
-     │  └─ (inside) UI-CMP-002 Game Switcher
-     ├─ (below) Language selector region
-     │  └─ (inside) UI-CMP-003 Language Switcher
-     ├─ (below) Display mode selector region
-     │  └─ (inside) UI-CMP-004 Display Mode Switcher
-     ├─ (below settings controls) Notation reference region
-     │  └─ (inside) UI-CMP-037 Notation Legend Table
-     ├─ (below reference, conditional) Persistence/session-only message region
-     └─ (below, final row) Confirmation action region
+```jsx
+<FirstLaunchSetupForm ui="UI-CMP-006">
+  <SetupFormRegion slot="UI-PAGE-002 SetupSurface">
+    <Stack name="SetupFormLayout">
+      <GameSelectorRegion>
+        <GameSwitcher ui="UI-CMP-002" />
+      </GameSelectorRegion>
+
+      <LanguageSelectorRegion>
+        <LanguageSwitcher ui="UI-CMP-003" />
+      </LanguageSelectorRegion>
+
+      <DisplayModeSelectorRegion>
+        <DisplayModeSwitcher ui="UI-CMP-004" />
+      </DisplayModeSelectorRegion>
+
+      <NotationReferenceRegion>
+        <NotationLegendTable ui="UI-CMP-037" />
+      </NotationReferenceRegion>
+
+      <Show when={hasPersistenceSessionOnlyMessage}>
+        <PersistenceSessionOnlyMessageRegion />
+      </Show>
+
+      <ConfirmationActionRegion />
+    </Stack>
+  </SetupFormRegion>
+</FirstLaunchSetupForm>
 ```
 
 Правила розміщення:

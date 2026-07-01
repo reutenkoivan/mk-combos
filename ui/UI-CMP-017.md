@@ -20,15 +20,29 @@
 
 Розміщення є двоколонковою або stacked metadata таблицею: label стоїть перед value у кожному row, а stale annotation займає окремий row.
 
-```text
-UI-CMP-017 Combo Metadata Grid
-  └─ (below combo description in UI-PAGE-004) Metadata grid root
-     ├─ (top) Metadata row list
-     │  └─ (inside list) Metadata row
-     │     ├─ (left/top) Label
-     │     ├─ (right/below) Value
-     │     └─ (left/adjacent, optional) icon/status marker
-     └─ (below rows, conditional) stale/invalid анотація row
+```jsx
+<ComboMetadataGrid ui="UI-CMP-017">
+  <MetadataGrid slot="UI-PAGE-004 combo description">
+    <Stack name="MetadataGridLayout">
+      <MetadataRowList>
+        <MetadataRow>
+          <Group name="MetadataRowContent">
+            <MetadataLabel />
+            <MetadataValue />
+
+            <Show when={hasIconStatusMarker}>
+              <IconStatusMarker />
+            </Show>
+          </Group>
+        </MetadataRow>
+      </MetadataRowList>
+
+      <Show when={hasStaleInvalidAnnotation}>
+        <StaleInvalidAnnotationRow />
+      </Show>
+    </Stack>
+  </MetadataGrid>
+</ComboMetadataGrid>
 ```
 
 Правила розміщення:

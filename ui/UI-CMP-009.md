@@ -91,18 +91,36 @@ Rules:
 
 Розміщення є picker surface після main character picker: context label стоїть над kameo grid, status region нижче grid.
 
-```text
-UI-CMP-009 Kameo Picker
-  └─ (inside UI-CMP-012 contextRow, after UI-CMP-007) Root picker surface
-     ├─ (top) Visible label або accessible label
-     ├─ (below label) Selected main character context label
-     ├─ (below context) Kameo grid
-     │  └─ (inside grid cell) Kameo slot
-     │     ├─ (top/center) Portrait або fallback mark
-     │     ├─ (below portrait) Kameo label
-     │     ├─ (overlay/inside slot) Selected/focused indicator
-     │     └─ (overlay/inside slot) Disabled або placeholder state
-     └─ (below grid, conditional) Optional status/live region
+```jsx
+<KameoPicker ui="UI-CMP-009">
+  <KameoPickerSurface slot="UI-CMP-012 contextRow">
+    <Stack name="KameoPickerLayout">
+      <PickerLabel />
+      <SelectedMainCharacterContextLabel />
+
+      <KameoGrid>
+        <KameoSlot>
+          <Stack name="KameoSlotContent">
+            <KameoPortraitOrFallbackMark />
+            <KameoLabel />
+          </Stack>
+
+          <Show when={isSelectedOrFocused}>
+            <SelectedFocusedIndicator />
+          </Show>
+
+          <Show when={isDisabledOrPlaceholder}>
+            <DisabledPlaceholderState />
+          </Show>
+        </KameoSlot>
+      </KameoGrid>
+
+      <Show when={hasStatusLiveRegion}>
+        <StatusLiveRegion />
+      </Show>
+    </Stack>
+  </KameoPickerSurface>
+</KameoPicker>
 ```
 
 Правила розміщення:

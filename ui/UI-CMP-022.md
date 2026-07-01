@@ -20,17 +20,37 @@
 
 Розміщення dialog читається як overlay -> surface -> mode message -> mode-specific body -> validation -> actions.
 
-```text
-UI-CMP-022 List Edit Dialog
-  └─ (overlay, page-owned singleton) Dialog overlay
-     └─ (inside overlay) Dialog surface
-        ├─ (top) Mode-specific heading/message
-        ├─ (below heading, create/rename) Draft name field region
-        ├─ (below heading, delete confirmation) Delete impact summary
-        ├─ (below body, conditional) Validation/error message region
-        └─ (bottom) Dialog action row
-           ├─ Submit/confirm action
-           └─ Cancel action
+```jsx
+<ListEditDialog ui="UI-CMP-022">
+  <Show when={isListEditDialogOpen}>
+    <ListEditDialogOverlay owner="page">
+      <ListEditDialogSurface>
+        <Stack name="ListEditDialogLayout">
+          <ModeSpecificHeadingMessage />
+
+          <Show when={modeIsCreateOrRename}>
+            <DraftNameFieldRegion />
+          </Show>
+
+          <Show when={modeIsDelete}>
+            <DeleteImpactSummary />
+          </Show>
+
+          <Show when={hasValidationErrorMessage}>
+            <ValidationErrorMessageRegion />
+          </Show>
+
+          <DialogActionRow>
+            <Group name="DialogActions">
+              <SubmitConfirmAction />
+              <CancelAction />
+            </Group>
+          </DialogActionRow>
+        </Stack>
+      </ListEditDialogSurface>
+    </ListEditDialogOverlay>
+  </Show>
+</ListEditDialog>
 ```
 
 Правила розміщення:

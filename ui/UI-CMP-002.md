@@ -67,31 +67,44 @@ type GameSwitcherOption = {
 
 Розміщення є single-select control, який змінює зовнішню оболонку залежно від parent context: inline crumb у breadcrumbs або form row у first-launch setup.
 
-```text
-UI-CMP-002 Game Switcher
-  └─ (inside parent slot) Root single-select control
-     ├─ (top/inline) Current game trigger / selected option
-     ├─ (below/overlay, якщо open model active) Available game options
-     └─ (below trigger/list, conditional) Optional validation або status message
+```jsx
+<GameSwitcher ui="UI-CMP-002">
+  <SingleSelectControl slot="parent">
+    <Stack name="SingleSelectLayout">
+      <CurrentGameTrigger />
+
+      <Show when={isOpen}>
+        <AvailableGameOptions />
+      </Show>
+
+      <Show when={hasValidationStatusMessage}>
+        <ValidationStatusMessage />
+      </Show>
+    </Stack>
+  </SingleSelectControl>
+</GameSwitcher>
 ```
 
 Правила розміщення:
 
-- У `breadcrumbs` context root займає перший crumb і стоїть лівіше за `Catalog`/current trail items.
-- У `firstLaunch` context root стоїть над language і display mode controls усередині `UI-CMP-006`.
+- У `breadcrumbs` context `SingleSelectControl` займає перший crumb і стоїть лівіше за `Catalog`/current trail items.
+- У `firstLaunch` context `SingleSelectControl` стоїть над language і display mode controls усередині `UI-CMP-006`.
 - Options list є controlled surface від parent model; selection state не зберігається всередині switcher.
 
 ### Breadcrumbs context
 
 У `breadcrumbs` context компонент рендериться як перший breadcrumb item:
 
-```text
-UI-CMP-032 Breadcrumbs
-  ├─ (left) UI-CMP-002 Game Switcher
-  ├─ (right) Catalog
-  ├─ (right) Character
-  ├─ (right) Variation або Kameo
-  └─ (right) Current surface item
+```jsx
+<Breadcrumbs ui="UI-CMP-032">
+  <Group name="BreadcrumbTrail">
+    <GameSwitcher ui="UI-CMP-002" />
+    <CatalogCrumb />
+    <CharacterCrumb />
+    <VariationOrKameoCrumb />
+    <CurrentSurfaceCrumb />
+  </Group>
+</Breadcrumbs>
 ```
 
 Switcher має виглядати як частина breadcrumb trail, але мати зрозумілий selected-game control affordance. Він не має змішуватися з `Catalog` crumb: game switch змінює route prefix, а `Catalog` crumb навігує в межах active game.

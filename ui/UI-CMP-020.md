@@ -20,17 +20,32 @@
 
 Розміщення є detail panel для selected list: summary header зверху, combo rows нижче, reorder/status і empty/error slots розміщені поруч із affected list area.
 
-```text
-UI-CMP-020 Named List Detail
-  └─ (right/below region of UI-PAGE-005 workspace) Корінь detail
-     ├─ (top) Selected list summary header
-     ├─ (below header) Combo item list
-     │  └─ (inside list) Combo item row
-     │     ├─ (left/top) UI-CMP-011 Combo Card
-     │     ├─ (right/inside row) Reorder affordance
-     │     └─ (right/bottom) Remove action affordance
-     ├─ (below affected row/list, conditional) Reorder status slot
-     └─ (inside detail area, conditional) Empty/error slot
+```jsx
+<NamedListDetail ui="UI-CMP-020">
+  <NamedListDetailRegion slot="UI-PAGE-005 workspace">
+    <Stack name="DetailLayout">
+      <SelectedListSummaryHeader />
+
+      <ComboItemList>
+        <ComboItemRow>
+          <Group name="ComboItemRowContent">
+            <ComboCard ui="UI-CMP-011" />
+            <ReorderAffordance />
+            <RemoveActionAffordance />
+          </Group>
+        </ComboItemRow>
+      </ComboItemList>
+
+      <Show when={hasReorderStatus}>
+        <ReorderStatusSlot />
+      </Show>
+
+      <Show when={hasEmptyErrorState}>
+        <EmptyErrorSlot />
+      </Show>
+    </Stack>
+  </NamedListDetailRegion>
+</NamedListDetail>
 ```
 
 Правила розміщення:

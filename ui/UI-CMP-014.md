@@ -20,17 +20,35 @@
 
 Розміщення header читається як compact identity block: title/source зверху, context chips нижче, primary actions праворуч або під title, critical marker і return slot займають окремі predictable positions.
 
-```text
-UI-CMP-014 Combo Detail Header
-  └─ (top of UI-PAGE-004 detail root) Header root
-     ├─ (top/left) Title and source row
-     ├─ (below title) Game/context chip group
-     ├─ (right, wide13_6Plus / below chips, compact) Primary action group
-     │  ├─ Add-to-list action
-     │  └─ Duplicate/edit/repair action, якщо доступна як primary
-     ├─ (below chips/actions, conditional) Stale/invalid marker slot
-     │  └─ UI-CMP-031 Stale/Invalid Combo Marker
-     └─ (top-left або below, parent-defined) Return/source navigation slot
+```jsx
+<ComboDetailHeader ui="UI-CMP-014">
+  <ComboDetailHeaderRegion slot="UI-PAGE-004 DetailSurface">
+    <Stack name="HeaderLayout">
+      <TitleAndSourceRow />
+      <GameContextChipGroup />
+
+      <PrimaryActionGroup>
+        <Group name="PrimaryActions">
+          <AddToListAction />
+
+          <Show when={hasDuplicateEditRepairPrimaryAction}>
+            <DuplicateEditRepairAction />
+          </Show>
+        </Group>
+      </PrimaryActionGroup>
+
+      <Show when={hasStaleInvalidMarker}>
+        <StaleInvalidMarkerSlot>
+          <StaleInvalidComboMarker ui="UI-CMP-031" />
+        </StaleInvalidMarkerSlot>
+      </Show>
+
+      <Show when={hasReturnSourceNavigation}>
+        <ReturnSourceNavigationSlot />
+      </Show>
+    </Stack>
+  </ComboDetailHeaderRegion>
+</ComboDetailHeader>
 ```
 
 Правила розміщення:

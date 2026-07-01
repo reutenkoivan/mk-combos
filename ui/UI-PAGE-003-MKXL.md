@@ -112,24 +112,47 @@ Stage selection не є обов'язковим кроком MKXL catalog flow. 
 
 Розміщення читається згори вниз як MKXL specialization загальної Catalog сторінки: character і variation формують required context над filters, optional stage/interactable facet живе всередині filter body, dialog відкривається поверх page content.
 
-```text
-UI-PAGE-003 Catalog / MKXL Variant
-  └─ (inside UI-PAGE-001 active route slot) MKXL catalog root
-     ├─ (top) UI-CMP-012 Combo List Config Module
-     │  ├─ (top/left) UI-CMP-007 Character Picker
-     │  ├─ (right/below) UI-CMP-008 Variation Picker
-     │  └─ (below both pickers) UI-CMP-013 Filter Control Group
-     │     ├─ (top) filterHeader / result count / active chips
-     │     └─ (below) filterBody
-     │        ├─ (inside) Shared optional filter facets
-     │        └─ (inside, after shared facets) Optional stage/interactable facet
-     ├─ (below config) UI-CMP-010 Combo List
-     │  └─ (inside list) UI-CMP-011 Combo Card
-     │     └─ (inside card summary) UI-CMP-015 Notation Renderer
-     ├─ (below list, conditional) System state area
-     │  ├─ UI-CMP-029 Empty State
-     │  └─ UI-CMP-030 Error State
-     └─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
+```jsx
+<CatalogMkxlVariantPage ui="UI-PAGE-003">
+  <MkxlCatalogSurface slot="UI-PAGE-001 active route">
+    <Stack name="MkxlCatalogLayout">
+      <ComboListConfigModule ui="UI-CMP-012">
+        <CharacterPicker ui="UI-CMP-007" />
+        <VariationPicker ui="UI-CMP-008" />
+
+        <FilterControlGroup ui="UI-CMP-013">
+          <FilterHeader />
+
+          <Show when={filterGroupExpanded}>
+            <FilterBody>
+              <Stack name="MkxlFilterBodyLayout">
+                <SharedOptionalFilterFacets />
+                <OptionalStageInteractableFacet />
+              </Stack>
+            </FilterBody>
+          </Show>
+        </FilterControlGroup>
+      </ComboListConfigModule>
+
+      <ComboList ui="UI-CMP-010">
+        <ComboCard ui="UI-CMP-011">
+          <NotationRenderer ui="UI-CMP-015" />
+        </ComboCard>
+      </ComboList>
+
+      <Show when={hasSystemState}>
+        <SystemStateArea>
+          <EmptyState ui="UI-CMP-029" />
+          <ErrorState ui="UI-CMP-030" />
+        </SystemStateArea>
+      </Show>
+
+      <Show when={isAddToListDialogOpen}>
+        <AddToListDialog ui="UI-CMP-021" />
+      </Show>
+    </Stack>
+  </MkxlCatalogSurface>
+</CatalogMkxlVariantPage>
 ```
 
 Правила розміщення:

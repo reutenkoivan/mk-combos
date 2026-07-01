@@ -18,7 +18,7 @@
 Компонент дає користувачу:
 
 - game switcher як перший interactive item у breadcrumbs;
-- controller indicator area поруч із navigation block у `wide13_6Plus` або outside burger menu у `compact`;
+- `ControllerStatusSlot` поруч із navigation block у `wide13_6Plus` або outside burger menu у `compact`;
 - contextual breadcrumbs для active surface;
 - праворуч закріплене burger menu для global navigation і utility actions;
 - compact burger menu для top-bar navigation, коли viewport менший за desktop layout;
@@ -35,7 +35,7 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 `UI-CMP-001 Global Top Bar` отримує цей стан через inputs і відповідає тільки за верхню навігаційну панель:
 
 - рендерить [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md), де першим item є [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md), тільки у `wide13_6Plus` layout;
-- рендерить `UI-CMP-005 Controller Hint Strip` поруч із navigation block у `wide13_6Plus` або outside burger menu у `compact`;
+- рендерить `UI-CMP-005 Controller Hint Strip` у `ControllerStatusSlot` поруч із navigation block у `wide13_6Plus` або outside burger menu у `compact`;
 - рендерить [`UI-CMP-033 Top Bar Dropdown Menu`](./UI-CMP-033.md) як right-pinned burger menu;
 - керує responsive composition через conditional JSX на основі `topBarLayoutMode`;
 - передає breadcrumb game-switch intent в App Shell;
@@ -46,51 +46,102 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 
 ## Анатомія
 
-Розміщення є горизонтальною верхньою панеллю: navigation починається ліворуч, controller indicator стоїть поруч із navigation, menu завжди прибитий праворуч.
+Розміщення є горизонтальною верхньою панеллю: navigation починається в `NavigationRegion`, controller status стоїть у dedicated slot поруч із navigation, а global actions лишаються в правому pinned `ActionRegion`.
 
-```text
-UI-CMP-001 Global Top Bar
-  └─ (top, inside UI-PAGE-001) Root bar
-     ├─ (left, wide13_6Plus only) UI-CMP-032 Breadcrumbs
-     │  └─ (inside first crumb) UI-CMP-002 Game Switcher
-     ├─ (right of breadcrumbs / left of menu) Controller indicator area
-     │  └─ (inside) UI-CMP-005 Controller Hint Strip
-     └─ (right, pinned) UI-CMP-033 Top Bar Dropdown Menu
+```jsx
+<GlobalTopBar ui="UI-CMP-001">
+  <Group name="TopBarLayout">
+    <NavigationRegion>
+      <Group name="NavigationItems">
+        <Show when={isWide13_6Plus}>
+          <BreadcrumbsSlot>
+            <Breadcrumbs ui="UI-CMP-032">
+              <GameSwitcher ui="UI-CMP-002" />
+            </Breadcrumbs>
+          </BreadcrumbsSlot>
+        </Show>
+
+        <ControllerStatusSlot>
+          <ControllerHintStrip ui="UI-CMP-005" />
+        </ControllerStatusSlot>
+      </Group>
+    </NavigationRegion>
+
+    <ActionRegion pinned>
+      <TopBarDropdownMenu ui="UI-CMP-033" />
+    </ActionRegion>
+  </Group>
+</GlobalTopBar>
 ```
 
 На `wide13_6Plus` горизонтальний порядок зон є стабільним:
 
-```text
-Breadcrumbs with game switcher -> Controller indicator area -> right-pinned dropdown menu
+```jsx
+<Show when={isWide13_6Plus}>
+  <Group name="TopBarWideOrder">
+    <NavigationRegion>
+      <Group name="NavigationItems">
+        <BreadcrumbsSlot />
+        <ControllerStatusSlot />
+      </Group>
+    </NavigationRegion>
+
+    <ActionRegion pinned />
+  </Group>
+</Show>
 ```
 
 На `compact` inline breadcrumbs і inline game switcher не монтуються:
 
-```text
-Controller indicator area, якщо visible -> right-pinned burger menu
+```jsx
+<Show when={isCompact}>
+  <Group name="TopBarCompactOrder">
+    <NavigationRegion>
+      <ControllerStatusSlot />
+    </NavigationRegion>
+
+    <ActionRegion pinned />
+  </Group>
+</Show>
 ```
 
 У `compact` menu surface `UI-CMP-033` монтує equivalents для прихованих navigation affordances: game switcher, Catalog/current trail navigation, Named Lists, Builder і Settings.
 
 Правила розміщення:
 
-- На `wide13_6Plus` порядок завжди: breadcrumbs із game switcher зліва, controller indicator після них, dropdown menu праворуч.
+- `NavigationRegion`, `ActionRegion`, `BreadcrumbsSlot` і `ControllerStatusSlot` є anatomy/JSX layout names, не новими `UI-CMP-*` специфікаціями.
+- На `wide13_6Plus` порядок завжди: `BreadcrumbsSlot` із game switcher зліва, `ControllerStatusSlot` після нього, `ActionRegion` праворуч.
 - На `compact` inline breadcrumbs і inline `UI-CMP-002` не монтуються; їхні equivalents живуть усередині `UI-CMP-033`.
-- Visible controller indicator лишається outside dropdown menu в обох layout modes.
+- Visible controller indicator лишається в `ControllerStatusSlot` outside dropdown menu в обох layout modes.
 
-### Root bar
+### NavigationRegion
 
-Root bar є container верхньої панелі. Він має:
+`NavigationRegion` є left/start region верхньої панелі. Він має:
 
 - лишатися видимим у shell layout;
 - не перекривати active surface content;
-- у `wide13_6Plus` тримати breadcrumbs як головний navigation block;
-- у `wide13_6Plus` давати breadcrumbs весь доступний простір між лівим navigation block і правим menu;
+- у `wide13_6Plus` тримати `BreadcrumbsSlot` як головний navigation block;
+- у `wide13_6Plus` давати `BreadcrumbsSlot` весь доступний простір між left/start navigation block і `ActionRegion`;
 - у `compact` не монтувати inline breadcrumbs і inline game switcher;
 - тримати visible controller indicator поза menu;
-- тримати `UI-CMP-033 Top Bar Dropdown Menu` прибитим до правого краю;
 - підтримувати mouse, touch і keyboard input;
 - давати помітний `focus-visible` для всіх interactive controls.
+
+### BreadcrumbsSlot
+
+`BreadcrumbsSlot` є left/start slot у `NavigationRegion` для inline [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md).
+
+Slot монтується тільки у `wide13_6Plus`; у `compact` його navigation equivalents передаються в `UI-CMP-033`.
+
+### ControllerStatusSlot
+
+`ControllerStatusSlot` є slot у `NavigationRegion` для `UI-CMP-005 Controller Hint Strip`.
+
+Slot лишається outside `UI-CMP-033` в обох layout modes і не переноситься в dropdown menu або responsive overflow.
+
+### ActionRegion
+
+`ActionRegion` є right/end pinned region верхньої панелі. Він містить `UI-CMP-033 Top Bar Dropdown Menu` і тримає menu opener біля правого краю Top Bar.
 
 ### Breadcrumb game switcher
 
@@ -102,18 +153,18 @@ Game switcher показує active game із route prefix або app-level stat
 
 Game switcher не дублюється в `UI-PAGE-008 Settings`. Settings лишається місцем для `language`, `notation display mode` і backup.
 
-### Controller indicator area
+### Controller status behavior
 
-Controller indicator area розташована поруч із breadcrumbs/navigation block у `wide13_6Plus` або outside `UI-CMP-033` у `compact`.
+`ControllerStatusSlot` розташований поруч із breadcrumbs/navigation block у `wide13_6Plus` або outside `UI-CMP-033` у `compact`.
 
 Top Bar контролює:
 
-- місце indicator у лівому блоці;
+- місце indicator у `ControllerStatusSlot`;
 - чи indicator показаний або прихований;
 - де відкривається hint panel;
 - чи hint panel закритий під час navigation або menu actions.
 
-Visible connection indicator із `UI-CMP-005` не переноситься в dropdown menu або responsive overflow. Якщо controller indicator видимий, він лишається outside `UI-CMP-033` у Top Bar. Hint panel і далі відкривається тільки через indicator.
+Visible connection indicator із `UI-CMP-005` не переноситься в dropdown menu або responsive overflow. Якщо controller indicator видимий, він лишається в `ControllerStatusSlot` outside `UI-CMP-033`. Hint panel і далі відкривається тільки через indicator.
 
 `UI-CMP-005` визначає власний display state: `hiddenNoController`, `connectedIndicator`, `disconnectGraceIndicator`, `hintPanelClosed`, `hintPanelOpen`.
 
@@ -394,7 +445,7 @@ Controller від'єднано після active connection, і 1-minute disconn
 
 Очікуваний UI:
 
-- panel прив'язаний до controller indicator area поруч із navigation block у `wide13_6Plus` або до visible indicator outside menu у `compact`;
+- panel прив'язаний до `ControllerStatusSlot` поруч із navigation block у `wide13_6Plus` або до visible indicator outside menu у `compact`;
 - `Escape` закриває panel;
 - focus повертається на indicator після закриття;
 - navigation або route change закриває panel без втрати active surface state.

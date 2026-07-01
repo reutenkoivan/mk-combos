@@ -52,22 +52,53 @@ Active game catalog business надає context descriptors, picker layout data,
 
 Розміщення є верхнім Catalog configuration block: required context selectors стоять у `contextRow`, а optional filters завжди нижче них.
 
-```text
-UI-CMP-012 Combo List Config Module
-  └─ (top of UI-PAGE-003 Catalog content) Config root
-     ├─ (top) contextRow
-     │  ├─ (left/top) UI-CMP-007 Character Picker
-     │  └─ (right/below) Game-specific context picker
-     │     ├─ MKXL: UI-CMP-008 Variation Picker
-     │     └─ MK1: UI-CMP-009 Kameo Picker
-     └─ (below contextRow) UI-CMP-013 Filter Control Group
+```jsx
+<ComboListConfigModule ui="UI-CMP-012">
+  <ComboConfigRegion slot="UI-PAGE-003 Catalog content">
+    <Stack name="ConfigLayout">
+      <Show when={isWide13_6Plus}>
+        <Group name="ContextRow">
+          <CharacterPicker ui="UI-CMP-007" />
+
+          <GameSpecificContextPicker>
+            <Show when={activeGame === "MKXL"}>
+              <VariationPicker ui="UI-CMP-008" />
+            </Show>
+
+            <Show when={activeGame === "MK1"}>
+              <KameoPicker ui="UI-CMP-009" />
+            </Show>
+          </GameSpecificContextPicker>
+        </Group>
+      </Show>
+
+      <Show when={isCompact}>
+        <Stack name="ContextRow">
+          <CharacterPicker ui="UI-CMP-007" />
+
+          <GameSpecificContextPicker>
+            <Show when={activeGame === "MKXL"}>
+              <VariationPicker ui="UI-CMP-008" />
+            </Show>
+
+            <Show when={activeGame === "MK1"}>
+              <KameoPicker ui="UI-CMP-009" />
+            </Show>
+          </GameSpecificContextPicker>
+        </Stack>
+      </Show>
+
+      <FilterControlGroup ui="UI-CMP-013" />
+    </Stack>
+  </ComboConfigRegion>
+</ComboListConfigModule>
 ```
 
 Правила розміщення:
 
 - На `wide13_6Plus` character picker і game-specific picker можуть бути sibling columns; на `compact` вони stack-яться.
 - `UI-CMP-013` завжди стоїть нижче required context і не містить character/variation/kameo як duplicate facets.
-- Config root не містить combo cards; results починаються у `UI-CMP-010` нижче module.
+- ConfigRegion не містить combo cards; results починаються у `UI-CMP-010` нижче module.
 
 ### `contextRow`
 

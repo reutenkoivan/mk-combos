@@ -56,27 +56,48 @@ Card не імпортує game data напряму і не має game-specific
 
 Розміщення card читається згори вниз: primary notation/context стоїть першим, metadata і optional notes нижче, action targets замикають card або переходять у contextual menu.
 
-```text
-UI-CMP-011 Combo Card
-  └─ (inside list/detail/saved-summary parent) cardRoot
-     ├─ (top) primarySummary
-     │  ├─ (top/left) UI-CMP-015 Notation Renderer
-     │  └─ (below/right) context summary
-     ├─ (below summary) metadataBadges
-     │  ├─ damage
-     │  ├─ meter
-     │  ├─ position
-     │  ├─ starter
-     │  ├─ route type
-     │  ├─ difficulty
-     │  └─ tags
-     ├─ (below badges, conditional) optional notes snippet
-     ├─ (below notes/badges, conditional) optional membership hint
-     └─ (right/bottom) action targets
-        ├─ open detail
-        ├─ add to list
-        ├─ duplicate to custom combo
-        └─ contextual actions
+```jsx
+<ComboCard ui="UI-CMP-011">
+  <ComboCardSurface slot="list/detail/saved-summary parent">
+    <Stack name="CardLayout">
+      <PrimarySummary>
+        <Stack name="PrimarySummaryContent">
+          <NotationRenderer ui="UI-CMP-015" />
+          <ContextSummary />
+        </Stack>
+      </PrimarySummary>
+
+      <MetadataBadges>
+        <Group name="MetadataBadgeList">
+          <DamageBadge />
+          <MeterBadge />
+          <PositionBadge />
+          <StarterBadge />
+          <RouteTypeBadge />
+          <DifficultyBadge />
+          <TagsBadge />
+        </Group>
+      </MetadataBadges>
+
+      <Show when={hasOptionalNotesSnippet}>
+        <OptionalNotesSnippet />
+      </Show>
+
+      <Show when={hasOptionalMembershipHint}>
+        <OptionalMembershipHint />
+      </Show>
+
+      <ActionTargets>
+        <Group name="CardActions">
+          <OpenDetailAction />
+          <AddToListAction />
+          <DuplicateToCustomComboAction />
+          <ContextualActions />
+        </Group>
+      </ActionTargets>
+    </Stack>
+  </ComboCardSurface>
+</ComboCard>
 ```
 
 Правила розміщення:
@@ -85,11 +106,11 @@ UI-CMP-011 Combo Card
 - На `wide13_6Plus` actions можуть стояти праворуч від summary; на `compact` вони переходять нижче або в contextual menu.
 - Membership hint стоїть біля actions/metadata, але не стає list persistence owner.
 
-### `cardRoot`
+### `CardSurface`
 
-`cardRoot` є focusable item у [`UI-CMP-010 Combo List`](./UI-CMP-010.md) або saved-combo summary region.
+`CardSurface` є focusable item у [`UI-CMP-010 Combo List`](./UI-CMP-010.md) або saved-combo summary region.
 
-Root має:
+CardSurface має:
 
 - readable label або accessible name для combo;
 - visible focused/selected state;
@@ -174,7 +195,7 @@ Outputs є intent events. Route changes, dialog lifecycle, builder initializatio
 ## State Tokens
 
 - `cardReady`: card має valid combo summary і може показати summary.
-- `cardFocused`: card root є active focus target.
+- `cardFocused`: CardSurface є active focus target.
 - `cardActionFocused`: один із action targets має focus.
 - `actionsOpen`: contextual actions відкриті parent-owned або local presentation menu.
 - `actionDisabled`: конкретна action недоступна через parent availability, loading або persistence state.
@@ -268,13 +289,13 @@ Rules:
 
 Commands:
 
-- `confirm`: активує card root або focused action.
+- `confirm`: активує CardSurface або focused action.
 - `openDetail`: емітить `requestOpenDetail`, якщо combo valid і action available.
 - `addToList`: емітить `requestAddToList`, якщо add-to-list available.
 - `openActions`: відкриває contextual actions або фокусує action target.
 - `navLeft` / `navRight`: рух між action targets, якщо card actions visible.
 - `navUp` / `navDown`: parent list рухає focus між cards або safe targets.
-- `back`: закриває contextual actions або повертає focus до card root/list.
+- `back`: закриває contextual actions або повертає focus до `CardSurface`/list.
 - `closePanel`: закриває contextual actions через parent/page flow.
 
 Guard rails:
@@ -287,7 +308,7 @@ Guard rails:
 ## Accessibility
 
 - Card має semantic item structure усередині list або group.
-- Card root і action targets мають visible focus у light, dark, standard contrast і increased contrast.
+- CardSurface і action targets мають visible focus у light, dark, standard contrast і increased contrast.
 - Accessible name card має включати character/context і readable notation або combo label.
 - Metadata badges мають readable text, а не тільки icon або color.
 - Difficulty, tags, stage/interactable state і membership hint не мають покладатися тільки на колір.

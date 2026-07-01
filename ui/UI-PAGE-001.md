@@ -94,18 +94,54 @@ App Shell не відповідає за:
 
 Розміщення читається згори вниз: Top Bar завжди зверху, active route slot під ним, overlays і системні повідомлення накладаються поверх page content.
 
-```text
-UI-PAGE-001 App Shell
-  ├─ (top) UI-CMP-001 Global Top Bar
-  │  ├─ UI-CMP-005 Controller Hint Strip
-  │  ├─ UI-CMP-032 Breadcrumbs
-  │  │  └─ UI-CMP-002 Game Switcher
-  │  └─ UI-CMP-033 Top Bar Dropdown Menu
-  ├─ (below) Active route slot
-  │  └─ UI-PAGE-002 / 003 / 004 / 005 / 006 / 008
-  ├─ (overlay) Шар накладних панелей і page-owned dialogs
-  ├─ (overlay) Область системних повідомлень
-  └─ (inside, non-visual) Installed game business registry
+```jsx
+<AppShell ui="UI-PAGE-001">
+  <Stack name="AppShellLayout">
+    <GlobalTopBar ui="UI-CMP-001">
+      <ControllerHintStrip ui="UI-CMP-005" />
+      <Breadcrumbs ui="UI-CMP-032">
+        <GameSwitcher ui="UI-CMP-002" />
+      </Breadcrumbs>
+      <TopBarDropdownMenu ui="UI-CMP-033" />
+    </GlobalTopBar>
+
+    <ActiveRouteSlot>
+      <Show when={activeRoute === "firstLaunch"}>
+        <FirstLaunchSetupPage ui="UI-PAGE-002" />
+      </Show>
+
+      <Show when={activeRoute === "catalog"}>
+        <CatalogPage ui="UI-PAGE-003" />
+      </Show>
+
+      <Show when={activeRoute === "comboDetail"}>
+        <ComboDetailPage ui="UI-PAGE-004" />
+      </Show>
+
+      <Show when={activeRoute === "namedLists"}>
+        <NamedListsPage ui="UI-PAGE-005" />
+      </Show>
+
+      <Show when={activeRoute === "builder"}>
+        <CustomComboBuilderPage ui="UI-PAGE-006" />
+      </Show>
+
+      <Show when={activeRoute === "settings"}>
+        <SettingsPage ui="UI-PAGE-008" />
+      </Show>
+    </ActiveRouteSlot>
+
+    <Show when={hasPageOwnedOverlay}>
+      <OverlayLayer />
+    </Show>
+
+    <Show when={hasSystemMessages}>
+      <SystemMessagesRegion />
+    </Show>
+
+    <InstalledGameBusinessRegistry nonVisual />
+  </Stack>
+</AppShell>
 ```
 
 Правила розміщення:

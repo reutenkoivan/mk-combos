@@ -20,15 +20,34 @@
 
 Розміщення є anchored menu: trigger лишається у source action area, а menu surface відкривається поруч або поверх content із action list усередині.
 
-```text
-UI-CMP-018 Combo Actions Menu
-  └─ (inside UI-PAGE-004 action source) Menu root
-     ├─ (inside source row) Actions trigger
-     ├─ (overlay/anchored, conditional) Actions surface, якщо `menuState = open`
-     │  ├─ (top) Primary/secondary action list
-     │  ├─ (below affected action, conditional) Disabled reason message
-     │  └─ (inside surface, non-visual) Return focus sentinel
-     └─ (right/bottom, optional) compact overflow affordance
+```jsx
+<ComboActionsMenu ui="UI-CMP-018">
+  <ComboActionsMenuRegion slot="UI-PAGE-004 action source">
+    <Stack name="MenuRegionLayout">
+      <MenuTriggerSlot>
+        <ActionsTrigger />
+      </MenuTriggerSlot>
+
+      <Show when={menuState === "open"}>
+        <ComboActionsMenuSurface anchored>
+          <Stack name="MenuSurfaceLayout">
+            <PrimarySecondaryActionList />
+
+            <Show when={hasDisabledReasonMessage}>
+              <DisabledReasonMessage />
+            </Show>
+
+            <ReturnFocusSentinel nonVisual />
+          </Stack>
+        </ComboActionsMenuSurface>
+      </Show>
+
+      <Show when={hasCompactOverflowAffordance}>
+        <CompactOverflowAffordance />
+      </Show>
+    </Stack>
+  </ComboActionsMenuRegion>
+</ComboActionsMenu>
 ```
 
 Правила розміщення:

@@ -65,6 +65,14 @@ Shared UI components є controlled/pure поверхнями:
 
 Якщо механіку винесено в module, module експортує pure UI component і custom hook. Hook готує state, derived models і semantic handlers. Pages викликають hook і передають результат hook-а в pure UI component. UI component ніколи не імпортує game data, browser persistence, route mutation або controller bridge APIs напряму.
 
+Бізнес-логіка для React проєктується як розділення `domain source` і `observable domain state`.
+
+`Domain source` є канонічним власником доменного значення, інваріантів, правил зміни і semantic methods. Усі зміни домену проходять тільки через ці methods. Source може мати lifecycle status, state machine або іншу доменну форму стану, але конкретна форма залежить від домену.
+
+`Observable domain state` не змінює source. Він виводить із source стабільну read-facing форму для споживання: flags, availability, validation, labels, status projections, selection/open/focused стани та інші derived значення для page flow, UI components і accessibility.
+
+У React layer `domain source` і `observable domain state` поставляються як окремі domain-specific custom hooks. React components читають view data тільки з `observable domain state`, але взаємодіють із `domain source` через його semantic methods. Компоненти не читають raw domain source як view data, не реконструюють доменні правила самостійно і не виконують mutations поза source methods.
+
 ## Root Scopes
 
 The repository is split by ownership:

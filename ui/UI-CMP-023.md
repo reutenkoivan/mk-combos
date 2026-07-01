@@ -20,17 +20,36 @@
 
 Розміщення setup є staged form перед builder workspace: character і game-specific selectors стоять над optional stage/runtime state, validation і actions завершують form.
 
-```text
-UI-CMP-023 Builder Context Setup
-  └─ (below builder summary, before workspace) Setup root
-     ├─ (top) Character selector region
-     ├─ (below/right) Game-specific context selector region
-     │  ├─ Variation selector, для MKXL
-     │  └─ Kameo selector, для MK1
-     ├─ (below selectors, optional) MKXL stage context
-     ├─ (below stage/selectors) Runtime start state region
-     ├─ (below runtime, conditional) Validation/status region
-     └─ (bottom) Confirm/reset action region
+```jsx
+<BuilderContextSetup ui="UI-CMP-023">
+  <BuilderContextSetupRegion slot="Builder summary before workspace">
+    <Stack name="BuilderContextSetupLayout">
+      <CharacterSelectorRegion />
+
+      <GameSpecificContextSelectorRegion>
+        <Show when={activeGame === "MKXL"}>
+          <VariationSelector />
+        </Show>
+
+        <Show when={activeGame === "MK1"}>
+          <KameoSelector />
+        </Show>
+      </GameSpecificContextSelectorRegion>
+
+      <Show when={activeGame === "MKXL"}>
+        <MkxlStageContext />
+      </Show>
+
+      <RuntimeStartStateRegion />
+
+      <Show when={hasValidationStatus}>
+        <ValidationStatusRegion />
+      </Show>
+
+      <ConfirmResetActionRegion />
+    </Stack>
+  </BuilderContextSetupRegion>
+</BuilderContextSetup>
 ```
 
 Правила розміщення:

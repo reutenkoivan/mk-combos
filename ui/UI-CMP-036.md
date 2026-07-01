@@ -54,19 +54,41 @@ Frame Meter показує SF6-style frame timeline і числові значе
 
 Розміщення frame meter є inspection panel: scope switch стоїть зверху, timeline під ним, selected segment details і frame summary розміщені нижче або поруч залежно від viewport, invalid/repair annotations лишаються біля відповідної timeline/detail area.
 
-```text
-UI-CMP-036 Combo Frame Meter
-  └─ (right/below inside builder/detail workspace) Корінь Frame Meter
-     ├─ (top) Scope switch region
-     │  ├─ (left/top) Selected move scope
-     │  └─ (right/below) Whole combo scope
-     ├─ (below scope switch) Timeline region
-     │  └─ (inside timeline order) Timeline segment
-     ├─ (below/right of timeline, conditional) Selected segment details
-     ├─ (below details/timeline) Frame value summary region
-     ├─ (inside timeline/detail, conditional) Transition gap / frame window annotation region
-     ├─ (below affected segment/details, conditional) Invalid/repair annotation region
-     └─ (bottom/inside panel, optional) Focus sync action slot
+```jsx
+<ComboFrameMeter ui="UI-CMP-036">
+  <FrameMeterPanel slot="builder/detail workspace">
+    <Stack name="FrameMeterLayout">
+      <ScopeSwitchRegion>
+        <Group name="ScopeSwitchControls">
+          <SelectedMoveScope />
+          <WholeComboScope />
+        </Group>
+      </ScopeSwitchRegion>
+
+      <TimelineRegion>
+        <TimelineSegment />
+      </TimelineRegion>
+
+      <Show when={hasSelectedSegmentDetails}>
+        <SelectedSegmentDetails />
+      </Show>
+
+      <FrameValueSummaryRegion />
+
+      <Show when={hasTransitionGapFrameWindowAnnotation}>
+        <TransitionGapFrameWindowAnnotationRegion />
+      </Show>
+
+      <Show when={hasInvalidRepairAnnotation}>
+        <InvalidRepairAnnotationRegion />
+      </Show>
+
+      <Show when={hasFocusSyncAction}>
+        <FocusSyncActionSlot />
+      </Show>
+    </Stack>
+  </FrameMeterPanel>
+</ComboFrameMeter>
 ```
 
 Правила розміщення:

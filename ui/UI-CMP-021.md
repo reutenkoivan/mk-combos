@@ -20,19 +20,38 @@ Active page володіє open/closed state, active combo context, compatible l
 
 Розміщення dialog читається як overlay -> surface -> summary/body/status/actions; compatible lists стоять у body між combo summary і action row.
 
-```text
-UI-CMP-021 Add-To-List Dialog
-  └─ (overlay, page-owned singleton) Dialog overlay
-     └─ (inside overlay) Dialog surface
-        ├─ (top) Dialog header / title
-        ├─ (below header) Combo summary region
-        ├─ (below summary) Compatible list selection region
-        │  └─ (inside list) Compatible list option
-        ├─ (below selection, conditional) Current membership/status region
-        ├─ (below status, optional) create-list shortcut
-        └─ (bottom) Dialog action row
-           ├─ Submit action
-           └─ Close/cancel action
+```jsx
+<AddToListDialog ui="UI-CMP-021">
+  <Show when={isAddToListDialogOpen}>
+    <AddToListDialogOverlay owner="page">
+      <AddToListDialogSurface>
+        <Stack name="AddToListDialogLayout">
+          <DialogHeaderTitle />
+          <ComboSummaryRegion />
+
+          <CompatibleListSelectionRegion>
+            <CompatibleListOption />
+          </CompatibleListSelectionRegion>
+
+          <Show when={hasCurrentMembershipStatus}>
+            <CurrentMembershipStatusRegion />
+          </Show>
+
+          <Show when={hasCreateListShortcut}>
+            <CreateListShortcut />
+          </Show>
+
+          <DialogActionRow>
+            <Group name="DialogActions">
+              <SubmitAction />
+              <CloseCancelAction />
+            </Group>
+          </DialogActionRow>
+        </Stack>
+      </AddToListDialogSurface>
+    </AddToListDialogOverlay>
+  </Show>
+</AddToListDialog>
 ```
 
 Правила розміщення:

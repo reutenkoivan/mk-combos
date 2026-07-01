@@ -122,17 +122,32 @@ Game switcher не є `BreadcrumbItem`. Він рендериться окрем
 
 Розміщення breadcrumbs є horizontal trail усередині wide Top Bar: game switcher завжди перший, решта crumbs ідуть праворуч у hierarchy order, overflow affordance стоїть наприкінці.
 
-```text
-UI-CMP-032 Breadcrumbs
-  └─ (left, inside UI-CMP-001 wide13_6Plus only) Breadcrumb nav root
-     ├─ (left, first item) Game crumb
-     │  └─ (inside crumb) UI-CMP-002 Game Switcher
-     ├─ (between crumbs) Separator group
-     ├─ (right of game crumb) Breadcrumb item list
-     │  ├─ Navigable crumb
-     │  ├─ Disabled crumb
-     │  └─ Current crumb
-     └─ (right/end, conditional) Optional overflow/truncation affordance
+```jsx
+<Breadcrumbs ui="UI-CMP-032">
+  <Show when={isWide13_6Plus}>
+    <BreadcrumbNavigationRegion slot="UI-CMP-001">
+      <Group name="BreadcrumbTrail">
+        <GameCrumb>
+          <GameSwitcher ui="UI-CMP-002" />
+        </GameCrumb>
+
+        <SeparatorGroup />
+
+        <BreadcrumbItemList>
+          <Group name="BreadcrumbItems">
+            <NavigableCrumb />
+            <DisabledCrumb />
+            <CurrentCrumb />
+          </Group>
+        </BreadcrumbItemList>
+
+        <Show when={hasOverflowTruncationAffordance}>
+          <OverflowTruncationAffordance />
+        </Show>
+      </Group>
+    </BreadcrumbNavigationRegion>
+  </Show>
+</Breadcrumbs>
 ```
 
 Правила розміщення:
@@ -141,11 +156,11 @@ UI-CMP-032 Breadcrumbs
 - Game crumb завжди лівіший за route crumbs і не змішується з `Catalog` crumb.
 - Overflow/truncation affordance стоїть наприкінці trail і не перекриває `UI-CMP-005` або right-pinned menu.
 
-### Breadcrumb nav root
+### BreadcrumbNavigationRegion
 
-Root є inline navigation region у `UI-CMP-001 Global Top Bar`.
+BreadcrumbNavigationRegion є inline navigation region у `UI-CMP-001 Global Top Bar`.
 
-Root має:
+BreadcrumbNavigationRegion має:
 
 - мати navigation semantics або equivalent accessible relationship;
 - мати localized accessible name, наприклад `Breadcrumbs`;
@@ -424,7 +439,7 @@ Game switch не видаляє named lists, custom combos або local game sli
 
 ## Доступність і поведінка вводу
 
-- Breadcrumb root має navigation semantics або equivalent accessible name.
+- BreadcrumbNavigationRegion має navigation semantics або equivalent accessible name.
 - Game switcher має readable current game state через `UI-CMP-002`.
 - Breadcrumb list order має відповідати visual order.
 - Navigable crumbs мають accessible names і працюють через click, tap, `Enter` і `Space`.
@@ -443,7 +458,7 @@ Game switch не видаляє named lists, custom combos або local game sli
 
 Implementation має використовувати semantic recipes, якщо breadcrumbs реалізуються в shared UI package:
 
-- `navigation` або `surface` для root region;
+- `navigation` або `surface` для BreadcrumbNavigationRegion;
 - `item` для breadcrumb crumb;
 - `control` для nested game switcher trigger через `UI-CMP-002`;
 - `separator` для visual dividers;
@@ -517,7 +532,7 @@ Visual tests мають покривати:
 
 Automated accessibility checks мають перевірити:
 
-- root navigation accessible name;
+- BreadcrumbNavigationRegion accessible name;
 - game switcher selected/current game;
 - current crumb semantics;
 - disabled crumb behavior і reason;

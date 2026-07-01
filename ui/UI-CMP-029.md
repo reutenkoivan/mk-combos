@@ -20,13 +20,24 @@
 
 Розміщення empty state займає content/status slot parent surface: message стоїть зверху, details нижче, recovery actions внизу.
 
-```text
-UI-CMP-029 Empty State
-  └─ (inside parent empty slot) Корінь empty state
-     ├─ (top) Title/message region
-     ├─ (below message, optional) details ділянка
-     └─ (below details/message, conditional) Recovery action region
-        └─ Recovery action item
+```jsx
+<EmptyState ui="UI-CMP-029">
+  <EmptyStateSurface slot="parent empty">
+    <Stack name="EmptyStateLayout">
+      <TitleMessageRegion />
+
+      <Show when={hasDetails}>
+        <DetailsRegion />
+      </Show>
+
+      <Show when={hasRecoveryActions}>
+        <RecoveryActionRegion>
+          <RecoveryActionItem />
+        </RecoveryActionRegion>
+      </Show>
+    </Stack>
+  </EmptyStateSurface>
+</EmptyState>
 ```
 
 Правила розміщення:

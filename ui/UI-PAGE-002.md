@@ -69,30 +69,39 @@ Game options у setup беруться з `apps/web/src/game-business/installed-
 
 Розміщення читається згори вниз у active route slot: короткий summary стоїть над формою, повідомлення про persistence нижче форми.
 
-```text
-UI-PAGE-002 First-Launch Setup
-  └─ (inside UI-PAGE-001 active route slot) Setup root
-     ├─ (top) Capabilities summary
-     ├─ (below) UI-CMP-006 First-Launch Setup Form
-     │  ├─ (top) UI-CMP-002 Game Switcher
-     │  ├─ (below) UI-CMP-003 Language Switcher
-     │  ├─ (below) UI-CMP-004 Display Mode Switcher
-     │  ├─ (below) UI-CMP-037 Notation Legend Table
-     │  └─ (below) Confirmation action
-     └─ (below) Session-only / system message area
+```jsx
+<FirstLaunchSetupPage ui="UI-PAGE-002">
+  <SetupSurface slot="UI-PAGE-001 active route">
+    <Stack name="SetupLayout">
+      <CapabilitiesSummary />
+
+      <FirstLaunchSetupForm ui="UI-CMP-006">
+        <GameSwitcher ui="UI-CMP-002" />
+        <LanguageSwitcher ui="UI-CMP-003" />
+        <DisplayModeSwitcher ui="UI-CMP-004" />
+        <NotationLegendTable ui="UI-CMP-037" />
+        <ConfirmationAction />
+      </FirstLaunchSetupForm>
+
+      <Show when={hasSessionOnlySystemMessage}>
+        <SessionOnlySystemMessageArea />
+      </Show>
+    </Stack>
+  </SetupSurface>
+</FirstLaunchSetupPage>
 ```
 
 Правила розміщення:
 
-- Setup root займає active route slot і блокує робочі surfaces до completion.
+- SetupSurface займає active route slot і блокує робочі surfaces до completion.
 - Confirmation action стоїть після required selectors, а не в Top Bar.
 - System message не перекриває form controls.
 
-### Setup root
+### SetupSurface
 
-Setup root є єдиною активною surface, доки first-launch gate не завершено.
+SetupSurface є єдиною активною surface, доки first-launch gate не завершено.
 
-Root має:
+SetupSurface має:
 
 - бути рендереним у slot активної сторінки `UI-PAGE-001 App Shell`;
 - блокувати робочі surfaces до підтвердження;

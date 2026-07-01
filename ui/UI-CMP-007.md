@@ -101,17 +101,35 @@ Rules:
 
 Розміщення є picker surface: label стоїть над roster grid, grid містить slots у prepared `row`/`column` або `compactOrder`, status region стоїть нижче grid.
 
-```text
-UI-CMP-007 Character Picker
-  └─ (inside UI-CMP-012 contextRow) Root picker surface
-     ├─ (top) Visible label або accessible label
-     ├─ (below) Roster grid
-     │  └─ (inside grid cell) Roster slot
-     │     ├─ (top/center) Portrait або fallback mark
-     │     ├─ (below portrait) Character label
-     │     ├─ (overlay/inside slot) Selected/focused indicator
-     │     └─ (overlay/inside slot) Disabled або placeholder state
-     └─ (below grid, conditional) Optional status/live region
+```jsx
+<CharacterPicker ui="UI-CMP-007">
+  <CharacterPickerSurface slot="UI-CMP-012 contextRow">
+    <Stack name="CharacterPickerLayout">
+      <PickerLabel />
+
+      <RosterGrid>
+        <RosterSlot>
+          <Stack name="RosterSlotContent">
+            <CharacterPortraitOrFallbackMark />
+            <CharacterLabel />
+          </Stack>
+
+          <Show when={isSelectedOrFocused}>
+            <SelectedFocusedIndicator />
+          </Show>
+
+          <Show when={isDisabledOrPlaceholder}>
+            <DisabledPlaceholderState />
+          </Show>
+        </RosterSlot>
+      </RosterGrid>
+
+      <Show when={hasStatusLiveRegion}>
+        <StatusLiveRegion />
+      </Show>
+    </Stack>
+  </CharacterPickerSurface>
+</CharacterPicker>
 ```
 
 Правила розміщення:

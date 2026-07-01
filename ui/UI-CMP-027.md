@@ -21,16 +21,30 @@
 
 Розміщення dialog читається як overlay -> surface -> export summary -> warning/status -> actions.
 
-```text
-UI-CMP-027 Export Dialog
-  └─ (overlay, page-owned singleton) Dialog overlay
-     └─ (inside overlay) Dialog surface
-        ├─ (top) Dialog header / export title
-        ├─ (below header) Export summary region
-        ├─ (below summary, conditional) Warning/error message region
-        └─ (bottom) Dialog action row
-           ├─ Confirm export action
-           └─ Cancel/close action
+```jsx
+<ExportDialog ui="UI-CMP-027">
+  <Show when={isExportDialogOpen}>
+    <ExportDialogOverlay owner="page">
+      <ExportDialogSurface>
+        <Stack name="ExportDialogLayout">
+          <DialogHeaderExportTitle />
+          <ExportSummaryRegion />
+
+          <Show when={hasWarningErrorMessage}>
+            <WarningErrorMessageRegion />
+          </Show>
+
+          <DialogActionRow>
+            <Group name="DialogActions">
+              <ConfirmExportAction />
+              <CancelCloseAction />
+            </Group>
+          </DialogActionRow>
+        </Stack>
+      </ExportDialogSurface>
+    </ExportDialogOverlay>
+  </Show>
+</ExportDialog>
 ```
 
 Правила розміщення:

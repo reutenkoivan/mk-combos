@@ -67,17 +67,40 @@
 
 Розміщення є праворуч anchored menu: burger opener стоїть у Top Bar, menu surface відкривається під/поруч із ним і містить compact navigation blocks згори вниз.
 
-```text
-UI-CMP-033 Top Bar Dropdown Menu
-  └─ (right, inside UI-CMP-001) Menu root
-     ├─ (inside Top Bar, pinned right) Burger opener button
-     └─ (overlay/anchored below opener, conditional) Menu surface
-        ├─ (top, compact only) Optional compact game switcher region
-        │  └─ UI-CMP-002 Game Switcher
-        ├─ (below game switcher, compact only) Optional compact breadcrumb/navigation region
-        ├─ (below compact navigation) Global navigation item group
-        ├─ (below navigation, optional) Utility item group
-        └─ (bottom, optional) Disabled/status item
+```jsx
+<TopBarDropdownMenu ui="UI-CMP-033">
+  <TopBarMenuRegion slot="UI-CMP-001">
+    <MenuTriggerSlot pinned>
+      <BurgerOpenerButton />
+    </MenuTriggerSlot>
+
+    <Show when={menuState === "open"}>
+      <TopBarMenuSurface anchored>
+        <Stack name="TopBarMenuLayout">
+          <Show when={isCompact && hasCompactGameSwitcher}>
+            <CompactGameSwitcherRegion>
+              <GameSwitcher ui="UI-CMP-002" />
+            </CompactGameSwitcherRegion>
+          </Show>
+
+          <Show when={isCompact && hasCompactBreadcrumbNavigation}>
+            <CompactBreadcrumbNavigationRegion />
+          </Show>
+
+          <GlobalNavigationItemGroup />
+
+          <Show when={hasUtilityItems}>
+            <UtilityItemGroup />
+          </Show>
+
+          <Show when={hasDisabledStatusItem}>
+            <DisabledStatusItem />
+          </Show>
+        </Stack>
+      </TopBarMenuSurface>
+    </Show>
+  </TopBarMenuRegion>
+</TopBarDropdownMenu>
 ```
 
 Правила розміщення:
@@ -86,22 +109,22 @@ UI-CMP-033 Top Bar Dropdown Menu
 - На `wide13_6Plus` menu не дублює breadcrumbs або inline game switcher; на `compact` ці equivalents стоять у верхній частині surface.
 - Status/disabled items стоять унизу surface і не змішуються з primary navigation group.
 
-### Burger opener button
+### MenuTriggerSlot
 
-Opener є icon-only button із burger/menu icon.
+`MenuTriggerSlot` містить icon-only burger opener button.
 
 Вимоги:
 
 - має localized accessible name, наприклад `Open main menu`;
 - має `aria-expanded`, який відповідає open state;
-- має `aria-controls` або equivalent relationship із menu surface;
+- має `aria-controls` або equivalent relationship із `MenuSurface`;
 - відкривається через click, tap, `Enter` і `Space`;
 - має visible `focus-visible` у light, dark, standard contrast і increased contrast;
 - не змінює розміри Top Bar між idle, hover, active, focus-visible, disabled і open states.
 
-### Menu surface
+### MenuSurface
 
-Menu surface є anchored popup/menu, прив'язаний до burger opener.
+`MenuSurface` є anchored popup/menu, прив'язаний до burger opener.
 
 Вимоги:
 
@@ -161,12 +184,14 @@ CSS може стилізувати змонтовані гілки, але не
 
 ```text
 UI-CMP-001
-  ├─ UI-CMP-032 Breadcrumbs
-  │  └─ UI-CMP-002 Game Switcher
-  ├─ UI-CMP-005 Controller Hint Strip, якщо indicator visible
-  └─ UI-CMP-033
-     ├─ Burger opener
-     └─ Menu surface with global actions
+  ├─ NavigationRegion
+  │  ├─ UI-CMP-032 Breadcrumbs
+  │  │  └─ UI-CMP-002 Game Switcher
+  │  └─ UI-CMP-005 Controller Hint Strip, якщо indicator visible
+  └─ ActionRegion
+     └─ UI-CMP-033
+        ├─ MenuTriggerSlot
+        └─ MenuSurface with global actions
 ```
 
 Expected behavior:
@@ -182,13 +207,15 @@ Expected behavior:
 
 ```text
 UI-CMP-001
-  ├─ UI-CMP-005 Controller Hint Strip, якщо indicator visible
-  └─ UI-CMP-033
-     ├─ Burger opener
-     └─ Menu surface
-        ├─ UI-CMP-002 Game Switcher
-        ├─ compact breadcrumb/navigation items
-        └─ global actions
+  ├─ NavigationRegion
+  │  └─ UI-CMP-005 Controller Hint Strip, якщо indicator visible
+  └─ ActionRegion
+     └─ UI-CMP-033
+        ├─ MenuTriggerSlot
+        └─ MenuSurface
+           ├─ UI-CMP-002 Game Switcher
+           ├─ compact breadcrumb/navigation items
+           └─ global actions
 ```
 
 Expected behavior:
@@ -340,8 +367,8 @@ Action переданий, але тимчасово unavailable.
 - Opener є button із localized accessible name.
 - Icon-only opener має visible tooltip або equivalent accessible relationship, якщо implementation це підтримує.
 - `aria-expanded` відповідає open state.
-- `aria-controls` або Base UI equivalent пов'язує opener із menu surface.
-- Menu surface має menu або navigation semantics відповідно до implementation pattern.
+- `aria-controls` або Base UI equivalent пов'язує opener із `MenuSurface`.
+- `MenuSurface` має menu або navigation semantics відповідно до implementation pattern.
 - Menu items мають accessible names.
 - Current page або selected game мають semantic current/selected state.
 - Disabled items використовують native disabled або intentional `aria-disabled` behavior і не trap-лять keyboard.

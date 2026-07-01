@@ -102,23 +102,44 @@ MK1 Catalog context вважається валідним, коли:
 
 Розміщення читається згори вниз як MK1 specialization загальної Catalog сторінки: required selectors стоять над filters, results ідуть нижче, add-to-list dialog відкривається поверх page content.
 
-```text
-UI-PAGE-003 Catalog / MK1 Variant
-  └─ (inside UI-PAGE-001 active route slot) MK1 catalog root
-     ├─ (top) UI-CMP-012 Combo List Config Module
-     │  ├─ (top/left) UI-CMP-007 Character Picker
-     │  ├─ (right/below) UI-CMP-009 Kameo Picker
-     │  └─ (below both pickers) UI-CMP-013 Filter Control Group
-     │     ├─ (top) filterHeader / result count / active chips
-     │     └─ (below) filterBody
-     │        └─ (inside) Shared optional filter facets
-     ├─ (below config) UI-CMP-010 Combo List
-     │  └─ (inside list) UI-CMP-011 Combo Card
-     │     └─ (inside card summary) UI-CMP-015 Notation Renderer
-     ├─ (below list, conditional) System state area
-     │  ├─ UI-CMP-029 Empty State
-     │  └─ UI-CMP-030 Error State
-     └─ (overlay, page-owned singleton) UI-CMP-021 Add-To-List Dialog
+```jsx
+<CatalogMk1VariantPage ui="UI-PAGE-003">
+  <Mk1CatalogSurface slot="UI-PAGE-001 active route">
+    <Stack name="Mk1CatalogLayout">
+      <ComboListConfigModule ui="UI-CMP-012">
+        <CharacterPicker ui="UI-CMP-007" />
+        <KameoPicker ui="UI-CMP-009" />
+
+        <FilterControlGroup ui="UI-CMP-013">
+          <FilterHeader />
+
+          <Show when={filterGroupExpanded}>
+            <FilterBody>
+              <SharedOptionalFilterFacets />
+            </FilterBody>
+          </Show>
+        </FilterControlGroup>
+      </ComboListConfigModule>
+
+      <ComboList ui="UI-CMP-010">
+        <ComboCard ui="UI-CMP-011">
+          <NotationRenderer ui="UI-CMP-015" />
+        </ComboCard>
+      </ComboList>
+
+      <Show when={hasSystemState}>
+        <SystemStateArea>
+          <EmptyState ui="UI-CMP-029" />
+          <ErrorState ui="UI-CMP-030" />
+        </SystemStateArea>
+      </Show>
+
+      <Show when={isAddToListDialogOpen}>
+        <AddToListDialog ui="UI-CMP-021" />
+      </Show>
+    </Stack>
+  </Mk1CatalogSurface>
+</CatalogMk1VariantPage>
 ```
 
 Правила розміщення:

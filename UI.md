@@ -59,6 +59,8 @@ Game-specific UI behavior належить `mkxl/*` або `mk1/*` через ga
 
 Якщо механіку винесено в module, module має поставляти pair: pure UI component + custom hook. Page component викликає hook, отримує prepared state/handlers і передає їх у UI component. Builder module дотримується цього правила через `useComboWhiteboardModel` + `ComboWhiteboard` і `useComboFrameMeterModel` + `ComboFrameMeter`.
 
+Бізнес-логіка для React розділяється на `domain source` і `observable domain state`, які поставляються як окремі domain-specific custom hooks. Source hook повертає канонічний domain source, його інваріанти, потрібний lifecycle/domain status і semantic methods для зміни домену. Observable hook повертає read-facing derived state для UI: flags, availability, validation, labels, status projections, selection/open/focused стани та інші prepared значення. React components читають display state з observable hook, а зміни виконують тільки через methods із source hook; компоненти не читають raw domain source як view data, не реконструюють доменні правила і не мутують домен поза source methods.
+
 Уся prose-документація пишеться українською. Англійською лишаються стабільні code identifiers, package names, route paths, API names, type names і власні назви UI codes.
 
 ## Коди посилань
@@ -219,10 +221,50 @@ Prose документації пишеться українською. Англ
 
 Кожна активна `UI-PAGE-*` і `UI-CMP-*` специфікація має містити секцію `## Анатомія`. Ця секція описує тільки структурні UI-ділянки і не переносить source of truth або бізнес-логіку з page/page-hook рівня в pure UI component. Застарілі entries без окремих specs не отримують anatomy stubs.
 
-`Анатомія` має пояснювати взаємне розміщення, а не лише перелік зон:
+`Анатомія` має бути JSX-like schema: одна схема показує named JSX entities і їхню layout-ієрархію.
 
-- порядок у схемі читається згори вниз і зліва направо;
-- використовуються позначки `(top)`, `(below)`, `(left)`, `(right)`, `(inside)`, `(overlay)`, `(wide13_6Plus)` і `(compact)`;
-- діалоги й накладки рівня сторінки позначаються як `(overlay)` або page-owned singleton surface;
-- адаптивні перестановки описуються в коротких `Правила розміщення`;
+- порядок у `<Stack>` читається згори вниз, а порядок у `<Group>` - зліва направо / від start до end;
+- `<Stack>` використовується тільки коли дочірні entities розташовані вертикально;
+- `<Group>` використовується тільки коли дочірні entities розташовані горизонтально;
+- `<Show when={condition}>...</Show>` використовується для conditional, optional, expanded/collapsed, overlay і responsive гілок;
+- documented component/page використовує self-explaining PascalCase JSX tag і `ui="UI-CMP-*"` або `ui="UI-PAGE-*"`;
+- локальні regions, slots, surfaces, panels, overlays, lists, rows, items і actions теж використовують self-explaining PascalCase tags, а не generic `<Component>` або `<Slot>`;
+- `name` props дозволені для `<Stack>` і `<Group>`, щоб назвати layout group; назва entity не дублюється через `name`;
+- metadata лишається props тільки коли це не умова render: `slot`, `owner`, `pinned`, `registry`;
+- зайві `Root`, `root` або `Корінь` wrappers не використовуються. Якщо wrapper потрібен як JSX-область, він отримує role-based назву, наприклад `<CatalogSurface>`, `<DialogSurface>`, `<NavigationRegion>`, `<ControllerStatusRegion>`;
 - секція не описує логіку мутацій, правила валідації або ownership persistence.
+
+Naming guidance для anatomy entities:
+
+- `Region` - layout-зона або grouping wrapper;
+- `Surface` - самостійна видима поверхня;
+- `Overlay` / `DialogSurface` - portal/dialog structures;
+- `List`, `Grid`, `Collection`, `Row`, `Item` - repeated content;
+- `Panel`, `ActionBar` - локальні групи controls/content;
+- `Slot` suffix вживається тільки якщо entity справді є місцем монтування child component або conditional content.
+
+Приклад JSX schema без generic root wrapper:
+
+```jsx
+<GlobalTopBar ui="UI-CMP-001">
+  <Group name="TopBarLayout">
+    <NavigationRegion>
+      <Group name="NavigationItems">
+        <Show when={isWide13_6Plus}>
+          <BreadcrumbsSlot>
+            <Breadcrumbs ui="UI-CMP-032" />
+          </BreadcrumbsSlot>
+        </Show>
+
+        <ControllerStatusRegion>
+          <ControllerHintStrip ui="UI-CMP-005" />
+        </ControllerStatusRegion>
+      </Group>
+    </NavigationRegion>
+
+    <ActionRegion pinned>
+      <TopBarDropdownMenu ui="UI-CMP-033" />
+    </ActionRegion>
+  </Group>
+</GlobalTopBar>
+```

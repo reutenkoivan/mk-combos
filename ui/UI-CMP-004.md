@@ -93,15 +93,42 @@ Recommended option labels:
 
 Розміщення є form-control row: label стоїть перед display-mode segmented control, а validation/status region завжди нижче control group.
 
-```text
-UI-CMP-004 Display Mode Switcher
-  └─ (inside First Launch або Settings form) Root field/group
-     ├─ (top/left) Visible label або accessible name
-     ├─ (below/right) Segmented display mode control
-     │  ├─ (left/top) Display mode segment: FGC
-     │  ├─ (right/below) Display mode segment: PlayStation
-     │  └─ (right/below) Display mode segment: Xbox
-     └─ (below control, conditional) Optional validation або status message
+```jsx
+<DisplayModeSwitcher ui="UI-CMP-004">
+  <DisplayModeFieldGroup slot="First Launch або Settings form">
+    <Stack name="FieldGroupLayout">
+      <Show when={isWideForm}>
+        <Group name="DisplayModeControlRow">
+          <VisibleLabel />
+          <SegmentedDisplayModeControl>
+            <Group name="DisplayModeSegments">
+              <FgcDisplayModeSegment />
+              <PlayStationDisplayModeSegment />
+              <XboxDisplayModeSegment />
+            </Group>
+          </SegmentedDisplayModeControl>
+        </Group>
+      </Show>
+
+      <Show when={isCompact}>
+        <Stack name="DisplayModeControlStack">
+          <VisibleLabel />
+          <SegmentedDisplayModeControl>
+            <Group name="DisplayModeSegments">
+              <FgcDisplayModeSegment />
+              <PlayStationDisplayModeSegment />
+              <XboxDisplayModeSegment />
+            </Group>
+          </SegmentedDisplayModeControl>
+        </Stack>
+      </Show>
+
+      <Show when={hasValidationStatusMessage}>
+        <ValidationStatusMessage />
+      </Show>
+    </Stack>
+  </DisplayModeFieldGroup>
+</DisplayModeSwitcher>
 ```
 
 Правила розміщення:
@@ -110,9 +137,9 @@ UI-CMP-004 Display Mode Switcher
 - Segments читаються в переданому parent order зліва направо або згори вниз після compact wrap.
 - Status message не є source of truth; він рендерить page-prepared validation/status input.
 
-### Root field/group
+### FieldGroup
 
-Root group є form-control region усередині First Launch або Settings form.
+FieldGroup є form-control region усередині First Launch або Settings form.
 
 Вимоги:
 
@@ -346,7 +373,7 @@ Implementation має використовувати semantic recipes у `packag
 Recommended shared recipes:
 
 - `control` для clickable segments;
-- `field` або segmented-control wrapper для root bordered group;
+- `field` або segmented-control wrapper для bordered `FieldGroup`;
 - `indicator` для selected/current mark;
 - `separator` для subtle segment division, якщо потрібно.
 

@@ -20,14 +20,27 @@
 
 Розміщення error state займає parent-provided error slot: severity marker і message стоять зверху, technical reference/details нижче, recovery actions замикають block.
 
-```text
-UI-CMP-030 Error State
-  └─ (inside parent error slot) Корінь error state
-     ├─ (top/left) Severity/status marker
-     ├─ (top/right або below marker) Title/message region
-     ├─ (below message, optional) technical reference ділянка
-     └─ (below details/message, conditional) Recovery action region
-        └─ Retry/fallback/dismiss action
+```jsx
+<ErrorState ui="UI-CMP-030">
+  <ErrorStateSurface slot="parent error">
+    <Stack name="ErrorStateLayout">
+      <Group name="ErrorSummaryRow">
+        <SeverityStatusMarker />
+        <TitleMessageRegion />
+      </Group>
+
+      <Show when={hasTechnicalReference}>
+        <TechnicalReferenceRegion />
+      </Show>
+
+      <Show when={hasRecoveryAction}>
+        <RecoveryActionRegion>
+          <RetryFallbackDismissAction />
+        </RecoveryActionRegion>
+      </Show>
+    </Stack>
+  </ErrorStateSurface>
+</ErrorState>
 ```
 
 Правила розміщення:

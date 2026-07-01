@@ -21,19 +21,33 @@
 
 Розміщення dialog читається як overlay -> surface -> parsed summary -> validation -> replace impact -> warning -> actions.
 
-```text
-UI-CMP-028 Import Preview Dialog
-  └─ (overlay, page-owned singleton) Dialog overlay
-     └─ (inside overlay) Dialog surface
-        ├─ (top) Dialog header / import title
-        ├─ (below header) Parsed backup summary region
-        ├─ (below summary) Validation result region
-        ├─ (below validation) Replace impact summary
-        ├─ (below impact, conditional) Destructive confirmation warning
-        └─ (bottom) Dialog action row
-           ├─ Confirm replace action
-           ├─ Retry file selection action
-           └─ Cancel/close action
+```jsx
+<ImportPreviewDialog ui="UI-CMP-028">
+  <Show when={isImportPreviewDialogOpen}>
+    <ImportPreviewDialogOverlay owner="page">
+      <ImportPreviewDialogSurface>
+        <Stack name="ImportPreviewDialogLayout">
+          <DialogHeaderImportTitle />
+          <ParsedBackupSummaryRegion />
+          <ValidationResultRegion />
+          <ReplaceImpactSummary />
+
+          <Show when={hasDestructiveConfirmationWarning}>
+            <DestructiveConfirmationWarning />
+          </Show>
+
+          <DialogActionRow>
+            <Group name="DialogActions">
+              <ConfirmReplaceAction />
+              <RetryFileSelectionAction />
+              <CancelCloseAction />
+            </Group>
+          </DialogActionRow>
+        </Stack>
+      </ImportPreviewDialogSurface>
+    </ImportPreviewDialogOverlay>
+  </Show>
+</ImportPreviewDialog>
 ```
 
 Правила розміщення:

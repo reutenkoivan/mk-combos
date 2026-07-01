@@ -61,24 +61,94 @@ Whiteboard синхронізує focused step або focused move candidate і�
 
 Розміщення whiteboard є робочою ділянкою builder workspace: path board є основною ділянкою, internal `movePicker` стоїть праворуч на широкому екрані або нижче path board на compact, а markers/confirmations прив'язані до відповідної ділянки path або candidate.
 
-```text
-UI-CMP-035 Combo Whiteboard
-  └─ (left/top inside builder workspace) Корінь Whiteboard
-     ├─ (top) Runtime summary strip
-     ├─ (below summary, left/top primary) Path board region
-     │  ├─ (inside path order) Step target list
-     │  │  └─ (inside list) Move step
-     │  ├─ (between/around steps) Gap target list
-     │  │  └─ (between steps) Insert/reorder gap
-     │  ├─ (inside affected boundary, conditional) Invalid boundary marker
-     │  └─ (overlay/anchored to step or gap, conditional) Local step/gap action menu slot
-     ├─ (right of path board, wide13_6Plus / below path board, compact) Internal movePicker region
-     │  ├─ (top) Move group selector
-     │  ├─ (below selector) Candidate list
-     │  │  └─ (inside list) Move candidate
-     │  └─ (below/inside candidate list, conditional) Candidate disabled reason/details slot
-     ├─ (below affected path area, conditional) Pending truncate confirmation region
-     └─ (below path board or summary, conditional) Repair/stale marker region
+```jsx
+<ComboWhiteboard ui="UI-CMP-035">
+  <WhiteboardSurface slot="builder workspace">
+    <Stack name="WhiteboardLayout">
+      <RuntimeSummaryStrip />
+
+      <Show when={isWide13_6Plus}>
+        <Group name="WhiteboardWorkspace">
+          <PathBoardRegion>
+            <StepTargetList>
+              <MoveStep />
+            </StepTargetList>
+
+            <GapTargetList>
+              <InsertReorderGap />
+            </GapTargetList>
+
+            <Show when={hasInvalidBoundaryMarker}>
+              <InvalidBoundaryMarker />
+            </Show>
+
+            <Show when={hasLocalStepGapActionMenu}>
+              <LocalStepGapActionMenuSlot />
+            </Show>
+          </PathBoardRegion>
+
+          <InternalMovePickerRegion>
+            <Stack name="InternalMovePickerLayout">
+              <MoveGroupSelector />
+
+              <CandidateList>
+                <MoveCandidate />
+              </CandidateList>
+
+              <Show when={hasCandidateDisabledReasonDetails}>
+                <CandidateDisabledReasonDetailsSlot />
+              </Show>
+            </Stack>
+          </InternalMovePickerRegion>
+        </Group>
+      </Show>
+
+      <Show when={isCompact}>
+        <Stack name="WhiteboardWorkspace">
+          <PathBoardRegion>
+            <StepTargetList>
+              <MoveStep />
+            </StepTargetList>
+
+            <GapTargetList>
+              <InsertReorderGap />
+            </GapTargetList>
+
+            <Show when={hasInvalidBoundaryMarker}>
+              <InvalidBoundaryMarker />
+            </Show>
+
+            <Show when={hasLocalStepGapActionMenu}>
+              <LocalStepGapActionMenuSlot />
+            </Show>
+          </PathBoardRegion>
+
+          <InternalMovePickerRegion>
+            <Stack name="InternalMovePickerLayout">
+              <MoveGroupSelector />
+
+              <CandidateList>
+                <MoveCandidate />
+              </CandidateList>
+
+              <Show when={hasCandidateDisabledReasonDetails}>
+                <CandidateDisabledReasonDetailsSlot />
+              </Show>
+            </Stack>
+          </InternalMovePickerRegion>
+        </Stack>
+      </Show>
+
+      <Show when={hasPendingTruncateConfirmation}>
+        <PendingTruncateConfirmationRegion />
+      </Show>
+
+      <Show when={hasRepairStaleMarker}>
+        <RepairStaleMarkerRegion />
+      </Show>
+    </Stack>
+  </WhiteboardSurface>
+</ComboWhiteboard>
 ```
 
 Правила розміщення:

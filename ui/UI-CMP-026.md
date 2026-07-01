@@ -20,14 +20,26 @@
 
 Розміщення action bar є нижнім command row builder flow: primary actions стоять поруч, status region прив'язана до цих actions, optional add-to-list action з'являється після save.
 
-```text
-UI-CMP-026 Builder Action Bar
-  └─ (below UI-CMP-035/UI-CMP-036 workspace) Корінь action bar
-     ├─ (left/top) Undo action
-     ├─ (left/primary) Finish/save action
-     ├─ (right/below) Cancel action
-     ├─ (below actions, conditional) Save/busy/error status region
-     └─ (right/below after save, optional) add saved combo to list action
+```jsx
+<BuilderActionBar ui="UI-CMP-026">
+  <BuilderActionBarRegion slot="UI-CMP-035/UI-CMP-036 workspace">
+    <Stack name="BuilderActionBarLayout">
+      <Group name="BuilderPrimaryActions">
+        <UndoAction />
+        <FinishSaveAction />
+        <CancelAction />
+      </Group>
+
+      <Show when={hasSaveBusyErrorStatus}>
+        <SaveBusyErrorStatusRegion />
+      </Show>
+
+      <Show when={hasSavedCombo}>
+        <AddSavedComboToListAction />
+      </Show>
+    </Stack>
+  </BuilderActionBarRegion>
+</BuilderActionBar>
 ```
 
 Правила розміщення:

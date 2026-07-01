@@ -108,18 +108,33 @@ Icon registry має покривати:
 
 Розміщення legend є read-only table/reference block: caption стоїть зверху, header row над legend rows, optional modifier columns додаються праворуч або як compact rows.
 
-```text
-UI-CMP-037 Notation Legend Table
-  └─ (inside First Launch або Settings reference region) Root reference region
-     ├─ (top) Caption або accessible name
-     ├─ (below caption) Header row
-     │  ├─ (left) Mode column
-     │  ├─ (right) Attack marker columns
-     │  └─ (right/end, optional) Modifier columns
-     └─ (below header) Legend rows
-        ├─ FGC row
-        ├─ PlayStation row
-        └─ Xbox row
+```jsx
+<NotationLegendTable ui="UI-CMP-037">
+  <NotationLegendReferenceRegion slot="First Launch або Settings reference">
+    <Stack name="NotationLegendLayout">
+      <CaptionOrAccessibleName />
+
+      <HeaderRow>
+        <Group name="LegendHeaderColumns">
+          <ModeColumn />
+          <AttackMarkerColumns />
+
+          <Show when={hasModifierColumns}>
+            <ModifierColumns />
+          </Show>
+        </Group>
+      </HeaderRow>
+
+      <LegendRows>
+        <Stack name="LegendRowList">
+          <FgcRow />
+          <PlayStationRow />
+          <XboxRow />
+        </Stack>
+      </LegendRows>
+    </Stack>
+  </NotationLegendReferenceRegion>
+</NotationLegendTable>
 ```
 
 Правила розміщення:
@@ -128,9 +143,9 @@ UI-CMP-037 Notation Legend Table
 - На `compact` optional modifier columns можуть перейти в rows/details під base attack markers.
 - Row order follows prepared display modes and does not mutate selected notation display mode.
 
-### Root reference region
+### ReferenceRegion
 
-Root reference region є read-only companion surface у First Launch або Settings.
+ReferenceRegion є read-only companion surface у First Launch або Settings.
 
 Вимоги:
 

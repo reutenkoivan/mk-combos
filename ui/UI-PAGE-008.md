@@ -94,20 +94,43 @@ Backup flow є частиною Settings і рендериться в `UI-CMP-03
 
 Розміщення Settings читається згори вниз: applied settings form і notation reference стоять перед backup block, а import/export dialogs відкриваються як page-owned overlays від Settings flow.
 
-```text
-UI-PAGE-008 Settings
-  └─ (inside UI-PAGE-001 active route slot) Settings root
-     ├─ (top) Settings form
-     │  ├─ (top) UI-CMP-003 Language Switcher
-     │  └─ (below) UI-CMP-004 Display Mode Switcher
-     ├─ (below form) UI-CMP-037 Notation Legend Table
-     ├─ (below notation reference) UI-CMP-034 Backup Collapsible Block
-     │  ├─ (top) disclosure header
-     │  └─ (below, conditional expanded panel) backup action groups
-     ├─ (below settings/backup content, conditional) Persistence / system message area
-     ├─ (below content) Navigation / return action
-     ├─ (overlay, page-owned singleton) UI-CMP-027 Export Dialog
-     └─ (overlay, page-owned singleton) UI-CMP-028 Import Preview Dialog
+```jsx
+<SettingsPage ui="UI-PAGE-008">
+  <SettingsSurface slot="UI-PAGE-001 active route">
+    <Stack name="SettingsLayout">
+      <SettingsForm>
+        <Stack name="SettingsFormControls">
+          <LanguageSwitcher ui="UI-CMP-003" />
+          <DisplayModeSwitcher ui="UI-CMP-004" />
+        </Stack>
+      </SettingsForm>
+
+      <NotationLegendTable ui="UI-CMP-037" />
+
+      <BackupCollapsibleBlock ui="UI-CMP-034">
+        <DisclosureHeader />
+
+        <Show when={backupBlockExpanded}>
+          <BackupActionGroups />
+        </Show>
+      </BackupCollapsibleBlock>
+
+      <Show when={hasPersistenceSystemMessage}>
+        <PersistenceSystemMessageArea />
+      </Show>
+
+      <NavigationReturnAction />
+
+      <Show when={isExportDialogOpen}>
+        <ExportDialog ui="UI-CMP-027" />
+      </Show>
+
+      <Show when={isImportPreviewDialogOpen}>
+        <ImportPreviewDialog ui="UI-CMP-028" />
+      </Show>
+    </Stack>
+  </SettingsSurface>
+</SettingsPage>
 ```
 
 Правила розміщення:
@@ -117,11 +140,11 @@ UI-PAGE-008 Settings
 - `UI-CMP-034` стоїть після regular settings і містить тільки disclosure/panel structure; dialogs монтуються як singleton overlays на рівні Settings.
 - File picker result входить у Settings flow як prepared intent/result; anatomy не описує native `<input>` event.
 
-### Settings root
+### SettingsSurface
 
-Settings root є page-level container, який рендериться в slot активної сторінки `UI-PAGE-001 App Shell`.
+SettingsSurface є page-level container, який рендериться в slot активної сторінки `UI-PAGE-001 App Shell`.
 
-Root має:
+SettingsSurface має:
 
 - показувати поточні applied settings;
 - не бути modal або dropdown panel;
