@@ -1,9 +1,45 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "concurrency": "100%",
   "tasks": {
+    "//#root:arch:check": {
+      "outputs": []
+    },
+    "//#root:check": {
+      "outputs": []
+    },
+    "//#root:format:check": {
+      "outputs": []
+    },
+    "//#root:hooks:validate": {
+      "outputs": []
+    },
+    "//#root:knip": {
+      "outputs": []
+    },
+    "//#root:lint": {
+      "outputs": []
+    },
+    "//#root:secrets:check": {
+      "cache": false,
+      "outputs": []
+    },
+    "//#root:sherif": {
+      "outputs": []
+    },
+    "//#root:test": {
+      "outputs": []
+    },
+    "//#root:typecheck": {
+      "outputs": []
+    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "storybook-static/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build", "^typecheck"],
+      "outputs": []
     },
     "test": {
       "dependsOn": ["build", "^build", "^test"],
@@ -20,6 +56,14 @@
     "validate:docs": {
       "dependsOn": ["^build"],
       "outputs": []
+    },
+    "storybook:build": {
+      "dependsOn": ["build", "^build"],
+      "outputs": ["storybook-static/**"]
+    },
+    "storybook": {
+      "cache": false,
+      "persistent": true
     },
     "dev": {
       "cache": false,

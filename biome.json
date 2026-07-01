@@ -1,0 +1,96 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.2/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!bun.lock",
+      "!dist",
+      "!storybook-static",
+      "!coverage",
+      "!sheriff-graph.json"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "lucide-react": {
+                "message": "Import icons from @mk-combos/ui/icons instead."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["packages/ui/src/icons/**/*.ts", "packages/ui/src/icons/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/**/*.ts", "apps/web/**/*.tsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": [
+                      "@mk-combos/mkxl-data",
+                      "@mk-combos/mkxl-data/*",
+                      "@mk-combos/mkxl-rules",
+                      "@mk-combos/mkxl-rules/*",
+                      "@mk-combos/mk1-data",
+                      "@mk-combos/mk1-data/*",
+                      "@mk-combos/mk1-rules",
+                      "@mk-combos/mk1-rules/*"
+                    ],
+                    "message": "Web pages must use installed game business entry points instead of direct game data or rules imports."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
+}

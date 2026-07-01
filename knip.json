@@ -1,0 +1,12 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "ignore": ["sheriff.config.ts", "tools/sheriff-entry.ts"],
+  "ignoreBinaries": ["gitleaks"],
+  "ignoreDependencies": [
+    "@storybook/addon-a11y",
+    "@storybook/addon-docs",
+    "@storybook/addon-vitest",
+    "@storybook/react-vite",
+    "storybook"
+  ]
+}

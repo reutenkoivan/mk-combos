@@ -20,6 +20,7 @@
 **/coverage
 **/playwright-report
 **/test-results
+sheriff-graph.json
 
 # next.js
 /.next/
@@ -28,6 +29,7 @@
 # production
 /build
 /dist
+storybook-static
 **/dist
 /.turbo
 **/.turbo
@@ -42,6 +44,7 @@
 .DS_Store
 *.pem
 *.docx
+lefthook-local.yml
 mock/output/
 
 # debug

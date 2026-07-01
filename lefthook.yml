@@ -1,0 +1,26 @@
+pre-commit:
+  jobs:
+    - name: secrets:check:staged
+      run: bun run secrets:check:staged
+    - name: check
+      run: bun run check
+
+pre-push:
+  parallel: false
+  jobs:
+    - name: secrets:check
+      run: bun run secrets:check
+    - name: check
+      run: bun run check
+    - name: typecheck
+      run: bun run typecheck
+    - name: test
+      run: bun run test
+    - name: build
+      run: bun run build
+    - name: sherif
+      run: bun run sherif
+    - name: knip
+      run: bun run knip
+    - name: arch:check
+      run: bun run arch:check
