@@ -26,7 +26,7 @@ Each item also has `Done when` so `done` has a clear meaning.
 
 | # | Status | Step | Scope | Done when |
 |---|---|---|---|---|
-| 1 | todo | Root Platform Bootstrap | repo root | Bun workspaces use `packages/*`, `mkxl/*`, `mk1/*`, `apps/*`; Turbo, TS base config, root scripts, package metadata exist. |
+| 1 | done | Root Platform Bootstrap | repo root | Bun workspaces use `packages/*`, `mkxl/*`, `mk1/*`, `apps/*`; Turbo, TS base config, root scripts, package metadata exist. |
 | 2 | todo | Root Tooling Setup | repo root | Biome, Knip, Sherif, Sheriff, Gitleaks, Lefthook, Vitest, Playwright, Storybook base tooling are configured. |
 | 3 | todo | Architecture Boundary Update | docs | Docs say `packages/ui` owns all active numbered `UI-CMP-*`; `@mk-combos/builder-ui` is removed. |
 | 4 | todo | `packages/contracts` | `packages/contracts` | Shared contracts, route/source ids, notation mode, backup envelope, result shapes are exported. |

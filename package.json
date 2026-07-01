@@ -1,0 +1,29 @@
+{
+  "name": "mk-combos",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "bun@1.3.5",
+  "workspaces": [
+    "packages/*",
+    "mkxl/*",
+    "mk1/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "validate:data": "turbo run validate:data",
+    "validate:docs": "turbo run validate:docs"
+  },
+  "engines": {
+    "bun": ">=1.3.5",
+    "node": ">=22.0.0"
+  },
+  "devDependencies": {
+    "turbo": "2.10.2",
+    "typescript": "6.0.3"
+  }
+}
