@@ -4,7 +4,7 @@
 
 The first supported games are `MKXL` and `MK1`. The application must stay local-first and static: no backend, no auth, no remote database, and no server-side personalization.
 
-The canonical architecture document is [ARCHITECTURE.md](./ARCHITECTURE.md). This README is the project overview and implementation roadmap.
+The canonical architecture document is [ARCHITECTURE.md](./ARCHITECTURE.md). This README is the project overview; the status-tracked implementation roadmap lives in [roadmap.md](./roadmap.md).
 
 ## Goals
 
@@ -47,6 +47,7 @@ mk-combos/
     web/
 
   ARCHITECTURE.md
+  roadmap.md
   UI.md
   UX.md
 ```
@@ -230,6 +231,8 @@ Free text fallback is out of scope for MVP.
 `@mk-combos/controller-bridge` emits semantic commands. `apps/web` maps those commands to the active page, and active game behavior is delegated through the selected business entry point where needed.
 
 ## Implementation Roadmap
+
+This section is a high-level overview. The flat step-by-step progress tracker lives in [roadmap.md](./roadmap.md).
 
 ### 1. Bootstrap Workspaces
 
