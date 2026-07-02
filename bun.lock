@@ -57,6 +57,20 @@
         "vitest": "4.1.9",
       },
     },
+    "packages/controller-bridge": {
+      "name": "@mk-combos/controller-bridge",
+      "version": "0.0.0",
+      "dependencies": {
+        "@mk-combos/contracts": "workspace:*",
+        "zod": "4.4.3",
+      },
+      "devDependencies": {
+        "@types/node": "25.6.2",
+        "tsdown": "0.22.3",
+        "vite": "8.1.2",
+        "vitest": "4.1.9",
+      },
+    },
   },
   "packages": {
     "@adobe/css-tools": ["@adobe/css-tools@4.5.0", "", {}, "sha512-6OzddxPio9UiWTCemp4N8cYLV2ZN1ncRnV1cVGtve7dhPOtRkleRyx32GQCYSwDYgaHU3USMm84tNsvKzRCa1Q=="],
@@ -212,6 +226,8 @@
     "@mk-combos/builder-core": ["@mk-combos/builder-core@workspace:packages/builder-core"],
 
     "@mk-combos/contracts": ["@mk-combos/contracts@workspace:packages/contracts"],
+
+    "@mk-combos/controller-bridge": ["@mk-combos/controller-bridge@workspace:packages/controller-bridge"],
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.6", "", { "dependencies": { "@tybys/wasm-util": "^0.10.3" }, "peerDependencies": { "@emnapi/core": "^1.7.1", "@emnapi/runtime": "^1.7.1" } }, "sha512-ZLv/JdUfkvOy9eCnnBaGfiO+XimbjebAeO+MRQqD/B+FR1tnRN0tpKSJHRbE8sFfS6aqsXZ67TQjfwfsxULVbg=="],
 

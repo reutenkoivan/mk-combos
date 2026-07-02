@@ -32,7 +32,7 @@ Each item also has `Done when` so `done` has a clear meaning.
 | 4 | done | `packages/contracts` | `packages/contracts` | Shared contracts, route/source ids, notation mode, backup envelope, result shapes are exported. |
 | 5 | done | `packages/contracts` Build/Test Exports | `packages/contracts` | Shared build/test config exports are available. |
 | 6 | done | `packages/builder-core` | `packages/builder-core` | Graph primitives, replay types, transition helpers, runtime state, stale/invalid structures are implemented. |
-| 7 | todo | `packages/controller-bridge` | `packages/controller-bridge` | Gamepad bridge emits semantic commands with profiles, repeat/dead-zone logic, and hint metadata. |
+| 7 | done | `packages/controller-bridge` | `packages/controller-bridge` | Gamepad bridge emits semantic commands with profiles, repeat/dead-zone logic, and hint metadata. |
 | 8 | todo | `mkxl/data` | `mkxl/data` | Full MKXL roster, variations, movelists, combos, graph data, stages, interactables, localized content, coverage targets exist. |
 | 9 | todo | `mkxl/rules` | `mkxl/rules` | MKXL schemas, validation, notation, variation, stage/interactable, patch rules pass tests. |
 | 10 | todo | `mkxl/catalog` | `mkxl/catalog` | MKXL selectors, context parsing, filters, summaries, recovery behavior are implemented. |

@@ -1,0 +1,88 @@
+export const controllerProfileIds = ["dualsense", "xbox", "standard"] as const;
+
+export const controllerProfileMatchers = {
+  dualsense: ["dualsense", "dual sense", "dualshock", "playstation", "sony interactive"],
+  xbox: ["xbox", "xinput", "x-input"],
+  standard: [],
+} as const;
+
+const standardDirectionLabels = {
+  dpadDown: { EN: "D-pad down", fallback: "D-pad down" },
+  dpadLeft: { EN: "D-pad left", fallback: "D-pad left" },
+  dpadRight: { EN: "D-pad right", fallback: "D-pad right" },
+  dpadUp: { EN: "D-pad up", fallback: "D-pad up" },
+  leftStickDown: { EN: "Left stick down", fallback: "Left stick down" },
+  leftStickLeft: { EN: "Left stick left", fallback: "Left stick left" },
+  leftStickRight: { EN: "Left stick right", fallback: "Left stick right" },
+  leftStickUp: { EN: "Left stick up", fallback: "Left stick up" },
+  rightStickDown: { EN: "Right stick down", fallback: "Right stick down" },
+  rightStickLeft: { EN: "Right stick left", fallback: "Right stick left" },
+  rightStickRight: { EN: "Right stick right", fallback: "Right stick right" },
+  rightStickUp: { EN: "Right stick up", fallback: "Right stick up" },
+} as const;
+
+export const controllerProfiles = [
+  {
+    id: "dualsense",
+    label: { EN: "DualSense", fallback: "DualSense" },
+    matchers: controllerProfileMatchers.dualsense,
+    buttonLabels: {
+      ...standardDirectionLabels,
+      faceEast: { EN: "Circle", fallback: "Circle" },
+      faceNorth: { EN: "Triangle", fallback: "Triangle" },
+      faceSouth: { EN: "Cross", fallback: "Cross" },
+      faceWest: { EN: "Square", fallback: "Square" },
+      home: { EN: "PS", fallback: "PS" },
+      leftShoulder: { EN: "L1", fallback: "L1" },
+      leftStickPress: { EN: "L3", fallback: "L3" },
+      leftTrigger: { EN: "L2", fallback: "L2" },
+      rightShoulder: { EN: "R1", fallback: "R1" },
+      rightStickPress: { EN: "R3", fallback: "R3" },
+      rightTrigger: { EN: "R2", fallback: "R2" },
+      select: { EN: "Create", fallback: "Create" },
+      start: { EN: "Options", fallback: "Options" },
+    },
+  },
+  {
+    id: "xbox",
+    label: { EN: "Xbox", fallback: "Xbox" },
+    matchers: controllerProfileMatchers.xbox,
+    buttonLabels: {
+      ...standardDirectionLabels,
+      faceEast: { EN: "B", fallback: "B" },
+      faceNorth: { EN: "Y", fallback: "Y" },
+      faceSouth: { EN: "A", fallback: "A" },
+      faceWest: { EN: "X", fallback: "X" },
+      home: { EN: "Guide", fallback: "Guide" },
+      leftShoulder: { EN: "LB", fallback: "LB" },
+      leftStickPress: { EN: "LS", fallback: "LS" },
+      leftTrigger: { EN: "LT", fallback: "LT" },
+      rightShoulder: { EN: "RB", fallback: "RB" },
+      rightStickPress: { EN: "RS", fallback: "RS" },
+      rightTrigger: { EN: "RT", fallback: "RT" },
+      select: { EN: "View", fallback: "View" },
+      start: { EN: "Menu", fallback: "Menu" },
+    },
+  },
+  {
+    id: "standard",
+    label: { EN: "Standard Gamepad", fallback: "Standard Gamepad" },
+    matchers: controllerProfileMatchers.standard,
+    buttonLabels: {
+      ...standardDirectionLabels,
+      faceEast: { EN: "East button", fallback: "East button" },
+      faceNorth: { EN: "North button", fallback: "North button" },
+      faceSouth: { EN: "South button", fallback: "South button" },
+      faceWest: { EN: "West button", fallback: "West button" },
+      home: { EN: "Home", fallback: "Home" },
+      leftShoulder: { EN: "Left shoulder", fallback: "Left shoulder" },
+      leftStickPress: { EN: "Left stick press", fallback: "Left stick press" },
+      leftTrigger: { EN: "Left trigger", fallback: "Left trigger" },
+      rightShoulder: { EN: "Right shoulder", fallback: "Right shoulder" },
+      rightStickPress: { EN: "Right stick press", fallback: "Right stick press" },
+      rightTrigger: { EN: "Right trigger", fallback: "Right trigger" },
+      select: { EN: "Select", fallback: "Select" },
+      start: { EN: "Start", fallback: "Start" },
+    },
+  },
+] as const;

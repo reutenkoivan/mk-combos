@@ -1,0 +1,67 @@
+{
+  "name": "@mk-combos/controller-bridge",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "exports": {
+    "./bridge/runtime": "./src/bridge/runtime.ts",
+    "./bridge/schema": "./src/bridge/schema.ts",
+    "./bridge/type": "./src/bridge/type.ts",
+    "./command/schema": "./src/command/schema.ts",
+    "./command/type": "./src/command/type.ts",
+    "./command/value": "./src/command/value.ts",
+    "./contract": "./src/contract.ts",
+    "./hint/runtime": "./src/hint/runtime.ts",
+    "./hint/schema": "./src/hint/schema.ts",
+    "./hint/type": "./src/hint/type.ts",
+    "./input/runtime": "./src/input/runtime.ts",
+    "./input/schema": "./src/input/schema.ts",
+    "./input/type": "./src/input/type.ts",
+    "./profile/runtime": "./src/profile/runtime.ts",
+    "./profile/schema": "./src/profile/schema.ts",
+    "./profile/type": "./src/profile/type.ts",
+    "./profile/value": "./src/profile/value.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "exports": {
+      "./bridge/runtime": "./dist/bridge/runtime.mjs",
+      "./bridge/schema": "./dist/bridge/schema.mjs",
+      "./bridge/type": "./dist/bridge/type.mjs",
+      "./command/schema": "./dist/command/schema.mjs",
+      "./command/type": "./dist/command/type.mjs",
+      "./command/value": "./dist/command/value.mjs",
+      "./contract": "./dist/contract.mjs",
+      "./hint/runtime": "./dist/hint/runtime.mjs",
+      "./hint/schema": "./dist/hint/schema.mjs",
+      "./hint/type": "./dist/hint/type.mjs",
+      "./input/runtime": "./dist/input/runtime.mjs",
+      "./input/schema": "./dist/input/schema.mjs",
+      "./input/type": "./dist/input/type.mjs",
+      "./profile/runtime": "./dist/profile/runtime.mjs",
+      "./profile/schema": "./dist/profile/schema.mjs",
+      "./profile/type": "./dist/profile/type.mjs",
+      "./profile/value": "./dist/profile/value.mjs",
+      "./package.json": "./package.json"
+    }
+  },
+  "dependencies": {
+    "@mk-combos/contracts": "workspace:*",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.2",
+    "tsdown": "0.22.3",
+    "vite": "8.1.2",
+    "vitest": "4.1.9"
+  }
+}
