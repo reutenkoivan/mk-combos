@@ -25,7 +25,6 @@ mk-combos/
   packages/
     contracts/
     builder-core/
-    builder-ui/
     controller-bridge/
     ui/
 
@@ -77,14 +76,6 @@ Contains game-agnostic builder primitives: graph primitives, replay result shape
 
 It does not compose MKXL or MK1 graphs. Game graph composition belongs to the game scope.
 
-### `packages/builder-ui`
-
-Package name: `@mk-combos/builder-ui`.
-
-Contains shared builder presentation: `ComboWhiteboard`, the internal `movePicker` region, `ComboFrameMeter`, builder layout, and read-only detail presentation.
-
-It renders prepared state and emits UI events. It does not decide whether a move is valid.
-
 ### `packages/controller-bridge`
 
 Package name: `@mk-combos/controller-bridge`.
@@ -97,9 +88,9 @@ It does not know routes, game data, local storage, or builder rules.
 
 Package name: `@mk-combos/ui`.
 
-Contains generic React primitives and display components: controls, dialogs, picker/list/filter primitives, cards where generic, semantic tokens, and `NotationRenderer`.
+Contains all active numbered `UI-CMP-*` components and generic React primitives: controls, dialogs, picker/list/filter primitives, cards where generic, semantic tokens, `NotationRenderer`, notation icon registry, `ComboWhiteboard`, internal `movePicker`, `ComboFrameMeter`, and builder presentation hooks.
 
-It does not contain game-specific business logic.
+It renders prepared state and emits semantic UI events. It does not contain game-specific business logic or decide whether a move is valid.
 
 ## Game Business Scopes
 
@@ -218,9 +209,9 @@ Root first launch shows required setup for default language, default game, and n
 
 ### Custom Combo Builder
 
-`UI-PAGE-006 Custom Combo Builder` combines shared builder UI with the active game's builder adapter.
+`UI-PAGE-006 Custom Combo Builder` combines shared builder presentation from `@mk-combos/ui` with the active game's builder adapter.
 
-- `@mk-combos/builder-ui` renders the whiteboard, internal move picker, and frame meter.
+- `@mk-combos/ui` renders the whiteboard, internal move picker, and frame meter.
 - `mkxl/builder` decides MKXL graph composition, valid next moves, stage/interactable availability, replay, and stale state.
 - `mk1/builder` decides MK1 graph composition, valid next moves, kameo transition behavior, replay, and stale state.
 
@@ -258,14 +249,13 @@ Acceptance:
 
 - Implement `@mk-combos/contracts`.
 - Implement `@mk-combos/builder-core`.
-- Implement `@mk-combos/builder-ui`.
 - Implement `@mk-combos/ui`.
 - Implement `@mk-combos/controller-bridge`.
 
 Acceptance:
 
 - Shared packages do not import from `mkxl/*` or `mk1/*`.
-- Shared builder UI can render prepared builder state without knowing game-specific rules.
+- Shared UI components can render prepared builder state without knowing game-specific rules.
 - Controller bridge emits semantic commands only.
 - UI package remains game-agnostic.
 
@@ -320,7 +310,7 @@ Acceptance:
 - Implement `UI-PAGE-001` through `UI-PAGE-008` according to [UI.md](./UI.md).
 - Keep stable UI codes.
 - Keep MKXL and MK1 catalog variants as documentation variants of `UI-PAGE-003`.
-- Use `@mk-combos/builder-ui` for whiteboard and frame meter.
+- Use `@mk-combos/ui` for whiteboard and frame meter.
 
 Acceptance:
 

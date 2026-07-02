@@ -44,11 +44,12 @@ Tooling ownership:
 UI and app import boundaries:
 
 - `packages/ui` wraps Base UI primitives and exposes project-owned React components.
+- `packages/ui` owns every active numbered `UI-CMP-*`, including shared builder presentation components and hooks.
 - `packages/ui` implements shared component styling through `tailwind-variants` recipes.
-- `packages/ui` owns the icon facade. App pages, game scopes, and builder UI consumers import icons only from `@mk-combos/ui/icons/{icon-name}`.
+- `packages/ui` owns the icon facade. App pages and game scopes import icons only from `@mk-combos/ui/icons/{icon-name}`.
 - Direct `lucide-react` imports are allowed inside `packages/ui` icon modules only.
+- `packages/ui` may use React Flow for the visual combo builder canvas.
 - App-level forms use `@tanstack/react-form` for form state. Zod remains the schema and validation layer.
-- `packages/builder-ui` may use React Flow for the visual combo builder canvas.
 - `packages/builder-core` and game business scopes own combo graph rules, validation, replay, and persistence shape.
 
 ## Стан На Рівні Сторінки І Pure UI Контракти
@@ -82,7 +83,6 @@ mk-combos/
   packages/
     contracts/
     builder-core/
-    builder-ui/
     controller-bridge/
     ui/
 
@@ -104,7 +104,7 @@ mk-combos/
     web/
 ```
 
-`packages/*` is the shared platform layer. It contains reusable contracts, UI primitives, builder primitives, builder presentation components, and controller input normalization.
+`packages/*` is the shared platform layer. It contains reusable contracts, UI primitives, active numbered UI components, builder primitives, builder presentation components, and controller input normalization.
 
 `mkxl/*` is the MKXL business scope. It owns MKXL data, rules, schemas, catalog behavior, builder behavior, validation, coverage, and the MKXL app-facing business entry point.
 
@@ -140,21 +140,6 @@ Owns reusable builder primitives:
 
 It does not compose MKXL or MK1 graphs by itself. Game-specific graph composition lives in the game business scope.
 
-### `packages/builder-ui`
-
-Package name: `@mk-combos/builder-ui`.
-
-Owns shared builder presentation:
-
-- `ComboWhiteboard`;
-- `useComboWhiteboardModel`;
-- internal `movePicker` region;
-- `ComboFrameMeter`;
-- `useComboFrameMeterModel`;
-- builder layout components and read-only detail rendering support.
-
-Hooks готують builder UI view models і semantic handler payloads із page-provided builder adapter state. `UI-PAGE-006` і `UI-PAGE-004` викликають ці hooks на рівні сторінки, після чого рендерять pure UI components із prepared props. `@mk-combos/builder-ui` не вирішує, чи move валідний, і не пише local state.
-
 ### `packages/controller-bridge`
 
 Package name: `@mk-combos/controller-bridge`.
@@ -167,11 +152,17 @@ It does not know routes, combo data, game-specific builder rules, local storage,
 
 Package name: `@mk-combos/ui`.
 
-Owns generic React primitives and display components:
+Owns all active numbered UI components and generic React primitives:
 
 - buttons, dialogs, controls, segmented controls, list primitives, picker primitives, filter primitives;
-- `NotationRenderer`;
-- generic cards and layout primitives when they do not encode game rules.
+- all active `UI-CMP-*` implementations;
+- `NotationRenderer` and the UI-owned notation icon registry;
+- `ComboWhiteboard`, `useComboWhiteboardModel`, internal `movePicker`, `ComboFrameMeter`, and `useComboFrameMeterModel`;
+- builder layout components and read-only detail rendering support;
+- generic cards and layout primitives when they do not encode game rules;
+- project icon facade exports.
+
+Hooks готують builder presentation view models і semantic handler payloads із page-provided builder adapter state. `UI-PAGE-006` і `UI-PAGE-004` викликають ці hooks на рівні сторінки, після чого рендерять pure UI components із prepared props. `@mk-combos/ui` не вирішує, чи move валідний, і не пише local state.
 
 It does not own MKXL/MK1 business logic, data validation, graph composition, route parsing, or local persistence.
 

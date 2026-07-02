@@ -24,7 +24,7 @@ Frame Meter показує SF6-style frame timeline і числові значе
 
 ## Володіння
 
-`UI-CMP-036` є доменним компонентом `@mk-combos/builder-ui`, який може рендеритися builder і detail поверхнями.
+`UI-CMP-036` є доменним компонентом `@mk-combos/ui`, який може рендеритися builder і detail поверхнями.
 
 Власники стану:
 

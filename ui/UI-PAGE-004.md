@@ -90,8 +90,8 @@ Combo Detail є shared page. Route має форму `/:gameId/combos/:source/:c
 Підготовлені UI models для дочірніх компонентів:
 
 - `UI-CMP-014` header model із combo title, source, primary action availability і stale marker data;
-- `UI-CMP-035` read-only whiteboard model із page-level builder UI hook;
-- `UI-CMP-036` frame meter model із page-level builder UI hook;
+- `UI-CMP-035` read-only whiteboard model із page-level builder presentation hook;
+- `UI-CMP-036` frame meter model із page-level builder presentation hook;
 - `UI-CMP-017`, `UI-CMP-018`, `UI-CMP-021`, `UI-CMP-030` і `UI-CMP-031` models.
 
 Сторінкові handlers / intents:
@@ -104,7 +104,7 @@ Combo Detail є shared page. Route має форму `/:gameId/combos/:source/:c
 
 - active game business entry point для lookup, stale detection, detail display model і repair availability;
 - app-level named-list availability і persistence flow;
-- page-level `@mk-combos/builder-ui` hooks для read-only whiteboard/frame models.
+- page-level `@mk-combos/ui` hooks для read-only whiteboard/frame models.
 
 Не відповідає за:
 

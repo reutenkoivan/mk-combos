@@ -26,13 +26,13 @@
 
 Процес конструктора є строгим: користувач може обирати тільки `valid next moves`, які повертає active game builder entry point. `free text fallback` не входить у MVP.
 
-`UI-PAGE-006` описує координацію на рівні сторінки. `@mk-combos/builder-ui` рендерить Whiteboard і Frame Meter, а active game business builder adapter володіє frame-aware логікою валідних переходів, replay, `movePath`, `cachedNotation`, runtime state і перевіркою stale state.
+`UI-PAGE-006` описує координацію на рівні сторінки. `@mk-combos/ui` рендерить Whiteboard і Frame Meter, а active game business builder adapter володіє frame-aware логікою валідних переходів, replay, `movePath`, `cachedNotation`, runtime state і перевіркою stale state.
 
-Архітектурний ownership описано в [ARCHITECTURE.md](../ARCHITECTURE.md): shared builder UI не вирішує game-specific rules.
+Архітектурний ownership описано в [ARCHITECTURE.md](../ARCHITECTURE.md): shared builder presentation не вирішує game-specific rules.
 
 ## Володіння
 
-`UI-PAGE-006` володіє маршрутним процесом і зв'язком між станом застосунку, active game builder adapter, `@mk-combos/builder-ui` та локальним збереженням.
+`UI-PAGE-006` володіє маршрутним процесом і зв'язком між станом застосунку, active game builder adapter, `@mk-combos/ui` та локальним збереженням.
 
 Сторінка відповідає за:
 
@@ -41,7 +41,7 @@
 - передачу character, variation або kameo в процес конструктора;
 - передачу optional `MKXL` stage context: stage, zone і segment;
 - запит prepared builder state у active game builder adapter;
-- рендер `UI-CMP-035` і `UI-CMP-036` із `@mk-combos/builder-ui`;
+- рендер `UI-CMP-035` і `UI-CMP-036` із `@mk-combos/ui`;
 - отримання `movePath`, `cachedNotation`, `stageContext` і runtime summary після завершення процесу конструктора;
 - запис custom combo у local state через app-level persistence;
 - показ saved combo summary/card після збереження і відкриття page-level singleton `UI-CMP-021 Add-To-List Dialog`, якщо користувач хоче додати combo у named list;
@@ -86,13 +86,13 @@
 Бізнес-залежності:
 
 - active game business entry point і builder adapter;
-- `@mk-combos/builder-ui` hooks invoked at page level;
+- `@mk-combos/ui` hooks invoked at page level;
 - app-level custom combo persistence і named-list availability.
 
 Не відповідає за:
 
 - graph validation усередині pure UI components;
-- direct `localStorage` writes із builder UI;
+- direct `localStorage` writes із builder presentation components;
 - browser/controller event payloads у whiteboard, frame meter або action bar callbacks.
 
 ## Анатомія
@@ -164,7 +164,7 @@
 - `UI-CMP-023` стоїть перед editable workspace і зникає або стискається до summary після підтвердження context.
 - На `wide13_6Plus` whiteboard є лівою primary region, frame meter - правою inspection region; на `compact` вони йдуть вертикально.
 - `UI-CMP-026` стоїть нижче workspace або закріплюється внизу viewport, але отримує availability із page-level builder flow.
-- `UI-CMP-021` відкривається тільки після saved combo context як singleton overlay, не всередині `@mk-combos/builder-ui`.
+- `UI-CMP-021` відкривається тільки після saved combo context як singleton overlay, не всередині `UI-CMP-035` або `UI-CMP-036` builder presentation flow.
 
 ### BuilderSurface
 
@@ -347,7 +347,7 @@ Marker має:
 
 `UI-CMP-021 Add-To-List Dialog` відкривається як page-level singleton action dialog після збереження custom combo.
 
-Dialog не належить `@mk-combos/builder-ui`. Він працює з named lists на рівні застосунку і локальним збереженням, отримує context від saved combo summary/card і повертає add-to-list intent у page/app-level flow.
+Dialog не належить builder presentation components із `@mk-combos/ui`. Він працює з named lists на рівні застосунку і локальним збереженням, отримує context від saved combo summary/card і повертає add-to-list intent у page/app-level flow.
 
 ## Контракти компонентів
 
@@ -522,7 +522,7 @@ Dialog не належить `@mk-combos/builder-ui`. Він працює з nam
 - не створює custom combo;
 - не змінює builder path;
 - не зберігає named list membership напряму;
-- не належить `@mk-combos/builder-ui`.
+- не належить builder presentation components із `@mk-combos/ui`.
 
 ### UI-CMP-031 Stale/Invalid Combo Marker
 
@@ -833,7 +833,7 @@ UI-PAGE-006 Custom Combo Builder
   -> page-level singleton UI-CMP-021
 ```
 
-Active game builder adapter і `@mk-combos/builder-ui` не пишуть в `localStorage`. Збереження виконує app-level flow після finish.
+Active game builder adapter і builder presentation components із `@mk-combos/ui` не пишуть в `localStorage`. Збереження виконує app-level flow після finish.
 
 ## Поведінка controller
 
