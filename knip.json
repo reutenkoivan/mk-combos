@@ -1,5 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "includeEntryExports": true,
   "ignore": ["sheriff.config.ts", "tools/sheriff-entry.ts"],
   "ignoreBinaries": ["gitleaks"],
   "ignoreDependencies": [

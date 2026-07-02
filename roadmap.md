@@ -29,8 +29,8 @@ Each item also has `Done when` so `done` has a clear meaning.
 | 1 | done | Root Platform Bootstrap | repo root | Bun workspaces use `packages/*`, `mkxl/*`, `mk1/*`, `apps/*`; Turbo, TS base config, root scripts, package metadata exist. |
 | 2 | done | Root Tooling Setup | repo root | Biome, Knip, Sherif, Sheriff, Gitleaks, Lefthook, Vitest, Playwright, Storybook base tooling are configured. |
 | 3 | done | Architecture Boundary Update | docs | Docs say `packages/ui` owns all active numbered `UI-CMP-*`, including builder presentation components; no separate builder presentation package is documented. |
-| 4 | todo | `packages/contracts` | `packages/contracts` | Shared contracts, route/source ids, notation mode, backup envelope, result shapes are exported. |
-| 5 | todo | `packages/contracts` Build/Test Exports | `packages/contracts` | Shared build/test config exports are available. |
+| 4 | done | `packages/contracts` | `packages/contracts` | Shared contracts, route/source ids, notation mode, backup envelope, result shapes are exported. |
+| 5 | done | `packages/contracts` Build/Test Exports | `packages/contracts` | Shared build/test config exports are available. |
 | 6 | todo | `packages/builder-core` | `packages/builder-core` | Graph primitives, replay types, transition helpers, runtime state, stale/invalid structures are implemented. |
 | 7 | todo | `packages/controller-bridge` | `packages/controller-bridge` | Gamepad bridge emits semantic commands with profiles, repeat/dead-zone logic, and hint metadata. |
 | 8 | todo | `mkxl/data` | `mkxl/data` | Full MKXL roster, variations, movelists, combos, graph data, stages, interactables, localized content, coverage targets exist. |
