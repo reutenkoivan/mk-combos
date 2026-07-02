@@ -4,6 +4,41 @@
 
 This document is the canonical source for package ownership, import direction, route shape, local state shape, backup ownership, and the process for adding another game.
 
+## Правила Роботи В Репозиторії
+
+Перед будь-якою зміною в репозиторії спочатку прочитай цей документ як робочий
+контекст. Далі визнач власника зміни, перевір дозволений напрям імпортів і вибери
+найвужче місце, де зміна природно належить системі.
+
+Зміни додаються або розширюються за такими правилами:
+
+- shared `packages/*` отримують тільки багаторазові platform concepts, які не знають
+  конкретних ігор;
+- game-specific behavior залишається всередині відповідного game scope;
+- route-level pages оркеструють business state, готують view models і передають їх у
+  pure UI components;
+- public contracts мають бути стабільними, game-agnostic і forward-compatible.
+
+Останній refactor `cc9d61d` задає патерн для контрактів і публічних subpaths:
+
+- value sets живуть у `value.ts`;
+- Zod runtime validation живе в `schema.ts`;
+- TypeScript types виводяться зі схем у `type.ts`;
+- runtime helpers живуть у `runtime.ts`;
+- public subpaths додаються свідомо через package exports, build entries,
+  contract metadata і тести, які фіксують ці інваріанти.
+
+Код видаляється тільки після того, як його ownership перенесено, поведінку замінено
+або Knip/Biome підтверджують, що він не використовується. Разом із видаленням треба
+прибрати відповідні exports, tests, dependencies, docs і architecture visibility.
+Persistence, routes, backup, seeded data і business-rule code не видаляються без
+migration, recovery або validation path.
+
+Фінальний стан зміни не має містити dead code або unused exports. Зміни, що чіпають
+contracts, повинні мати тести на public exports, importable subpaths, schema strictness,
+open `GameId` behavior і runtime helpers. Зміни, що чіпають межі модулів або напрям
+імпортів, повинні проходити architecture/import checks.
+
 ## Selected Technology Stack
 
 The application is implemented with TypeScript and React.
