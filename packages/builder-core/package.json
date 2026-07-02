@@ -1,0 +1,67 @@
+{
+  "name": "@mk-combos/builder-core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "exports": {
+    "./contract": "./src/contract.ts",
+    "./graph/schema": "./src/graph/schema.ts",
+    "./graph/type": "./src/graph/type.ts",
+    "./replay/runtime": "./src/replay/runtime.ts",
+    "./replay/schema": "./src/replay/schema.ts",
+    "./replay/type": "./src/replay/type.ts",
+    "./replay/value": "./src/replay/value.ts",
+    "./runtime/schema": "./src/runtime/schema.ts",
+    "./runtime/type": "./src/runtime/type.ts",
+    "./stale/runtime": "./src/stale/runtime.ts",
+    "./stale/schema": "./src/stale/schema.ts",
+    "./stale/type": "./src/stale/type.ts",
+    "./stale/value": "./src/stale/value.ts",
+    "./transition/runtime": "./src/transition/runtime.ts",
+    "./transition/schema": "./src/transition/schema.ts",
+    "./transition/type": "./src/transition/type.ts",
+    "./transition/value": "./src/transition/value.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "exports": {
+      "./contract": "./dist/contract.mjs",
+      "./graph/schema": "./dist/graph/schema.mjs",
+      "./graph/type": "./dist/graph/type.mjs",
+      "./replay/runtime": "./dist/replay/runtime.mjs",
+      "./replay/schema": "./dist/replay/schema.mjs",
+      "./replay/type": "./dist/replay/type.mjs",
+      "./replay/value": "./dist/replay/value.mjs",
+      "./runtime/schema": "./dist/runtime/schema.mjs",
+      "./runtime/type": "./dist/runtime/type.mjs",
+      "./stale/runtime": "./dist/stale/runtime.mjs",
+      "./stale/schema": "./dist/stale/schema.mjs",
+      "./stale/type": "./dist/stale/type.mjs",
+      "./stale/value": "./dist/stale/value.mjs",
+      "./transition/runtime": "./dist/transition/runtime.mjs",
+      "./transition/schema": "./dist/transition/schema.mjs",
+      "./transition/type": "./dist/transition/type.mjs",
+      "./transition/value": "./dist/transition/value.mjs",
+      "./package.json": "./package.json"
+    }
+  },
+  "dependencies": {
+    "@mk-combos/contracts": "workspace:*",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.2",
+    "tsdown": "0.22.3",
+    "vite": "8.1.2",
+    "vitest": "4.1.9"
+  }
+}

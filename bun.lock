@@ -24,6 +24,20 @@
         "vitest": "4.1.9",
       },
     },
+    "packages/builder-core": {
+      "name": "@mk-combos/builder-core",
+      "version": "0.0.0",
+      "dependencies": {
+        "@mk-combos/contracts": "workspace:*",
+        "zod": "4.4.3",
+      },
+      "devDependencies": {
+        "@types/node": "25.6.2",
+        "tsdown": "0.22.3",
+        "vite": "8.1.2",
+        "vitest": "4.1.9",
+      },
+    },
     "packages/contracts": {
       "name": "@mk-combos/contracts",
       "version": "0.0.0",
@@ -194,6 +208,8 @@
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
     "@mdx-js/react": ["@mdx-js/react@3.1.1", "", { "dependencies": { "@types/mdx": "^2.0.0" }, "peerDependencies": { "@types/react": ">=16", "react": ">=16" } }, "sha512-f++rKLQgUVYDAtECQ6fn/is15GkEH9+nZPM3MS0RcxVqoTfawHvDlSCH7JbMhAM6uJ32v3eXLvLmLvjGu7PTQw=="],
+
+    "@mk-combos/builder-core": ["@mk-combos/builder-core@workspace:packages/builder-core"],
 
     "@mk-combos/contracts": ["@mk-combos/contracts@workspace:packages/contracts"],
 
