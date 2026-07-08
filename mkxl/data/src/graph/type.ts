@@ -1,0 +1,16 @@
+import type { z } from "zod/v4";
+
+import type {
+  MkxlGraphEdgeSchema,
+  MkxlGraphNodeSchema,
+  MkxlStageGraphFragmentSchema,
+  MkxlVariationGraphSchema,
+} from "./schema";
+
+export type MkxlGraphNode = z.output<typeof MkxlGraphNodeSchema>;
+
+export type MkxlGraphEdge = z.output<typeof MkxlGraphEdgeSchema>;
+
+export type MkxlVariationGraph = z.output<typeof MkxlVariationGraphSchema>;
+
+export type MkxlStageGraphFragment = z.output<typeof MkxlStageGraphFragmentSchema>;

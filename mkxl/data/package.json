@@ -1,0 +1,91 @@
+{
+  "name": "@mk-combos/mkxl-data",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "validate:data": "bun run src/validate-data.ts"
+  },
+  "exports": {
+    "./combos/schema": "./src/combos/schema.ts",
+    "./combos/type": "./src/combos/type.ts",
+    "./combos/value": "./src/combos/value.ts",
+    "./contract": "./src/contract.ts",
+    "./coverage/runtime": "./src/coverage/runtime.ts",
+    "./coverage/schema": "./src/coverage/schema.ts",
+    "./coverage/type": "./src/coverage/type.ts",
+    "./coverage/value": "./src/coverage/value.ts",
+    "./game/schema": "./src/game/schema.ts",
+    "./game/type": "./src/game/type.ts",
+    "./game/value": "./src/game/value.ts",
+    "./graph/schema": "./src/graph/schema.ts",
+    "./graph/type": "./src/graph/type.ts",
+    "./graph/value": "./src/graph/value.ts",
+    "./movelists/schema": "./src/movelists/schema.ts",
+    "./movelists/type": "./src/movelists/type.ts",
+    "./movelists/value": "./src/movelists/value.ts",
+    "./roster/schema": "./src/roster/schema.ts",
+    "./roster/type": "./src/roster/type.ts",
+    "./roster/value": "./src/roster/value.ts",
+    "./stages/schema": "./src/stages/schema.ts",
+    "./stages/type": "./src/stages/type.ts",
+    "./stages/value": "./src/stages/value.ts",
+    "./transitions/schema": "./src/transitions/schema.ts",
+    "./transitions/type": "./src/transitions/type.ts",
+    "./transitions/value": "./src/transitions/value.ts",
+    "./variations/schema": "./src/variations/schema.ts",
+    "./variations/type": "./src/variations/type.ts",
+    "./variations/value": "./src/variations/value.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "exports": {
+      "./combos/schema": "./dist/combos/schema.mjs",
+      "./combos/type": "./dist/combos/type.mjs",
+      "./combos/value": "./dist/combos/value.mjs",
+      "./contract": "./dist/contract.mjs",
+      "./coverage/runtime": "./dist/coverage/runtime.mjs",
+      "./coverage/schema": "./dist/coverage/schema.mjs",
+      "./coverage/type": "./dist/coverage/type.mjs",
+      "./coverage/value": "./dist/coverage/value.mjs",
+      "./game/schema": "./dist/game/schema.mjs",
+      "./game/type": "./dist/game/type.mjs",
+      "./game/value": "./dist/game/value.mjs",
+      "./graph/schema": "./dist/graph/schema.mjs",
+      "./graph/type": "./dist/graph/type.mjs",
+      "./graph/value": "./dist/graph/value.mjs",
+      "./movelists/schema": "./dist/movelists/schema.mjs",
+      "./movelists/type": "./dist/movelists/type.mjs",
+      "./movelists/value": "./dist/movelists/value.mjs",
+      "./roster/schema": "./dist/roster/schema.mjs",
+      "./roster/type": "./dist/roster/type.mjs",
+      "./roster/value": "./dist/roster/value.mjs",
+      "./stages/schema": "./dist/stages/schema.mjs",
+      "./stages/type": "./dist/stages/type.mjs",
+      "./stages/value": "./dist/stages/value.mjs",
+      "./transitions/schema": "./dist/transitions/schema.mjs",
+      "./transitions/type": "./dist/transitions/type.mjs",
+      "./transitions/value": "./dist/transitions/value.mjs",
+      "./variations/schema": "./dist/variations/schema.mjs",
+      "./variations/type": "./dist/variations/type.mjs",
+      "./variations/value": "./dist/variations/value.mjs",
+      "./package.json": "./package.json"
+    }
+  },
+  "dependencies": {
+    "@mk-combos/contracts": "workspace:*",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.2",
+    "tsdown": "0.22.3",
+    "vite": "8.1.2",
+    "vitest": "4.1.9"
+  }
+}

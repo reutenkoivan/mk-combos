@@ -1,0 +1,6718 @@
+import type { MkxlAuthoredCharacterMoves } from "../../type";
+import { mkxlXlFinalCharacterIds as characterIds } from "../character-ids";
+import { mkxlXlFinalFgcNotation as fgcNotation } from "../notation";
+
+const alienTransitionGeneratedMoves = {
+  sourcePath: "characters/alien-transition-generated.ts",
+  characterId: characterIds.alien,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    tarkatan: {
+      bOneOneUFour: {
+        id: `${characterIds.alien}:tarkatan:b11u4`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "B11U4",
+          fallback: "B11U4",
+        },
+        notation: [
+          fgcNotation.back,
+          fgcNotation.one,
+          fgcNotation.one,
+          fgcNotation.up,
+          fgcNotation.four,
+        ],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThree: {
+        id: `${characterIds.alien}:tarkatan:b3`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "B3",
+          fallback: "B3",
+        },
+        notation: [fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFThree: {
+        id: `${characterIds.alien}:tarkatan:df3`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "DF3",
+          fallback: "DF3",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFFour: {
+        id: `${characterIds.alien}:tarkatan:exbf4`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "EXBF4",
+          fallback: "EXBF4",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFOne: {
+        id: `${characterIds.alien}:tarkatan:exbf1`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "EXBF1",
+          fallback: "EXBF1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFour: {
+        id: `${characterIds.alien}:tarkatan:f4`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "F4",
+          fallback: "F4",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneThreeFour: {
+        id: `${characterIds.alien}:tarkatan:f134`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "F134",
+          fallback: "F134",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.three, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwo: {
+        id: `${characterIds.alien}:tarkatan:12`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "12",
+          fallback: "12",
+        },
+        notation: [fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOneFour: {
+        id: `${characterIds.alien}:tarkatan:214`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "214",
+          fallback: "214",
+        },
+        notation: [fgcNotation.two, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      uThree: {
+        id: `${characterIds.alien}:tarkatan:u3`,
+        characterId: characterIds.alien,
+        label: {
+          EN: "U3",
+          fallback: "U3",
+        },
+        notation: [fgcNotation.up, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.alien}:tarkatan`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const boRaiChoTransitionGeneratedMoves = {
+  sourcePath: "characters/bo-rai-cho-transition-generated.ts",
+  characterId: characterIds.boRaiCho,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    bartitsu: {
+      bFFour: {
+        id: `${characterIds.boRaiCho}:bartitsu:bf4`,
+        characterId: characterIds.boRaiCho,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.boRaiCho}:bartitsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwoThreeThree: {
+        id: `${characterIds.boRaiCho}:bartitsu:b233`,
+        characterId: characterIds.boRaiCho,
+        label: {
+          EN: "B233",
+          fallback: "B233",
+        },
+        notation: [fgcNotation.back, fgcNotation.two, fgcNotation.three, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.boRaiCho}:bartitsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwo: {
+        id: `${characterIds.boRaiCho}:bartitsu:f2`,
+        characterId: characterIds.boRaiCho,
+        label: {
+          EN: "F2",
+          fallback: "F2",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.boRaiCho}:bartitsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      threeFourOne: {
+        id: `${characterIds.boRaiCho}:bartitsu:341`,
+        characterId: characterIds.boRaiCho,
+        label: {
+          EN: "341",
+          fallback: "341",
+        },
+        notation: [fgcNotation.three, fgcNotation.four, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.boRaiCho}:bartitsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOne: {
+        id: `${characterIds.boRaiCho}:bartitsu:21`,
+        characterId: characterIds.boRaiCho,
+        label: {
+          EN: "21",
+          fallback: "21",
+        },
+        notation: [fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.boRaiCho}:bartitsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const cassieCageTransitionGeneratedMoves = {
+  sourcePath: "characters/cassie-cage-transition-generated.ts",
+  characterId: characterIds.cassieCage,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    hollywood: {
+      bFFour: {
+        id: `${characterIds.cassieCage}:hollywood:bf4`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOne: {
+        id: `${characterIds.cassieCage}:hollywood:b1`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "B1",
+          fallback: "B1",
+        },
+        notation: [fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneTwo: {
+        id: `${characterIds.cassieCage}:hollywood:b12`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "B12",
+          fallback: "B12",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBTwo: {
+        id: `${characterIds.cassieCage}:hollywood:db2`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "DB2",
+          fallback: "DB2",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBTwo: {
+        id: `${characterIds.cassieCage}:hollywood:exdb2`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "EXDB2",
+          fallback: "EXDB2",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFourFour: {
+        id: `${characterIds.cassieCage}:hollywood:f44`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "F44",
+          fallback: "F44",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThree: {
+        id: `${characterIds.cassieCage}:hollywood:f3`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "F3",
+          fallback: "F3",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneTwo: {
+        id: `${characterIds.cassieCage}:hollywood:112`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "112",
+          fallback: "112",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoOne: {
+        id: `${characterIds.cassieCage}:hollywood:121`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "121",
+          fallback: "121",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoThree: {
+        id: `${characterIds.cassieCage}:hollywood:123`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "123",
+          fallback: "123",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoFourTwo: {
+        id: `${characterIds.cassieCage}:hollywood:242`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "242",
+          fallback: "242",
+        },
+        notation: [fgcNotation.two, fgcNotation.four, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOneUFour: {
+        id: `${characterIds.cassieCage}:hollywood:21u4`,
+        characterId: characterIds.cassieCage,
+        label: {
+          EN: "21U4",
+          fallback: "21U4",
+        },
+        notation: [fgcNotation.two, fgcNotation.one, fgcNotation.up, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.cassieCage}:hollywood`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const dvorahTransitionGeneratedMoves = {
+  sourcePath: "characters/dvorah-transition-generated.ts",
+  characterId: characterIds.dvorah,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    broodMother: {
+      bOne: {
+        id: `${characterIds.dvorah}:brood-mother:b1`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "B1",
+          fallback: "B1",
+        },
+        notation: [fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFour: {
+        id: `${characterIds.dvorah}:brood-mother:db4`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "DB4",
+          fallback: "DB4",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBOne: {
+        id: `${characterIds.dvorah}:brood-mother:db1`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "DB1",
+          fallback: "DB1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFFour: {
+        id: `${characterIds.dvorah}:brood-mother:df4`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "DF4",
+          fallback: "DF4",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFThree: {
+        id: `${characterIds.dvorah}:brood-mother:df3`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "DF3",
+          fallback: "DF3",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.dvorah}:brood-mother:d1`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDFOne: {
+        id: `${characterIds.dvorah}:brood-mother:exdf1`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "EXDF1",
+          fallback: "EXDF1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFourFour: {
+        id: `${characterIds.dvorah}:brood-mother:f44`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "F44",
+          fallback: "F44",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneOne: {
+        id: `${characterIds.dvorah}:brood-mother:f11`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "F11",
+          fallback: "F11",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneOneTwo: {
+        id: `${characterIds.dvorah}:brood-mother:f112`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "F112",
+          fallback: "F112",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fourFour: {
+        id: `${characterIds.dvorah}:brood-mother:44`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "44",
+          fallback: "44",
+        },
+        notation: [fgcNotation.four, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThreeFour: {
+        id: `${characterIds.dvorah}:brood-mother:f34`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "F34",
+          fallback: "F34",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneBTwo: {
+        id: `${characterIds.dvorah}:brood-mother:11b2`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "11B2",
+          fallback: "11B2",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneTwo: {
+        id: `${characterIds.dvorah}:brood-mother:112`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "112",
+          fallback: "112",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOneTwo: {
+        id: `${characterIds.dvorah}:brood-mother:212`,
+        characterId: characterIds.dvorah,
+        label: {
+          EN: "212",
+          fallback: "212",
+        },
+        notation: [fgcNotation.two, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.dvorah}:brood-mother`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const ermacTransitionGeneratedMoves = {
+  sourcePath: "characters/ermac-transition-generated.ts",
+  characterId: characterIds.ermac,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    masterOfSouls: {
+      bFTwo: {
+        id: `${characterIds.ermac}:master-of-souls:bf2`,
+        characterId: characterIds.ermac,
+        label: {
+          EN: "BF2",
+          fallback: "BF2",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ermac}:master-of-souls`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFour: {
+        id: `${characterIds.ermac}:master-of-souls:db4`,
+        characterId: characterIds.ermac,
+        label: {
+          EN: "DB4",
+          fallback: "DB4",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ermac}:master-of-souls`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.ermac}:master-of-souls:d2`,
+        characterId: characterIds.ermac,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ermac}:master-of-souls`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneTwo: {
+        id: `${characterIds.ermac}:master-of-souls:112`,
+        characterId: characterIds.ermac,
+        label: {
+          EN: "112",
+          fallback: "112",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ermac}:master-of-souls`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const erronBlackTransitionGeneratedMoves = {
+  sourcePath: "characters/erron-black-transition-generated.ts",
+  characterId: characterIds.erronBlack,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    outlaw: {
+      bFFour: {
+        id: `${characterIds.erronBlack}:outlaw:bf4`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeThree: {
+        id: `${characterIds.erronBlack}:outlaw:b33`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "B33",
+          fallback: "B33",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFour: {
+        id: `${characterIds.erronBlack}:outlaw:db4`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "DB4",
+          fallback: "DB4",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFTwo: {
+        id: `${characterIds.erronBlack}:outlaw:dbf2`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "DBF2",
+          fallback: "DBF2",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFTwo: {
+        id: `${characterIds.erronBlack}:outlaw:df2`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "DF2",
+          fallback: "DF2",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.erronBlack}:outlaw:d1`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.erronBlack}:outlaw:d2`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFThree: {
+        id: `${characterIds.erronBlack}:outlaw:exbf3`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "EXBF3",
+          fallback: "EXBF3",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBFour: {
+        id: `${characterIds.erronBlack}:outlaw:exdb4`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "EXDB4",
+          fallback: "EXDB4",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneThree: {
+        id: `${characterIds.erronBlack}:outlaw:f13`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "F13",
+          fallback: "F13",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneBThree: {
+        id: `${characterIds.erronBlack}:outlaw:11b3`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "11B3",
+          fallback: "11B3",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneTwo: {
+        id: `${characterIds.erronBlack}:outlaw:112`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "112",
+          fallback: "112",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOneOneTwoTwo: {
+        id: `${characterIds.erronBlack}:outlaw:21122`,
+        characterId: characterIds.erronBlack,
+        label: {
+          EN: "21122",
+          fallback: "21122",
+        },
+        notation: [
+          fgcNotation.two,
+          fgcNotation.one,
+          fgcNotation.one,
+          fgcNotation.two,
+          fgcNotation.two,
+        ],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.erronBlack}:outlaw`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const ferraTorrTransitionGeneratedMoves = {
+  sourcePath: "characters/ferra-torr-transition-generated.ts",
+  characterId: characterIds.ferraTorr,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    ruthless: {
+      bFThree: {
+        id: `${characterIds.ferraTorr}:ruthless:bf3`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "BF3",
+          fallback: "BF3",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneTwoOne: {
+        id: `${characterIds.ferraTorr}:ruthless:b121`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "B121",
+          fallback: "B121",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFOne: {
+        id: `${characterIds.ferraTorr}:ruthless:dbf1`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "DBF1",
+          fallback: "DBF1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.ferraTorr}:ruthless:d2`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFTwo: {
+        id: `${characterIds.ferraTorr}:ruthless:exbf2`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "EXBF2",
+          fallback: "EXBF2",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.two],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBTwo: {
+        id: `${characterIds.ferraTorr}:ruthless:exdb2`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "EXDB2",
+          fallback: "EXDB2",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.ferraTorr}:ruthless:4`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThree: {
+        id: `${characterIds.ferraTorr}:ruthless:f3`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "F3",
+          fallback: "F3",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwo: {
+        id: `${characterIds.ferraTorr}:ruthless:f2`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "F2",
+          fallback: "F2",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOne: {
+        id: `${characterIds.ferraTorr}:ruthless:11`,
+        characterId: characterIds.ferraTorr,
+        label: {
+          EN: "11",
+          fallback: "11",
+        },
+        notation: [fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.ferraTorr}:ruthless`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const goroTransitionGeneratedMoves = {
+  sourcePath: "characters/goro-transition-generated.ts",
+  characterId: characterIds.goro,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    kuatanWarrior: {
+      bFFour: {
+        id: `${characterIds.goro}:kuatan-warrior:bf4`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bFTwo: {
+        id: `${characterIds.goro}:kuatan-warrior:bf2`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "BF2",
+          fallback: "BF2",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneTwoUTwo: {
+        id: `${characterIds.goro}:kuatan-warrior:b12u2`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "B12U2",
+          fallback: "B12U2",
+        },
+        notation: [
+          fgcNotation.back,
+          fgcNotation.one,
+          fgcNotation.two,
+          fgcNotation.up,
+          fgcNotation.two,
+        ],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.goro}:kuatan-warrior:b2`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFThree: {
+        id: `${characterIds.goro}:kuatan-warrior:dbf3`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "DBF3",
+          fallback: "DBF3",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.goro}:kuatan-warrior:d1`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFOne: {
+        id: `${characterIds.goro}:kuatan-warrior:exbf1`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "EXBF1",
+          fallback: "EXBF1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBFThree: {
+        id: `${characterIds.goro}:kuatan-warrior:exdbf3`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "EXDBF3",
+          fallback: "EXDBF3",
+        },
+        notation: [
+          fgcNotation.amplify,
+          fgcNotation.down,
+          fgcNotation.back,
+          fgcNotation.forward,
+          fgcNotation.three,
+        ],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.goro}:kuatan-warrior:4`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThree: {
+        id: `${characterIds.goro}:kuatan-warrior:f3`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "F3",
+          fallback: "F3",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      mb: {
+        id: `${characterIds.goro}:kuatan-warrior:mb`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "MB",
+          fallback: "MB",
+        },
+        notation: [fgcNotation.amplify],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoOne: {
+        id: `${characterIds.goro}:kuatan-warrior:121`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "121",
+          fallback: "121",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      threeDThree: {
+        id: `${characterIds.goro}:kuatan-warrior:3d3`,
+        characterId: characterIds.goro,
+        label: {
+          EN: "3D3",
+          fallback: "3D3",
+        },
+        notation: [fgcNotation.three, fgcNotation.down, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.goro}:kuatan-warrior`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const jacquiBriggsTransitionGeneratedMoves = {
+  sourcePath: "characters/jacqui-briggs-transition-generated.ts",
+  characterId: characterIds.jacquiBriggs,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    fullAuto: {
+      bFFour: {
+        id: `${characterIds.jacquiBriggs}:full-auto:bf4`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bFOne: {
+        id: `${characterIds.jacquiBriggs}:full-auto:bf1`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "BF1",
+          fallback: "BF1",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bFTwo: {
+        id: `${characterIds.jacquiBriggs}:full-auto:bf2`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "BF2",
+          fallback: "BF2",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeThree: {
+        id: `${characterIds.jacquiBriggs}:full-auto:b33`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "B33",
+          fallback: "B33",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.jacquiBriggs}:full-auto:b2`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBThree: {
+        id: `${characterIds.jacquiBriggs}:full-auto:db3`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "DB3",
+          fallback: "DB3",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBTwo: {
+        id: `${characterIds.jacquiBriggs}:full-auto:db2`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "DB2",
+          fallback: "DB2",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dUFour: {
+        id: `${characterIds.jacquiBriggs}:full-auto:du4`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "DU4",
+          fallback: "DU4",
+        },
+        notation: [fgcNotation.down, fgcNotation.up, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBThree: {
+        id: `${characterIds.jacquiBriggs}:full-auto:exdb3`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "EXDB3",
+          fallback: "EXDB3",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.three],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBTwo: {
+        id: `${characterIds.jacquiBriggs}:full-auto:exdb2`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "EXDB2",
+          fallback: "EXDB2",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOne: {
+        id: `${characterIds.jacquiBriggs}:full-auto:f1`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "F1",
+          fallback: "F1",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneTwo: {
+        id: `${characterIds.jacquiBriggs}:full-auto:f12`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "F12",
+          fallback: "F12",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.jacquiBriggs}:full-auto:4`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoUTwo: {
+        id: `${characterIds.jacquiBriggs}:full-auto:f2u2`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "F2U2",
+          fallback: "F2U2",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two, fgcNotation.up, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      one: {
+        id: `${characterIds.jacquiBriggs}:full-auto:1`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "1",
+          fallback: "1",
+        },
+        notation: [fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOne: {
+        id: `${characterIds.jacquiBriggs}:full-auto:11`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "11",
+          fallback: "11",
+        },
+        notation: [fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneFour: {
+        id: `${characterIds.jacquiBriggs}:full-auto:114`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "114",
+          fallback: "114",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoOne: {
+        id: `${characterIds.jacquiBriggs}:full-auto:121`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "121",
+          fallback: "121",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoOneTwo: {
+        id: `${characterIds.jacquiBriggs}:full-auto:1212`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "1212",
+          fallback: "1212",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      threeThree: {
+        id: `${characterIds.jacquiBriggs}:full-auto:33`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "33",
+          fallback: "33",
+        },
+        notation: [fgcNotation.three, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoThree: {
+        id: `${characterIds.jacquiBriggs}:full-auto:23`,
+        characterId: characterIds.jacquiBriggs,
+        label: {
+          EN: "23",
+          fallback: "23",
+        },
+        notation: [fgcNotation.two, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const jasonVoorheesTransitionGeneratedMoves = {
+  sourcePath: "characters/jason-voorhees-transition-generated.ts",
+  characterId: characterIds.jasonVoorhees,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    slasher: {
+      bFThree: {
+        id: `${characterIds.jasonVoorhees}:slasher:bf3`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "BF3",
+          fallback: "BF3",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneTwoTwo: {
+        id: `${characterIds.jasonVoorhees}:slasher:b122`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "B122",
+          fallback: "B122",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.two, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.jasonVoorhees}:slasher:b2`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFOne: {
+        id: `${characterIds.jasonVoorhees}:slasher:df1`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "DF1",
+          fallback: "DF1",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.jasonVoorhees}:slasher:d1`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFTwo: {
+        id: `${characterIds.jasonVoorhees}:slasher:exbf2`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "EXBF2",
+          fallback: "EXBF2",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.two],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDFOne: {
+        id: `${characterIds.jasonVoorhees}:slasher:exdf1`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "EXDF1",
+          fallback: "EXDF1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFourTwo: {
+        id: `${characterIds.jasonVoorhees}:slasher:f42`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "F42",
+          fallback: "F42",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwo: {
+        id: `${characterIds.jasonVoorhees}:slasher:f2`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "F2",
+          fallback: "F2",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOne: {
+        id: `${characterIds.jasonVoorhees}:slasher:11`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "11",
+          fallback: "11",
+        },
+        notation: [fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneOne: {
+        id: `${characterIds.jasonVoorhees}:slasher:111`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "111",
+          fallback: "111",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoTwo: {
+        id: `${characterIds.jasonVoorhees}:slasher:122`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "122",
+          fallback: "122",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoFour: {
+        id: `${characterIds.jasonVoorhees}:slasher:24`,
+        characterId: characterIds.jasonVoorhees,
+        label: {
+          EN: "24",
+          fallback: "24",
+        },
+        notation: [fgcNotation.two, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jasonVoorhees}:slasher`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const jaxTransitionGeneratedMoves = {
+  sourcePath: "characters/jax-transition-generated.ts",
+  characterId: characterIds.jax,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    heavyWeapons: {
+      bFTwoD: {
+        id: `${characterIds.jax}:heavy-weapons:bf2d`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "BF2D",
+          fallback: "BF2D",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.two, fgcNotation.down],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThree: {
+        id: `${characterIds.jax}:heavy-weapons:b3`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "B3",
+          fallback: "B3",
+        },
+        notation: [fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeFour: {
+        id: `${characterIds.jax}:heavy-weapons:b34`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "B34",
+          fallback: "B34",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.jax}:heavy-weapons:b2`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBOne: {
+        id: `${characterIds.jax}:heavy-weapons:db1`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "DB1",
+          fallback: "DB1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOneTwo: {
+        id: `${characterIds.jax}:heavy-weapons:d12`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "D12",
+          fallback: "D12",
+        },
+        notation: [fgcNotation.down, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFTwoD: {
+        id: `${characterIds.jax}:heavy-weapons:exbf2d`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "EXBF2D",
+          fallback: "EXBF2D",
+        },
+        notation: [
+          fgcNotation.amplify,
+          fgcNotation.back,
+          fgcNotation.forward,
+          fgcNotation.two,
+          fgcNotation.down,
+        ],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBOne: {
+        id: `${characterIds.jax}:heavy-weapons:exdb1`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "EXDB1",
+          fallback: "EXDB1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.jax}:heavy-weapons:4`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoOne: {
+        id: `${characterIds.jax}:heavy-weapons:f21`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "F21",
+          fallback: "F21",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoOneTwo: {
+        id: `${characterIds.jax}:heavy-weapons:f212`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "F212",
+          fallback: "F212",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoOneTwoD: {
+        id: `${characterIds.jax}:heavy-weapons:f212d`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "F212D",
+          fallback: "F212D",
+        },
+        notation: [
+          fgcNotation.forward,
+          fgcNotation.two,
+          fgcNotation.one,
+          fgcNotation.two,
+          fgcNotation.down,
+        ],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOne: {
+        id: `${characterIds.jax}:heavy-weapons:11`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "11",
+          fallback: "11",
+        },
+        notation: [fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwo: {
+        id: `${characterIds.jax}:heavy-weapons:12`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "12",
+          fallback: "12",
+        },
+        notation: [fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoFour: {
+        id: `${characterIds.jax}:heavy-weapons:124`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "124",
+          fallback: "124",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      threeBTwo: {
+        id: `${characterIds.jax}:heavy-weapons:3b2`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "3B2",
+          fallback: "3B2",
+        },
+        notation: [fgcNotation.three, fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      two: {
+        id: `${characterIds.jax}:heavy-weapons:2`,
+        characterId: characterIds.jax,
+        label: {
+          EN: "2",
+          fallback: "2",
+        },
+        notation: [fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.jax}:heavy-weapons`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const johnnyCageTransitionGeneratedMoves = {
+  sourcePath: "characters/johnny-cage-transition-generated.ts",
+  characterId: characterIds.johnnyCage,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    stuntDouble: {
+      bDThree: {
+        id: `${characterIds.johnnyCage}:stunt-double:bd3`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "BD3",
+          fallback: "BD3",
+        },
+        notation: [fgcNotation.back, fgcNotation.down, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFour: {
+        id: `${characterIds.johnnyCage}:stunt-double:db4`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "DB4",
+          fallback: "DB4",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBOne: {
+        id: `${characterIds.johnnyCage}:stunt-double:db1`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "DB1",
+          fallback: "DB1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.johnnyCage}:stunt-double:d1`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBDThree: {
+        id: `${characterIds.johnnyCage}:stunt-double:exbd3`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "EXBD3",
+          fallback: "EXBD3",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.down, fgcNotation.three],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFFour: {
+        id: `${characterIds.johnnyCage}:stunt-double:exbf4`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "EXBF4",
+          fallback: "EXBF4",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBTwo: {
+        id: `${characterIds.johnnyCage}:stunt-double:exdb2`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "EXDB2",
+          fallback: "EXDB2",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.johnnyCage}:stunt-double:4`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThree: {
+        id: `${characterIds.johnnyCage}:stunt-double:f3`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "F3",
+          fallback: "F3",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoFour: {
+        id: `${characterIds.johnnyCage}:stunt-double:f24`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "F24",
+          fallback: "F24",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneFour: {
+        id: `${characterIds.johnnyCage}:stunt-double:114`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "114",
+          fallback: "114",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneThree: {
+        id: `${characterIds.johnnyCage}:stunt-double:113`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "113",
+          fallback: "113",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwo: {
+        id: `${characterIds.johnnyCage}:stunt-double:12`,
+        characterId: characterIds.johnnyCage,
+        label: {
+          EN: "12",
+          fallback: "12",
+        },
+        notation: [fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.johnnyCage}:stunt-double`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const kanoTransitionGeneratedMoves = {
+  sourcePath: "characters/kano-transition-generated.ts",
+  characterId: characterIds.kano,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    cutthroat: {
+      bFThree: {
+        id: `${characterIds.kano}:cutthroat:bf3`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "BF3",
+          fallback: "BF3",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneTwoOne: {
+        id: `${characterIds.kano}:cutthroat:b121`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "B121",
+          fallback: "B121",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeOneTwo: {
+        id: `${characterIds.kano}:cutthroat:b312`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "B312",
+          fallback: "B312",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBOne: {
+        id: `${characterIds.kano}:cutthroat:db1`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "DB1",
+          fallback: "DB1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFTwo: {
+        id: `${characterIds.kano}:cutthroat:df2`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "DF2",
+          fallback: "DF2",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dThree: {
+        id: `${characterIds.kano}:cutthroat:d3`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "D3",
+          fallback: "D3",
+        },
+        notation: [fgcNotation.down, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBOne: {
+        id: `${characterIds.kano}:cutthroat:exdb1`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "EXDB1",
+          fallback: "EXDB1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDDThree: {
+        id: `${characterIds.kano}:cutthroat:exdd3`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "EXDD3",
+          fallback: "EXDD3",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.down, fgcNotation.three],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFour: {
+        id: `${characterIds.kano}:cutthroat:f4`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "F4",
+          fallback: "F4",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.kano}:cutthroat:4`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoOneTwo: {
+        id: `${characterIds.kano}:cutthroat:f212`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "F212",
+          fallback: "F212",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneTwo: {
+        id: `${characterIds.kano}:cutthroat:112`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "112",
+          fallback: "112",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      threeTwo: {
+        id: `${characterIds.kano}:cutthroat:32`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "32",
+          fallback: "32",
+        },
+        notation: [fgcNotation.three, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      two: {
+        id: `${characterIds.kano}:cutthroat:2`,
+        characterId: characterIds.kano,
+        label: {
+          EN: "2",
+          fallback: "2",
+        },
+        notation: [fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kano}:cutthroat`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const kenshiTransitionGeneratedMoves = {
+  sourcePath: "characters/kenshi-transition-generated.ts",
+  characterId: characterIds.kenshi,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    possessed: {
+      bFThree: {
+        id: `${characterIds.kenshi}:possessed:bf3`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "BF3",
+          fallback: "BF3",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeTwo: {
+        id: `${characterIds.kenshi}:possessed:b32`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "B32",
+          fallback: "B32",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFFour: {
+        id: `${characterIds.kenshi}:possessed:df4`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "DF4",
+          fallback: "DF4",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.kenshi}:possessed:d1`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.kenshi}:possessed:d2`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBFour: {
+        id: `${characterIds.kenshi}:possessed:exdb4`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "EXDB4",
+          fallback: "EXDB4",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBFourB: {
+        id: `${characterIds.kenshi}:possessed:exdb4b`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "EXDB4B",
+          fallback: "EXDB4B",
+        },
+        notation: [
+          fgcNotation.amplify,
+          fgcNotation.down,
+          fgcNotation.back,
+          fgcNotation.four,
+          fgcNotation.back,
+        ],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBOne: {
+        id: `${characterIds.kenshi}:possessed:exdb1`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "EXDB1",
+          fallback: "EXDB1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.kenshi}:possessed:4`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fourThree: {
+        id: `${characterIds.kenshi}:possessed:43`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "43",
+          fallback: "43",
+        },
+        notation: [fgcNotation.four, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fourTwoOne: {
+        id: `${characterIds.kenshi}:possessed:421`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "421",
+          fallback: "421",
+        },
+        notation: [fgcNotation.four, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThreeTwo: {
+        id: `${characterIds.kenshi}:possessed:f32`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "F32",
+          fallback: "F32",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneFour: {
+        id: `${characterIds.kenshi}:possessed:114`,
+        characterId: characterIds.kenshi,
+        label: {
+          EN: "114",
+          fallback: "114",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kenshi}:possessed`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const kotalKahnTransitionGeneratedMoves = {
+  sourcePath: "characters/kotal-kahn-transition-generated.ts",
+  characterId: characterIds.kotalKahn,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    warGod: {
+      bOne: {
+        id: `${characterIds.kotalKahn}:war-god:b1`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "B1",
+          fallback: "B1",
+        },
+        notation: [fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneFour: {
+        id: `${characterIds.kotalKahn}:war-god:b14`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "B14",
+          fallback: "B14",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneTwoTwo: {
+        id: `${characterIds.kotalKahn}:war-god:b122`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "B122",
+          fallback: "B122",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.two, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBOne: {
+        id: `${characterIds.kotalKahn}:war-god:db1`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "DB1",
+          fallback: "DB1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFOne: {
+        id: `${characterIds.kotalKahn}:war-god:df1`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "DF1",
+          fallback: "DF1",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFour: {
+        id: `${characterIds.kotalKahn}:war-god:d4`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "D4",
+          fallback: "D4",
+        },
+        notation: [fgcNotation.down, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFTwo: {
+        id: `${characterIds.kotalKahn}:war-god:df2`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "DF2",
+          fallback: "DF2",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.kotalKahn}:war-god:d1`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.kotalKahn}:war-god:d2`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBOne: {
+        id: `${characterIds.kotalKahn}:war-god:exdb1`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "EXDB1",
+          fallback: "EXDB1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDFOne: {
+        id: `${characterIds.kotalKahn}:war-god:exdf1`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "EXDF1",
+          fallback: "EXDF1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDFThree: {
+        id: `${characterIds.kotalKahn}:war-god:exdf3`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "EXDF3",
+          fallback: "EXDF3",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.forward, fgcNotation.three],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneBTwo: {
+        id: `${characterIds.kotalKahn}:war-god:f1b2`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "F1B2",
+          fallback: "F1B2",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThree: {
+        id: `${characterIds.kotalKahn}:war-god:f3`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "F3",
+          fallback: "F3",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThreeFour: {
+        id: `${characterIds.kotalKahn}:war-god:f34`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "F34",
+          fallback: "F34",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwo: {
+        id: `${characterIds.kotalKahn}:war-god:f2`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "F2",
+          fallback: "F2",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      one: {
+        id: `${characterIds.kotalKahn}:war-god:1`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "1",
+          fallback: "1",
+        },
+        notation: [fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneF: {
+        id: `${characterIds.kotalKahn}:war-god:1f`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "1F",
+          fallback: "1F",
+        },
+        notation: [fgcNotation.one, fgcNotation.forward],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneFour: {
+        id: `${characterIds.kotalKahn}:war-god:114`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "114",
+          fallback: "114",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      two: {
+        id: `${characterIds.kotalKahn}:war-god:2`,
+        characterId: characterIds.kotalKahn,
+        label: {
+          EN: "2",
+          fallback: "2",
+        },
+        notation: [fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kotalKahn}:war-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const kungJinTransitionGeneratedMoves = {
+  sourcePath: "characters/kung-jin-transition-generated.ts",
+  characterId: characterIds.kungJin,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    bojutsu: {
+      bFFour: {
+        id: `${characterIds.kungJin}:bojutsu:bf4`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneFour: {
+        id: `${characterIds.kungJin}:bojutsu:b14`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "B14",
+          fallback: "B14",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBOne: {
+        id: `${characterIds.kungJin}:bojutsu:db1`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "DB1",
+          fallback: "DB1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBThree: {
+        id: `${characterIds.kungJin}:bojutsu:db3`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "DB3",
+          fallback: "DB3",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBOne: {
+        id: `${characterIds.kungJin}:bojutsu:exdb1`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "EXDB1",
+          fallback: "EXDB1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBThree: {
+        id: `${characterIds.kungJin}:bojutsu:exdb3`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "EXDB3",
+          fallback: "EXDB3",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.three],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.kungJin}:bojutsu:4`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoFour: {
+        id: `${characterIds.kungJin}:bojutsu:f24`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "F24",
+          fallback: "F24",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneOne: {
+        id: `${characterIds.kungJin}:bojutsu:111`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "111",
+          fallback: "111",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      threeFour: {
+        id: `${characterIds.kungJin}:bojutsu:34`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "34",
+          fallback: "34",
+        },
+        notation: [fgcNotation.three, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      threeFourThree: {
+        id: `${characterIds.kungJin}:bojutsu:343`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "343",
+          fallback: "343",
+        },
+        notation: [fgcNotation.three, fgcNotation.four, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoTwoOne: {
+        id: `${characterIds.kungJin}:bojutsu:221`,
+        characterId: characterIds.kungJin,
+        label: {
+          EN: "221",
+          fallback: "221",
+        },
+        notation: [fgcNotation.two, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungJin}:bojutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const kungLaoTransitionGeneratedMoves = {
+  sourcePath: "characters/kung-lao-transition-generated.ts",
+  characterId: characterIds.kungLao,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    tempest: {
+      bOneTwo: {
+        id: `${characterIds.kungLao}:tempest:b12`,
+        characterId: characterIds.kungLao,
+        label: {
+          EN: "B12",
+          fallback: "B12",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungLao}:tempest`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeTwoOne: {
+        id: `${characterIds.kungLao}:tempest:b321`,
+        characterId: characterIds.kungLao,
+        label: {
+          EN: "B321",
+          fallback: "B321",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungLao}:tempest`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.kungLao}:tempest:b2`,
+        characterId: characterIds.kungLao,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungLao}:tempest`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBOne: {
+        id: `${characterIds.kungLao}:tempest:db1`,
+        characterId: characterIds.kungLao,
+        label: {
+          EN: "DB1",
+          fallback: "DB1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungLao}:tempest`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFOne: {
+        id: `${characterIds.kungLao}:tempest:df1`,
+        characterId: characterIds.kungLao,
+        label: {
+          EN: "DF1",
+          fallback: "DF1",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungLao}:tempest`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.kungLao}:tempest:d2`,
+        characterId: characterIds.kungLao,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungLao}:tempest`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDFOne: {
+        id: `${characterIds.kungLao}:tempest:exdf1`,
+        characterId: characterIds.kungLao,
+        label: {
+          EN: "EXDF1",
+          fallback: "EXDF1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungLao}:tempest`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoThree: {
+        id: `${characterIds.kungLao}:tempest:f23`,
+        characterId: characterIds.kungLao,
+        label: {
+          EN: "F23",
+          fallback: "F23",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.kungLao}:tempest`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const leatherfaceTransitionGeneratedMoves = {
+  sourcePath: "characters/leatherface-transition-generated.ts",
+  characterId: characterIds.leatherface,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    killer: {
+      bDFour: {
+        id: `${characterIds.leatherface}:killer:bd4`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "BD4",
+          fallback: "BD4",
+        },
+        notation: [fgcNotation.back, fgcNotation.down, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOne: {
+        id: `${characterIds.leatherface}:killer:b1`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "B1",
+          fallback: "B1",
+        },
+        notation: [fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFour: {
+        id: `${characterIds.leatherface}:killer:db4`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "DB4",
+          fallback: "DB4",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBOne: {
+        id: `${characterIds.leatherface}:killer:db1`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "DB1",
+          fallback: "DB1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBThree: {
+        id: `${characterIds.leatherface}:killer:db3`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "DB3",
+          fallback: "DB3",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneTwo: {
+        id: `${characterIds.leatherface}:killer:f12`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "F12",
+          fallback: "F12",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThree: {
+        id: `${characterIds.leatherface}:killer:f3`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "F3",
+          fallback: "F3",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoOneDTwo: {
+        id: `${characterIds.leatherface}:killer:f21d2`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "F21D2",
+          fallback: "F21D2",
+        },
+        notation: [
+          fgcNotation.forward,
+          fgcNotation.two,
+          fgcNotation.one,
+          fgcNotation.down,
+          fgcNotation.two,
+        ],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      mb: {
+        id: `${characterIds.leatherface}:killer:mb`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "MB",
+          fallback: "MB",
+        },
+        notation: [fgcNotation.amplify],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      one: {
+        id: `${characterIds.leatherface}:killer:1`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "1",
+          fallback: "1",
+        },
+        notation: [fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwo: {
+        id: `${characterIds.leatherface}:killer:12`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "12",
+          fallback: "12",
+        },
+        notation: [fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoTwo: {
+        id: `${characterIds.leatherface}:killer:122`,
+        characterId: characterIds.leatherface,
+        label: {
+          EN: "122",
+          fallback: "122",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.leatherface}:killer`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const liuKangTransitionGeneratedMoves = {
+  sourcePath: "characters/liu-kang-transition-generated.ts",
+  characterId: characterIds.liuKang,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    flameFist: {
+      bFThree: {
+        id: `${characterIds.liuKang}:flame-fist:bf3`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "BF3",
+          fallback: "BF3",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneTwo: {
+        id: `${characterIds.liuKang}:flame-fist:b12`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "B12",
+          fallback: "B12",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeFour: {
+        id: `${characterIds.liuKang}:flame-fist:b34`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "B34",
+          fallback: "B34",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBTwo: {
+        id: `${characterIds.liuKang}:flame-fist:db2`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "DB2",
+          fallback: "DB2",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dDOne: {
+        id: `${characterIds.liuKang}:flame-fist:dd1`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "DD1",
+          fallback: "DD1",
+        },
+        notation: [fgcNotation.down, fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.liuKang}:flame-fist:d1`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.liuKang}:flame-fist:d2`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFOne: {
+        id: `${characterIds.liuKang}:flame-fist:exbf1`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "EXBF1",
+          fallback: "EXBF1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDDOne: {
+        id: `${characterIds.liuKang}:flame-fist:exdd1`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "EXDD1",
+          fallback: "EXDD1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.down, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exFBFFour: {
+        id: `${characterIds.liuKang}:flame-fist:exfbf4`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "EXFBF4",
+          fallback: "EXFBF4",
+        },
+        notation: [
+          fgcNotation.amplify,
+          fgcNotation.forward,
+          fgcNotation.back,
+          fgcNotation.forward,
+          fgcNotation.four,
+        ],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fBFFour: {
+        id: `${characterIds.liuKang}:flame-fist:fbf4`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "FBF4",
+          fallback: "FBF4",
+        },
+        notation: [fgcNotation.forward, fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFourFour: {
+        id: `${characterIds.liuKang}:flame-fist:f44`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "F44",
+          fallback: "F44",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneTwo: {
+        id: `${characterIds.liuKang}:flame-fist:f12`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "F12",
+          fallback: "F12",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwoOneThree: {
+        id: `${characterIds.liuKang}:flame-fist:f213`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "F213",
+          fallback: "F213",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two, fgcNotation.one, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneThree: {
+        id: `${characterIds.liuKang}:flame-fist:113`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "113",
+          fallback: "113",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneTwo: {
+        id: `${characterIds.liuKang}:flame-fist:112`,
+        characterId: characterIds.liuKang,
+        label: {
+          EN: "112",
+          fallback: "112",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.liuKang}:flame-fist`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const predatorTransitionGeneratedMoves = {
+  sourcePath: "characters/predator-transition-generated.ts",
+  characterId: characterIds.predator,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    hunter: {
+      bFFour: {
+        id: `${characterIds.predator}:hunter:bf4`,
+        characterId: characterIds.predator,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.predator}:hunter`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bFTwo: {
+        id: `${characterIds.predator}:hunter:bf2`,
+        characterId: characterIds.predator,
+        label: {
+          EN: "BF2",
+          fallback: "BF2",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.predator}:hunter`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeOneOne: {
+        id: `${characterIds.predator}:hunter:b311`,
+        characterId: characterIds.predator,
+        label: {
+          EN: "B311",
+          fallback: "B311",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.predator}:hunter`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dDOne: {
+        id: `${characterIds.predator}:hunter:dd1`,
+        characterId: characterIds.predator,
+        label: {
+          EN: "DD1",
+          fallback: "DD1",
+        },
+        notation: [fgcNotation.down, fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.predator}:hunter`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBFour: {
+        id: `${characterIds.predator}:hunter:exdb4`,
+        characterId: characterIds.predator,
+        label: {
+          EN: "EXDB4",
+          fallback: "EXDB4",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.predator}:hunter`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFour: {
+        id: `${characterIds.predator}:hunter:f4`,
+        characterId: characterIds.predator,
+        label: {
+          EN: "F4",
+          fallback: "F4",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.predator}:hunter`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      threeTwo: {
+        id: `${characterIds.predator}:hunter:32`,
+        characterId: characterIds.predator,
+        label: {
+          EN: "32",
+          fallback: "32",
+        },
+        notation: [fgcNotation.three, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.predator}:hunter`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const quanChiTransitionGeneratedMoves = {
+  sourcePath: "characters/quan-chi-transition-generated.ts",
+  characterId: characterIds.quanChi,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    summoner: {
+      bFThree: {
+        id: `${characterIds.quanChi}:summoner:bf3`,
+        characterId: characterIds.quanChi,
+        label: {
+          EN: "BF3",
+          fallback: "BF3",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.quanChi}:summoner`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeTwoFour: {
+        id: `${characterIds.quanChi}:summoner:b324`,
+        characterId: characterIds.quanChi,
+        label: {
+          EN: "B324",
+          fallback: "B324",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.two, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.quanChi}:summoner`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFour: {
+        id: `${characterIds.quanChi}:summoner:f4`,
+        characterId: characterIds.quanChi,
+        label: {
+          EN: "F4",
+          fallback: "F4",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.quanChi}:summoner`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneFourOne: {
+        id: `${characterIds.quanChi}:summoner:141`,
+        characterId: characterIds.quanChi,
+        label: {
+          EN: "141",
+          fallback: "141",
+        },
+        notation: [fgcNotation.one, fgcNotation.four, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.quanChi}:summoner`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwo: {
+        id: `${characterIds.quanChi}:summoner:12`,
+        characterId: characterIds.quanChi,
+        label: {
+          EN: "12",
+          fallback: "12",
+        },
+        notation: [fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.quanChi}:summoner`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const raidenTransitionGeneratedMoves = {
+  sourcePath: "characters/raiden-transition-generated.ts",
+  characterId: characterIds.raiden,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    thunderGod: {
+      bFThree: {
+        id: `${characterIds.raiden}:thunder-god:bf3`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "BF3",
+          fallback: "BF3",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneFour: {
+        id: `${characterIds.raiden}:thunder-god:b14`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "B14",
+          fallback: "B14",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneOne: {
+        id: `${characterIds.raiden}:thunder-god:b11`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "B11",
+          fallback: "B11",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeFour: {
+        id: `${characterIds.raiden}:thunder-god:b34`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "B34",
+          fallback: "B34",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeTwo: {
+        id: `${characterIds.raiden}:thunder-god:b32`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "B32",
+          fallback: "B32",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.raiden}:thunder-god:b2`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBTwo: {
+        id: `${characterIds.raiden}:thunder-god:db2`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "DB2",
+          fallback: "DB2",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFTwo: {
+        id: `${characterIds.raiden}:thunder-god:df2`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "DF2",
+          fallback: "DF2",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDFTwo: {
+        id: `${characterIds.raiden}:thunder-god:exdf2`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "EXDF2",
+          fallback: "EXDF2",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.forward, fgcNotation.two],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneTwoBTwo: {
+        id: `${characterIds.raiden}:thunder-god:f12b2`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "F12B2",
+          fallback: "F12B2",
+        },
+        notation: [
+          fgcNotation.forward,
+          fgcNotation.one,
+          fgcNotation.two,
+          fgcNotation.back,
+          fgcNotation.two,
+        ],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOneFour: {
+        id: `${characterIds.raiden}:thunder-god:214`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "214",
+          fallback: "214",
+        },
+        notation: [fgcNotation.two, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOneThree: {
+        id: `${characterIds.raiden}:thunder-god:213`,
+        characterId: characterIds.raiden,
+        label: {
+          EN: "213",
+          fallback: "213",
+        },
+        notation: [fgcNotation.two, fgcNotation.one, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.raiden}:thunder-god`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const reptileTransitionGeneratedMoves = {
+  sourcePath: "characters/reptile-transition-generated.ts",
+  characterId: characterIds.reptile,
+  sourceIds: ["community-combo-source"],
+  universal: {
+    bFFour: {
+      id: `${characterIds.reptile}:universal:bf4`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "BF4",
+        fallback: "BF4",
+      },
+      notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    bFTwo: {
+      id: `${characterIds.reptile}:universal:bf2`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "BF2",
+        fallback: "BF2",
+      },
+      notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.two],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    bThree: {
+      id: `${characterIds.reptile}:universal:b3`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "B3",
+        fallback: "B3",
+      },
+      notation: [fgcNotation.back, fgcNotation.three],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    bTwo: {
+      id: `${characterIds.reptile}:universal:b2`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "B2",
+        fallback: "B2",
+      },
+      notation: [fgcNotation.back, fgcNotation.two],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    dBFour: {
+      id: `${characterIds.reptile}:universal:db4`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "DB4",
+        fallback: "DB4",
+      },
+      notation: [fgcNotation.down, fgcNotation.back, fgcNotation.four],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    dBThree: {
+      id: `${characterIds.reptile}:universal:db3`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "DB3",
+        fallback: "DB3",
+      },
+      notation: [fgcNotation.down, fgcNotation.back, fgcNotation.three],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    dBTwo: {
+      id: `${characterIds.reptile}:universal:db2`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "DB2",
+        fallback: "DB2",
+      },
+      notation: [fgcNotation.down, fgcNotation.back, fgcNotation.two],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    dFThree: {
+      id: `${characterIds.reptile}:universal:df3`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "DF3",
+        fallback: "DF3",
+      },
+      notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.three],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    dOne: {
+      id: `${characterIds.reptile}:universal:d1`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "D1",
+        fallback: "D1",
+      },
+      notation: [fgcNotation.down, fgcNotation.one],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    dThree: {
+      id: `${characterIds.reptile}:universal:d3`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "D3",
+        fallback: "D3",
+      },
+      notation: [fgcNotation.down, fgcNotation.three],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    dTwo: {
+      id: `${characterIds.reptile}:universal:d2`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "D2",
+        fallback: "D2",
+      },
+      notation: [fgcNotation.down, fgcNotation.two],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    exDDThree: {
+      id: `${characterIds.reptile}:universal:exdd3`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "EXDD3",
+        fallback: "EXDD3",
+      },
+      notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.down, fgcNotation.three],
+      category: "enhanced",
+      availability: {
+        kind: "universal",
+      },
+      meterCost: 1,
+      tags: ["transition-source", "meter"],
+      sourceIds: ["community-combo-source"],
+    },
+    fFourOne: {
+      id: `${characterIds.reptile}:universal:f41`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "F41",
+        fallback: "F41",
+      },
+      notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.one],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    fFourOneTwo: {
+      id: `${characterIds.reptile}:universal:f412`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "F412",
+        fallback: "F412",
+      },
+      notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.one, fgcNotation.two],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    fTwoOne: {
+      id: `${characterIds.reptile}:universal:f21`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "F21",
+        fallback: "F21",
+      },
+      notation: [fgcNotation.forward, fgcNotation.two, fgcNotation.one],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    mb: {
+      id: `${characterIds.reptile}:universal:mb`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "MB",
+        fallback: "MB",
+      },
+      notation: [fgcNotation.amplify],
+      category: "enhanced",
+      availability: {
+        kind: "universal",
+      },
+      meterCost: 1,
+      tags: ["transition-source", "meter"],
+      sourceIds: ["community-combo-source"],
+    },
+    oneFourOne: {
+      id: `${characterIds.reptile}:universal:141`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "141",
+        fallback: "141",
+      },
+      notation: [fgcNotation.one, fgcNotation.four, fgcNotation.one],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    oneTwo: {
+      id: `${characterIds.reptile}:universal:12`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "12",
+        fallback: "12",
+      },
+      notation: [fgcNotation.one, fgcNotation.two],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    twoOne: {
+      id: `${characterIds.reptile}:universal:21`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "21",
+        fallback: "21",
+      },
+      notation: [fgcNotation.two, fgcNotation.one],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+    twoOneTwoFour: {
+      id: `${characterIds.reptile}:universal:2124`,
+      characterId: characterIds.reptile,
+      label: {
+        EN: "2124",
+        fallback: "2124",
+      },
+      notation: [fgcNotation.two, fgcNotation.one, fgcNotation.two, fgcNotation.four],
+      category: "string",
+      availability: {
+        kind: "universal",
+      },
+      tags: ["transition-source"],
+      sourceIds: ["community-combo-source"],
+    },
+  },
+  variations: {},
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const scorpionTransitionGeneratedMoves = {
+  sourcePath: "characters/scorpion-transition-generated.ts",
+  characterId: characterIds.scorpion,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    ninjutsu: {
+      bFFour: {
+        id: `${characterIds.scorpion}:ninjutsu:bf4`,
+        characterId: characterIds.scorpion,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.scorpion}:ninjutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.scorpion}:ninjutsu:b2`,
+        characterId: characterIds.scorpion,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.scorpion}:ninjutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBThree: {
+        id: `${characterIds.scorpion}:ninjutsu:db3`,
+        characterId: characterIds.scorpion,
+        label: {
+          EN: "DB3",
+          fallback: "DB3",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.scorpion}:ninjutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.scorpion}:ninjutsu:d2`,
+        characterId: characterIds.scorpion,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.scorpion}:ninjutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwo: {
+        id: `${characterIds.scorpion}:ninjutsu:f2`,
+        characterId: characterIds.scorpion,
+        label: {
+          EN: "F2",
+          fallback: "F2",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.scorpion}:ninjutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOneFour: {
+        id: `${characterIds.scorpion}:ninjutsu:214`,
+        characterId: characterIds.scorpion,
+        label: {
+          EN: "214",
+          fallback: "214",
+        },
+        notation: [fgcNotation.two, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.scorpion}:ninjutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const shinnokTransitionGeneratedMoves = {
+  sourcePath: "characters/shinnok-transition-generated.ts",
+  characterId: characterIds.shinnok,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    boneShaper: {
+      bFThree: {
+        id: `${characterIds.shinnok}:bone-shaper:bf3`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "BF3",
+          fallback: "BF3",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOne: {
+        id: `${characterIds.shinnok}:bone-shaper:b1`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "B1",
+          fallback: "B1",
+        },
+        notation: [fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThree: {
+        id: `${characterIds.shinnok}:bone-shaper:b3`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "B3",
+          fallback: "B3",
+        },
+        notation: [fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBTwo: {
+        id: `${characterIds.shinnok}:bone-shaper:db2`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "DB2",
+          fallback: "DB2",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.shinnok}:bone-shaper:d1`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.shinnok}:bone-shaper:d2`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFourOneDTwo: {
+        id: `${characterIds.shinnok}:bone-shaper:f41d2`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "F41D2",
+          fallback: "F41D2",
+        },
+        notation: [
+          fgcNotation.forward,
+          fgcNotation.four,
+          fgcNotation.one,
+          fgcNotation.down,
+          fgcNotation.two,
+        ],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      mb: {
+        id: `${characterIds.shinnok}:bone-shaper:mb`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "MB",
+          fallback: "MB",
+        },
+        notation: [fgcNotation.amplify],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOne: {
+        id: `${characterIds.shinnok}:bone-shaper:11`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "11",
+          fallback: "11",
+        },
+        notation: [fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneTwo: {
+        id: `${characterIds.shinnok}:bone-shaper:112`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "112",
+          fallback: "112",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      threeOneTwo: {
+        id: `${characterIds.shinnok}:bone-shaper:312`,
+        characterId: characterIds.shinnok,
+        label: {
+          EN: "312",
+          fallback: "312",
+        },
+        notation: [fgcNotation.three, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.shinnok}:bone-shaper`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const sonyaBladeTransitionGeneratedMoves = {
+  sourcePath: "characters/sonya-blade-transition-generated.ts",
+  characterId: characterIds.sonyaBlade,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    demolition: {
+      bFFour: {
+        id: `${characterIds.sonyaBlade}:demolition:bf4`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneFour: {
+        id: `${characterIds.sonyaBlade}:demolition:b14`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "B14",
+          fallback: "B14",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeThreeTwoOneTwo: {
+        id: `${characterIds.sonyaBlade}:demolition:b33212`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "B33212",
+          fallback: "B33212",
+        },
+        notation: [
+          fgcNotation.back,
+          fgcNotation.three,
+          fgcNotation.three,
+          fgcNotation.two,
+          fgcNotation.one,
+          fgcNotation.two,
+        ],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBOne: {
+        id: `${characterIds.sonyaBlade}:demolition:db1`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "DB1",
+          fallback: "DB1",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFOne: {
+        id: `${characterIds.sonyaBlade}:demolition:df1`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "DF1",
+          fallback: "DF1",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDDOne: {
+        id: `${characterIds.sonyaBlade}:demolition:exdd1`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "EXDD1",
+          fallback: "EXDD1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.down, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFour: {
+        id: `${characterIds.sonyaBlade}:demolition:f4`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "F4",
+          fallback: "F4",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.sonyaBlade}:demolition:4`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwo: {
+        id: `${characterIds.sonyaBlade}:demolition:f2`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "F2",
+          fallback: "F2",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      one: {
+        id: `${characterIds.sonyaBlade}:demolition:1`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "1",
+          fallback: "1",
+        },
+        notation: [fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwo: {
+        id: `${characterIds.sonyaBlade}:demolition:12`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "12",
+          fallback: "12",
+        },
+        notation: [fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoFour: {
+        id: `${characterIds.sonyaBlade}:demolition:124`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "124",
+          fallback: "124",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoOne: {
+        id: `${characterIds.sonyaBlade}:demolition:121`,
+        characterId: characterIds.sonyaBlade,
+        label: {
+          EN: "121",
+          fallback: "121",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.sonyaBlade}:demolition`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const subZeroTransitionGeneratedMoves = {
+  sourcePath: "characters/sub-zero-transition-generated.ts",
+  characterId: characterIds.subZero,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    grandmaster: {
+      bFFour: {
+        id: `${characterIds.subZero}:grandmaster:bf4`,
+        characterId: characterIds.subZero,
+        label: {
+          EN: "BF4",
+          fallback: "BF4",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.subZero}:grandmaster`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOneTwo: {
+        id: `${characterIds.subZero}:grandmaster:b12`,
+        characterId: characterIds.subZero,
+        label: {
+          EN: "B12",
+          fallback: "B12",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.subZero}:grandmaster`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.subZero}:grandmaster:b2`,
+        characterId: characterIds.subZero,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.subZero}:grandmaster`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFourTwo: {
+        id: `${characterIds.subZero}:grandmaster:f42`,
+        characterId: characterIds.subZero,
+        label: {
+          EN: "F42",
+          fallback: "F42",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.subZero}:grandmaster`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const takedaTransitionGeneratedMoves = {
+  sourcePath: "characters/takeda-transition-generated.ts",
+  characterId: characterIds.takeda,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    shiraiRyu: {
+      bFOne: {
+        id: `${characterIds.takeda}:shirai-ryu:bf1`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "BF1",
+          fallback: "BF1",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bFTwo: {
+        id: `${characterIds.takeda}:shirai-ryu:bf2`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "BF2",
+          fallback: "BF2",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThree: {
+        id: `${characterIds.takeda}:shirai-ryu:b3`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "B3",
+          fallback: "B3",
+        },
+        notation: [fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwoOne: {
+        id: `${characterIds.takeda}:shirai-ryu:b21`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "B21",
+          fallback: "B21",
+        },
+        notation: [fgcNotation.back, fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBThree: {
+        id: `${characterIds.takeda}:shirai-ryu:db3`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "DB3",
+          fallback: "DB3",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dOne: {
+        id: `${characterIds.takeda}:shirai-ryu:d1`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "D1",
+          fallback: "D1",
+        },
+        notation: [fgcNotation.down, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.takeda}:shirai-ryu:d2`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBOne: {
+        id: `${characterIds.takeda}:shirai-ryu:exdb1`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "EXDB1",
+          fallback: "EXDB1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFour: {
+        id: `${characterIds.takeda}:shirai-ryu:f4`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "F4",
+          fallback: "F4",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneTwo: {
+        id: `${characterIds.takeda}:shirai-ryu:112`,
+        characterId: characterIds.takeda,
+        label: {
+          EN: "112",
+          fallback: "112",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.takeda}:shirai-ryu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const tanyaTransitionGeneratedMoves = {
+  sourcePath: "characters/tanya-transition-generated.ts",
+  characterId: characterIds.tanya,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    kobuJutsu: {
+      bThreeOne: {
+        id: `${characterIds.tanya}:kobu-jutsu:b31`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "B31",
+          fallback: "B31",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFOne: {
+        id: `${characterIds.tanya}:kobu-jutsu:df1`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "DF1",
+          fallback: "DF1",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dFTwo: {
+        id: `${characterIds.tanya}:kobu-jutsu:df2`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "DF2",
+          fallback: "DF2",
+        },
+        notation: [fgcNotation.down, fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFFour: {
+        id: `${characterIds.tanya}:kobu-jutsu:exbf4`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "EXBF4",
+          fallback: "EXBF4",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDFOne: {
+        id: `${characterIds.tanya}:kobu-jutsu:exdf1`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "EXDF1",
+          fallback: "EXDF1",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.forward, fgcNotation.one],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDFTwo: {
+        id: `${characterIds.tanya}:kobu-jutsu:exdf2`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "EXDF2",
+          fallback: "EXDF2",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.forward, fgcNotation.two],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFourThree: {
+        id: `${characterIds.tanya}:kobu-jutsu:f43`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "F43",
+          fallback: "F43",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.tanya}:kobu-jutsu:4`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fTwo: {
+        id: `${characterIds.tanya}:kobu-jutsu:f2`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "F2",
+          fallback: "F2",
+        },
+        notation: [fgcNotation.forward, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOne: {
+        id: `${characterIds.tanya}:kobu-jutsu:11`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "11",
+          fallback: "11",
+        },
+        notation: [fgcNotation.one, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneTwo: {
+        id: `${characterIds.tanya}:kobu-jutsu:112`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "112",
+          fallback: "112",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoUThree: {
+        id: `${characterIds.tanya}:kobu-jutsu:2u3`,
+        characterId: characterIds.tanya,
+        label: {
+          EN: "2U3",
+          fallback: "2U3",
+        },
+        notation: [fgcNotation.two, fgcNotation.up, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tanya}:kobu-jutsu`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const tremorTransitionGeneratedMoves = {
+  sourcePath: "characters/tremor-transition-generated.ts",
+  characterId: characterIds.tremor,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    crystalline: {
+      bOneTwo: {
+        id: `${characterIds.tremor}:crystalline:b12`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "B12",
+          fallback: "B12",
+        },
+        notation: [fgcNotation.back, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThree: {
+        id: `${characterIds.tremor}:crystalline:b3`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "B3",
+          fallback: "B3",
+        },
+        notation: [fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThreeTwo: {
+        id: `${characterIds.tremor}:crystalline:b32`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "B32",
+          fallback: "B32",
+        },
+        notation: [fgcNotation.back, fgcNotation.three, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.tremor}:crystalline:b2`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      d: {
+        id: `${characterIds.tremor}:crystalline:d`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "D",
+          fallback: "D",
+        },
+        notation: [fgcNotation.down],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBTwo: {
+        id: `${characterIds.tremor}:crystalline:db2`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "DB2",
+          fallback: "DB2",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBTwoD: {
+        id: `${characterIds.tremor}:crystalline:db2d`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "DB2D",
+          fallback: "DB2D",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.two, fgcNotation.down],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBTwoU: {
+        id: `${characterIds.tremor}:crystalline:db2u`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "DB2U",
+          fallback: "DB2U",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.two, fgcNotation.up],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exBFFour: {
+        id: `${characterIds.tremor}:crystalline:exbf4`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "EXBF4",
+          fallback: "EXBF4",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.back, fgcNotation.forward, fgcNotation.four],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFour: {
+        id: `${characterIds.tremor}:crystalline:f4`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "F4",
+          fallback: "F4",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneTwo: {
+        id: `${characterIds.tremor}:crystalline:f12`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "F12",
+          fallback: "F12",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.tremor}:crystalline:4`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneTwoThree: {
+        id: `${characterIds.tremor}:crystalline:123`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "123",
+          fallback: "123",
+        },
+        notation: [fgcNotation.one, fgcNotation.two, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOne: {
+        id: `${characterIds.tremor}:crystalline:21`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "21",
+          fallback: "21",
+        },
+        notation: [fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOneDFour: {
+        id: `${characterIds.tremor}:crystalline:21d4`,
+        characterId: characterIds.tremor,
+        label: {
+          EN: "21D4",
+          fallback: "21D4",
+        },
+        notation: [fgcNotation.two, fgcNotation.one, fgcNotation.down, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.tremor}:crystalline`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+const triborgTransitionGeneratedMoves = {
+  sourcePath: "characters/triborg-transition-generated.ts",
+  characterId: characterIds.triborg,
+  sourceIds: ["community-combo-source"],
+  universal: {},
+  variations: {
+    cyrax: {
+      b: {
+        id: `${characterIds.triborg}:cyrax:b`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "B",
+          fallback: "B",
+        },
+        notation: [fgcNotation.back],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bFOne: {
+        id: `${characterIds.triborg}:cyrax:bf1`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "BF1",
+          fallback: "BF1",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bTwo: {
+        id: `${characterIds.triborg}:cyrax:b2`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "B2",
+          fallback: "B2",
+        },
+        notation: [fgcNotation.back, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFour: {
+        id: `${characterIds.triborg}:cyrax:db4`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "DB4",
+          fallback: "DB4",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBThree: {
+        id: `${characterIds.triborg}:cyrax:db3`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "DB3",
+          fallback: "DB3",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dDThree: {
+        id: `${characterIds.triborg}:cyrax:dd3`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "DD3",
+          fallback: "DD3",
+        },
+        notation: [fgcNotation.down, fgcNotation.down, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dTwo: {
+        id: `${characterIds.triborg}:cyrax:d2`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "D2",
+          fallback: "D2",
+        },
+        notation: [fgcNotation.down, fgcNotation.two],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDBFour: {
+        id: `${characterIds.triborg}:cyrax:exdb4`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "EXDB4",
+          fallback: "EXDB4",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fF: {
+        id: `${characterIds.triborg}:cyrax:ff`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "FF",
+          fallback: "FF",
+        },
+        notation: [fgcNotation.forward, fgcNotation.forward],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFourThree: {
+        id: `${characterIds.triborg}:cyrax:f43`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "F43",
+          fallback: "F43",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOne: {
+        id: `${characterIds.triborg}:cyrax:f1`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "F1",
+          fallback: "F1",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneThree: {
+        id: `${characterIds.triborg}:cyrax:f13`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "F13",
+          fallback: "F13",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      four: {
+        id: `${characterIds.triborg}:cyrax:4`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "4",
+          fallback: "4",
+        },
+        notation: [fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThreeFour: {
+        id: `${characterIds.triborg}:cyrax:f34`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "F34",
+          fallback: "F34",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneFour: {
+        id: `${characterIds.triborg}:cyrax:114`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "114",
+          fallback: "114",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOne: {
+        id: `${characterIds.triborg}:cyrax:21`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "21",
+          fallback: "21",
+        },
+        notation: [fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:cyrax`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+    sektor: {
+      bFThree: {
+        id: `${characterIds.triborg}:sektor:bf3`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "BF3",
+          fallback: "BF3",
+        },
+        notation: [fgcNotation.back, fgcNotation.forward, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bOne: {
+        id: `${characterIds.triborg}:sektor:b1`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "B1",
+          fallback: "B1",
+        },
+        notation: [fgcNotation.back, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      bThree: {
+        id: `${characterIds.triborg}:sektor:b3`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "B3",
+          fallback: "B3",
+        },
+        notation: [fgcNotation.back, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      dBFour: {
+        id: `${characterIds.triborg}:sektor:db4`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "DB4",
+          fallback: "DB4",
+        },
+        notation: [fgcNotation.down, fgcNotation.back, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      exDDThree: {
+        id: `${characterIds.triborg}:sektor:exdd3`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "EXDD3",
+          fallback: "EXDD3",
+        },
+        notation: [fgcNotation.amplify, fgcNotation.down, fgcNotation.down, fgcNotation.three],
+        category: "enhanced",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        meterCost: 1,
+        tags: ["transition-source", "meter"],
+        sourceIds: ["community-combo-source"],
+      },
+      fFourThree: {
+        id: `${characterIds.triborg}:sektor:f43`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "F43",
+          fallback: "F43",
+        },
+        notation: [fgcNotation.forward, fgcNotation.four, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fOneThree: {
+        id: `${characterIds.triborg}:sektor:f13`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "F13",
+          fallback: "F13",
+        },
+        notation: [fgcNotation.forward, fgcNotation.one, fgcNotation.three],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      fThreeFour: {
+        id: `${characterIds.triborg}:sektor:f34`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "F34",
+          fallback: "F34",
+        },
+        notation: [fgcNotation.forward, fgcNotation.three, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      oneOneFour: {
+        id: `${characterIds.triborg}:sektor:114`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "114",
+          fallback: "114",
+        },
+        notation: [fgcNotation.one, fgcNotation.one, fgcNotation.four],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+      twoOne: {
+        id: `${characterIds.triborg}:sektor:21`,
+        characterId: characterIds.triborg,
+        label: {
+          EN: "21",
+          fallback: "21",
+        },
+        notation: [fgcNotation.two, fgcNotation.one],
+        category: "string",
+        availability: {
+          kind: "variation",
+          variationIds: [`${characterIds.triborg}:sektor`],
+        },
+        tags: ["transition-source"],
+        sourceIds: ["community-combo-source"],
+      },
+    },
+  },
+} as const satisfies MkxlAuthoredCharacterMoves;
+
+export const mkxlXlFinalTransitionGeneratedMoveRegistry = {
+  alien: {
+    universal: alienTransitionGeneratedMoves.universal,
+    tarkatan: alienTransitionGeneratedMoves.variations.tarkatan,
+  },
+  boRaiCho: {
+    universal: boRaiChoTransitionGeneratedMoves.universal,
+    bartitsu: boRaiChoTransitionGeneratedMoves.variations.bartitsu,
+  },
+  cassieCage: {
+    universal: cassieCageTransitionGeneratedMoves.universal,
+    hollywood: cassieCageTransitionGeneratedMoves.variations.hollywood,
+  },
+  dvorah: {
+    universal: dvorahTransitionGeneratedMoves.universal,
+    broodMother: dvorahTransitionGeneratedMoves.variations.broodMother,
+  },
+  ermac: {
+    universal: ermacTransitionGeneratedMoves.universal,
+    masterOfSouls: ermacTransitionGeneratedMoves.variations.masterOfSouls,
+  },
+  erronBlack: {
+    universal: erronBlackTransitionGeneratedMoves.universal,
+    outlaw: erronBlackTransitionGeneratedMoves.variations.outlaw,
+  },
+  ferraTorr: {
+    universal: ferraTorrTransitionGeneratedMoves.universal,
+    ruthless: ferraTorrTransitionGeneratedMoves.variations.ruthless,
+  },
+  goro: {
+    universal: goroTransitionGeneratedMoves.universal,
+    kuatanWarrior: goroTransitionGeneratedMoves.variations.kuatanWarrior,
+  },
+  jacquiBriggs: {
+    universal: jacquiBriggsTransitionGeneratedMoves.universal,
+    fullAuto: jacquiBriggsTransitionGeneratedMoves.variations.fullAuto,
+  },
+  jasonVoorhees: {
+    universal: jasonVoorheesTransitionGeneratedMoves.universal,
+    slasher: jasonVoorheesTransitionGeneratedMoves.variations.slasher,
+  },
+  jax: {
+    universal: jaxTransitionGeneratedMoves.universal,
+    heavyWeapons: jaxTransitionGeneratedMoves.variations.heavyWeapons,
+  },
+  johnnyCage: {
+    universal: johnnyCageTransitionGeneratedMoves.universal,
+    stuntDouble: johnnyCageTransitionGeneratedMoves.variations.stuntDouble,
+  },
+  kano: {
+    universal: kanoTransitionGeneratedMoves.universal,
+    cutthroat: kanoTransitionGeneratedMoves.variations.cutthroat,
+  },
+  kenshi: {
+    universal: kenshiTransitionGeneratedMoves.universal,
+    possessed: kenshiTransitionGeneratedMoves.variations.possessed,
+  },
+  kotalKahn: {
+    universal: kotalKahnTransitionGeneratedMoves.universal,
+    warGod: kotalKahnTransitionGeneratedMoves.variations.warGod,
+  },
+  kungJin: {
+    universal: kungJinTransitionGeneratedMoves.universal,
+    bojutsu: kungJinTransitionGeneratedMoves.variations.bojutsu,
+  },
+  kungLao: {
+    universal: kungLaoTransitionGeneratedMoves.universal,
+    tempest: kungLaoTransitionGeneratedMoves.variations.tempest,
+  },
+  leatherface: {
+    universal: leatherfaceTransitionGeneratedMoves.universal,
+    killer: leatherfaceTransitionGeneratedMoves.variations.killer,
+  },
+  liuKang: {
+    universal: liuKangTransitionGeneratedMoves.universal,
+    flameFist: liuKangTransitionGeneratedMoves.variations.flameFist,
+  },
+  predator: {
+    universal: predatorTransitionGeneratedMoves.universal,
+    hunter: predatorTransitionGeneratedMoves.variations.hunter,
+  },
+  quanChi: {
+    universal: quanChiTransitionGeneratedMoves.universal,
+    summoner: quanChiTransitionGeneratedMoves.variations.summoner,
+  },
+  raiden: {
+    universal: raidenTransitionGeneratedMoves.universal,
+    thunderGod: raidenTransitionGeneratedMoves.variations.thunderGod,
+  },
+  reptile: {
+    universal: reptileTransitionGeneratedMoves.universal,
+  },
+  scorpion: {
+    universal: scorpionTransitionGeneratedMoves.universal,
+    ninjutsu: scorpionTransitionGeneratedMoves.variations.ninjutsu,
+  },
+  shinnok: {
+    universal: shinnokTransitionGeneratedMoves.universal,
+    boneShaper: shinnokTransitionGeneratedMoves.variations.boneShaper,
+  },
+  sonyaBlade: {
+    universal: sonyaBladeTransitionGeneratedMoves.universal,
+    demolition: sonyaBladeTransitionGeneratedMoves.variations.demolition,
+  },
+  subZero: {
+    universal: subZeroTransitionGeneratedMoves.universal,
+    grandmaster: subZeroTransitionGeneratedMoves.variations.grandmaster,
+  },
+  takeda: {
+    universal: takedaTransitionGeneratedMoves.universal,
+    shiraiRyu: takedaTransitionGeneratedMoves.variations.shiraiRyu,
+  },
+  tanya: {
+    universal: tanyaTransitionGeneratedMoves.universal,
+    kobuJutsu: tanyaTransitionGeneratedMoves.variations.kobuJutsu,
+  },
+  tremor: {
+    universal: tremorTransitionGeneratedMoves.universal,
+    crystalline: tremorTransitionGeneratedMoves.variations.crystalline,
+  },
+  triborg: {
+    universal: triborgTransitionGeneratedMoves.universal,
+    cyrax: triborgTransitionGeneratedMoves.variations.cyrax,
+    sektor: triborgTransitionGeneratedMoves.variations.sektor,
+  },
+} as const;
+
+export const mkxlXlFinalTransitionGeneratedMoves = [
+  alienTransitionGeneratedMoves,
+  boRaiChoTransitionGeneratedMoves,
+  cassieCageTransitionGeneratedMoves,
+  dvorahTransitionGeneratedMoves,
+  ermacTransitionGeneratedMoves,
+  erronBlackTransitionGeneratedMoves,
+  ferraTorrTransitionGeneratedMoves,
+  goroTransitionGeneratedMoves,
+  jacquiBriggsTransitionGeneratedMoves,
+  jasonVoorheesTransitionGeneratedMoves,
+  jaxTransitionGeneratedMoves,
+  johnnyCageTransitionGeneratedMoves,
+  kanoTransitionGeneratedMoves,
+  kenshiTransitionGeneratedMoves,
+  kotalKahnTransitionGeneratedMoves,
+  kungJinTransitionGeneratedMoves,
+  kungLaoTransitionGeneratedMoves,
+  leatherfaceTransitionGeneratedMoves,
+  liuKangTransitionGeneratedMoves,
+  predatorTransitionGeneratedMoves,
+  quanChiTransitionGeneratedMoves,
+  raidenTransitionGeneratedMoves,
+  reptileTransitionGeneratedMoves,
+  scorpionTransitionGeneratedMoves,
+  shinnokTransitionGeneratedMoves,
+  sonyaBladeTransitionGeneratedMoves,
+  subZeroTransitionGeneratedMoves,
+  takedaTransitionGeneratedMoves,
+  tanyaTransitionGeneratedMoves,
+  tremorTransitionGeneratedMoves,
+  triborgTransitionGeneratedMoves,
+] as const;

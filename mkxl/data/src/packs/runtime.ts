@@ -1,0 +1,394 @@
+import type { MkxlSeededCombo } from "../combos/type";
+import type { MkxlMove, MkxlMoveTree } from "../movelists/type";
+import type { MkxlTransition } from "../transitions/type";
+import type {
+  MkxlAuthoredCharacterMoves,
+  MkxlAuthoredTransition,
+  MkxlAuthoredVariationCombos,
+  MkxlDataPack,
+  MkxlMovePatch,
+  MkxlResolvedCharacterMovelistFile,
+  MkxlResolvedData,
+  MkxlResolvedVariationComboFile,
+} from "./type";
+
+type MutableAuthoredCharacterMoves = {
+  sourcePath: MkxlAuthoredCharacterMoves["sourcePath"];
+  characterId: string;
+  sourceIds: MkxlAuthoredCharacterMoves["sourceIds"];
+  universal: Record<string, MkxlMove>;
+  variations: Record<string, Record<string, MkxlMove>>;
+};
+
+type MkxlPackState = {
+  sources: MkxlDataPack["sources"];
+  game: MkxlDataPack["game"];
+  roster: MkxlDataPack["roster"];
+  variations: MkxlDataPack["variations"];
+  stages: MkxlDataPack["stages"];
+  inputNotationValues: MkxlDataPack["inputNotationValues"];
+  transitionsById: Map<string, MkxlAuthoredTransition>;
+  movesByCharacterId: Map<string, MutableAuthoredCharacterMoves>;
+  combosByVariationId: Map<string, MkxlAuthoredVariationCombos>;
+};
+
+const createEmptyPackState = (): MkxlPackState => ({
+  sources: undefined,
+  game: undefined,
+  roster: undefined,
+  variations: undefined,
+  stages: undefined,
+  inputNotationValues: undefined,
+  transitionsById: new Map(),
+  movesByCharacterId: new Map(),
+  combosByVariationId: new Map(),
+});
+
+const toCamelKey = (value: string) =>
+  value.replace(/-([a-z0-9])/gu, (_match, char: string) => char.toUpperCase());
+
+const cloneCharacterMoves = (entry: MkxlAuthoredCharacterMoves): MutableAuthoredCharacterMoves => ({
+  sourcePath: entry.sourcePath,
+  characterId: entry.characterId,
+  sourceIds: entry.sourceIds,
+  universal: { ...entry.universal },
+  variations: Object.fromEntries(
+    Object.entries(entry.variations).map(([variationKey, moves]) => [variationKey, { ...moves }]),
+  ),
+});
+
+const clonePackState = (state: MkxlPackState): MkxlPackState => ({
+  sources: state.sources,
+  game: state.game,
+  roster: state.roster,
+  variations: state.variations,
+  stages: state.stages,
+  inputNotationValues: state.inputNotationValues,
+  transitionsById: new Map(state.transitionsById),
+  movesByCharacterId: new Map(
+    [...state.movesByCharacterId].map(([characterId, entry]) => [
+      characterId,
+      {
+        ...entry,
+        universal: { ...entry.universal },
+        variations: Object.fromEntries(
+          Object.entries(entry.variations).map(([variationKey, moves]) => [
+            variationKey,
+            { ...moves },
+          ]),
+        ),
+      },
+    ]),
+  ),
+  combosByVariationId: new Map(state.combosByVariationId),
+});
+
+const mergeCharacterMoves = (state: MkxlPackState, entry: MkxlAuthoredCharacterMoves) => {
+  const existing = state.movesByCharacterId.get(entry.characterId);
+
+  if (!existing) {
+    state.movesByCharacterId.set(entry.characterId, cloneCharacterMoves(entry));
+    return;
+  }
+
+  state.movesByCharacterId.set(entry.characterId, {
+    ...existing,
+    sourceIds: [...new Set([...existing.sourceIds, ...entry.sourceIds])],
+    universal: {
+      ...existing.universal,
+      ...entry.universal,
+    },
+    variations: {
+      ...existing.variations,
+      ...Object.fromEntries(
+        Object.entries(entry.variations).map(([variationKey, moves]) => [
+          variationKey,
+          {
+            ...(existing.variations[variationKey] ?? {}),
+            ...moves,
+          },
+        ]),
+      ),
+    },
+  });
+};
+
+const applyMovePatch = (state: MkxlPackState, patch: MkxlMovePatch) => {
+  const entry = state.movesByCharacterId.get(patch.characterId);
+
+  if (!entry) {
+    throw new Error(`${patch.characterId} has no authored move pack.`);
+  }
+
+  let target: Record<string, MkxlMove>;
+
+  if (patch.scope === "universal") {
+    target = entry.universal;
+  } else {
+    target = entry.variations[patch.variationKey] ?? {};
+    entry.variations[patch.variationKey] = target;
+  }
+
+  if (patch.action === "retire") {
+    delete target[patch.key];
+    return;
+  }
+
+  target[patch.key] = patch.move;
+};
+
+const mergeComboAddPatch = (state: MkxlPackState, comboPatch: MkxlAuthoredVariationCombos) => {
+  const existing = state.combosByVariationId.get(comboPatch.variationId);
+
+  if (!existing) {
+    state.combosByVariationId.set(comboPatch.variationId, comboPatch);
+    return;
+  }
+
+  state.combosByVariationId.set(comboPatch.variationId, {
+    ...existing,
+    combos: [...existing.combos, ...comboPatch.combos] as MkxlAuthoredVariationCombos["combos"],
+  });
+};
+
+const applyPack = (inputState: MkxlPackState, pack: MkxlDataPack): MkxlPackState => {
+  const state = clonePackState(inputState);
+
+  if (pack.sources) {
+    state.sources = pack.sources;
+  }
+  if (pack.game) {
+    state.game = pack.game;
+  }
+  if (pack.roster) {
+    state.roster = pack.roster;
+  }
+  if (pack.variations) {
+    state.variations = pack.variations;
+  }
+  if (pack.stages) {
+    state.stages = pack.stages;
+  }
+  if (pack.inputNotationValues) {
+    state.inputNotationValues = pack.inputNotationValues;
+  }
+  if (pack.transitions) {
+    for (const transition of pack.transitions) {
+      state.transitionsById.set(transition.id, transition);
+    }
+  }
+  if (pack.moves) {
+    for (const entry of pack.moves) {
+      mergeCharacterMoves(state, entry);
+    }
+  }
+  if (pack.combos) {
+    for (const entry of pack.combos) {
+      state.combosByVariationId.set(entry.variationId, entry);
+    }
+  }
+  if (pack.movePatches) {
+    for (const patch of pack.movePatches) {
+      applyMovePatch(state, patch);
+    }
+  }
+  if (pack.comboPatches?.replace) {
+    for (const replacement of pack.comboPatches.replace) {
+      state.combosByVariationId.set(replacement.variationId, replacement);
+    }
+  }
+  if (pack.comboPatches?.add) {
+    for (const addition of pack.comboPatches.add) {
+      mergeComboAddPatch(state, addition);
+    }
+  }
+  if (pack.comboPatches?.retireIds) {
+    const retiredIds = new Set(pack.comboPatches.retireIds);
+
+    for (const [variationId, entry] of state.combosByVariationId) {
+      const combos = entry.combos.filter((combo) => !retiredIds.has(combo.id));
+
+      if (combos.length === 0) {
+        state.combosByVariationId.delete(variationId);
+        continue;
+      }
+
+      state.combosByVariationId.set(variationId, {
+        ...entry,
+        combos: combos as unknown as MkxlAuthoredVariationCombos["combos"],
+      });
+    }
+  }
+
+  return state;
+};
+
+const resolvePackState = (pack: MkxlDataPack): MkxlPackState => {
+  const baseState = pack.extends ? resolvePackState(pack.extends) : createEmptyPackState();
+
+  return applyPack(baseState, pack);
+};
+
+const requirePackValue = <T>(packId: string, label: string, value: T | undefined): T => {
+  if (!value) {
+    throw new Error(`${packId} data pack is missing ${label}.`);
+  }
+
+  return value;
+};
+
+const collectMovelist = (entry: MutableAuthoredCharacterMoves): readonly MkxlMove[] => {
+  const seenMoves = new Set<MkxlMove>();
+  const movelist: MkxlMove[] = [];
+
+  const addMove = (move: MkxlMove) => {
+    if (seenMoves.has(move)) {
+      return;
+    }
+
+    seenMoves.add(move);
+    movelist.push(move);
+  };
+
+  for (const move of Object.values(entry.universal)) {
+    addMove(move);
+  }
+  for (const variationMoves of Object.values(entry.variations)) {
+    for (const move of Object.values(variationMoves)) {
+      addMove(move);
+    }
+  }
+
+  return movelist;
+};
+
+const resolveMoveTree = (entry: MutableAuthoredCharacterMoves): MkxlMoveTree =>
+  Object.keys(entry.variations).length === 0
+    ? { universal: entry.universal }
+    : Object.fromEntries(
+        Object.entries(entry.variations).map(([variationKey, variationMoves]) => [
+          variationKey,
+          {
+            ...entry.universal,
+            ...variationMoves,
+          },
+        ]),
+      );
+
+const resolveMovelistFile = (
+  entry: MutableAuthoredCharacterMoves,
+): MkxlResolvedCharacterMovelistFile => ({
+  sourcePath: entry.sourcePath,
+  characterId: entry.characterId,
+  moves: resolveMoveTree(entry),
+  movelist: collectMovelist(entry),
+  sourceIds: entry.sourceIds,
+});
+
+const resolveTransition = (transition: MkxlAuthoredTransition): MkxlTransition => {
+  const movePath = transition.route.map((move) => move.id);
+
+  return {
+    ...transition,
+    route: movePath.map((moveId) => ({ kind: "move", moveId })),
+    movePath,
+    notation: transition.route.map((move) => move.notation),
+  };
+};
+
+const resolveComboFile = (
+  entry: MkxlAuthoredVariationCombos,
+  transitionsById: ReadonlyMap<string, MkxlTransition>,
+): MkxlResolvedVariationComboFile => ({
+  sourcePath: entry.sourcePath,
+  characterId: entry.characterId,
+  variationSlug: entry.variationSlug,
+  variationId: entry.variationId,
+  combos: entry.combos.map((combo) => {
+    const { route, ...seededCombo } = combo;
+    const resolvedRoute = route.map((routeEntry) => {
+      const transition = transitionsById.get(routeEntry.id);
+
+      if (!transition) {
+        throw new Error(`${routeEntry.id} is not declared as a transition.`);
+      }
+
+      return transition;
+    });
+
+    return {
+      ...seededCombo,
+      characterId: entry.characterId,
+      variationId: entry.variationId,
+      route: resolvedRoute.map((transition) => ({
+        kind: "transition",
+        transitionId: transition.id,
+      })),
+      movePath: resolvedRoute.flatMap((transition) => transition.movePath),
+      notation: resolvedRoute.flatMap((transition) => transition.notation),
+    } satisfies MkxlSeededCombo;
+  }) as unknown as MkxlResolvedVariationComboFile["combos"],
+});
+
+export const compileMkxlDataPack = (pack: MkxlDataPack): MkxlResolvedData => {
+  const state = resolvePackState(pack);
+  const sources = requirePackValue(pack.id, "sources", state.sources);
+  const game = requirePackValue(pack.id, "game", state.game);
+  const characters = requirePackValue(pack.id, "roster", state.roster);
+  const variations = requirePackValue(pack.id, "variations", state.variations);
+  const stages = requirePackValue(pack.id, "stages", state.stages);
+  const inputNotationValues = requirePackValue(
+    pack.id,
+    "input notation values",
+    state.inputNotationValues,
+  );
+  const movelistFiles = [...state.movesByCharacterId.values()].map(resolveMovelistFile);
+  const movelists = movelistFiles.map(({ characterId, moves, movelist, sourceIds }) => ({
+    characterId,
+    moves,
+    movelist,
+    sourceIds,
+  }));
+  const transitions = [...state.transitionsById.values()].map(resolveTransition);
+  const transitionsById = new Map(transitions.map((transition) => [transition.id, transition]));
+  const comboFiles = [...state.combosByVariationId.values()].map((entry) =>
+    resolveComboFile(entry, transitionsById),
+  );
+  const seededCombos = comboFiles.flatMap((entry) => entry.combos);
+  const moveTreeRegistry = Object.fromEntries(
+    movelistFiles.map((entry) => [toCamelKey(entry.characterId), entry]),
+  );
+
+  return {
+    packId: pack.id,
+    gameVersion: pack.gameVersion,
+    sources,
+    game,
+    characters,
+    characterIds: characters.map((character) => character.id),
+    variations,
+    variationIds: variations.map((variation) => variation.id),
+    variationsByCharacterId: Object.fromEntries(
+      characters.map((character) => [
+        character.id,
+        variations.filter((variation) => variation.characterId === character.id),
+      ]),
+    ),
+    stages,
+    stageIds: stages.map((stage) => stage.id),
+    interactableIds: stages.flatMap((stage) =>
+      stage.interactables.map((interactable) => interactable.id),
+    ),
+    inputNotationValues,
+    transitions,
+    transitionIds: transitions.map((transition) => transition.id),
+    movelistFiles,
+    moveTreeRegistry,
+    movelists,
+    moves: movelists.flatMap((movelist) => movelist.movelist),
+    moveIds: movelists.flatMap((movelist) => movelist.movelist.map((move) => move.id)),
+    comboFiles,
+    seededCombos,
+    seededComboIds: seededCombos.map((combo) => combo.id),
+  };
+};

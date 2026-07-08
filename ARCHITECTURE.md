@@ -226,6 +226,20 @@ The MKXL scope owns:
 - MKXL catalog selectors, optional stage/interactable filter behavior, and combo summary shaping;
 - MKXL builder graph composition, replay, valid next move calculation, stale detection, and custom combo output.
 
+`mkxl/data` is the concrete reference for the target `mk*/data` data-layer pattern. Game data
+layers separate authored data from resolved public values. Versioned authored packs live under
+`mk*/data/src/packs/<pack-id>` and declare static game facts explicitly with `as const`. Pack files
+own source facts such as ids, labels, source ids, roster order, picker slots, stage/interactable
+fields, move records, and combo route intent. Runtime compilation inside the game data package
+derives indexes and projections such as id lists, variation maps, move trees, flat movelists, combo
+`movePath`, combo `cachedNotation`, and generated graph inputs. Full data entities must not be
+wrapped in broad authoring helpers; helpers may operate only on narrow derived subfields or on
+complete data packs during compilation. Balance patches or new game versions extend a base authored
+pack with explicit add/replace/retire data instead of rewriting the active dataset. Pack-owned
+notation registries are authored source facts: move files reference registry values instead of
+retyping FGC notation strings inline. Future `mk1/data` work follows this pattern unless a
+game-specific exception is documented in this architecture.
+
 ### MK1
 
 ```text
