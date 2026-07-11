@@ -29,6 +29,7 @@ import { mkxlXlFinalFgcNotation, mkxlXlFinalInputNotationValues } from "./packs/
 const authoredPackRootPath = join(process.cwd(), "src/packs/xl-final");
 const comboCharactersRootPath = join(process.cwd(), "src/packs/xl-final/combos/characters");
 const movelistCharactersRootPath = join(process.cwd(), "src/packs/xl-final/moves/characters");
+const generalMoveOwnerId = "general";
 
 const toCamelKey = (value: string) =>
   value.replace(/-([a-z0-9])/gu, (_match, char: string) => char.toUpperCase());
@@ -44,6 +45,20 @@ const toMkxlSlug = (value: string) =>
 const getSourceFileText = (rootPath: string, sourcePath: string) =>
   readFileSync(join(rootPath, sourcePath.replace(/^characters\//u, "")), "utf8");
 
+const splitTrimmedNonEmptyCsv = (value: string): readonly string[] => {
+  const entries: string[] = [];
+
+  for (const entry of value.split(",")) {
+    const trimmedEntry = entry.trim();
+
+    if (trimmedEntry) {
+      entries.push(trimmedEntry);
+    }
+  }
+
+  return entries;
+};
+
 const genericMoveLabels = new Set([
   "Starter string",
   "Launcher",
@@ -51,87 +66,350 @@ const genericMoveLabels = new Set([
   "Enhanced cashout",
 ]);
 
-const isMoveRecord = (value: unknown): value is (typeof mkxlMoves)[number] => {
-  if (typeof value !== "object" || value === null) {
-    return false;
+const createMoveLookup = (): ReadonlyMap<string, (typeof mkxlMoves)[number]> => {
+  const movesById = new Map<string, (typeof mkxlMoves)[number]>();
+
+  for (const move of mkxlMoves) {
+    movesById.set(move.id, move);
   }
 
-  const record = value as Record<string, unknown>;
+  return movesById;
+};
 
-  return typeof record.id === "string" && typeof record.characterId === "string";
+const isUnknownRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+const isMoveRecord = (value: unknown): value is (typeof mkxlMoves)[number] =>
+  isUnknownRecord(value) && typeof value.id === "string" && typeof value.characterId === "string";
+
+const collectMoveTreeMovesInto = (value: unknown, moves: (typeof mkxlMoves)[number][]) => {
+  if (isMoveRecord(value)) {
+    moves.push(value);
+    return;
+  }
+
+  if (!isUnknownRecord(value)) {
+    return;
+  }
+
+  for (const key in value) {
+    if (Object.hasOwn(value, key)) {
+      collectMoveTreeMovesInto(value[key], moves);
+    }
+  }
 };
 
 const collectMoveTreeMoves = (value: unknown): readonly (typeof mkxlMoves)[number][] => {
-  if (isMoveRecord(value)) {
-    return [value];
-  }
+  const moves: (typeof mkxlMoves)[number][] = [];
 
-  if (typeof value !== "object" || value === null) {
-    return [];
-  }
+  collectMoveTreeMovesInto(value, moves);
 
-  return Object.values(value as Record<string, unknown>).flatMap((child) =>
-    collectMoveTreeMoves(child),
-  );
+  return moves;
 };
 
-const collectUniqueMoveTreeMoves = (
+const collectUniqueMoveTreeMovesInto = (
   value: unknown,
-  seenMoves = new Set<(typeof mkxlMoves)[number]>(),
-): readonly (typeof mkxlMoves)[number][] => {
+  seenMoves: Set<(typeof mkxlMoves)[number]>,
+  moves: (typeof mkxlMoves)[number][],
+) => {
   if (isMoveRecord(value)) {
     if (seenMoves.has(value)) {
-      return [];
+      return;
     }
 
     seenMoves.add(value);
-    return [value];
+    moves.push(value);
+    return;
   }
 
-  if (typeof value !== "object" || value === null) {
-    return [];
+  if (!isUnknownRecord(value)) {
+    return;
   }
 
-  return Object.values(value as Record<string, unknown>).flatMap((child) =>
-    collectUniqueMoveTreeMoves(child, seenMoves),
-  );
+  for (const key in value) {
+    if (Object.hasOwn(value, key)) {
+      collectUniqueMoveTreeMovesInto(value[key], seenMoves, moves);
+    }
+  }
+};
+
+const collectUniqueMoveTreeMoves = (value: unknown): readonly (typeof mkxlMoves)[number][] => {
+  const moves: (typeof mkxlMoves)[number][] = [];
+
+  collectUniqueMoveTreeMovesInto(value, new Set(), moves);
+
+  return moves;
+};
+
+const collectCharacterSourcePathsInto = (
+  rootPath: string,
+  directoryPath: string,
+  paths: string[],
+) => {
+  for (const entry of readdirSync(directoryPath, { withFileTypes: true })) {
+    const entryPath = join(directoryPath, entry.name);
+
+    if (entry.isDirectory()) {
+      collectCharacterSourcePathsInto(rootPath, entryPath, paths);
+      continue;
+    }
+
+    if (!entry.isFile() || !entry.name.endsWith(".ts")) {
+      continue;
+    }
+
+    paths.push(`characters/${relative(rootPath, entryPath).split(sep).join("/")}`);
+  }
 };
 
 const collectCharacterSourcePaths = (
   rootPath: string,
   directoryPath = rootPath,
-): readonly string[] =>
-  readdirSync(directoryPath, { withFileTypes: true }).flatMap((entry) => {
+): readonly string[] => {
+  const paths: string[] = [];
+
+  collectCharacterSourcePathsInto(rootPath, directoryPath, paths);
+
+  return paths;
+};
+
+const collectTypeScriptSourcePathsInto = (
+  rootPath: string,
+  directoryPath: string,
+  paths: string[],
+) => {
+  for (const entry of readdirSync(directoryPath, { withFileTypes: true })) {
     const entryPath = join(directoryPath, entry.name);
 
     if (entry.isDirectory()) {
-      return collectCharacterSourcePaths(rootPath, entryPath);
+      collectTypeScriptSourcePathsInto(rootPath, entryPath, paths);
+      continue;
     }
 
     if (!entry.isFile() || !entry.name.endsWith(".ts")) {
-      return [];
+      continue;
     }
 
-    return [`characters/${relative(rootPath, entryPath).split(sep).join("/")}`];
-  });
+    paths.push(relative(rootPath, entryPath).split(sep).join("/"));
+  }
+};
 
 const collectTypeScriptSourcePaths = (
   rootPath: string,
   directoryPath = rootPath,
-): readonly string[] =>
-  readdirSync(directoryPath, { withFileTypes: true }).flatMap((entry) => {
-    const entryPath = join(directoryPath, entry.name);
+): readonly string[] => {
+  const paths: string[] = [];
 
-    if (entry.isDirectory()) {
-      return collectTypeScriptSourcePaths(rootPath, entryPath);
+  collectTypeScriptSourcePathsInto(rootPath, directoryPath, paths);
+
+  return paths;
+};
+
+const createComboRegistrySnapshot = () => {
+  const expectedVariationIds = new Set<string>();
+  const registryVariationIds: string[] = [];
+  const registrySourcePaths: string[] = [];
+  const sourcePathsOnDisk = collectCharacterSourcePaths(comboCharactersRootPath);
+
+  for (const variation of mkxlVariations) {
+    expectedVariationIds.add(variation.id);
+  }
+  for (const entry of mkxlComboFileRegistry) {
+    registryVariationIds.push(entry.variationId);
+    registrySourcePaths.push(entry.sourcePath);
+  }
+
+  return {
+    expectedVariationIds,
+    registryVariationIds,
+    registrySourcePaths,
+    sourcePathsOnDisk,
+  };
+};
+
+const parseComboSourceShape = (
+  sourceText: string,
+  entry: (typeof mkxlComboFileRegistry)[number],
+) => {
+  const routeBlocks = [...sourceText.matchAll(/route:\s*\[(?<body>[^\]]*)\]/gu)];
+  const comboObjectDeclarations = [
+    ...sourceText.matchAll(
+      /const (?<name>[a-z][A-Za-z0-9]*Combo) = \{[\s\S]*?\n\} as const satisfies MkxlAuthoredSeededCombo;/gu,
+    ),
+  ];
+  const comboObjectNames = new Set<string>();
+  const expectedComboObjectNames = new Set<string>();
+  const combosBlock = /combos:\s*\[(?<body>[\s\S]*?)\]/u.exec(sourceText);
+  const comboRefs = splitTrimmedNonEmptyCsv(combosBlock?.groups?.body ?? "");
+
+  for (const declaration of comboObjectDeclarations) {
+    comboObjectNames.add(declaration.groups?.name ?? "");
+  }
+  for (const combo of entry.combos) {
+    expectedComboObjectNames.add(`${toCamelKey(combo.id)}Combo`);
+  }
+
+  return {
+    routeBlocks,
+    comboObjectDeclarations,
+    comboObjectNames,
+    expectedComboObjectNames,
+    combosBlock,
+    comboRefs,
+  };
+};
+
+const createMovelistAlignmentSnapshot = () => {
+  const expectedMoveOwnerIds = new Set<string>([generalMoveOwnerId]);
+  const registryCharacterIds: string[] = [];
+  const registrySourcePaths: string[] = [];
+  const sourcePathsOnDisk = collectCharacterSourcePaths(movelistCharactersRootPath);
+  const moveTreeRegistryEntries = Object.entries(mkxlMoveTreeRegistry);
+  const moveNotationValues = new Set(mkxlMoveNotationValues);
+  const moveTreeByCharacterId = new Map<string, unknown>();
+  const movelistByCharacterId = new Map<string, (typeof mkxlMovelistFileRegistry)[number]>();
+  const moveTreeCharacterIds = new Set<string>();
+  const moveTreeRegistryKeys = new Set<string>();
+  const expectedMoveOwnerKeys = new Set<string>();
+  const movelistCharacterIds = new Set<string>();
+  const aggregateMoveIdsByCharacterId = new Map<string, Set<string>>();
+  const variationsByCharacterId = new Map<string, (typeof mkxlVariations)[number][]>();
+
+  for (const character of mkxlCharacters) {
+    expectedMoveOwnerIds.add(character.id);
+    expectedMoveOwnerKeys.add(toCamelKey(character.id));
+  }
+  expectedMoveOwnerKeys.add(toCamelKey(generalMoveOwnerId));
+  for (const entry of mkxlMovelistFileRegistry) {
+    registryCharacterIds.push(entry.characterId);
+    registrySourcePaths.push(entry.sourcePath);
+    movelistByCharacterId.set(entry.characterId, entry);
+  }
+  for (const [registryKey, entry] of moveTreeRegistryEntries) {
+    moveTreeCharacterIds.add(entry.characterId);
+    moveTreeRegistryKeys.add(registryKey);
+    moveTreeByCharacterId.set(entry.characterId, entry.moves);
+  }
+  for (const movelist of mkxlMovelists) {
+    let aggregateMoveIds = aggregateMoveIdsByCharacterId.get(movelist.characterId);
+
+    if (!aggregateMoveIds) {
+      aggregateMoveIds = new Set();
+      aggregateMoveIdsByCharacterId.set(movelist.characterId, aggregateMoveIds);
     }
 
-    if (!entry.isFile() || !entry.name.endsWith(".ts")) {
-      return [];
+    movelistCharacterIds.add(movelist.characterId);
+    for (const move of movelist.movelist) {
+      aggregateMoveIds.add(move.id);
+    }
+  }
+  for (const variation of mkxlVariations) {
+    let characterVariations = variationsByCharacterId.get(variation.characterId);
+
+    if (!characterVariations) {
+      characterVariations = [];
+      variationsByCharacterId.set(variation.characterId, characterVariations);
     }
 
-    return [relative(rootPath, entryPath).split(sep).join("/")];
-  });
+    characterVariations.push(variation);
+  }
+
+  return {
+    expectedMoveOwnerIds,
+    registryCharacterIds,
+    registrySourcePaths,
+    sourcePathsOnDisk,
+    moveTreeRegistryEntries,
+    moveNotationValues,
+    moveTreeByCharacterId,
+    movelistByCharacterId,
+    moveTreeCharacterIds,
+    moveTreeRegistryKeys,
+    expectedMoveOwnerKeys,
+    movelistCharacterIds,
+    aggregateMoveIdsByCharacterId,
+    variationsByCharacterId,
+  };
+};
+
+const expectMoveTreeAlignment = (
+  entry: (typeof mkxlMovelistFileRegistry)[number],
+  sourceText: string,
+  snapshot: ReturnType<typeof createMovelistAlignmentSnapshot>,
+) => {
+  const characterMoveTree = snapshot.moveTreeByCharacterId.get(entry.characterId) as
+    | Record<string, unknown>
+    | undefined;
+  const aggregateMoveRefs = new Set(entry.movelist);
+  const treeMoves = collectMoveTreeMoves(characterMoveTree);
+  const uniqueTreeMoves = collectUniqueMoveTreeMoves(characterMoveTree);
+  const treeMoveIds = new Set<string>();
+  const entryMovelistIds = new Set<string>();
+
+  for (const move of treeMoves) {
+    treeMoveIds.add(move.id);
+  }
+  for (const move of entry.movelist) {
+    entryMovelistIds.add(move.id);
+  }
+
+  expect(entry.movelist).toEqual(uniqueTreeMoves);
+  expect(treeMoveIds).toEqual(entryMovelistIds);
+
+  for (const move of treeMoves) {
+    expect(aggregateMoveRefs.has(move)).toBe(true);
+  }
+
+  for (const variation of snapshot.variationsByCharacterId.get(entry.characterId) ?? []) {
+    const variationSlug = variation.id.split(":")[1] ?? "";
+    const variationKey = toCamelKey(variationSlug);
+
+    expect(sourceText).toContain(`${variationKey}: {`);
+    expect(characterMoveTree?.[variationKey]).toBeDefined();
+  }
+};
+
+const expectAuthoredMoveNamingPolicy = (
+  entry: (typeof mkxlMovelistFileRegistry)[number],
+  move: (typeof mkxlMoves)[number],
+  aggregateMoveIds: ReadonlySet<string>,
+  moveNotationValues: ReadonlySet<string>,
+  isGeneralMoveOwner: boolean,
+) => {
+  const labelEn = move.label.EN;
+  const labelSlug = labelEn ? toMkxlSlug(labelEn) : "";
+
+  expect(move.characterId).toBe(entry.characterId);
+  expect(aggregateMoveIds.has(move.id)).toBe(true);
+  expect(Array.isArray(move.notation)).toBe(true);
+  for (const notationValue of move.notation) {
+    expect(moveNotationValues.has(notationValue)).toBe(true);
+  }
+  expect(labelEn).toBeDefined();
+  if (!isGeneralMoveOwner) {
+    expect(genericMoveLabels.has(labelEn ?? "")).toBe(false);
+    expect(labelEn ?? "").not.toMatch(/\bsignature\b/iu);
+  }
+  if (move.sourceIds.includes("community-combo-source")) {
+    expect(move.tags).toContain("route-source");
+  }
+
+  if (move.availability.kind === "variation") {
+    const variationId = move.availability.variationIds[0];
+    const variationSlug = variationId?.split(":")[1];
+
+    expect(move.id).toBe(`${entry.characterId}:${variationSlug}:${labelSlug}`);
+    for (const variationId of move.availability.variationIds) {
+      expect(variationId.split(":")[0]).toBe(entry.characterId);
+    }
+  } else if (move.availability.kind === "universal") {
+    const expectedId = move.tags.includes("route-source")
+      ? `${entry.characterId}:universal:${labelSlug}`
+      : `${entry.characterId}:${labelSlug}`;
+
+    expect(move.id).toBe(expectedId);
+  }
+};
 
 describe("MKXL seeded data", () => {
   it("passes source, coverage, and reference validation", () => {
@@ -159,7 +437,11 @@ describe("MKXL seeded data", () => {
 
   it("keeps the xl-final character id registry explicit and active", () => {
     const characterIdValues = Object.values(mkxlXlFinalCharacterIds);
-    const rosterCharacterIds = mkxlCharacters.map((character) => character.id);
+    const rosterCharacterIds: string[] = [];
+
+    for (const character of mkxlCharacters) {
+      rosterCharacterIds.push(character.id);
+    }
 
     expect(new Set(characterIdValues).size).toBe(characterIdValues.length);
     expect(new Set(characterIdValues)).toEqual(new Set(rosterCharacterIds));
@@ -231,7 +513,7 @@ describe("MKXL seeded data", () => {
   });
 
   it("keeps general moves reusable through combo routes without character-owned clones", () => {
-    const movesById = new Map(mkxlMoves.map((move) => [move.id, move]));
+    const movesById = createMoveLookup();
     const generalMovelist = mkxlMovelists.find((movelist) => movelist.characterId === "general");
     const runMove = movesById.get("general:run");
     const combo = mkxlSeededCombos.find(
@@ -260,7 +542,11 @@ describe("MKXL seeded data", () => {
   });
 
   it("covers every selectable variation with a seeded combo", () => {
-    const comboVariationIds = new Set(mkxlSeededCombos.map((combo) => combo.variationId));
+    const comboVariationIds = new Set<string>();
+
+    for (const combo of mkxlSeededCombos) {
+      comboVariationIds.add(combo.variationId);
+    }
 
     expect(mkxlSeededCombos).toHaveLength(362);
     expect(comboVariationIds.size).toBe(mkxlVariations.length);
@@ -270,15 +556,12 @@ describe("MKXL seeded data", () => {
   });
 
   it("keeps seeded combo files aligned with the variation registry", () => {
-    const expectedVariationIds = new Set(mkxlVariations.map((variation) => variation.id));
-    const registryVariationIds = mkxlComboFileRegistry.map((entry) => entry.variationId);
-    const registrySourcePaths = mkxlComboFileRegistry.map((entry) => entry.sourcePath);
-    const sourcePathsOnDisk = collectCharacterSourcePaths(comboCharactersRootPath);
+    const snapshot = createComboRegistrySnapshot();
 
     expect(mkxlComboFileRegistry).toHaveLength(mkxlVariations.length);
-    expect(new Set(registryVariationIds)).toEqual(expectedVariationIds);
-    expect(new Set(registrySourcePaths).size).toBe(registrySourcePaths.length);
-    expect(new Set(sourcePathsOnDisk)).toEqual(new Set(registrySourcePaths));
+    expect(new Set(snapshot.registryVariationIds)).toEqual(snapshot.expectedVariationIds);
+    expect(new Set(snapshot.registrySourcePaths).size).toBe(snapshot.registrySourcePaths.length);
+    expect(new Set(snapshot.sourcePathsOnDisk)).toEqual(new Set(snapshot.registrySourcePaths));
 
     for (const entry of mkxlComboFileRegistry) {
       const [root, characterId, fileName] = entry.sourcePath.split("/");
@@ -304,23 +587,7 @@ describe("MKXL seeded data", () => {
         'import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";';
       const expectedMoveImport =
         'import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";';
-      const routeBlocks = [...sourceText.matchAll(/route:\s*\[(?<body>[^\]]*)\]/gu)];
-      const comboObjectDeclarations = [
-        ...sourceText.matchAll(
-          /const (?<name>[a-z][A-Za-z0-9]*Combo) = \{[\s\S]*?\n\} as const satisfies MkxlAuthoredSeededCombo;/gu,
-        ),
-      ];
-      const comboObjectNames = new Set(
-        comboObjectDeclarations.map((declaration) => declaration.groups?.name ?? ""),
-      );
-      const expectedComboObjectNames = new Set(
-        entry.combos.map((combo) => `${toCamelKey(combo.id)}Combo`),
-      );
-      const combosBlock = /combos:\s*\[(?<body>[\s\S]*?)\]/u.exec(sourceText);
-      const comboRefs = (combosBlock?.groups?.body ?? "")
-        .split(",")
-        .map((entry) => entry.trim())
-        .filter(Boolean);
+      const sourceShape = parseComboSourceShape(sourceText, entry);
       const moveReferencePattern = /^moves(?:\.[a-z][A-Za-z0-9]*){3},?$/u;
 
       expect(sourceText).toContain(expectedCharacterIdsImport);
@@ -336,22 +603,19 @@ describe("MKXL seeded data", () => {
       expect(sourceText).toContain("characterId,");
       expect(sourceText).toContain("variationSlug,");
       expect(sourceText).toContain("variationId,");
-      expect(comboObjectDeclarations).toHaveLength(entry.combos.length);
-      expect(comboObjectNames).toEqual(expectedComboObjectNames);
-      expect(combosBlock).not.toBeNull();
-      expect(combosBlock?.groups?.body ?? "").not.toMatch(/["'{}]/u);
-      expect(comboRefs).toHaveLength(entry.combos.length);
-      for (const comboRef of comboRefs) {
+      expect(sourceShape.comboObjectDeclarations).toHaveLength(entry.combos.length);
+      expect(sourceShape.comboObjectNames).toEqual(sourceShape.expectedComboObjectNames);
+      expect(sourceShape.combosBlock).not.toBeNull();
+      expect(sourceShape.combosBlock?.groups?.body ?? "").not.toMatch(/["'{}]/u);
+      expect(sourceShape.comboRefs).toHaveLength(entry.combos.length);
+      for (const comboRef of sourceShape.comboRefs) {
         expect(comboRef).toMatch(/^[a-z][A-Za-z0-9]*Combo$/u);
-        expect(comboObjectNames.has(comboRef)).toBe(true);
+        expect(sourceShape.comboObjectNames.has(comboRef)).toBe(true);
       }
-      expect(routeBlocks).toHaveLength(entry.combos.length);
-      for (const routeBlock of routeBlocks) {
+      expect(sourceShape.routeBlocks).toHaveLength(entry.combos.length);
+      for (const routeBlock of sourceShape.routeBlocks) {
         const routeBody = routeBlock.groups?.body ?? "";
-        const routeEntries = routeBody
-          .split(",")
-          .map((entry) => entry.trim())
-          .filter(Boolean);
+        const routeEntries = splitTrimmedNonEmptyCsv(routeBody);
 
         expect(routeEntries.length).toBeGreaterThan(0);
         expect(routeBody).not.toMatch(/\bid\s*:/u);
@@ -390,10 +654,7 @@ describe("MKXL seeded data", () => {
       expect(sourceText).not.toMatch(/notation:\s*\[\s*["']/u);
       expect(notationBlocks.length).toBeGreaterThan(0);
       for (const notationBlock of notationBlocks) {
-        const notationRefs = (notationBlock.groups?.body ?? "")
-          .split(",")
-          .map((entry) => entry.trim())
-          .filter(Boolean);
+        const notationRefs = splitTrimmedNonEmptyCsv(notationBlock.groups?.body ?? "");
 
         expect(notationRefs.length).toBeGreaterThan(0);
         for (const notationRef of notationRefs) {
@@ -407,39 +668,20 @@ describe("MKXL seeded data", () => {
   });
 
   it("keeps movelist files aligned with the roster registry", () => {
-    const generalMoveOwnerId = "general";
-    const expectedRosterCharacterIds = new Set(mkxlCharacters.map((character) => character.id));
-    const expectedMoveOwnerIds = new Set([...expectedRosterCharacterIds, generalMoveOwnerId]);
-    const registryCharacterIds = mkxlMovelistFileRegistry.map((entry) => entry.characterId);
-    const registrySourcePaths = mkxlMovelistFileRegistry.map((entry) => entry.sourcePath);
-    const sourcePathsOnDisk = collectCharacterSourcePaths(movelistCharactersRootPath);
-    const moveTreeRegistryEntries = Object.entries(mkxlMoveTreeRegistry);
-    const moveNotationValues = new Set(mkxlMoveNotationValues);
-    const moveTreeByCharacterId = new Map(
-      moveTreeRegistryEntries.map(([_registryKey, entry]) => [entry.characterId, entry.moves]),
-    );
-    const movelistByCharacterId = new Map(
-      mkxlMovelistFileRegistry.map((entry) => [entry.characterId, entry]),
-    );
+    const snapshot = createMovelistAlignmentSnapshot();
 
-    expect(mkxlMovelistFileRegistry).toHaveLength(expectedMoveOwnerIds.size);
-    expect(moveTreeRegistryEntries).toHaveLength(expectedMoveOwnerIds.size);
-    expect(new Set(registryCharacterIds)).toEqual(expectedMoveOwnerIds);
-    expect(
-      new Set(moveTreeRegistryEntries.map(([_registryKey, entry]) => entry.characterId)),
-    ).toEqual(expectedMoveOwnerIds);
-    expect(new Set(moveTreeRegistryEntries.map(([registryKey]) => registryKey))).toEqual(
-      new Set([...expectedMoveOwnerIds].map((characterId) => toCamelKey(characterId))),
-    );
-    for (const [registryKey, entry] of moveTreeRegistryEntries) {
+    expect(mkxlMovelistFileRegistry).toHaveLength(snapshot.expectedMoveOwnerIds.size);
+    expect(snapshot.moveTreeRegistryEntries).toHaveLength(snapshot.expectedMoveOwnerIds.size);
+    expect(new Set(snapshot.registryCharacterIds)).toEqual(snapshot.expectedMoveOwnerIds);
+    expect(snapshot.moveTreeCharacterIds).toEqual(snapshot.expectedMoveOwnerIds);
+    expect(snapshot.moveTreeRegistryKeys).toEqual(snapshot.expectedMoveOwnerKeys);
+    for (const [registryKey, entry] of snapshot.moveTreeRegistryEntries) {
       expect(registryKey).toBe(toCamelKey(entry.characterId));
-      expect(movelistByCharacterId.get(entry.characterId)).toBe(entry);
+      expect(snapshot.movelistByCharacterId.get(entry.characterId)).toBe(entry);
     }
-    expect(new Set(registrySourcePaths).size).toBe(registrySourcePaths.length);
-    expect(new Set(sourcePathsOnDisk)).toEqual(new Set(registrySourcePaths));
-    expect(new Set(mkxlMovelists.map((movelist) => movelist.characterId))).toEqual(
-      expectedMoveOwnerIds,
-    );
+    expect(new Set(snapshot.registrySourcePaths).size).toBe(snapshot.registrySourcePaths.length);
+    expect(new Set(snapshot.sourcePathsOnDisk)).toEqual(new Set(snapshot.registrySourcePaths));
+    expect(snapshot.movelistCharacterIds).toEqual(snapshot.expectedMoveOwnerIds);
 
     for (const movelist of mkxlMovelists) {
       expect("sourcePath" in movelist).toBe(false);
@@ -450,17 +692,8 @@ describe("MKXL seeded data", () => {
       const sourceText = getSourceFileText(movelistCharactersRootPath, entry.sourcePath);
       const characterKey = toCamelKey(entry.characterId);
       const isGeneralMoveOwner = entry.characterId === generalMoveOwnerId;
-      const characterMoveTree = moveTreeByCharacterId.get(entry.characterId) as
-        | Record<string, unknown>
-        | undefined;
-      const aggregateMoveRefs = new Set(entry.movelist);
-      const aggregateMoveIds = new Set(
-        mkxlMovelists
-          .filter((movelist) => movelist.characterId === entry.characterId)
-          .flatMap((movelist) => movelist.movelist.map((move) => move.id)),
-      );
-      const treeMoves = collectMoveTreeMoves(characterMoveTree);
-      const uniqueTreeMoves = collectUniqueMoveTreeMoves(characterMoveTree);
+      const aggregateMoveIds =
+        snapshot.aggregateMoveIdsByCharacterId.get(entry.characterId) ?? new Set();
 
       expect(root).toBe("characters");
       expect(extra).toBeUndefined();
@@ -483,65 +716,22 @@ describe("MKXL seeded data", () => {
       expect(sourceText).not.toMatch(/\bcommunity[A-Z0-9][A-Za-z0-9]*\s*:/u);
       expect(sourceText).not.toMatch(/\b(toReadableEn|toMkxlSlug)\s*\(/u);
       expect(sourceText).not.toMatch(/\.(map|flatMap)\s*\(/u);
-      expect(entry.movelist).toEqual(uniqueTreeMoves);
-      expect(new Set(treeMoves.map((move) => move.id))).toEqual(
-        new Set(entry.movelist.map((move) => move.id)),
-      );
-
-      for (const move of treeMoves) {
-        expect(aggregateMoveRefs.has(move)).toBe(true);
-      }
-
-      for (const variation of mkxlVariations.filter(
-        (candidate) => candidate.characterId === entry.characterId,
-      )) {
-        const variationSlug = variation.id.split(":")[1] ?? "";
-        const variationKey = toCamelKey(variationSlug);
-
-        expect(sourceText).toContain(`${variationKey}: {`);
-        expect(characterMoveTree?.[variationKey]).toBeDefined();
-      }
+      expectMoveTreeAlignment(entry, sourceText, snapshot);
 
       for (const move of entry.movelist) {
-        const labelEn = move.label.EN;
-        const labelSlug = labelEn ? toMkxlSlug(labelEn) : "";
-
-        expect(move.characterId).toBe(entry.characterId);
-        expect(aggregateMoveIds.has(move.id)).toBe(true);
-        expect(Array.isArray(move.notation)).toBe(true);
-        for (const notationValue of move.notation) {
-          expect(moveNotationValues.has(notationValue)).toBe(true);
-        }
-        expect(labelEn).toBeDefined();
-        if (!isGeneralMoveOwner) {
-          expect(genericMoveLabels.has(labelEn ?? "")).toBe(false);
-          expect(labelEn ?? "").not.toMatch(/\bsignature\b/iu);
-        }
-        if (move.sourceIds.includes("community-combo-source")) {
-          expect(move.tags).toContain("route-source");
-        }
-
-        if (move.availability.kind === "variation") {
-          const variationId = move.availability.variationIds[0];
-          const variationSlug = variationId?.split(":")[1];
-
-          expect(move.id).toBe(`${entry.characterId}:${variationSlug}:${labelSlug}`);
-          for (const variationId of move.availability.variationIds) {
-            expect(variationId.split(":")[0]).toBe(entry.characterId);
-          }
-        } else if (move.availability.kind === "universal") {
-          const expectedId = move.tags.includes("route-source")
-            ? `${entry.characterId}:universal:${labelSlug}`
-            : `${entry.characterId}:${labelSlug}`;
-
-          expect(move.id).toBe(expectedId);
-        }
+        expectAuthoredMoveNamingPolicy(
+          entry,
+          move,
+          aggregateMoveIds,
+          snapshot.moveNotationValues,
+          isGeneralMoveOwner,
+        );
       }
     }
   });
 
   it("keeps combo routes built from moves", () => {
-    const movesById = new Map(mkxlMoves.map((move) => [move.id, move]));
+    const movesById = createMoveLookup();
     const moveNotationValues = new Set(mkxlMoveNotationValues);
 
     for (const combo of mkxlSeededCombos) {
@@ -664,17 +854,18 @@ describe("MKXL seeded data", () => {
   });
 
   it("keeps stage-specific combos inside one stage registry", () => {
-    const stagesById = new Map(mkxlStages.map((stage) => [stage.id, stage]));
+    const stagesById = new Map<string, (typeof mkxlStages)[number]>();
     const interactableIds = new Set(mkxlInteractableIds);
-    const stageSpecificCombos = mkxlSeededCombos.filter(
-      (combo) => combo.stageContext.kind === "stageSpecific",
-    );
+    let stageSpecificComboCount = 0;
 
-    expect(stageSpecificCombos.length).toBeGreaterThan(0);
-    for (const combo of stageSpecificCombos) {
+    for (const stage of mkxlStages) {
+      stagesById.set(stage.id, stage);
+    }
+    for (const combo of mkxlSeededCombos) {
       if (combo.stageContext.kind !== "stageSpecific") {
         continue;
       }
+      stageSpecificComboCount += 1;
       const stage = stagesById.get(combo.stageContext.stageId);
 
       expect(stage).toBeDefined();
@@ -685,10 +876,16 @@ describe("MKXL seeded data", () => {
         ).toBe(true);
       }
     }
+
+    expect(stageSpecificComboCount).toBeGreaterThan(0);
   });
 
   it("keeps MKXL roster complete without story or mobile-only NPCs", () => {
-    const characterIds = new Set(mkxlCharacters.map((character) => character.id));
+    const characterIds = new Set<string>();
+
+    for (const character of mkxlCharacters) {
+      characterIds.add(character.id);
+    }
 
     expect(characterIds.has("baraka")).toBe(false);
     expect(characterIds.has("rain")).toBe(false);

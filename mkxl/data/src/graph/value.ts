@@ -5,7 +5,11 @@ import { mkxlStages } from "../stages/value";
 import type { MkxlGraphEdge, MkxlStageGraphFragment, MkxlVariationGraph } from "./type";
 
 const stageGraphSourceIds = ["in-game-practice-mode"] as const;
-const moveById = new Map(mkxlMoves.map((move) => [move.id, move]));
+const moveById = new Map<string, (typeof mkxlMoves)[number]>();
+
+for (const move of mkxlMoves) {
+  moveById.set(move.id, move);
+}
 
 const createRouteEdge = (
   comboId: string,
@@ -24,67 +28,121 @@ const createRouteEdge = (
   sourceIds,
 });
 
-export const mkxlVariationGraphs = mkxlSeededCombos.map((combo) => {
+const createVariationGraph = (combo: (typeof mkxlSeededCombos)[number]): MkxlVariationGraph => {
   const startNodeId = `${combo.variationId}:graph-start`;
-  const pathNodeIds = combo.route.map((_step, index) => `${combo.id}:step-${index + 1}:node`);
   const endNodeId = `${combo.variationId}:graph-end`;
-  const orderedNodeIds = [startNodeId, ...pathNodeIds, endNodeId];
+  const nodes: MkxlVariationGraph["nodes"][number][] = [
+    { id: startNodeId, label: toReadableEn("Start"), kind: "start" },
+  ];
+  const edges: MkxlVariationGraph["edges"][number][] = [];
+  let previousNodeId = startNodeId;
+
+  for (const [index, step] of combo.route.entries()) {
+    const nodeId = `${combo.id}:step-${index + 1}:node`;
+    const routeEntry = moveById.get(step.moveId);
+
+    nodes.push({
+      id: nodeId,
+      label: routeEntry?.label ?? toReadableEn(step.moveId),
+      kind: "move",
+    });
+    edges.push(createRouteEdge(combo.id, previousNodeId, nodeId, step, index, combo.sourceIds));
+    previousNodeId = nodeId;
+  }
+
+  nodes.push({ id: endNodeId, label: toReadableEn("End"), kind: "end" });
 
   return {
     id: `graph:${combo.id}`,
     characterId: combo.characterId,
     variationId: combo.variationId,
     startNodeId,
-    nodes: [
-      { id: startNodeId, label: toReadableEn("Start"), kind: "start" },
-      ...combo.route.map((step, index) => {
-        const nodeId = pathNodeIds[index] ?? `${combo.id}:step-${index + 1}:node`;
-        const routeEntry = moveById.get(step.moveId);
-
-        return {
-          id: nodeId,
-          label: routeEntry?.label ?? toReadableEn(step.moveId),
-          kind: "move" as const,
-        };
-      }),
-      { id: endNodeId, label: toReadableEn("End"), kind: "end" },
-    ],
-    edges: combo.route.map((step, index) =>
-      createRouteEdge(
-        combo.id,
-        orderedNodeIds[index] ?? startNodeId,
-        orderedNodeIds[index + 1] ?? endNodeId,
-        step,
-        index,
-        combo.sourceIds,
-      ),
-    ),
+    nodes,
+    edges,
     sourceIds: combo.sourceIds,
-  } satisfies MkxlVariationGraph;
-}) as readonly MkxlVariationGraph[];
+  };
+};
 
-export const mkxlStageGraphFragments = mkxlStages.map((stage) => ({
-  id: `stage-graph:${stage.id}`,
-  stageId: stage.id,
-  nodes: [
-    { id: `${stage.id}:stage-start`, label: toReadableEn("Stage start"), kind: "start" },
-    ...stage.interactables.map((interactable) => ({
-      id: `${interactable.id}:node`,
+const createStageGraphFragment = (stage: (typeof mkxlStages)[number]): MkxlStageGraphFragment => {
+  const startNodeId = `${stage.id}:stage-start`;
+  const nodes: MkxlStageGraphFragment["nodes"][number][] = [
+    { id: startNodeId, label: toReadableEn("Stage start"), kind: "start" },
+  ];
+  const edges: MkxlStageGraphFragment["edges"][number][] = [];
+
+  for (const interactable of stage.interactables) {
+    const nodeId = `${interactable.id}:node`;
+
+    nodes.push({
+      id: nodeId,
       label: interactable.label,
-      kind: "stageInteraction" as const,
-    })),
-  ],
-  edges: stage.interactables.map((interactable) => ({
-    id: `${interactable.id}:edge`,
-    fromNodeId: `${stage.id}:stage-start`,
-    toNodeId: `${interactable.id}:node`,
-    interactableId: interactable.id,
-    tags: interactable.tags,
+      kind: "stageInteraction",
+    });
+    edges.push({
+      id: `${interactable.id}:edge`,
+      fromNodeId: startNodeId,
+      toNodeId: nodeId,
+      interactableId: interactable.id,
+      tags: interactable.tags,
+      sourceIds: stageGraphSourceIds,
+    });
+  }
+
+  return {
+    id: `stage-graph:${stage.id}`,
+    stageId: stage.id,
+    nodes,
+    edges,
     sourceIds: stageGraphSourceIds,
-  })),
-  sourceIds: stageGraphSourceIds,
-})) as readonly MkxlStageGraphFragment[];
+  };
+};
 
-export const mkxlVariationGraphIds = mkxlVariationGraphs.map((graph) => graph.id);
+const collectVariationGraphIds = (graphs: readonly MkxlVariationGraph[]): readonly string[] => {
+  const graphIds: string[] = [];
 
-export const mkxlStageGraphFragmentIds = mkxlStageGraphFragments.map((fragment) => fragment.id);
+  for (const graph of graphs) {
+    graphIds.push(graph.id);
+  }
+
+  return graphIds;
+};
+
+const collectStageGraphFragmentIds = (
+  fragments: readonly MkxlStageGraphFragment[],
+): readonly string[] => {
+  const fragmentIds: string[] = [];
+
+  for (const fragment of fragments) {
+    fragmentIds.push(fragment.id);
+  }
+
+  return fragmentIds;
+};
+
+const createVariationGraphs = (): readonly MkxlVariationGraph[] => {
+  const graphs: MkxlVariationGraph[] = [];
+
+  for (const combo of mkxlSeededCombos) {
+    graphs.push(createVariationGraph(combo));
+  }
+
+  return graphs;
+};
+
+const createStageGraphFragments = (): readonly MkxlStageGraphFragment[] => {
+  const fragments: MkxlStageGraphFragment[] = [];
+
+  for (const stage of mkxlStages) {
+    fragments.push(createStageGraphFragment(stage));
+  }
+
+  return fragments;
+};
+
+export const mkxlVariationGraphs = createVariationGraphs();
+
+export const mkxlStageGraphFragments = createStageGraphFragments();
+
+export const mkxlVariationGraphIds = collectVariationGraphIds(mkxlVariationGraphs);
+
+export const mkxlStageGraphFragmentIds = collectStageGraphFragmentIds(mkxlStageGraphFragments);

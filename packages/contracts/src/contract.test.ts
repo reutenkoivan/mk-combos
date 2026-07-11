@@ -59,11 +59,13 @@ import {
 } from "@mk-combos/contracts/test/unit/react";
 import { describe, expect, it } from "vitest";
 
-const acceptsE2eTypes = (_contract: {
-  config: PlaywrightTestConfig;
-  context: APIRequestContext;
-  page: Page;
-}) => true;
+const acceptsE2eTypes = <
+  _Contract extends {
+    config: PlaywrightTestConfig;
+    context: APIRequestContext;
+    page: Page;
+  },
+>() => true;
 
 describe("@mk-combos/contracts", () => {
   it("keeps the contract entrypoint limited to contract metadata", () => {
@@ -193,13 +195,7 @@ describe("@mk-combos/contracts", () => {
     expect(typeof playwrightRequest.newContext).toBe("function");
     expect(typeof playwrightTest).toBe("function");
     expect(createE2eSlug("Run 01", "Spec")).toBe("spec-run-01");
-    expect(
-      acceptsE2eTypes({
-        config: {},
-        context: undefined as unknown as APIRequestContext,
-        page: undefined as unknown as Page,
-      }),
-    ).toBe(true);
+    expect(acceptsE2eTypes()).toBe(true);
 
     expect(typeof act).toBe("function");
     expect(typeof cleanup).toBe("function");

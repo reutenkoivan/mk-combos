@@ -17,6 +17,7 @@ import { describe, expect, it } from "vitest";
 const createButtons = (pressedIndexes: readonly number[] = []) =>
   Array.from({ length: 17 }, (_, index) => ({
     pressed: pressedIndexes.includes(index),
+    touched: false,
     value: pressedIndexes.includes(index) ? 1 : 0,
   }));
 
@@ -38,6 +39,25 @@ const createGamepad = (
   buttons: createButtons(input.pressedButtons),
   axes: input.axes ?? [0, 0, 0, 0],
 });
+
+const processActiveGamepadIndex = (input: {
+  bridge?: ReturnType<typeof createControllerBridge>;
+  timestamp?: number;
+  activeGamepadIndex?: number;
+  gamepads: readonly ControllerGamepadSnapshot[];
+}) => {
+  const bridge = input.bridge ?? createControllerBridge();
+  const pollInput: Parameters<ReturnType<typeof createControllerBridge>["process"]>[0] = {
+    timestamp: input.timestamp ?? 0,
+    gamepads: input.gamepads,
+  };
+
+  if (input.activeGamepadIndex !== undefined) {
+    pollInput.activeGamepadIndex = input.activeGamepadIndex;
+  }
+
+  return bridge.process(pollInput).state.activeGamepadIndex;
+};
 
 describe("@mk-combos/controller-bridge runtime", () => {
   it("detects DualSense, Xbox, and standard profiles", () => {
@@ -61,7 +81,7 @@ describe("@mk-combos/controller-bridge runtime", () => {
       timestamp: 7,
       buttons: createButtons([1]),
       axes: [0, 0, 0, 0],
-    } as unknown as Gamepad);
+    });
     const pressed = normalizeGamepadSnapshot(
       createGamepad({
         pressedButtons: [0],
@@ -92,6 +112,61 @@ describe("@mk-combos/controller-bridge runtime", () => {
     );
     expect(softAxis.pressedControls).toContain("leftStickRight");
     expect(softAxisWithoutHold.pressedControls).not.toContain("leftStickRight");
+  });
+
+  it("preserves pressed control order while normalizing in one pass", () => {
+    const pressed = normalizeGamepadSnapshot(
+      createGamepad({
+        pressedButtons: [0, 1, 15],
+        axes: [0.7, -0.8, 0, 0],
+      }),
+    );
+
+    expect(pressed.pressedControls).toEqual([
+      "faceSouth",
+      "faceEast",
+      "dpadRight",
+      "leftStickRight",
+      "leftStickUp",
+    ]);
+  });
+
+  it("selects active gamepad by requested, previous, then lowest connected index", () => {
+    const requestedIndex = processActiveGamepadIndex({
+      activeGamepadIndex: 5,
+      gamepads: [
+        createGamepad({ id: "Previous", index: 3 }),
+        createGamepad({ id: "Lowest", index: 1 }),
+        createGamepad({ id: "Requested", index: 5 }),
+      ],
+    });
+    const previousBridge = createControllerBridge();
+
+    processActiveGamepadIndex({
+      bridge: previousBridge,
+      activeGamepadIndex: 3,
+      gamepads: [createGamepad({ id: "Previous", index: 3 })],
+    });
+
+    const previousIndex = processActiveGamepadIndex({
+      bridge: previousBridge,
+      timestamp: 10,
+      gamepads: [
+        createGamepad({ id: "Lowest", index: 1 }),
+        createGamepad({ id: "Previous", index: 3 }),
+      ],
+    });
+    const lowestIndex = processActiveGamepadIndex({
+      gamepads: [
+        createGamepad({ id: "High", index: 7 }),
+        createGamepad({ id: "Disconnected", index: 0, connected: false }),
+        createGamepad({ id: "Low", index: 2 }),
+      ],
+    });
+
+    expect(requestedIndex).toBe(5);
+    expect(previousIndex).toBe(3);
+    expect(lowestIndex).toBe(2);
   });
 
   it("does not duplicate held non-repeat commands", () => {

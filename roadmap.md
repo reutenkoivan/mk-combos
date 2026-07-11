@@ -34,7 +34,7 @@ Each item also has `Done when` so `done` has a clear meaning.
 | 6 | done | `packages/builder-core` | `packages/builder-core` | Graph primitives, replay types, transition helpers, runtime state, stale/invalid structures are implemented. |
 | 7 | done | `packages/controller-bridge` | `packages/controller-bridge` | Gamepad bridge emits semantic commands with profiles, repeat/dead-zone logic, and hint metadata. |
 | 8 | done | `mkxl/data` | `mkxl/data` | Full MKXL roster, variations, movelists, combos, graph data, stages, interactables, localized content, coverage targets exist. |
-| 9 | todo | `mkxl/catalog` | `mkxl/catalog` | MKXL selectors, context parsing, filters, summaries, recovery behavior are implemented. |
+| 9 | done | `mkxl/catalog` | `mkxl/catalog` | MKXL selectors, context parsing, filters, summaries, recovery behavior are implemented. |
 | 10 | todo | `mkxl/builder` | `mkxl/builder` | MKXL graph composition, replay, valid moves, frame checks, interactables, stale detection work. |
 | 11 | todo | `mkxl/business` | `mkxl/business` | `mkxlBusiness` exposes catalog/detail/lists/builder/backup/validation adapters. |
 | 12 | todo | `mk1/data` | `mk1/data` | Full MK1 roster, kameos, movelists, combos, graph data, localized content, coverage targets exist. |

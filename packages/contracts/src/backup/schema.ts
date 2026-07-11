@@ -3,8 +3,10 @@ import { z } from "zod/v4";
 import { GameIdSchema } from "../identity/schema";
 import { AppSettingsSchema } from "../settings/schema";
 
-export const createBackupEnvelopeSchema = <GameSliceSchema extends z.ZodType = z.ZodUnknown>(
-  gameSliceSchema: GameSliceSchema = z.unknown() as unknown as GameSliceSchema,
+const UnknownGameSliceSchema = z.unknown();
+
+const createBackupEnvelopeSchemaWithSlice = <GameSliceSchema extends z.ZodType>(
+  gameSliceSchema: GameSliceSchema,
 ) =>
   z
     .object({
@@ -14,5 +16,15 @@ export const createBackupEnvelopeSchema = <GameSliceSchema extends z.ZodType = z
       games: z.record(GameIdSchema, gameSliceSchema),
     })
     .strict();
+
+export function createBackupEnvelopeSchema(): ReturnType<
+  typeof createBackupEnvelopeSchemaWithSlice<typeof UnknownGameSliceSchema>
+>;
+export function createBackupEnvelopeSchema<GameSliceSchema extends z.ZodType>(
+  gameSliceSchema: GameSliceSchema,
+): ReturnType<typeof createBackupEnvelopeSchemaWithSlice<GameSliceSchema>>;
+export function createBackupEnvelopeSchema(gameSliceSchema: z.ZodType = UnknownGameSliceSchema) {
+  return createBackupEnvelopeSchemaWithSlice(gameSliceSchema);
+}
 
 export const BackupEnvelopeSchema = createBackupEnvelopeSchema();

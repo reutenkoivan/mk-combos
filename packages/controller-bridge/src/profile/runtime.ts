@@ -1,34 +1,49 @@
 import type { LocalizedText } from "@mk-combos/contracts/settings/type";
 
 import type { ControllerGamepadSnapshot } from "../input/type";
-import type { ControllerProfile, ControllerProfileId } from "./type";
+import { ControllerProfileListSchema } from "./schema";
+import type { ControllerProfile } from "./type";
 import { controllerProfiles } from "./value";
 
-const fallbackProfile = controllerProfiles.find((profile) => profile.id === "standard");
+const runtimeControllerProfiles = ControllerProfileListSchema.parse(controllerProfiles);
 
-const profileById = new Map<ControllerProfileId, ControllerProfile>(
-  controllerProfiles.map((profile) => [profile.id, profile as ControllerProfile]),
-);
+const profileById = new Map<string, ControllerProfile>();
+
+for (const profile of runtimeControllerProfiles) {
+  profileById.set(profile.id, profile);
+}
+
+const requireFallbackProfile = (): ControllerProfile => {
+  const fallbackProfile = profileById.get("standard");
+
+  if (fallbackProfile === undefined) {
+    throw new Error("Standard controller profile is not registered.");
+  }
+
+  return fallbackProfile;
+};
+
+const fallbackProfile = requireFallbackProfile();
 
 const normalizeId = (id: string) => id.toLowerCase();
 
 export function getControllerProfile(profileId?: string): ControllerProfile {
-  if (profileId !== undefined && profileById.has(profileId as ControllerProfileId)) {
-    return profileById.get(profileId as ControllerProfileId) as ControllerProfile;
+  if (profileId !== undefined) {
+    return profileById.get(profileId) ?? fallbackProfile;
   }
 
-  return fallbackProfile as ControllerProfile;
+  return fallbackProfile;
 }
 
 export function detectControllerProfile(input: Pick<ControllerGamepadSnapshot, "id" | "mapping">) {
   const normalizedId = normalizeId(input.id);
 
-  for (const profile of controllerProfiles) {
+  for (const profile of runtimeControllerProfiles) {
     if (profile.id === "standard") {
       continue;
     }
     if (profile.matchers.some((matcher) => normalizedId.includes(matcher))) {
-      return profile as ControllerProfile;
+      return profile;
     }
   }
 

@@ -1,5 +1,6 @@
 import type { MkxlSeededCombo } from "../combos/type";
-import type { MkxlMove, MkxlMoveTree } from "../movelists/type";
+import type { MkxlMove, MkxlMovelist, MkxlMoveTree } from "../movelists/type";
+import type { MkxlVariation } from "../variations/type";
 import type {
   MkxlAuthoredCharacterMoves,
   MkxlAuthoredVariationCombos,
@@ -20,6 +21,8 @@ type MutableAuthoredCharacterMoves = {
 
 type NonEmptyReadonlyArray<T> = readonly [T, ...T[]];
 
+type MutableNonEmptyArray<T> = [T, ...T[]];
+
 type MkxlPackState = {
   sources: MkxlDataPack["sources"];
   game: MkxlDataPack["game"];
@@ -30,6 +33,31 @@ type MkxlPackState = {
   movesByCharacterId: Map<string, MutableAuthoredCharacterMoves>;
   combosByVariationId: Map<string, MkxlAuthoredVariationCombos>;
 };
+
+type ResolvedEntityIds = {
+  characterIds: string[];
+  variationIds: string[];
+  stageIds: string[];
+  interactableIds: string[];
+};
+
+type ResolvedMovelistArtifacts = {
+  movelistFiles: MkxlResolvedCharacterMovelistFile[];
+  moveTreeRegistry: Record<string, MkxlResolvedCharacterMovelistFile>;
+  movelists: MkxlMovelist[];
+  moves: MkxlMove[];
+  moveIds: string[];
+};
+
+type ResolvedComboArtifacts = {
+  comboFiles: MkxlResolvedVariationComboFile[];
+  seededCombos: MkxlSeededCombo[];
+  seededComboIds: string[];
+};
+
+type ResolvedSeededComboRoute = Pick<MkxlSeededCombo, "route" | "movePath" | "notation">;
+
+type MkxlAuthoredSeededCombo = MkxlAuthoredVariationCombos["combos"][number];
 
 const createEmptyPackState = (): MkxlPackState => ({
   sources: undefined,
@@ -45,17 +73,16 @@ const createEmptyPackState = (): MkxlPackState => ({
 const toCamelKey = (value: string) =>
   value.replace(/-([a-z0-9])/gu, (_match, char: string) => char.toUpperCase());
 
-const toNonEmptyReadonlyArray = <T extends NonNullable<unknown>>(
-  values: readonly T[],
-  label: string,
-): NonEmptyReadonlyArray<T> => {
-  const [first, ...rest] = values;
-
-  if (first === undefined) {
-    throw new Error(`${label} must not be empty.`);
+const appendNonEmptyValue = <T>(
+  values: MutableNonEmptyArray<T> | undefined,
+  value: T,
+): MutableNonEmptyArray<T> => {
+  if (values === undefined) {
+    return [value];
   }
 
-  return [first, ...rest];
+  values.push(value);
+  return values;
 };
 
 const mapNonEmptyReadonlyArray = <
@@ -65,9 +92,74 @@ const mapNonEmptyReadonlyArray = <
   values: NonEmptyReadonlyArray<TInput>,
   mapper: (value: TInput, index: number) => TOutput,
 ): NonEmptyReadonlyArray<TOutput> => {
-  const [first, ...rest] = values;
+  let mappedValues: MutableNonEmptyArray<TOutput> | undefined;
+  let index = 0;
 
-  return [mapper(first, 0), ...rest.map((value, index) => mapper(value, index + 1))];
+  for (const value of values) {
+    mappedValues = appendNonEmptyValue(mappedValues, mapper(value, index));
+    index += 1;
+  }
+
+  if (mappedValues === undefined) {
+    throw new Error("Non-empty array mapper received an empty array.");
+  }
+
+  return mappedValues;
+};
+
+const concatNonEmptyReadonlyArrays = <T>(
+  firstValues: NonEmptyReadonlyArray<T>,
+  secondValues: NonEmptyReadonlyArray<T>,
+): NonEmptyReadonlyArray<T> => {
+  let combinedValues: MutableNonEmptyArray<T> | undefined;
+
+  for (const value of firstValues) {
+    combinedValues = appendNonEmptyValue(combinedValues, value);
+  }
+  for (const value of secondValues) {
+    combinedValues = appendNonEmptyValue(combinedValues, value);
+  }
+
+  if (combinedValues === undefined) {
+    throw new Error("Cannot concatenate empty combo lists.");
+  }
+
+  return combinedValues;
+};
+
+const collectRetainedCombos = (
+  combos: NonEmptyReadonlyArray<MkxlAuthoredSeededCombo>,
+  retiredIds: ReadonlySet<string>,
+): NonEmptyReadonlyArray<MkxlAuthoredSeededCombo> | undefined => {
+  let retainedCombos: MutableNonEmptyArray<MkxlAuthoredSeededCombo> | undefined;
+
+  for (const combo of combos) {
+    if (!retiredIds.has(combo.id)) {
+      retainedCombos = appendNonEmptyValue(retainedCombos, combo);
+    }
+  }
+
+  return retainedCombos;
+};
+
+const cloneVariationMoveMaps = (
+  variations: MutableAuthoredCharacterMoves["variations"],
+): MutableAuthoredCharacterMoves["variations"] => {
+  const clonedVariations: MutableAuthoredCharacterMoves["variations"] = {};
+
+  for (const variationKey in variations) {
+    if (!Object.hasOwn(variations, variationKey)) {
+      continue;
+    }
+
+    const moves = variations[variationKey];
+
+    if (moves) {
+      clonedVariations[variationKey] = { ...moves };
+    }
+  }
+
+  return clonedVariations;
 };
 
 const cloneCharacterMoves = (entry: MkxlAuthoredCharacterMoves): MutableAuthoredCharacterMoves => ({
@@ -75,35 +167,27 @@ const cloneCharacterMoves = (entry: MkxlAuthoredCharacterMoves): MutableAuthored
   characterId: entry.characterId,
   sourceIds: entry.sourceIds,
   universal: { ...entry.universal },
-  variations: Object.fromEntries(
-    Object.entries(entry.variations).map(([variationKey, moves]) => [variationKey, { ...moves }]),
-  ),
+  variations: cloneVariationMoveMaps(entry.variations),
 });
 
-const clonePackState = (state: MkxlPackState): MkxlPackState => ({
-  sources: state.sources,
-  game: state.game,
-  roster: state.roster,
-  variations: state.variations,
-  stages: state.stages,
-  inputNotationValues: state.inputNotationValues,
-  movesByCharacterId: new Map(
-    [...state.movesByCharacterId].map(([characterId, entry]) => [
-      characterId,
-      {
-        ...entry,
-        universal: { ...entry.universal },
-        variations: Object.fromEntries(
-          Object.entries(entry.variations).map(([variationKey, moves]) => [
-            variationKey,
-            { ...moves },
-          ]),
-        ),
-      },
-    ]),
-  ),
-  combosByVariationId: new Map(state.combosByVariationId),
-});
+const clonePackState = (state: MkxlPackState): MkxlPackState => {
+  const movesByCharacterId = new Map<string, MutableAuthoredCharacterMoves>();
+
+  for (const [characterId, entry] of state.movesByCharacterId) {
+    movesByCharacterId.set(characterId, cloneCharacterMoves(entry));
+  }
+
+  return {
+    sources: state.sources,
+    game: state.game,
+    roster: state.roster,
+    variations: state.variations,
+    stages: state.stages,
+    inputNotationValues: state.inputNotationValues,
+    movesByCharacterId,
+    combosByVariationId: new Map(state.combosByVariationId),
+  };
+};
 
 const mergeCharacterMoves = (state: MkxlPackState, entry: MkxlAuthoredCharacterMoves) => {
   const existing = state.movesByCharacterId.get(entry.characterId);
@@ -113,6 +197,23 @@ const mergeCharacterMoves = (state: MkxlPackState, entry: MkxlAuthoredCharacterM
     return;
   }
 
+  const variations: MutableAuthoredCharacterMoves["variations"] = { ...existing.variations };
+
+  for (const variationKey in entry.variations) {
+    if (!Object.hasOwn(entry.variations, variationKey)) {
+      continue;
+    }
+
+    const moves = entry.variations[variationKey];
+
+    if (moves) {
+      variations[variationKey] = {
+        ...(existing.variations[variationKey] ?? {}),
+        ...moves,
+      };
+    }
+  }
+
   state.movesByCharacterId.set(entry.characterId, {
     ...existing,
     sourceIds: [...new Set([...existing.sourceIds, ...entry.sourceIds])],
@@ -120,18 +221,7 @@ const mergeCharacterMoves = (state: MkxlPackState, entry: MkxlAuthoredCharacterM
       ...existing.universal,
       ...entry.universal,
     },
-    variations: {
-      ...existing.variations,
-      ...Object.fromEntries(
-        Object.entries(entry.variations).map(([variationKey, moves]) => [
-          variationKey,
-          {
-            ...(existing.variations[variationKey] ?? {}),
-            ...moves,
-          },
-        ]),
-      ),
-    },
+    variations,
   });
 };
 
@@ -169,8 +259,26 @@ const mergeComboAddPatch = (state: MkxlPackState, comboPatch: MkxlAuthoredVariat
 
   state.combosByVariationId.set(comboPatch.variationId, {
     ...existing,
-    combos: [...existing.combos, ...comboPatch.combos] as MkxlAuthoredVariationCombos["combos"],
+    combos: concatNonEmptyReadonlyArrays(existing.combos, comboPatch.combos),
   });
+};
+
+const applyComboRetirePatch = (state: MkxlPackState, retireIds: readonly string[]) => {
+  const retiredIds = new Set(retireIds);
+
+  for (const [variationId, entry] of state.combosByVariationId) {
+    const combos = collectRetainedCombos(entry.combos, retiredIds);
+
+    if (combos === undefined) {
+      state.combosByVariationId.delete(variationId);
+      continue;
+    }
+
+    state.combosByVariationId.set(variationId, {
+      ...entry,
+      combos,
+    });
+  }
 };
 
 const applyPack = (inputState: MkxlPackState, pack: MkxlDataPack): MkxlPackState => {
@@ -220,21 +328,7 @@ const applyPack = (inputState: MkxlPackState, pack: MkxlDataPack): MkxlPackState
     }
   }
   if (pack.comboPatches?.retireIds) {
-    const retiredIds = new Set(pack.comboPatches.retireIds);
-
-    for (const [variationId, entry] of state.combosByVariationId) {
-      const combos = entry.combos.filter((combo) => !retiredIds.has(combo.id));
-
-      if (combos.length === 0) {
-        state.combosByVariationId.delete(variationId);
-        continue;
-      }
-
-      state.combosByVariationId.set(variationId, {
-        ...entry,
-        combos: toNonEmptyReadonlyArray(combos, `${variationId} combos`),
-      });
-    }
+    applyComboRetirePatch(state, pack.comboPatches.retireIds);
   }
 
   return state;
@@ -279,18 +373,31 @@ const collectMovelist = (entry: MutableAuthoredCharacterMoves): readonly MkxlMov
   return movelist;
 };
 
+const resolveVariationMoveTree = (entry: MutableAuthoredCharacterMoves): MkxlMoveTree => {
+  const moveTree: MkxlMoveTree = {};
+
+  for (const variationKey in entry.variations) {
+    if (!Object.hasOwn(entry.variations, variationKey)) {
+      continue;
+    }
+
+    const variationMoves = entry.variations[variationKey];
+
+    if (variationMoves) {
+      moveTree[variationKey] = {
+        ...entry.universal,
+        ...variationMoves,
+      };
+    }
+  }
+
+  return moveTree;
+};
+
 const resolveMoveTree = (entry: MutableAuthoredCharacterMoves): MkxlMoveTree =>
   Object.keys(entry.variations).length === 0
     ? { universal: entry.universal }
-    : Object.fromEntries(
-        Object.entries(entry.variations).map(([variationKey, variationMoves]) => [
-          variationKey,
-          {
-            ...entry.universal,
-            ...variationMoves,
-          },
-        ]),
-      );
+    : resolveVariationMoveTree(entry);
 
 const resolveMovelistFile = (
   entry: MutableAuthoredCharacterMoves,
@@ -302,6 +409,29 @@ const resolveMovelistFile = (
   sourceIds: entry.sourceIds,
 });
 
+const resolveSeededComboRoute = (
+  route: MkxlAuthoredVariationCombos["combos"][number]["route"],
+): ResolvedSeededComboRoute => {
+  const resolvedRoute: MkxlSeededCombo["route"][number][] = [];
+  const movePath: string[] = [];
+  const notation: MkxlSeededCombo["notation"][number][] = [];
+
+  for (const move of route) {
+    resolvedRoute.push({
+      kind: "move",
+      moveId: move.id,
+    });
+    movePath.push(move.id);
+    notation.push(move.notation);
+  }
+
+  return {
+    route: resolvedRoute,
+    movePath,
+    notation,
+  };
+};
+
 const resolveComboFile = (entry: MkxlAuthoredVariationCombos): MkxlResolvedVariationComboFile => ({
   sourcePath: entry.sourcePath,
   characterId: entry.characterId,
@@ -309,20 +439,125 @@ const resolveComboFile = (entry: MkxlAuthoredVariationCombos): MkxlResolvedVaria
   variationId: entry.variationId,
   combos: mapNonEmptyReadonlyArray(entry.combos, (combo) => {
     const { route, ...seededCombo } = combo;
+    const resolvedRoute = resolveSeededComboRoute(route);
 
     return {
       ...seededCombo,
       characterId: entry.characterId,
       variationId: entry.variationId,
-      route: route.map((move) => ({
-        kind: "move",
-        moveId: move.id,
-      })),
-      movePath: route.map((move) => move.id),
-      notation: route.map((move) => move.notation),
+      route: resolvedRoute.route,
+      movePath: resolvedRoute.movePath,
+      notation: resolvedRoute.notation,
     } satisfies MkxlSeededCombo;
   }),
 });
+
+const collectResolvedEntityIds = (
+  characters: NonNullable<MkxlDataPack["roster"]>,
+  variations: NonNullable<MkxlDataPack["variations"]>,
+  stages: NonNullable<MkxlDataPack["stages"]>,
+): ResolvedEntityIds => {
+  const characterIds: string[] = [];
+  const variationIds: string[] = [];
+  const stageIds: string[] = [];
+  const interactableIds: string[] = [];
+
+  for (const character of characters) {
+    characterIds.push(character.id);
+  }
+  for (const variation of variations) {
+    variationIds.push(variation.id);
+  }
+  for (const stage of stages) {
+    stageIds.push(stage.id);
+    for (const interactable of stage.interactables) {
+      interactableIds.push(interactable.id);
+    }
+  }
+
+  return {
+    characterIds,
+    variationIds,
+    stageIds,
+    interactableIds,
+  };
+};
+
+const resolveMovelistArtifacts = (
+  entries: Iterable<MutableAuthoredCharacterMoves>,
+): ResolvedMovelistArtifacts => {
+  const movelistFiles: MkxlResolvedCharacterMovelistFile[] = [];
+  const moveTreeRegistry: Record<string, MkxlResolvedCharacterMovelistFile> = {};
+  const movelists: MkxlMovelist[] = [];
+  const moves: MkxlMove[] = [];
+  const moveIds: string[] = [];
+
+  for (const entry of entries) {
+    const movelistFile = resolveMovelistFile(entry);
+    movelistFiles.push(movelistFile);
+    moveTreeRegistry[toCamelKey(movelistFile.characterId)] = movelistFile;
+    movelists.push({
+      characterId: movelistFile.characterId,
+      moves: movelistFile.moves,
+      movelist: movelistFile.movelist,
+      sourceIds: movelistFile.sourceIds,
+    });
+
+    for (const move of movelistFile.movelist) {
+      moves.push(move);
+      moveIds.push(move.id);
+    }
+  }
+
+  return {
+    movelistFiles,
+    moveTreeRegistry,
+    movelists,
+    moves,
+    moveIds,
+  };
+};
+
+const resolveComboArtifacts = (
+  entries: Iterable<MkxlAuthoredVariationCombos>,
+): ResolvedComboArtifacts => {
+  const comboFiles: MkxlResolvedVariationComboFile[] = [];
+  const seededCombos: MkxlSeededCombo[] = [];
+  const seededComboIds: string[] = [];
+
+  for (const entry of entries) {
+    const comboFile = resolveComboFile(entry);
+    comboFiles.push(comboFile);
+
+    for (const combo of comboFile.combos) {
+      seededCombos.push(combo);
+      seededComboIds.push(combo.id);
+    }
+  }
+
+  return {
+    comboFiles,
+    seededCombos,
+    seededComboIds,
+  };
+};
+
+const buildVariationsByCharacterId = (
+  characters: readonly { readonly id: string }[],
+  variations: readonly MkxlVariation[],
+): Readonly<Record<string, readonly MkxlVariation[]>> => {
+  const variationsByCharacterId: Record<string, MkxlVariation[]> = {};
+
+  for (const character of characters) {
+    variationsByCharacterId[character.id] = [];
+  }
+
+  for (const variation of variations) {
+    variationsByCharacterId[variation.characterId]?.push(variation);
+  }
+
+  return variationsByCharacterId;
+};
 
 export const compileMkxlDataPack = (pack: MkxlDataPack): MkxlResolvedData => {
   const state = resolvePackState(pack);
@@ -336,18 +571,9 @@ export const compileMkxlDataPack = (pack: MkxlDataPack): MkxlResolvedData => {
     "input notation values",
     state.inputNotationValues,
   );
-  const movelistFiles = [...state.movesByCharacterId.values()].map(resolveMovelistFile);
-  const movelists = movelistFiles.map(({ characterId, moves, movelist, sourceIds }) => ({
-    characterId,
-    moves,
-    movelist,
-    sourceIds,
-  }));
-  const comboFiles = [...state.combosByVariationId.values()].map(resolveComboFile);
-  const seededCombos = comboFiles.flatMap((entry) => entry.combos);
-  const moveTreeRegistry = Object.fromEntries(
-    movelistFiles.map((entry) => [toCamelKey(entry.characterId), entry]),
-  );
+  const entityIds = collectResolvedEntityIds(characters, variations, stages);
+  const movelistArtifacts = resolveMovelistArtifacts(state.movesByCharacterId.values());
+  const comboArtifacts = resolveComboArtifacts(state.combosByVariationId.values());
 
   return {
     packId: pack.id,
@@ -355,28 +581,21 @@ export const compileMkxlDataPack = (pack: MkxlDataPack): MkxlResolvedData => {
     sources,
     game,
     characters,
-    characterIds: characters.map((character) => character.id),
+    characterIds: entityIds.characterIds,
     variations,
-    variationIds: variations.map((variation) => variation.id),
-    variationsByCharacterId: Object.fromEntries(
-      characters.map((character) => [
-        character.id,
-        variations.filter((variation) => variation.characterId === character.id),
-      ]),
-    ),
+    variationIds: entityIds.variationIds,
+    variationsByCharacterId: buildVariationsByCharacterId(characters, variations),
     stages,
-    stageIds: stages.map((stage) => stage.id),
-    interactableIds: stages.flatMap((stage) =>
-      stage.interactables.map((interactable) => interactable.id),
-    ),
+    stageIds: entityIds.stageIds,
+    interactableIds: entityIds.interactableIds,
     inputNotationValues,
-    movelistFiles,
-    moveTreeRegistry,
-    movelists,
-    moves: movelists.flatMap((movelist) => movelist.movelist),
-    moveIds: movelists.flatMap((movelist) => movelist.movelist.map((move) => move.id)),
-    comboFiles,
-    seededCombos,
-    seededComboIds: seededCombos.map((combo) => combo.id),
+    movelistFiles: movelistArtifacts.movelistFiles,
+    moveTreeRegistry: movelistArtifacts.moveTreeRegistry,
+    movelists: movelistArtifacts.movelists,
+    moves: movelistArtifacts.moves,
+    moveIds: movelistArtifacts.moveIds,
+    comboFiles: comboArtifacts.comboFiles,
+    seededCombos: comboArtifacts.seededCombos,
+    seededComboIds: comboArtifacts.seededComboIds,
   };
 };

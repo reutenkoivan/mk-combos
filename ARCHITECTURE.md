@@ -19,6 +19,17 @@ This document is the canonical source for package ownership, import direction, r
   pure UI components;
 - public contracts мають бути стабільними, game-agnostic і forward-compatible.
 
+Зовнішній ввід системи завжди нормалізується на boundary через Zod `parse` або
+`transform` перед використанням як typed value. Це стосується зокрема
+`process.env`, browser/native APIs, persisted payloads, route/query input і
+network/file input. Boundary validation не замінюється апкастом: новий код має
+надавати перевагу schema-derived types, type guards, typed builders і named
+algorithm stages. Алгоритми проєктуються з фокусом на O(n) по часу й памʼяті,
+а структура коду має зменшувати когнітивне навантаження під час читання.
+`as const` для статичних literal facts і value sets лишається дозволеним.
+Неминучий assertion допускається тільки у вузькому named boundary helper з
+поясненням, якщо альтернатива погіршує O(n) або суттєво ускладнює код.
+
 Останній refactor `cc9d61d` задає патерн для контрактів і публічних subpaths:
 
 - value sets живуть у `value.ts`;

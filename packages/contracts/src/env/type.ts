@@ -1,24 +1,5 @@
-declare const nonProductionNodeEnvBrand: unique symbol;
+import type { z } from "zod/v4";
 
-type NonProductionNodeEnv = string & {
-  readonly [nonProductionNodeEnvBrand]: "NonProductionNodeEnv";
-};
+import type { MkCombosEnvSchema } from "./schema";
 
-type MkCombosEnvFlags = Readonly<{
-  isCi: boolean;
-  isTsdownVerbose: boolean;
-}>;
-
-type MkCombosProductionEnv = MkCombosEnvFlags &
-  Readonly<{
-    nodeEnv: "production";
-    isProduction: true;
-  }>;
-
-type MkCombosNonProductionEnv = MkCombosEnvFlags &
-  Readonly<{
-    nodeEnv: "development" | "test" | NonProductionNodeEnv | undefined;
-    isProduction: false;
-  }>;
-
-export type MkCombosEnv = MkCombosProductionEnv | MkCombosNonProductionEnv;
+export type MkCombosEnv = z.output<typeof MkCombosEnvSchema>;

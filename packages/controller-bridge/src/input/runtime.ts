@@ -1,5 +1,5 @@
 import { detectControllerProfile } from "../profile/runtime";
-import { ControllerInputConfigSchema } from "./schema";
+import { ControllerGamepadSnapshotSchema, ControllerInputConfigSchema } from "./schema";
 import type {
   ControllerControlId,
   ControllerControlState,
@@ -41,20 +41,42 @@ const getAxisDirectionValue = (
   return direction === "negative" ? Math.max(0, -value) : Math.max(0, value);
 };
 
-export function createGamepadSnapshot(gamepad: Gamepad): ControllerGamepadSnapshot {
-  return {
+const appendControlState = (
+  controls: ControllerControlState[],
+  pressedControls: ControllerControlId[],
+  controlState: ControllerControlState,
+) => {
+  controls.push(controlState);
+  if (controlState.pressed) {
+    pressedControls.push(controlState.id);
+  }
+};
+
+export function createGamepadSnapshot(
+  gamepad: Pick<
+    Gamepad,
+    "axes" | "buttons" | "connected" | "id" | "index" | "mapping" | "timestamp"
+  >,
+): ControllerGamepadSnapshot {
+  const buttons: ControllerGamepadButtonSnapshot[] = [];
+
+  for (const button of gamepad.buttons) {
+    buttons.push({
+      pressed: button.pressed,
+      touched: button.touched,
+      value: button.value,
+    });
+  }
+
+  return ControllerGamepadSnapshotSchema.parse({
     id: gamepad.id,
     index: gamepad.index,
     connected: gamepad.connected,
     mapping: gamepad.mapping,
     timestamp: gamepad.timestamp,
-    buttons: gamepad.buttons.map((button) => ({
-      pressed: button.pressed,
-      touched: button.touched,
-      value: button.value,
-    })),
+    buttons,
     axes: [...gamepad.axes],
-  };
+  });
 }
 
 export function normalizeGamepadSnapshot(
@@ -65,16 +87,19 @@ export function normalizeGamepadSnapshot(
   const heldControls = new Set(options.heldControls ?? []);
   const profile = detectControllerProfile(snapshot);
   const controls: ControllerControlState[] = [];
+  const pressedControls: ControllerControlId[] = [];
 
   for (const control of standardGamepadButtonControls) {
     const value = clampButtonValue(snapshot.buttons[control.buttonIndex]);
-    controls.push({
+    const controlState = {
       id: control.id,
       source: "button",
       pressed: value >= config.buttonPressThreshold,
       value,
       rawIndex: control.buttonIndex,
-    });
+    } satisfies ControllerControlState;
+
+    appendControlState(controls, pressedControls, controlState);
   }
 
   for (const control of standardGamepadAxisControls) {
@@ -82,15 +107,16 @@ export function normalizeGamepadSnapshot(
     const threshold = heldControls.has(control.id)
       ? config.axisReleaseThreshold
       : config.axisPressThreshold;
-
-    controls.push({
+    const controlState = {
       id: control.id,
       source: "axis",
       pressed: value >= threshold,
       value,
       rawIndex: control.axisIndex,
       direction: control.direction,
-    });
+    } satisfies ControllerControlState;
+
+    appendControlState(controls, pressedControls, controlState);
   }
 
   return {
@@ -100,6 +126,6 @@ export function normalizeGamepadSnapshot(
     profileId: profile.id,
     timestamp: snapshot.timestamp,
     controls,
-    pressedControls: controls.filter((control) => control.pressed).map((control) => control.id),
+    pressedControls,
   };
 }

@@ -45,11 +45,13 @@ type HeldBinding = {
   lastEmittedAt: number;
 };
 
-const repeatableCommandIds = new Set<string>(
-  controllerCommandMetadata
-    .filter((metadata) => "repeatable" in metadata && metadata.repeatable)
-    .map((metadata) => metadata.id),
-);
+const repeatableCommandIds = new Set<string>();
+
+for (const metadata of controllerCommandMetadata) {
+  if ("repeatable" in metadata && metadata.repeatable) {
+    repeatableCommandIds.add(metadata.id);
+  }
+}
 
 const getBindingKey = (binding: ControllerCommandBinding) =>
   `${binding.controlId}:${binding.commandId}`;
@@ -59,22 +61,55 @@ const selectActiveGamepad = (
   requestedIndex: number | undefined,
   previousIndex: number | undefined,
 ) => {
-  const connected = snapshots.filter((snapshot) => snapshot.connected);
-  const requested = connected.find((snapshot) => snapshot.index === requestedIndex);
-  if (requested !== undefined) {
-    return requested;
+  let previous: ControllerGamepadSnapshot | undefined;
+  let lowestIndexSnapshot: ControllerGamepadSnapshot | undefined;
+
+  for (const snapshot of snapshots) {
+    if (!snapshot.connected) {
+      continue;
+    }
+
+    if (requestedIndex !== undefined && snapshot.index === requestedIndex) {
+      return snapshot;
+    }
+
+    if (previous === undefined && previousIndex !== undefined && snapshot.index === previousIndex) {
+      previous = snapshot;
+    }
+
+    if (lowestIndexSnapshot === undefined || snapshot.index < lowestIndexSnapshot.index) {
+      lowestIndexSnapshot = snapshot;
+    }
   }
 
-  const previous = connected.find((snapshot) => snapshot.index === previousIndex);
-  if (previous !== undefined) {
-    return previous;
-  }
-
-  return [...connected].sort((left, right) => left.index - right.index)[0];
+  return previous ?? lowestIndexSnapshot;
 };
 
-const toControlStateMap = (controls: readonly ControllerControlState[]) =>
-  new Map(controls.map((control) => [control.id, control]));
+const toControlStateMap = (controls: readonly ControllerControlState[]) => {
+  const controlsById = new Map<string, ControllerControlState>();
+
+  for (const control of controls) {
+    controlsById.set(control.id, control);
+  }
+
+  return controlsById;
+};
+
+const collectHeldControlIds = (heldBindings: ReadonlyMap<string, HeldBinding>) => {
+  const heldControlIds: string[] = [];
+  const seenHeldControlIds = new Set<string>();
+
+  for (const held of heldBindings.values()) {
+    if (seenHeldControlIds.has(held.controlId)) {
+      continue;
+    }
+
+    seenHeldControlIds.add(held.controlId);
+    heldControlIds.push(held.controlId);
+  }
+
+  return heldControlIds;
+};
 
 export function createControllerBridge(options: ControllerBridgeConfig = {}) {
   let bridgeState: ControllerBridgeState = {
@@ -149,10 +184,9 @@ export function createControllerBridge(options: ControllerBridgeConfig = {}) {
     }
 
     const profile = detectControllerProfile(activeGamepad);
-    const heldControlIds = [...new Set([...heldBindings.values()].map((held) => held.controlId))];
     const normalized = normalizeGamepadSnapshot(activeGamepad, {
       config: options.input,
-      heldControls: heldControlIds,
+      heldControls: collectHeldControlIds(heldBindings),
     });
     const controls = toControlStateMap(normalized.controls);
     const bindings: readonly ControllerCommandBinding[] =

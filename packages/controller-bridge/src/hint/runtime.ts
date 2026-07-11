@@ -1,12 +1,18 @@
 import { defaultControllerBindings } from "../bridge/runtime";
+import { ControllerCommandMetadataListSchema } from "../command/schema";
 import type { ControllerCommandMetadata } from "../command/type";
 import { controllerCommandMetadata } from "../command/value";
 import { getControllerButtonLabel, getControllerProfile } from "../profile/runtime";
 import type { ControllerHintRequest, ControllerHintRow } from "./type";
 
-const commandMetadataById = new Map<string, ControllerCommandMetadata>(
-  controllerCommandMetadata.map((metadata) => [metadata.id, metadata as ControllerCommandMetadata]),
-);
+const runtimeControllerCommandMetadata =
+  ControllerCommandMetadataListSchema.parse(controllerCommandMetadata);
+
+const commandMetadataById = new Map<string, ControllerCommandMetadata>();
+
+for (const metadata of runtimeControllerCommandMetadata) {
+  commandMetadataById.set(metadata.id, metadata);
+}
 
 export function buildControllerHints(input: ControllerHintRequest = {}): ControllerHintRow[] {
   const profile = getControllerProfile(input.profileId);

@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom/vitest";
 import { vi } from "vitest";
 
-class ResizeObserverStub {
+class ResizeObserverStub implements ResizeObserver {
   observe() {}
 
   unobserve() {}
@@ -9,7 +9,7 @@ class ResizeObserverStub {
   disconnect() {}
 }
 
-globalThis.ResizeObserver = ResizeObserverStub as typeof ResizeObserver;
+globalThis.ResizeObserver = ResizeObserverStub;
 
 if (typeof window !== "undefined") {
   window.scrollTo = vi.fn();

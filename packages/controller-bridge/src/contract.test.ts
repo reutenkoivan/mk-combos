@@ -98,6 +98,16 @@ const gamepad = {
   axes: [0, 0, 0, 0],
 } satisfies ControllerGamepadSnapshot;
 
+const requireFirst = <T>(values: readonly T[], label: string): T => {
+  const [first] = values;
+
+  if (first === undefined) {
+    throw new Error(`${label} must not be empty.`);
+  }
+
+  return first;
+};
+
 const acceptsPublicTypes = (_contract: {
   commandId: ControllerCommandId;
   commandGroup: ControllerCommandGroup;
@@ -203,6 +213,7 @@ describe("@mk-combos/controller-bridge contract", () => {
       gamepads: [ControllerGamepadSnapshotSchema.parse(gamepad)],
     });
     const hints = buildControllerHints({ profileId: profile.id, commandIds: ["confirm"] });
+    const firstHint = requireFirst(hints, "Controller hints");
 
     expect(ControllerProfileSchema.parse(getControllerProfile(profile.id))).toEqual(
       getControllerProfile(profile.id),
@@ -235,7 +246,7 @@ describe("@mk-combos/controller-bridge contract", () => {
         binding: { controlId: "faceSouth", commandId: "confirm" },
         gamepad,
         result,
-        hint: hints[0] as ControllerHintRow,
+        hint: firstHint,
         hints,
       }),
     ).toBe(true);
