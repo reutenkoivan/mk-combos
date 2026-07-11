@@ -40,6 +40,24 @@
         "vitest": "4.1.9",
       },
     },
+    "mkxl/business": {
+      "name": "@mk-combos/mkxl-business",
+      "version": "0.0.0",
+      "dependencies": {
+        "@mk-combos/builder-core": "workspace:*",
+        "@mk-combos/contracts": "workspace:*",
+        "@mk-combos/mkxl-builder": "workspace:*",
+        "@mk-combos/mkxl-catalog": "workspace:*",
+        "@mk-combos/mkxl-data": "workspace:*",
+        "zod": "4.4.3",
+      },
+      "devDependencies": {
+        "@types/node": "25.6.2",
+        "tsdown": "0.22.3",
+        "vite": "8.1.2",
+        "vitest": "4.1.9",
+      },
+    },
     "mkxl/catalog": {
       "name": "@mk-combos/mkxl-catalog",
       "version": "0.0.0",
@@ -275,6 +293,8 @@
     "@mk-combos/controller-bridge": ["@mk-combos/controller-bridge@workspace:packages/controller-bridge"],
 
     "@mk-combos/mkxl-builder": ["@mk-combos/mkxl-builder@workspace:mkxl/builder"],
+
+    "@mk-combos/mkxl-business": ["@mk-combos/mkxl-business@workspace:mkxl/business"],
 
     "@mk-combos/mkxl-catalog": ["@mk-combos/mkxl-catalog@workspace:mkxl/catalog"],
 
