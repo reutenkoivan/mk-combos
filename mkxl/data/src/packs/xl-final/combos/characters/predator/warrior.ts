@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.predator;
 const variationSlug = "warrior";
@@ -38,10 +38,10 @@ const predatorWarriorStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.predator.universal.openingAssault,
-    transitions.predator.universal.risingAssault,
-    transitions.predator.warrior.warriorTechnique,
-    transitions.predator.universal.closingStrikeEnhanced,
+    moves.predator.universal.openingAssault,
+    moves.predator.universal.risingAssault,
+    moves.predator.warrior.warriorTechnique,
+    moves.predator.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

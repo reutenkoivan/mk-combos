@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.cassieCage;
 const variationSlug = "brawler";
@@ -38,10 +38,10 @@ const cassieCageBrawlerStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.cassieCage.universal.openingAssault,
-    transitions.cassieCage.universal.risingAssault,
-    transitions.cassieCage.brawler.brawlerTechnique,
-    transitions.cassieCage.universal.closingStrikeEnhanced,
+    moves.cassieCage.universal.openingAssault,
+    moves.cassieCage.universal.risingAssault,
+    moves.cassieCage.brawler.brawlerTechnique,
+    moves.cassieCage.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

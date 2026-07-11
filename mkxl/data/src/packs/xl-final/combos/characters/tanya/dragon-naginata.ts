@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.tanya;
 const variationSlug = "dragon-naginata";
@@ -38,10 +38,10 @@ const tanyaDragonNaginataStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.tanya.universal.openingAssault,
-    transitions.tanya.universal.risingAssault,
-    transitions.tanya.dragonNaginata.dragonNaginataTechnique,
-    transitions.tanya.universal.closingStrikeEnhanced,
+    moves.tanya.universal.openingAssault,
+    moves.tanya.universal.risingAssault,
+    moves.tanya.dragonNaginata.dragonNaginataTechnique,
+    moves.tanya.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

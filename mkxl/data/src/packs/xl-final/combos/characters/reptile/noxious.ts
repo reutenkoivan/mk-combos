@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.reptile;
 const variationSlug = "noxious";
@@ -38,10 +38,10 @@ const reptileNoxiousStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.reptile.universal.openingAssault,
-    transitions.reptile.universal.risingAssault,
-    transitions.reptile.noxious.noxiousTechnique,
-    transitions.reptile.universal.closingStrikeEnhanced,
+    moves.reptile.universal.openingAssault,
+    moves.reptile.universal.risingAssault,
+    moves.reptile.noxious.noxiousTechnique,
+    moves.reptile.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,8 +72,9 @@ const reptileNoxiousCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.twoOneTwoFour,
-    transitions.reptile.universal.fTwoOneIntoDBTwo,
+    moves.reptile.universal.twoOneTwoFour,
+    moves.reptile.universal.fTwoOne,
+    moves.reptile.universal.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -104,8 +105,10 @@ const reptileNoxiousCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.fFourOneTwoIntoBFTwo,
-    transitions.reptile.universal.fFourOneTwoIntoDBFour,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFTwo,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -135,7 +138,11 @@ const reptileNoxiousCommunityBeginner004Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.reptile.universal.bTwo, transitions.reptile.universal.fTwoOneIntoDBFour],
+  route: [
+    moves.reptile.universal.bTwo,
+    moves.reptile.universal.fTwoOne,
+    moves.reptile.universal.dBFour,
+  ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const reptileNoxiousCommunityBeginner005Combo = {
@@ -165,9 +172,11 @@ const reptileNoxiousCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.bTwo,
-    transitions.reptile.universal.fTwoOneMb,
-    transitions.reptile.universal.fFourOneTwoIntoBFFour,
+    moves.reptile.universal.bTwo,
+    moves.reptile.universal.fTwoOne,
+    moves.reptile.universal.mb,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -198,9 +207,11 @@ const reptileNoxiousCommunityOptimal009Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.fFourOneTwoIntoBFTwo,
-    transitions.reptile.universal.twoOne,
-    transitions.reptile.universal.fFourOneTwoIntoBFFour,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFTwo,
+    moves.reptile.universal.twoOne,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -232,10 +243,13 @@ const reptileNoxiousCommunityOptimal010Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.fFourOneIntoExDDThree,
-    transitions.reptile.universal.fFourOneTwoIntoBFTwo,
-    transitions.reptile.universal.twoOne,
-    transitions.reptile.universal.fFourOneTwoIntoBFFour,
+    moves.reptile.universal.fFourOne,
+    moves.reptile.universal.exDDThree,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFTwo,
+    moves.reptile.universal.twoOne,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -267,11 +281,13 @@ const reptileNoxiousCommunityCorner015Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.oneTwoIntoDFThree,
-    transitions.reptile.universal.dTwo,
-    transitions.reptile.universal.twoOne,
-    transitions.reptile.universal.dThree,
-    transitions.reptile.universal.fFourOneTwoIntoBFFour,
+    moves.reptile.universal.oneTwo,
+    moves.reptile.universal.dFThree,
+    moves.reptile.universal.dTwo,
+    moves.reptile.universal.twoOne,
+    moves.reptile.universal.dThree,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -302,10 +318,11 @@ const reptileNoxiousCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.oneFourOne,
-    transitions.reptile.universal.dOne,
-    transitions.reptile.universal.twoOne,
-    transitions.reptile.universal.fFourOneTwoIntoBFFour,
+    moves.reptile.universal.oneFourOne,
+    moves.reptile.universal.dOne,
+    moves.reptile.universal.twoOne,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -337,11 +354,13 @@ const reptileNoxiousCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.fFourOneTwoIntoDBThree,
-    transitions.reptile.universal.dTwo,
-    transitions.reptile.universal.twoOne,
-    transitions.reptile.universal.dThree,
-    transitions.reptile.universal.fFourOneTwoIntoBFFour,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.dBThree,
+    moves.reptile.universal.dTwo,
+    moves.reptile.universal.twoOne,
+    moves.reptile.universal.dThree,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -373,12 +392,15 @@ const reptileNoxiousCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.fFourOneIntoExDDThree,
-    transitions.reptile.universal.fFourOneTwoIntoDBThree,
-    transitions.reptile.universal.dTwo,
-    transitions.reptile.universal.twoOne,
-    transitions.reptile.universal.dThree,
-    transitions.reptile.universal.fFourOneTwoIntoBFFour,
+    moves.reptile.universal.fFourOne,
+    moves.reptile.universal.exDDThree,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.dBThree,
+    moves.reptile.universal.dTwo,
+    moves.reptile.universal.twoOne,
+    moves.reptile.universal.dThree,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -410,11 +432,14 @@ const reptileNoxiousCommunityCorner020Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.bThreeIntoExDDThree,
-    transitions.reptile.universal.fFourOneTwoIntoDBThree,
-    transitions.reptile.universal.dTwo,
-    transitions.reptile.universal.twoOne,
-    transitions.reptile.universal.fFourOneTwoIntoBFFour,
+    moves.reptile.universal.bThree,
+    moves.reptile.universal.exDDThree,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.dBThree,
+    moves.reptile.universal.dTwo,
+    moves.reptile.universal.twoOne,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -445,11 +470,12 @@ const reptileNoxiousCommunityCorner021Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.reptile.universal.bTwo,
-    transitions.reptile.universal.oneFourOne,
-    transitions.reptile.universal.dOne,
-    transitions.reptile.universal.dOne,
-    transitions.reptile.universal.fFourOneTwoIntoBFFour,
+    moves.reptile.universal.bTwo,
+    moves.reptile.universal.oneFourOne,
+    moves.reptile.universal.dOne,
+    moves.reptile.universal.dOne,
+    moves.reptile.universal.fFourOneTwo,
+    moves.reptile.universal.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

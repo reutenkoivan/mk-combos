@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kungLao;
 const variationSlug = "tempest";
@@ -38,10 +38,10 @@ const kungLaoTempestStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kungLao.universal.openingAssault,
-    transitions.kungLao.universal.risingAssault,
-    transitions.kungLao.tempest.tempestTechnique,
-    transitions.kungLao.universal.closingStrikeEnhanced,
+    moves.kungLao.universal.openingAssault,
+    moves.kungLao.universal.risingAssault,
+    moves.kungLao.tempest.tempestTechnique,
+    moves.kungLao.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,9 +72,11 @@ const kungLaoTempestCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungLao.tempest.bOneTwoIntoDBOne,
-    transitions.kungLao.tempest.bOneTwoIntoDFOne,
-    transitions.kungLao.tempest.dTwo,
+    moves.kungLao.tempest.bOneTwo,
+    moves.kungLao.tempest.dBOne,
+    moves.kungLao.tempest.bOneTwo,
+    moves.kungLao.tempest.dFOne,
+    moves.kungLao.tempest.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -105,9 +107,11 @@ const kungLaoTempestCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungLao.tempest.fTwoThreeIntoDBOne,
-    transitions.kungLao.tempest.bOneTwoIntoDFOne,
-    transitions.kungLao.tempest.dTwo,
+    moves.kungLao.tempest.fTwoThree,
+    moves.kungLao.tempest.dBOne,
+    moves.kungLao.tempest.bOneTwo,
+    moves.kungLao.tempest.dFOne,
+    moves.kungLao.tempest.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -138,9 +142,11 @@ const kungLaoTempestCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungLao.tempest.bTwoIntoDBOne,
-    transitions.kungLao.tempest.bOneTwoIntoDFOne,
-    transitions.kungLao.tempest.dTwo,
+    moves.kungLao.tempest.bTwo,
+    moves.kungLao.tempest.dBOne,
+    moves.kungLao.tempest.bOneTwo,
+    moves.kungLao.tempest.dFOne,
+    moves.kungLao.tempest.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -171,8 +177,9 @@ const kungLaoTempestCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungLao.tempest.bThreeTwoOneIntoDBOne,
-    transitions.kungLao.tempest.bThreeTwoOne,
+    moves.kungLao.tempest.bThreeTwoOne,
+    moves.kungLao.tempest.dBOne,
+    moves.kungLao.tempest.bThreeTwoOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -204,10 +211,13 @@ const kungLaoTempestCommunityBeginner006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungLao.tempest.fTwoThreeIntoDBOne,
-    transitions.kungLao.tempest.bOneTwoIntoDFOne,
-    transitions.kungLao.tempest.bThreeTwoOneIntoExDFOne,
-    transitions.kungLao.tempest.dTwo,
+    moves.kungLao.tempest.fTwoThree,
+    moves.kungLao.tempest.dBOne,
+    moves.kungLao.tempest.bOneTwo,
+    moves.kungLao.tempest.dFOne,
+    moves.kungLao.tempest.bThreeTwoOne,
+    moves.kungLao.tempest.exDFOne,
+    moves.kungLao.tempest.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

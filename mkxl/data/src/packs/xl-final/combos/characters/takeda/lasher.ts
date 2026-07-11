@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.takeda;
 const variationSlug = "lasher";
@@ -38,10 +38,10 @@ const takedaLasherStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.takeda.universal.openingAssault,
-    transitions.takeda.universal.risingAssault,
-    transitions.takeda.lasher.lasherTechnique,
-    transitions.takeda.universal.closingStrike,
+    moves.takeda.universal.openingAssault,
+    moves.takeda.universal.risingAssault,
+    moves.takeda.lasher.lasherTechnique,
+    moves.takeda.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

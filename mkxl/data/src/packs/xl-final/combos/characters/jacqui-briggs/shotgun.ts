@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.jacquiBriggs;
 const variationSlug = "shotgun";
@@ -38,10 +38,10 @@ const jacquiBriggsShotgunStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.jacquiBriggs.universal.openingAssault,
-    transitions.jacquiBriggs.universal.risingAssault,
-    transitions.jacquiBriggs.shotgun.shotgunTechnique,
-    transitions.jacquiBriggs.universal.closingStrike,
+    moves.jacquiBriggs.universal.openingAssault,
+    moves.jacquiBriggs.universal.risingAssault,
+    moves.jacquiBriggs.shotgun.shotgunTechnique,
+    moves.jacquiBriggs.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

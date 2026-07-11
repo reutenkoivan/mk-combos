@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.erronBlack;
 const variationSlug = "outlaw";
@@ -38,10 +38,10 @@ const erronBlackOutlawStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.erronBlack.universal.openingAssault,
-    transitions.erronBlack.universal.risingAssault,
-    transitions.erronBlack.outlaw.outlawTechnique,
-    transitions.erronBlack.universal.closingStrike,
+    moves.erronBlack.universal.openingAssault,
+    moves.erronBlack.universal.risingAssault,
+    moves.erronBlack.outlaw.outlawTechnique,
+    moves.erronBlack.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -71,7 +71,7 @@ const erronBlackOutlawCommunityBeginner001Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.erronBlack.outlaw.oneOneTwo, transitions.erronBlack.outlaw.bFFour],
+  route: [moves.erronBlack.outlaw.oneOneTwo, moves.erronBlack.outlaw.bFFour],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const erronBlackOutlawCommunityBeginner002Combo = {
@@ -101,8 +101,10 @@ const erronBlackOutlawCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.erronBlack.outlaw.oneOneBThreeIntoDBFour,
-    transitions.erronBlack.outlaw.bThreeThreeIntoDFTwo,
+    moves.erronBlack.outlaw.oneOneBThree,
+    moves.erronBlack.outlaw.dBFour,
+    moves.erronBlack.outlaw.bThreeThree,
+    moves.erronBlack.outlaw.dFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -132,7 +134,7 @@ const erronBlackOutlawCommunityBeginner003Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.erronBlack.outlaw.twoOneOneTwoTwoIntoBFFour],
+  route: [moves.erronBlack.outlaw.twoOneOneTwoTwo, moves.erronBlack.outlaw.bFFour],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const erronBlackOutlawCommunityBeginner004Combo = {
@@ -162,8 +164,10 @@ const erronBlackOutlawCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.erronBlack.outlaw.fOneThreeIntoDBFour,
-    transitions.erronBlack.outlaw.bThreeThreeIntoDFTwo,
+    moves.erronBlack.outlaw.fOneThree,
+    moves.erronBlack.outlaw.dBFour,
+    moves.erronBlack.outlaw.bThreeThree,
+    moves.erronBlack.outlaw.dFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -194,8 +198,10 @@ const erronBlackOutlawCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.erronBlack.outlaw.bThreeThreeIntoDBFour,
-    transitions.erronBlack.outlaw.bThreeThreeIntoDFTwo,
+    moves.erronBlack.outlaw.bThreeThree,
+    moves.erronBlack.outlaw.dBFour,
+    moves.erronBlack.outlaw.bThreeThree,
+    moves.erronBlack.outlaw.dFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -227,9 +233,11 @@ const erronBlackOutlawCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.erronBlack.outlaw.twoOneOneTwoTwoIntoExDBFour,
-    transitions.erronBlack.outlaw.dOne,
-    transitions.erronBlack.outlaw.twoOneOneTwoTwoIntoDBFTwo,
+    moves.erronBlack.outlaw.twoOneOneTwoTwo,
+    moves.erronBlack.outlaw.exDBFour,
+    moves.erronBlack.outlaw.dOne,
+    moves.erronBlack.outlaw.twoOneOneTwoTwo,
+    moves.erronBlack.outlaw.dBFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -261,10 +269,12 @@ const erronBlackOutlawCommunityCorner021Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.erronBlack.outlaw.bThreeThreeIntoExBFThree,
-    transitions.erronBlack.outlaw.dTwo,
-    transitions.erronBlack.outlaw.dOne,
-    transitions.erronBlack.outlaw.twoOneOneTwoTwoIntoDBFTwo,
+    moves.erronBlack.outlaw.bThreeThree,
+    moves.erronBlack.outlaw.exBFThree,
+    moves.erronBlack.outlaw.dTwo,
+    moves.erronBlack.outlaw.dOne,
+    moves.erronBlack.outlaw.twoOneOneTwoTwo,
+    moves.erronBlack.outlaw.dBFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

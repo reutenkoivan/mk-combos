@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.tremor;
 const variationSlug = "crystalline";
@@ -38,10 +38,10 @@ const tremorCrystallineStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.tremor.universal.openingAssault,
-    transitions.tremor.universal.risingAssault,
-    transitions.tremor.crystalline.crystallineTechnique,
-    transitions.tremor.universal.closingStrike,
+    moves.tremor.universal.openingAssault,
+    moves.tremor.universal.risingAssault,
+    moves.tremor.crystalline.crystallineTechnique,
+    moves.tremor.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,9 +72,11 @@ const tremorCrystallineCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.fOneTwoIntoDBTwoD,
-    transitions.tremor.crystalline.bTwo,
-    transitions.tremor.crystalline.bTwoIntoDBTwo,
+    moves.tremor.crystalline.fOneTwo,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -105,9 +107,11 @@ const tremorCrystallineCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.bOneTwoIntoDBTwoD,
-    transitions.tremor.crystalline.bTwo,
-    transitions.tremor.crystalline.bTwoIntoDBTwo,
+    moves.tremor.crystalline.bOneTwo,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -138,9 +142,11 @@ const tremorCrystallineCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.bThreeTwoIntoDBTwoD,
-    transitions.tremor.crystalline.bTwo,
-    transitions.tremor.crystalline.bTwoIntoDBTwo,
+    moves.tremor.crystalline.bThreeTwo,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -171,9 +177,10 @@ const tremorCrystallineCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.dBTwoD,
-    transitions.tremor.crystalline.bTwo,
-    transitions.tremor.crystalline.bTwoIntoDBTwo,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -204,9 +211,11 @@ const tremorCrystallineCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.bThreeIntoDBTwoD,
-    transitions.tremor.crystalline.bTwo,
-    transitions.tremor.crystalline.bTwoIntoDBTwo,
+    moves.tremor.crystalline.bThree,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -237,9 +246,11 @@ const tremorCrystallineCommunityBeginner006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.twoOneDFourIntoDBTwoD,
-    transitions.tremor.crystalline.bTwo,
-    transitions.tremor.crystalline.bTwoIntoDBTwo,
+    moves.tremor.crystalline.twoOneDFour,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -270,9 +281,11 @@ const tremorCrystallineCommunityBeginner007Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.twoOneIntoDBTwoD,
-    transitions.tremor.crystalline.bTwo,
-    transitions.tremor.crystalline.bTwoIntoDBTwo,
+    moves.tremor.crystalline.twoOne,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.bTwo,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -304,10 +317,13 @@ const tremorCrystallineCommunityCorner020Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.fOneTwoIntoDBTwoD,
-    transitions.tremor.crystalline.fourIntoDBTwoU,
-    transitions.tremor.crystalline.fFour,
-    transitions.tremor.crystalline.oneTwoThreeIntoDBTwo,
+    moves.tremor.crystalline.fOneTwo,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.four,
+    moves.tremor.crystalline.dBTwoU,
+    moves.tremor.crystalline.fFour,
+    moves.tremor.crystalline.oneTwoThree,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -339,10 +355,13 @@ const tremorCrystallineCommunityCorner021Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.twoOneDFourIntoDBTwoD,
-    transitions.tremor.crystalline.fourIntoDBTwoU,
-    transitions.tremor.crystalline.fFour,
-    transitions.tremor.crystalline.oneTwoThreeIntoDBTwo,
+    moves.tremor.crystalline.twoOneDFour,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.four,
+    moves.tremor.crystalline.dBTwoU,
+    moves.tremor.crystalline.fFour,
+    moves.tremor.crystalline.oneTwoThree,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -374,10 +393,13 @@ const tremorCrystallineCommunityCorner022Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.twoOneDFourIntoExBFFour,
-    transitions.tremor.crystalline.dIntoDBTwoU,
-    transitions.tremor.crystalline.fFour,
-    transitions.tremor.crystalline.oneTwoThreeIntoDBTwo,
+    moves.tremor.crystalline.twoOneDFour,
+    moves.tremor.crystalline.exBFFour,
+    moves.tremor.crystalline.d,
+    moves.tremor.crystalline.dBTwoU,
+    moves.tremor.crystalline.fFour,
+    moves.tremor.crystalline.oneTwoThree,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -409,10 +431,13 @@ const tremorCrystallineCommunityCorner023Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tremor.crystalline.bThreeTwoIntoDBTwoD,
-    transitions.tremor.crystalline.fourIntoDBTwoU,
-    transitions.tremor.crystalline.fFour,
-    transitions.tremor.crystalline.oneTwoThreeIntoDBTwo,
+    moves.tremor.crystalline.bThreeTwo,
+    moves.tremor.crystalline.dBTwoD,
+    moves.tremor.crystalline.four,
+    moves.tremor.crystalline.dBTwoU,
+    moves.tremor.crystalline.fFour,
+    moves.tremor.crystalline.oneTwoThree,
+    moves.tremor.crystalline.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

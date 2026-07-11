@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.subZero;
 const variationSlug = "unbreakable";
@@ -38,10 +38,10 @@ const subZeroUnbreakableStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.subZero.universal.openingAssault,
-    transitions.subZero.universal.risingAssault,
-    transitions.subZero.unbreakable.unbreakableTechnique,
-    transitions.subZero.universal.closingStrike,
+    moves.subZero.universal.openingAssault,
+    moves.subZero.universal.risingAssault,
+    moves.subZero.unbreakable.unbreakableTechnique,
+    moves.subZero.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

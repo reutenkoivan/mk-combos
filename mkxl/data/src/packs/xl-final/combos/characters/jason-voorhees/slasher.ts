@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.jasonVoorhees;
 const variationSlug = "slasher";
@@ -38,10 +38,10 @@ const jasonVoorheesSlasherStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.jasonVoorhees.universal.openingAssault,
-    transitions.jasonVoorhees.universal.risingAssault,
-    transitions.jasonVoorhees.slasher.slasherTechnique,
-    transitions.jasonVoorhees.universal.closingStrikeEnhanced,
+    moves.jasonVoorhees.universal.openingAssault,
+    moves.jasonVoorhees.universal.risingAssault,
+    moves.jasonVoorhees.slasher.slasherTechnique,
+    moves.jasonVoorhees.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -71,7 +71,7 @@ const jasonVoorheesSlasherCommunityBeginner001Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.jasonVoorhees.slasher.oneOneOneIntoDFOne],
+  route: [moves.jasonVoorhees.slasher.oneOneOne, moves.jasonVoorhees.slasher.dFOne],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const jasonVoorheesSlasherCommunityBeginner002Combo = {
@@ -100,7 +100,7 @@ const jasonVoorheesSlasherCommunityBeginner002Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.jasonVoorhees.slasher.oneOneOneIntoExBFTwo],
+  route: [moves.jasonVoorhees.slasher.oneOneOne, moves.jasonVoorhees.slasher.exBFTwo],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const jasonVoorheesSlasherCommunityBeginner003Combo = {
@@ -131,10 +131,11 @@ const jasonVoorheesSlasherCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jasonVoorhees.slasher.bOneTwoTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.oneOneOneIntoDFOne,
+    moves.jasonVoorhees.slasher.bOneTwoTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.oneOneOne,
+    moves.jasonVoorhees.slasher.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -165,10 +166,11 @@ const jasonVoorheesSlasherCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.oneOneIntoDFOne,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.oneOne,
+    moves.jasonVoorhees.slasher.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -200,10 +202,11 @@ const jasonVoorheesSlasherCommunityOptimal006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jasonVoorhees.slasher.bOneTwoTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.oneOneIntoExDFOne,
+    moves.jasonVoorhees.slasher.bOneTwoTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.oneOne,
+    moves.jasonVoorhees.slasher.exDFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -233,7 +236,7 @@ const jasonVoorheesSlasherCommunityOptimal007Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.jasonVoorhees.slasher.fTwoIntoDFOne],
+  route: [moves.jasonVoorhees.slasher.fTwo, moves.jasonVoorhees.slasher.dFOne],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const jasonVoorheesSlasherCommunityOptimal008Combo = {
@@ -262,7 +265,7 @@ const jasonVoorheesSlasherCommunityOptimal008Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.jasonVoorhees.slasher.fTwoIntoExBFTwo],
+  route: [moves.jasonVoorhees.slasher.fTwo, moves.jasonVoorhees.slasher.exBFTwo],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const jasonVoorheesSlasherCommunityOptimal009Combo = {
@@ -292,10 +295,11 @@ const jasonVoorheesSlasherCommunityOptimal009Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.oneOneIntoExDFOne,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.oneOne,
+    moves.jasonVoorhees.slasher.exDFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -326,11 +330,12 @@ const jasonVoorheesSlasherCommunityCorner012Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jasonVoorhees.slasher.bTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.dOne,
-    transitions.jasonVoorhees.slasher.oneOneOneIntoDFOne,
+    moves.jasonVoorhees.slasher.bTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.dOne,
+    moves.jasonVoorhees.slasher.oneOneOne,
+    moves.jasonVoorhees.slasher.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -361,9 +366,11 @@ const jasonVoorheesSlasherCommunityCorner015Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jasonVoorhees.slasher.oneTwoTwoIntoBFThree,
-    transitions.jasonVoorhees.slasher.dOne,
-    transitions.jasonVoorhees.slasher.oneOneOneIntoDFOne,
+    moves.jasonVoorhees.slasher.oneTwoTwo,
+    moves.jasonVoorhees.slasher.bFThree,
+    moves.jasonVoorhees.slasher.dOne,
+    moves.jasonVoorhees.slasher.oneOneOne,
+    moves.jasonVoorhees.slasher.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -395,11 +402,12 @@ const jasonVoorheesSlasherCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.dOne,
-    transitions.jasonVoorhees.slasher.oneOneOneIntoDFOne,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.dOne,
+    moves.jasonVoorhees.slasher.oneOneOne,
+    moves.jasonVoorhees.slasher.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -431,11 +439,12 @@ const jasonVoorheesSlasherCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.dOne,
-    transitions.jasonVoorhees.slasher.oneOneOneIntoExDFOne,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.dOne,
+    moves.jasonVoorhees.slasher.oneOneOne,
+    moves.jasonVoorhees.slasher.exDFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -466,10 +475,11 @@ const jasonVoorheesSlasherCommunityCorner022Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jasonVoorhees.slasher.twoFour,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.fFourTwo,
-    transitions.jasonVoorhees.slasher.oneOneOneIntoDFOne,
+    moves.jasonVoorhees.slasher.twoFour,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.fFourTwo,
+    moves.jasonVoorhees.slasher.oneOneOne,
+    moves.jasonVoorhees.slasher.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

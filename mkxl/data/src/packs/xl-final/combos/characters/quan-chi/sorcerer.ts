@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.quanChi;
 const variationSlug = "sorcerer";
@@ -38,10 +38,10 @@ const quanChiSorcererStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.quanChi.universal.openingAssault,
-    transitions.quanChi.universal.risingAssault,
-    transitions.quanChi.sorcerer.sorcererTechnique,
-    transitions.quanChi.universal.closingStrikeEnhanced,
+    moves.quanChi.universal.openingAssault,
+    moves.quanChi.universal.risingAssault,
+    moves.quanChi.sorcerer.sorcererTechnique,
+    moves.quanChi.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

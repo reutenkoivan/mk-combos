@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.boRaiCho;
 const variationSlug = "dragon-breath";
@@ -38,10 +38,10 @@ const boRaiChoDragonBreathStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.boRaiCho.universal.openingAssault,
-    transitions.boRaiCho.universal.risingAssault,
-    transitions.boRaiCho.dragonBreath.dragonBreathTechnique,
-    transitions.boRaiCho.universal.closingStrikeEnhanced,
+    moves.boRaiCho.universal.openingAssault,
+    moves.boRaiCho.universal.risingAssault,
+    moves.boRaiCho.dragonBreath.dragonBreathTechnique,
+    moves.boRaiCho.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

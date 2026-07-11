@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.mileena;
 const variationSlug = "piercing";
@@ -38,10 +38,10 @@ const mileenaPiercingStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.mileena.universal.openingAssault,
-    transitions.mileena.universal.risingAssault,
-    transitions.mileena.piercing.piercingTechnique,
-    transitions.mileena.universal.closingStrike,
+    moves.mileena.universal.openingAssault,
+    moves.mileena.universal.risingAssault,
+    moves.mileena.piercing.piercingTechnique,
+    moves.mileena.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

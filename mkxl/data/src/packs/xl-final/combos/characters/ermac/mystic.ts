@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.ermac;
 const variationSlug = "mystic";
@@ -38,10 +38,10 @@ const ermacMysticStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.ermac.universal.openingAssault,
-    transitions.ermac.universal.risingAssault,
-    transitions.ermac.mystic.mysticTechnique,
-    transitions.ermac.universal.closingStrike,
+    moves.ermac.universal.openingAssault,
+    moves.ermac.universal.risingAssault,
+    moves.ermac.mystic.mysticTechnique,
+    moves.ermac.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

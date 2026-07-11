@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.triborg;
 const variationSlug = "sektor";
@@ -38,10 +38,10 @@ const triborgSektorStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.triborg.universal.openingAssault,
-    transitions.triborg.universal.risingAssault,
-    transitions.triborg.sektor.sektorTechnique,
-    transitions.triborg.universal.closingStrike,
+    moves.triborg.universal.openingAssault,
+    moves.triborg.universal.risingAssault,
+    moves.triborg.sektor.sektorTechnique,
+    moves.triborg.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,8 +72,10 @@ const triborgSektorCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.sektor.oneOneFourIntoDBFour,
-    transitions.triborg.sektor.fFourThreeIntoBFThree,
+    moves.triborg.sektor.oneOneFour,
+    moves.triborg.sektor.dBFour,
+    moves.triborg.sektor.fFourThree,
+    moves.triborg.sektor.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -104,8 +106,10 @@ const triborgSektorCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.sektor.fOneThreeIntoDBFour,
-    transitions.triborg.sektor.fFourThreeIntoBFThree,
+    moves.triborg.sektor.fOneThree,
+    moves.triborg.sektor.dBFour,
+    moves.triborg.sektor.fFourThree,
+    moves.triborg.sektor.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -136,8 +140,10 @@ const triborgSektorCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.sektor.fFourThreeIntoDBFour,
-    transitions.triborg.sektor.fFourThreeIntoBFThree,
+    moves.triborg.sektor.fFourThree,
+    moves.triborg.sektor.dBFour,
+    moves.triborg.sektor.fFourThree,
+    moves.triborg.sektor.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -168,8 +174,10 @@ const triborgSektorCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.sektor.bThreeIntoDBFour,
-    transitions.triborg.sektor.fFourThreeIntoBFThree,
+    moves.triborg.sektor.bThree,
+    moves.triborg.sektor.dBFour,
+    moves.triborg.sektor.fFourThree,
+    moves.triborg.sektor.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -200,8 +208,10 @@ const triborgSektorCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.sektor.bOneIntoDBFour,
-    transitions.triborg.sektor.fFourThreeIntoBFThree,
+    moves.triborg.sektor.bOne,
+    moves.triborg.sektor.dBFour,
+    moves.triborg.sektor.fFourThree,
+    moves.triborg.sektor.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -233,10 +243,12 @@ const triborgSektorCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.sektor.fThreeFourIntoDBFour,
-    transitions.triborg.sektor.twoOne,
-    transitions.triborg.sektor.twoOne,
-    transitions.triborg.sektor.oneOneFourIntoExDDThree,
+    moves.triborg.sektor.fThreeFour,
+    moves.triborg.sektor.dBFour,
+    moves.triborg.sektor.twoOne,
+    moves.triborg.sektor.twoOne,
+    moves.triborg.sektor.oneOneFour,
+    moves.triborg.sektor.exDDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -267,9 +279,11 @@ const triborgSektorCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.sektor.fThreeFourIntoDBFour,
-    transitions.triborg.sektor.twoOne,
-    transitions.triborg.sektor.fThreeFourIntoBFThree,
+    moves.triborg.sektor.fThreeFour,
+    moves.triborg.sektor.dBFour,
+    moves.triborg.sektor.twoOne,
+    moves.triborg.sektor.fThreeFour,
+    moves.triborg.sektor.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

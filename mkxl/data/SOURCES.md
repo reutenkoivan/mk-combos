@@ -35,7 +35,7 @@ records do not reference known source ids.
 - The active `xl-final` FGC controller notation catalog lives in
   `src/packs/xl-final/notation.ts`. It contains atomic controller inputs only. Authored moves
   must reference its registry values instead of retyping notation strings inline.
-- Community route transitions must use atomic MKXL move notation values from the active notation
+- Community route-source moves must use atomic MKXL move notation values from the active notation
   catalogs. Community shorthand that cannot be represented in that format is not kept in seeded
   combo data.
 - Movelist authoring lives under `src/packs/<pack-id>/moves/characters/<character-id>.ts`.
@@ -49,12 +49,12 @@ records do not reference known source ids.
   `src/packs/<pack-id>/combos/characters/<character-id>/<variation-slug>.ts`. Each combo declares
   a standalone object with a `route` of move object references. The exported variation combo
   wrapper aggregates those objects in its `combos` property. The pack compiler derives public
-  `movePath` and `cachedNotation` from each route.
+  `movePath` and `notation` from each route.
 - Verified move `label.EN` stores the official English in-game move name. Community route-token
-  notation is authored as route transitions, not movelist moves. Move records must not reference
-  `community-combo-source`. Move `id` is the schema-safe slug of the label:
+  notation that is not yet verified as an official move name is authored as explicit `route-source`
+  move records with `community-combo-source` provenance. Move `id` is the schema-safe slug of the label:
   `<character-id>:<move-name-slug>` for universal moves and
   `<character-id>:<variation-slug>:<move-name-slug>` for variation-only moves.
-- Combo authored files must not store `movePath`, `cachedNotation`, step objects, duplicate move id
-  strings, role-shaped keys, or lookup maps. Import the owning character's authored moves and the
-  route transition registry, then build `route` from those object references.
+- Combo authored files must not store `movePath`, `notation`, step objects, duplicate move id
+  strings, role-shaped keys, or lookup maps. Import the `xl-final` move registry, then build
+  `route` from those object references.

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kungJin;
 const variationSlug = "ancestral";
@@ -38,10 +38,10 @@ const kungJinAncestralStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kungJin.universal.openingAssault,
-    transitions.kungJin.universal.risingAssault,
-    transitions.kungJin.ancestral.ancestralTechnique,
-    transitions.kungJin.universal.closingStrike,
+    moves.kungJin.universal.openingAssault,
+    moves.kungJin.universal.risingAssault,
+    moves.kungJin.ancestral.ancestralTechnique,
+    moves.kungJin.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

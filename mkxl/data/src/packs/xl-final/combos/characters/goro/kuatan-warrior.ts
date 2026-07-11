@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.goro;
 const variationSlug = "kuatan-warrior";
@@ -38,10 +38,10 @@ const goroKuatanWarriorStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.goro.universal.openingAssault,
-    transitions.goro.universal.risingAssault,
-    transitions.goro.kuatanWarrior.kuatanWarriorTechnique,
-    transitions.goro.universal.closingStrike,
+    moves.goro.universal.openingAssault,
+    moves.goro.universal.risingAssault,
+    moves.goro.kuatanWarrior.kuatanWarriorTechnique,
+    moves.goro.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,9 +72,10 @@ const goroKuatanWarriorCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.goro.kuatanWarrior.bOneTwoUTwo,
-    transitions.goro.kuatanWarrior.bTwo,
-    transitions.goro.kuatanWarrior.fThreeIntoBFTwo,
+    moves.goro.kuatanWarrior.bOneTwoUTwo,
+    moves.goro.kuatanWarrior.bTwo,
+    moves.goro.kuatanWarrior.fThree,
+    moves.goro.kuatanWarrior.bFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -105,9 +106,11 @@ const goroKuatanWarriorCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.goro.kuatanWarrior.threeDThreeIntoBFFour,
-    transitions.goro.kuatanWarrior.mb,
-    transitions.goro.kuatanWarrior.fThreeIntoBFTwo,
+    moves.goro.kuatanWarrior.threeDThree,
+    moves.goro.kuatanWarrior.bFFour,
+    moves.goro.kuatanWarrior.mb,
+    moves.goro.kuatanWarrior.fThree,
+    moves.goro.kuatanWarrior.bFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -138,9 +141,11 @@ const goroKuatanWarriorCommunityOptimal012Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.goro.kuatanWarrior.threeDThreeIntoBFFour,
-    transitions.goro.kuatanWarrior.mb,
-    transitions.goro.kuatanWarrior.fThreeIntoDBFThree,
+    moves.goro.kuatanWarrior.threeDThree,
+    moves.goro.kuatanWarrior.bFFour,
+    moves.goro.kuatanWarrior.mb,
+    moves.goro.kuatanWarrior.fThree,
+    moves.goro.kuatanWarrior.dBFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -172,10 +177,12 @@ const goroKuatanWarriorCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.goro.kuatanWarrior.bOneTwoUTwo,
-    transitions.goro.kuatanWarrior.fourIntoExBFOne,
-    transitions.goro.kuatanWarrior.dOne,
-    transitions.goro.kuatanWarrior.oneTwoOneIntoDBFThree,
+    moves.goro.kuatanWarrior.bOneTwoUTwo,
+    moves.goro.kuatanWarrior.four,
+    moves.goro.kuatanWarrior.exBFOne,
+    moves.goro.kuatanWarrior.dOne,
+    moves.goro.kuatanWarrior.oneTwoOne,
+    moves.goro.kuatanWarrior.dBFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -207,10 +214,12 @@ const goroKuatanWarriorCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.goro.kuatanWarrior.bOneTwoUTwo,
-    transitions.goro.kuatanWarrior.fourIntoExBFOne,
-    transitions.goro.kuatanWarrior.dOne,
-    transitions.goro.kuatanWarrior.oneTwoOneIntoExDBFThree,
+    moves.goro.kuatanWarrior.bOneTwoUTwo,
+    moves.goro.kuatanWarrior.four,
+    moves.goro.kuatanWarrior.exBFOne,
+    moves.goro.kuatanWarrior.dOne,
+    moves.goro.kuatanWarrior.oneTwoOne,
+    moves.goro.kuatanWarrior.exDBFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -241,9 +250,10 @@ const goroKuatanWarriorCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.goro.kuatanWarrior.threeDThree,
-    transitions.goro.kuatanWarrior.bOneTwoUTwo,
-    transitions.goro.kuatanWarrior.fourIntoDBFThree,
+    moves.goro.kuatanWarrior.threeDThree,
+    moves.goro.kuatanWarrior.bOneTwoUTwo,
+    moves.goro.kuatanWarrior.four,
+    moves.goro.kuatanWarrior.dBFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

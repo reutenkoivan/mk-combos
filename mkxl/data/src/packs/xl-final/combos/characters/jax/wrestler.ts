@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.jax;
 const variationSlug = "wrestler";
@@ -42,10 +42,10 @@ const jaxWrestlerStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.jax.universal.openingAssault,
-    transitions.jax.universal.risingAssault,
-    transitions.jax.wrestler.wrestlerTechnique,
-    transitions.jax.universal.closingStrike,
+    moves.jax.universal.openingAssault,
+    moves.jax.universal.risingAssault,
+    moves.jax.wrestler.wrestlerTechnique,
+    moves.jax.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

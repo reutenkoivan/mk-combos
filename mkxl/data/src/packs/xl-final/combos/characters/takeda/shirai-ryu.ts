@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.takeda;
 const variationSlug = "shirai-ryu";
@@ -38,10 +38,10 @@ const takedaShiraiRyuStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.takeda.universal.openingAssault,
-    transitions.takeda.universal.risingAssault,
-    transitions.takeda.shiraiRyu.shiraiRyuTechnique,
-    transitions.takeda.universal.closingStrikeEnhanced,
+    moves.takeda.universal.openingAssault,
+    moves.takeda.universal.risingAssault,
+    moves.takeda.shiraiRyu.shiraiRyuTechnique,
+    moves.takeda.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -71,7 +71,7 @@ const takedaShiraiRyuCommunityBeginner001Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.takeda.shiraiRyu.oneOneTwoIntoBFTwo],
+  route: [moves.takeda.shiraiRyu.oneOneTwo, moves.takeda.shiraiRyu.bFTwo],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const takedaShiraiRyuCommunityBeginner002Combo = {
@@ -101,9 +101,10 @@ const takedaShiraiRyuCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.takeda.shiraiRyu.oneOneTwoIntoExDBOne,
-    transitions.takeda.shiraiRyu.dBThree,
-    transitions.takeda.shiraiRyu.dTwo,
+    moves.takeda.shiraiRyu.oneOneTwo,
+    moves.takeda.shiraiRyu.exDBOne,
+    moves.takeda.shiraiRyu.dBThree,
+    moves.takeda.shiraiRyu.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -134,9 +135,10 @@ const takedaShiraiRyuCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.takeda.shiraiRyu.bThreeIntoExDBOne,
-    transitions.takeda.shiraiRyu.dBThree,
-    transitions.takeda.shiraiRyu.dTwo,
+    moves.takeda.shiraiRyu.bThree,
+    moves.takeda.shiraiRyu.exDBOne,
+    moves.takeda.shiraiRyu.dBThree,
+    moves.takeda.shiraiRyu.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -167,9 +169,10 @@ const takedaShiraiRyuCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.takeda.shiraiRyu.bTwoOneIntoExDBOne,
-    transitions.takeda.shiraiRyu.dBThree,
-    transitions.takeda.shiraiRyu.dTwo,
+    moves.takeda.shiraiRyu.bTwoOne,
+    moves.takeda.shiraiRyu.exDBOne,
+    moves.takeda.shiraiRyu.dBThree,
+    moves.takeda.shiraiRyu.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -201,13 +204,15 @@ const takedaShiraiRyuCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.takeda.shiraiRyu.oneOneTwoIntoExDBOne,
-    transitions.takeda.shiraiRyu.dTwo,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.oneOneTwoIntoBFOne,
+    moves.takeda.shiraiRyu.oneOneTwo,
+    moves.takeda.shiraiRyu.exDBOne,
+    moves.takeda.shiraiRyu.dTwo,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.oneOneTwo,
+    moves.takeda.shiraiRyu.bFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -239,12 +244,14 @@ const takedaShiraiRyuCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.takeda.shiraiRyu.fFourIntoDOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.oneOneTwoIntoBFOne,
+    moves.takeda.shiraiRyu.fFour,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.oneOneTwo,
+    moves.takeda.shiraiRyu.bFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -276,13 +283,15 @@ const takedaShiraiRyuCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.takeda.shiraiRyu.bThreeIntoExDBOne,
-    transitions.takeda.shiraiRyu.dTwo,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.oneOneTwoIntoBFOne,
+    moves.takeda.shiraiRyu.bThree,
+    moves.takeda.shiraiRyu.exDBOne,
+    moves.takeda.shiraiRyu.dTwo,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.oneOneTwo,
+    moves.takeda.shiraiRyu.bFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -314,13 +323,15 @@ const takedaShiraiRyuCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.takeda.shiraiRyu.bTwoOneIntoExDBOne,
-    transitions.takeda.shiraiRyu.dTwo,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.dOne,
-    transitions.takeda.shiraiRyu.oneOneTwoIntoBFOne,
+    moves.takeda.shiraiRyu.bTwoOne,
+    moves.takeda.shiraiRyu.exDBOne,
+    moves.takeda.shiraiRyu.dTwo,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.dOne,
+    moves.takeda.shiraiRyu.oneOneTwo,
+    moves.takeda.shiraiRyu.bFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

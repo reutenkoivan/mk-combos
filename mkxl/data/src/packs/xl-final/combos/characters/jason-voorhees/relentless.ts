@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.jasonVoorhees;
 const variationSlug = "relentless";
@@ -38,10 +38,10 @@ const jasonVoorheesRelentlessStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.jasonVoorhees.universal.openingAssault,
-    transitions.jasonVoorhees.universal.risingAssault,
-    transitions.jasonVoorhees.relentless.relentlessTechnique,
-    transitions.jasonVoorhees.universal.closingStrike,
+    moves.jasonVoorhees.universal.openingAssault,
+    moves.jasonVoorhees.universal.risingAssault,
+    moves.jasonVoorhees.relentless.relentlessTechnique,
+    moves.jasonVoorhees.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

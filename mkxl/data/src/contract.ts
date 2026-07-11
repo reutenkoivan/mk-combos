@@ -10,7 +10,6 @@ import {
 } from "./movelists/value";
 import { mkxlCharacterIds } from "./roster/value";
 import { mkxlInteractableIds, mkxlStageIds } from "./stages/value";
-import { mkxlTransitionIds } from "./transitions/value";
 import { mkxlVariationIds } from "./variations/value";
 
 export const mkxlDataContractGroups = {
@@ -50,11 +49,6 @@ export const mkxlDataContractGroups = {
     type: "@mk-combos/mkxl-data/stages/type",
     value: "@mk-combos/mkxl-data/stages/value",
   },
-  transitions: {
-    schema: "@mk-combos/mkxl-data/transitions/schema",
-    type: "@mk-combos/mkxl-data/transitions/type",
-    value: "@mk-combos/mkxl-data/transitions/value",
-  },
   variations: {
     schema: "@mk-combos/mkxl-data/variations/schema",
     type: "@mk-combos/mkxl-data/variations/type",
@@ -78,7 +72,6 @@ export const mkCombosMkxlData = {
     mkxlMoveCategories,
     mkxlMoveIds,
     mkxlMoveNotationValues,
-    mkxlTransitionIds,
     mkxlStageGraphFragmentIds,
     mkxlStageIds,
     mkxlVariationGraphIds,

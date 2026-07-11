@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.johnnyCage;
 const variationSlug = "stunt-double";
@@ -38,10 +38,10 @@ const johnnyCageStuntDoubleStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.johnnyCage.universal.openingAssault,
-    transitions.johnnyCage.universal.risingAssault,
-    transitions.johnnyCage.stuntDouble.stuntDoubleTechnique,
-    transitions.johnnyCage.universal.closingStrike,
+    moves.johnnyCage.universal.openingAssault,
+    moves.johnnyCage.universal.risingAssault,
+    moves.johnnyCage.stuntDouble.stuntDoubleTechnique,
+    moves.johnnyCage.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,8 +72,10 @@ const johnnyCageStuntDoubleCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.oneOneThreeIntoExBDThree,
-    transitions.johnnyCage.stuntDouble.fThreeIntoBDThree,
+    moves.johnnyCage.stuntDouble.oneOneThree,
+    moves.johnnyCage.stuntDouble.exBDThree,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -105,12 +107,15 @@ const johnnyCageStuntDoubleCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.dBFour,
-    transitions.johnnyCage.stuntDouble.oneOneThreeIntoDBOne,
-    transitions.johnnyCage.stuntDouble.dash,
-    transitions.johnnyCage.stuntDouble.fThreeIntoDBOne,
-    transitions.johnnyCage.stuntDouble.dash,
-    transitions.johnnyCage.stuntDouble.fThreeIntoBDThree,
+    moves.johnnyCage.stuntDouble.dBFour,
+    moves.johnnyCage.stuntDouble.oneOneThree,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.general.universal.dash,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.general.universal.dash,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -141,9 +146,10 @@ const johnnyCageStuntDoubleCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.fTwoFour,
-    transitions.johnnyCage.stuntDouble.dOne,
-    transitions.johnnyCage.stuntDouble.fThreeIntoBDThree,
+    moves.johnnyCage.stuntDouble.fTwoFour,
+    moves.johnnyCage.stuntDouble.dOne,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -175,10 +181,12 @@ const johnnyCageStuntDoubleCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.fTwoFour,
-    transitions.johnnyCage.stuntDouble.dOne,
-    transitions.johnnyCage.stuntDouble.fThreeIntoExBDThree,
-    transitions.johnnyCage.stuntDouble.fThreeIntoBDThree,
+    moves.johnnyCage.stuntDouble.fTwoFour,
+    moves.johnnyCage.stuntDouble.dOne,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.exBDThree,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -210,14 +218,17 @@ const johnnyCageStuntDoubleCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.dBFour,
-    transitions.johnnyCage.stuntDouble.fTwoFour,
-    transitions.johnnyCage.stuntDouble.dOne,
-    transitions.johnnyCage.stuntDouble.fThreeIntoDBOne,
-    transitions.johnnyCage.stuntDouble.dash,
-    transitions.johnnyCage.stuntDouble.fThreeIntoDBOne,
-    transitions.johnnyCage.stuntDouble.dash,
-    transitions.johnnyCage.stuntDouble.fThreeIntoBDThree,
+    moves.johnnyCage.stuntDouble.dBFour,
+    moves.johnnyCage.stuntDouble.fTwoFour,
+    moves.johnnyCage.stuntDouble.dOne,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.general.universal.dash,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.general.universal.dash,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -249,12 +260,15 @@ const johnnyCageStuntDoubleCommunityBeginner006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.dBFour,
-    transitions.johnnyCage.stuntDouble.fThreeIntoDBOne,
-    transitions.johnnyCage.stuntDouble.dash,
-    transitions.johnnyCage.stuntDouble.fThreeIntoDBOne,
-    transitions.johnnyCage.stuntDouble.dash,
-    transitions.johnnyCage.stuntDouble.fThreeIntoBDThree,
+    moves.johnnyCage.stuntDouble.dBFour,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.general.universal.dash,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.general.universal.dash,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -286,10 +300,12 @@ const johnnyCageStuntDoubleCommunityOptimal007Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.oneOneThreeIntoExBDThree,
-    transitions.johnnyCage.stuntDouble.fTwoFour,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.fThreeIntoBDThree,
+    moves.johnnyCage.stuntDouble.oneOneThree,
+    moves.johnnyCage.stuntDouble.exBDThree,
+    moves.johnnyCage.stuntDouble.fTwoFour,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.fThree,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -321,13 +337,15 @@ const johnnyCageStuntDoubleCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.fTwoFourIntoExBFFour,
-    transitions.johnnyCage.stuntDouble.dOne,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneOneThreeIntoBDThree,
+    moves.johnnyCage.stuntDouble.fTwoFour,
+    moves.johnnyCage.stuntDouble.exBFFour,
+    moves.johnnyCage.stuntDouble.dOne,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneOneThree,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -359,15 +377,18 @@ const johnnyCageStuntDoubleCommunityCorner020Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.dBFour,
-    transitions.johnnyCage.stuntDouble.oneOneThreeIntoDBOne,
-    transitions.johnnyCage.stuntDouble.fourIntoDBOne,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwoIntoBDThree,
+    moves.johnnyCage.stuntDouble.dBFour,
+    moves.johnnyCage.stuntDouble.oneOneThree,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.johnnyCage.stuntDouble.four,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -399,13 +420,17 @@ const johnnyCageStuntDoubleCommunityCorner022Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.johnnyCage.stuntDouble.dBFour,
-    transitions.johnnyCage.stuntDouble.fTwoFourIntoExDBTwo,
-    transitions.johnnyCage.stuntDouble.oneOneFourIntoDBOne,
-    transitions.johnnyCage.stuntDouble.fourIntoDBOne,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwo,
-    transitions.johnnyCage.stuntDouble.oneTwoIntoBDThree,
+    moves.johnnyCage.stuntDouble.dBFour,
+    moves.johnnyCage.stuntDouble.fTwoFour,
+    moves.johnnyCage.stuntDouble.exDBTwo,
+    moves.johnnyCage.stuntDouble.oneOneFour,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.johnnyCage.stuntDouble.four,
+    moves.johnnyCage.stuntDouble.dBOne,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.oneTwo,
+    moves.johnnyCage.stuntDouble.bDThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

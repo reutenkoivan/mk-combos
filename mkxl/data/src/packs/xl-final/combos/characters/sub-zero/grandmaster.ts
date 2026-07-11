@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.subZero;
 const variationSlug = "grandmaster";
@@ -38,10 +38,10 @@ const subZeroGrandmasterStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.subZero.universal.openingAssault,
-    transitions.subZero.universal.risingAssault,
-    transitions.subZero.grandmaster.grandmasterTechnique,
-    transitions.subZero.universal.closingStrikeEnhanced,
+    moves.subZero.universal.openingAssault,
+    moves.subZero.universal.risingAssault,
+    moves.subZero.grandmaster.grandmasterTechnique,
+    moves.subZero.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -71,7 +71,7 @@ const subZeroGrandmasterCommunityBeginner003Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.subZero.grandmaster.bTwo, transitions.subZero.grandmaster.bFFour],
+  route: [moves.subZero.grandmaster.bTwo, moves.subZero.grandmaster.bFFour],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const subZeroGrandmasterCommunityBeginner004Combo = {
@@ -101,9 +101,10 @@ const subZeroGrandmasterCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.subZero.grandmaster.bTwo,
-    transitions.subZero.grandmaster.bTwo,
-    transitions.subZero.grandmaster.bOneTwoIntoBFFour,
+    moves.subZero.grandmaster.bTwo,
+    moves.subZero.grandmaster.bTwo,
+    moves.subZero.grandmaster.bOneTwo,
+    moves.subZero.grandmaster.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -133,7 +134,11 @@ const subZeroGrandmasterCommunityOptimal009Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.subZero.grandmaster.bTwo, transitions.subZero.grandmaster.fFourTwoIntoBFFour],
+  route: [
+    moves.subZero.grandmaster.bTwo,
+    moves.subZero.grandmaster.fFourTwo,
+    moves.subZero.grandmaster.bFFour,
+  ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 export const subZeroGrandmasterCombos = {

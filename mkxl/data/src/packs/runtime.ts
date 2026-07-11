@@ -1,9 +1,7 @@
 import type { MkxlSeededCombo } from "../combos/type";
 import type { MkxlMove, MkxlMoveTree } from "../movelists/type";
-import type { MkxlTransition } from "../transitions/type";
 import type {
   MkxlAuthoredCharacterMoves,
-  MkxlAuthoredTransition,
   MkxlAuthoredVariationCombos,
   MkxlDataPack,
   MkxlMovePatch,
@@ -20,6 +18,8 @@ type MutableAuthoredCharacterMoves = {
   variations: Record<string, Record<string, MkxlMove>>;
 };
 
+type NonEmptyReadonlyArray<T> = readonly [T, ...T[]];
+
 type MkxlPackState = {
   sources: MkxlDataPack["sources"];
   game: MkxlDataPack["game"];
@@ -27,7 +27,6 @@ type MkxlPackState = {
   variations: MkxlDataPack["variations"];
   stages: MkxlDataPack["stages"];
   inputNotationValues: MkxlDataPack["inputNotationValues"];
-  transitionsById: Map<string, MkxlAuthoredTransition>;
   movesByCharacterId: Map<string, MutableAuthoredCharacterMoves>;
   combosByVariationId: Map<string, MkxlAuthoredVariationCombos>;
 };
@@ -39,13 +38,37 @@ const createEmptyPackState = (): MkxlPackState => ({
   variations: undefined,
   stages: undefined,
   inputNotationValues: undefined,
-  transitionsById: new Map(),
   movesByCharacterId: new Map(),
   combosByVariationId: new Map(),
 });
 
 const toCamelKey = (value: string) =>
   value.replace(/-([a-z0-9])/gu, (_match, char: string) => char.toUpperCase());
+
+const toNonEmptyReadonlyArray = <T extends NonNullable<unknown>>(
+  values: readonly T[],
+  label: string,
+): NonEmptyReadonlyArray<T> => {
+  const [first, ...rest] = values;
+
+  if (first === undefined) {
+    throw new Error(`${label} must not be empty.`);
+  }
+
+  return [first, ...rest];
+};
+
+const mapNonEmptyReadonlyArray = <
+  TInput extends NonNullable<unknown>,
+  TOutput extends NonNullable<unknown>,
+>(
+  values: NonEmptyReadonlyArray<TInput>,
+  mapper: (value: TInput, index: number) => TOutput,
+): NonEmptyReadonlyArray<TOutput> => {
+  const [first, ...rest] = values;
+
+  return [mapper(first, 0), ...rest.map((value, index) => mapper(value, index + 1))];
+};
 
 const cloneCharacterMoves = (entry: MkxlAuthoredCharacterMoves): MutableAuthoredCharacterMoves => ({
   sourcePath: entry.sourcePath,
@@ -64,7 +87,6 @@ const clonePackState = (state: MkxlPackState): MkxlPackState => ({
   variations: state.variations,
   stages: state.stages,
   inputNotationValues: state.inputNotationValues,
-  transitionsById: new Map(state.transitionsById),
   movesByCharacterId: new Map(
     [...state.movesByCharacterId].map(([characterId, entry]) => [
       characterId,
@@ -172,11 +194,6 @@ const applyPack = (inputState: MkxlPackState, pack: MkxlDataPack): MkxlPackState
   if (pack.inputNotationValues) {
     state.inputNotationValues = pack.inputNotationValues;
   }
-  if (pack.transitions) {
-    for (const transition of pack.transitions) {
-      state.transitionsById.set(transition.id, transition);
-    }
-  }
   if (pack.moves) {
     for (const entry of pack.moves) {
       mergeCharacterMoves(state, entry);
@@ -215,7 +232,7 @@ const applyPack = (inputState: MkxlPackState, pack: MkxlDataPack): MkxlPackState
 
       state.combosByVariationId.set(variationId, {
         ...entry,
-        combos: combos as unknown as MkxlAuthoredVariationCombos["combos"],
+        combos: toNonEmptyReadonlyArray(combos, `${variationId} combos`),
       });
     }
   }
@@ -285,49 +302,26 @@ const resolveMovelistFile = (
   sourceIds: entry.sourceIds,
 });
 
-const resolveTransition = (transition: MkxlAuthoredTransition): MkxlTransition => {
-  const movePath = transition.route.map((move) => move.id);
-
-  return {
-    ...transition,
-    route: movePath.map((moveId) => ({ kind: "move", moveId })),
-    movePath,
-    notation: transition.route.map((move) => move.notation),
-  };
-};
-
-const resolveComboFile = (
-  entry: MkxlAuthoredVariationCombos,
-  transitionsById: ReadonlyMap<string, MkxlTransition>,
-): MkxlResolvedVariationComboFile => ({
+const resolveComboFile = (entry: MkxlAuthoredVariationCombos): MkxlResolvedVariationComboFile => ({
   sourcePath: entry.sourcePath,
   characterId: entry.characterId,
   variationSlug: entry.variationSlug,
   variationId: entry.variationId,
-  combos: entry.combos.map((combo) => {
+  combos: mapNonEmptyReadonlyArray(entry.combos, (combo) => {
     const { route, ...seededCombo } = combo;
-    const resolvedRoute = route.map((routeEntry) => {
-      const transition = transitionsById.get(routeEntry.id);
-
-      if (!transition) {
-        throw new Error(`${routeEntry.id} is not declared as a transition.`);
-      }
-
-      return transition;
-    });
 
     return {
       ...seededCombo,
       characterId: entry.characterId,
       variationId: entry.variationId,
-      route: resolvedRoute.map((transition) => ({
-        kind: "transition",
-        transitionId: transition.id,
+      route: route.map((move) => ({
+        kind: "move",
+        moveId: move.id,
       })),
-      movePath: resolvedRoute.flatMap((transition) => transition.movePath),
-      notation: resolvedRoute.flatMap((transition) => transition.notation),
+      movePath: route.map((move) => move.id),
+      notation: route.map((move) => move.notation),
     } satisfies MkxlSeededCombo;
-  }) as unknown as MkxlResolvedVariationComboFile["combos"],
+  }),
 });
 
 export const compileMkxlDataPack = (pack: MkxlDataPack): MkxlResolvedData => {
@@ -349,11 +343,7 @@ export const compileMkxlDataPack = (pack: MkxlDataPack): MkxlResolvedData => {
     movelist,
     sourceIds,
   }));
-  const transitions = [...state.transitionsById.values()].map(resolveTransition);
-  const transitionsById = new Map(transitions.map((transition) => [transition.id, transition]));
-  const comboFiles = [...state.combosByVariationId.values()].map((entry) =>
-    resolveComboFile(entry, transitionsById),
-  );
+  const comboFiles = [...state.combosByVariationId.values()].map(resolveComboFile);
   const seededCombos = comboFiles.flatMap((entry) => entry.combos);
   const moveTreeRegistry = Object.fromEntries(
     movelistFiles.map((entry) => [toCamelKey(entry.characterId), entry]),
@@ -380,8 +370,6 @@ export const compileMkxlDataPack = (pack: MkxlDataPack): MkxlResolvedData => {
       stage.interactables.map((interactable) => interactable.id),
     ),
     inputNotationValues,
-    transitions,
-    transitionIds: transitions.map((transition) => transition.id),
     movelistFiles,
     moveTreeRegistry,
     movelists,

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kotalKahn;
 const variationSlug = "sun-god";
@@ -38,10 +38,10 @@ const kotalKahnSunGodStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kotalKahn.universal.openingAssault,
-    transitions.kotalKahn.universal.risingAssault,
-    transitions.kotalKahn.sunGod.sunGodTechnique,
-    transitions.kotalKahn.universal.closingStrike,
+    moves.kotalKahn.universal.openingAssault,
+    moves.kotalKahn.universal.risingAssault,
+    moves.kotalKahn.sunGod.sunGodTechnique,
+    moves.kotalKahn.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

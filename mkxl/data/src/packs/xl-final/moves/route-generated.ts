@@ -2,8 +2,8 @@ import type { MkxlAuthoredCharacterMoves } from "../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../character-ids";
 import { mkxlXlFinalFgcNotation as fgcNotation } from "../notation";
 
-const alienTransitionGeneratedMoves = {
-  sourcePath: "characters/alien-transition-generated.ts",
+const alienRouteGeneratedMoves = {
+  sourcePath: "characters/alien-route-generated.ts",
   characterId: characterIds.alien,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -28,7 +28,7 @@ const alienTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThree: {
@@ -44,7 +44,7 @@ const alienTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFThree: {
@@ -60,7 +60,7 @@ const alienTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBFFour: {
@@ -77,7 +77,7 @@ const alienTransitionGeneratedMoves = {
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exBFOne: {
@@ -94,7 +94,7 @@ const alienTransitionGeneratedMoves = {
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFour: {
@@ -110,7 +110,7 @@ const alienTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOneThreeFour: {
@@ -126,7 +126,7 @@ const alienTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwo: {
@@ -142,7 +142,7 @@ const alienTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOneFour: {
@@ -158,7 +158,7 @@ const alienTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       uThree: {
@@ -174,15 +174,15 @@ const alienTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.alien}:tarkatan`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const boRaiChoTransitionGeneratedMoves = {
-  sourcePath: "characters/bo-rai-cho-transition-generated.ts",
+const boRaiChoRouteGeneratedMoves = {
+  sourcePath: "characters/bo-rai-cho-route-generated.ts",
   characterId: characterIds.boRaiCho,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -201,7 +201,7 @@ const boRaiChoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.boRaiCho}:bartitsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwoThreeThree: {
@@ -217,7 +217,7 @@ const boRaiChoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.boRaiCho}:bartitsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwo: {
@@ -233,7 +233,7 @@ const boRaiChoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.boRaiCho}:bartitsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       threeFourOne: {
@@ -249,7 +249,7 @@ const boRaiChoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.boRaiCho}:bartitsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOne: {
@@ -265,15 +265,15 @@ const boRaiChoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.boRaiCho}:bartitsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const cassieCageTransitionGeneratedMoves = {
-  sourcePath: "characters/cassie-cage-transition-generated.ts",
+const cassieCageRouteGeneratedMoves = {
+  sourcePath: "characters/cassie-cage-route-generated.ts",
   characterId: characterIds.cassieCage,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -292,7 +292,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOne: {
@@ -308,7 +308,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneTwo: {
@@ -324,7 +324,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBTwo: {
@@ -340,7 +340,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDBTwo: {
@@ -357,7 +357,7 @@ const cassieCageTransitionGeneratedMoves = {
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFourFour: {
@@ -373,7 +373,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThree: {
@@ -389,7 +389,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneTwo: {
@@ -405,7 +405,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoOne: {
@@ -421,7 +421,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoThree: {
@@ -437,7 +437,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoFourTwo: {
@@ -453,7 +453,7 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOneUFour: {
@@ -469,15 +469,15 @@ const cassieCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.cassieCage}:hollywood`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const dvorahTransitionGeneratedMoves = {
-  sourcePath: "characters/dvorah-transition-generated.ts",
+const dvorahRouteGeneratedMoves = {
+  sourcePath: "characters/dvorah-route-generated.ts",
   characterId: characterIds.dvorah,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -496,7 +496,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFour: {
@@ -512,7 +512,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBOne: {
@@ -528,7 +528,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFFour: {
@@ -544,7 +544,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFThree: {
@@ -560,7 +560,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -576,7 +576,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDFOne: {
@@ -593,7 +593,7 @@ const dvorahTransitionGeneratedMoves = {
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFourFour: {
@@ -609,7 +609,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOneOne: {
@@ -625,7 +625,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOneOneTwo: {
@@ -641,7 +641,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fourFour: {
@@ -657,7 +657,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThreeFour: {
@@ -673,7 +673,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneBTwo: {
@@ -689,7 +689,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneTwo: {
@@ -705,7 +705,7 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOneTwo: {
@@ -721,15 +721,15 @@ const dvorahTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.dvorah}:brood-mother`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const ermacTransitionGeneratedMoves = {
-  sourcePath: "characters/ermac-transition-generated.ts",
+const ermacRouteGeneratedMoves = {
+  sourcePath: "characters/ermac-route-generated.ts",
   characterId: characterIds.ermac,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -748,7 +748,7 @@ const ermacTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ermac}:master-of-souls`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFour: {
@@ -764,7 +764,7 @@ const ermacTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ermac}:master-of-souls`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -780,7 +780,7 @@ const ermacTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ermac}:master-of-souls`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneTwo: {
@@ -796,15 +796,15 @@ const ermacTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ermac}:master-of-souls`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const erronBlackTransitionGeneratedMoves = {
-  sourcePath: "characters/erron-black-transition-generated.ts",
+const erronBlackRouteGeneratedMoves = {
+  sourcePath: "characters/erron-black-route-generated.ts",
   characterId: characterIds.erronBlack,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -823,7 +823,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeThree: {
@@ -839,7 +839,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFour: {
@@ -855,7 +855,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFTwo: {
@@ -871,7 +871,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFTwo: {
@@ -887,7 +887,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -903,7 +903,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -919,7 +919,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBFThree: {
@@ -936,7 +936,7 @@ const erronBlackTransitionGeneratedMoves = {
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDBFour: {
@@ -953,7 +953,7 @@ const erronBlackTransitionGeneratedMoves = {
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fOneThree: {
@@ -969,7 +969,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneBThree: {
@@ -985,7 +985,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneTwo: {
@@ -1001,7 +1001,7 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOneOneTwoTwo: {
@@ -1023,15 +1023,15 @@ const erronBlackTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.erronBlack}:outlaw`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const ferraTorrTransitionGeneratedMoves = {
-  sourcePath: "characters/ferra-torr-transition-generated.ts",
+const ferraTorrRouteGeneratedMoves = {
+  sourcePath: "characters/ferra-torr-route-generated.ts",
   characterId: characterIds.ferraTorr,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -1050,7 +1050,7 @@ const ferraTorrTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneTwoOne: {
@@ -1066,7 +1066,7 @@ const ferraTorrTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFOne: {
@@ -1082,7 +1082,7 @@ const ferraTorrTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -1098,7 +1098,7 @@ const ferraTorrTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBFTwo: {
@@ -1115,7 +1115,7 @@ const ferraTorrTransitionGeneratedMoves = {
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDBTwo: {
@@ -1132,7 +1132,7 @@ const ferraTorrTransitionGeneratedMoves = {
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -1148,7 +1148,7 @@ const ferraTorrTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThree: {
@@ -1164,7 +1164,7 @@ const ferraTorrTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwo: {
@@ -1180,7 +1180,7 @@ const ferraTorrTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOne: {
@@ -1196,15 +1196,15 @@ const ferraTorrTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.ferraTorr}:ruthless`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const goroTransitionGeneratedMoves = {
-  sourcePath: "characters/goro-transition-generated.ts",
+const goroRouteGeneratedMoves = {
+  sourcePath: "characters/goro-route-generated.ts",
   characterId: characterIds.goro,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -1223,7 +1223,7 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bFTwo: {
@@ -1239,7 +1239,7 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneTwoUTwo: {
@@ -1261,7 +1261,7 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -1277,7 +1277,7 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFThree: {
@@ -1293,7 +1293,7 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -1309,7 +1309,7 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBFOne: {
@@ -1326,7 +1326,7 @@ const goroTransitionGeneratedMoves = {
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDBFThree: {
@@ -1349,7 +1349,7 @@ const goroTransitionGeneratedMoves = {
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -1365,7 +1365,7 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThree: {
@@ -1381,7 +1381,7 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       mb: {
@@ -1398,7 +1398,7 @@ const goroTransitionGeneratedMoves = {
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoOne: {
@@ -1414,7 +1414,7 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       threeDThree: {
@@ -1430,15 +1430,15 @@ const goroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.goro}:kuatan-warrior`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const jacquiBriggsTransitionGeneratedMoves = {
-  sourcePath: "characters/jacqui-briggs-transition-generated.ts",
+const jacquiBriggsRouteGeneratedMoves = {
+  sourcePath: "characters/jacqui-briggs-route-generated.ts",
   characterId: characterIds.jacquiBriggs,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -1457,7 +1457,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bFOne: {
@@ -1473,7 +1473,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bFTwo: {
@@ -1489,7 +1489,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeThree: {
@@ -1505,7 +1505,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -1521,7 +1521,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBThree: {
@@ -1537,7 +1537,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBTwo: {
@@ -1553,7 +1553,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dUFour: {
@@ -1569,7 +1569,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDBThree: {
@@ -1586,7 +1586,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDBTwo: {
@@ -1603,7 +1603,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fOne: {
@@ -1619,7 +1619,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOneTwo: {
@@ -1635,7 +1635,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -1651,7 +1651,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwoUTwo: {
@@ -1667,7 +1667,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       one: {
@@ -1683,7 +1683,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOne: {
@@ -1699,7 +1699,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneFour: {
@@ -1715,7 +1715,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoOne: {
@@ -1731,7 +1731,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoOneTwo: {
@@ -1747,7 +1747,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       threeThree: {
@@ -1763,7 +1763,7 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoThree: {
@@ -1779,15 +1779,15 @@ const jacquiBriggsTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jacquiBriggs}:full-auto`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const jasonVoorheesTransitionGeneratedMoves = {
-  sourcePath: "characters/jason-voorhees-transition-generated.ts",
+const jasonVoorheesRouteGeneratedMoves = {
+  sourcePath: "characters/jason-voorhees-route-generated.ts",
   characterId: characterIds.jasonVoorhees,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -1806,7 +1806,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneTwoTwo: {
@@ -1822,7 +1822,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -1838,7 +1838,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFOne: {
@@ -1854,7 +1854,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -1870,7 +1870,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBFTwo: {
@@ -1887,7 +1887,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDFOne: {
@@ -1904,7 +1904,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFourTwo: {
@@ -1920,7 +1920,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwo: {
@@ -1936,7 +1936,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOne: {
@@ -1952,7 +1952,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneOne: {
@@ -1968,7 +1968,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoTwo: {
@@ -1984,7 +1984,7 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoFour: {
@@ -2000,15 +2000,15 @@ const jasonVoorheesTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jasonVoorhees}:slasher`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const jaxTransitionGeneratedMoves = {
-  sourcePath: "characters/jax-transition-generated.ts",
+const jaxRouteGeneratedMoves = {
+  sourcePath: "characters/jax-route-generated.ts",
   characterId: characterIds.jax,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -2027,7 +2027,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThree: {
@@ -2043,7 +2043,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeFour: {
@@ -2059,7 +2059,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -2075,7 +2075,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBOne: {
@@ -2091,7 +2091,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOneTwo: {
@@ -2107,7 +2107,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBFTwoD: {
@@ -2130,7 +2130,7 @@ const jaxTransitionGeneratedMoves = {
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDBOne: {
@@ -2147,7 +2147,7 @@ const jaxTransitionGeneratedMoves = {
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -2163,7 +2163,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwoOne: {
@@ -2179,7 +2179,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwoOneTwo: {
@@ -2195,7 +2195,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwoOneTwoD: {
@@ -2217,7 +2217,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOne: {
@@ -2233,7 +2233,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwo: {
@@ -2249,7 +2249,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoFour: {
@@ -2265,7 +2265,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       threeBTwo: {
@@ -2281,7 +2281,7 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       two: {
@@ -2297,15 +2297,15 @@ const jaxTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.jax}:heavy-weapons`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const johnnyCageTransitionGeneratedMoves = {
-  sourcePath: "characters/johnny-cage-transition-generated.ts",
+const johnnyCageRouteGeneratedMoves = {
+  sourcePath: "characters/johnny-cage-route-generated.ts",
   characterId: characterIds.johnnyCage,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -2324,7 +2324,7 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFour: {
@@ -2340,7 +2340,7 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBOne: {
@@ -2356,7 +2356,7 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -2372,7 +2372,7 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBDThree: {
@@ -2389,7 +2389,7 @@ const johnnyCageTransitionGeneratedMoves = {
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exBFFour: {
@@ -2406,7 +2406,7 @@ const johnnyCageTransitionGeneratedMoves = {
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDBTwo: {
@@ -2423,7 +2423,7 @@ const johnnyCageTransitionGeneratedMoves = {
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -2439,7 +2439,7 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThree: {
@@ -2455,7 +2455,7 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwoFour: {
@@ -2471,7 +2471,7 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneFour: {
@@ -2487,7 +2487,7 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneThree: {
@@ -2503,7 +2503,7 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwo: {
@@ -2519,15 +2519,15 @@ const johnnyCageTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.johnnyCage}:stunt-double`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const kanoTransitionGeneratedMoves = {
-  sourcePath: "characters/kano-transition-generated.ts",
+const kanoRouteGeneratedMoves = {
+  sourcePath: "characters/kano-route-generated.ts",
   characterId: characterIds.kano,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -2546,7 +2546,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneTwoOne: {
@@ -2562,7 +2562,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeOneTwo: {
@@ -2578,7 +2578,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBOne: {
@@ -2594,7 +2594,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFTwo: {
@@ -2610,7 +2610,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dThree: {
@@ -2626,7 +2626,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDBOne: {
@@ -2643,7 +2643,7 @@ const kanoTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDDThree: {
@@ -2660,7 +2660,7 @@ const kanoTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFour: {
@@ -2676,7 +2676,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -2692,7 +2692,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwoOneTwo: {
@@ -2708,7 +2708,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneTwo: {
@@ -2724,7 +2724,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       threeTwo: {
@@ -2740,7 +2740,7 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       two: {
@@ -2756,15 +2756,15 @@ const kanoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kano}:cutthroat`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const kenshiTransitionGeneratedMoves = {
-  sourcePath: "characters/kenshi-transition-generated.ts",
+const kenshiRouteGeneratedMoves = {
+  sourcePath: "characters/kenshi-route-generated.ts",
   characterId: characterIds.kenshi,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -2783,7 +2783,7 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeTwo: {
@@ -2799,7 +2799,7 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFFour: {
@@ -2815,7 +2815,7 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -2831,7 +2831,7 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -2847,7 +2847,7 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDBFour: {
@@ -2864,7 +2864,7 @@ const kenshiTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDBFourB: {
@@ -2887,7 +2887,7 @@ const kenshiTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDBOne: {
@@ -2904,7 +2904,7 @@ const kenshiTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -2920,7 +2920,7 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fourThree: {
@@ -2936,7 +2936,7 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fourTwoOne: {
@@ -2952,7 +2952,7 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThreeTwo: {
@@ -2968,7 +2968,7 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneFour: {
@@ -2984,15 +2984,15 @@ const kenshiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kenshi}:possessed`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const kotalKahnTransitionGeneratedMoves = {
-  sourcePath: "characters/kotal-kahn-transition-generated.ts",
+const kotalKahnRouteGeneratedMoves = {
+  sourcePath: "characters/kotal-kahn-route-generated.ts",
   characterId: characterIds.kotalKahn,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -3011,7 +3011,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneFour: {
@@ -3027,7 +3027,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneTwoTwo: {
@@ -3043,7 +3043,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBOne: {
@@ -3059,7 +3059,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFOne: {
@@ -3075,7 +3075,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFour: {
@@ -3091,7 +3091,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFTwo: {
@@ -3107,7 +3107,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -3123,7 +3123,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -3139,7 +3139,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDBOne: {
@@ -3156,7 +3156,7 @@ const kotalKahnTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDFOne: {
@@ -3173,7 +3173,7 @@ const kotalKahnTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDFThree: {
@@ -3190,7 +3190,7 @@ const kotalKahnTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fOneBTwo: {
@@ -3206,7 +3206,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThree: {
@@ -3222,7 +3222,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThreeFour: {
@@ -3238,7 +3238,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwo: {
@@ -3254,7 +3254,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       one: {
@@ -3270,7 +3270,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneF: {
@@ -3286,7 +3286,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneFour: {
@@ -3302,7 +3302,7 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       two: {
@@ -3318,15 +3318,15 @@ const kotalKahnTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kotalKahn}:war-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const kungJinTransitionGeneratedMoves = {
-  sourcePath: "characters/kung-jin-transition-generated.ts",
+const kungJinRouteGeneratedMoves = {
+  sourcePath: "characters/kung-jin-route-generated.ts",
   characterId: characterIds.kungJin,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -3345,7 +3345,7 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneFour: {
@@ -3361,7 +3361,7 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBOne: {
@@ -3377,7 +3377,7 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBThree: {
@@ -3393,7 +3393,7 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDBOne: {
@@ -3410,7 +3410,7 @@ const kungJinTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDBThree: {
@@ -3427,7 +3427,7 @@ const kungJinTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -3443,7 +3443,7 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwoFour: {
@@ -3459,7 +3459,7 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneOne: {
@@ -3475,7 +3475,7 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       threeFour: {
@@ -3491,7 +3491,7 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       threeFourThree: {
@@ -3507,7 +3507,7 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoTwoOne: {
@@ -3523,15 +3523,15 @@ const kungJinTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungJin}:bojutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const kungLaoTransitionGeneratedMoves = {
-  sourcePath: "characters/kung-lao-transition-generated.ts",
+const kungLaoRouteGeneratedMoves = {
+  sourcePath: "characters/kung-lao-route-generated.ts",
   characterId: characterIds.kungLao,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -3550,7 +3550,7 @@ const kungLaoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungLao}:tempest`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeTwoOne: {
@@ -3566,7 +3566,7 @@ const kungLaoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungLao}:tempest`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -3582,7 +3582,7 @@ const kungLaoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungLao}:tempest`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBOne: {
@@ -3598,7 +3598,7 @@ const kungLaoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungLao}:tempest`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFOne: {
@@ -3614,7 +3614,7 @@ const kungLaoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungLao}:tempest`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -3630,7 +3630,7 @@ const kungLaoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungLao}:tempest`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDFOne: {
@@ -3647,7 +3647,7 @@ const kungLaoTransitionGeneratedMoves = {
           variationIds: [`${characterIds.kungLao}:tempest`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fTwoThree: {
@@ -3663,15 +3663,15 @@ const kungLaoTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.kungLao}:tempest`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const leatherfaceTransitionGeneratedMoves = {
-  sourcePath: "characters/leatherface-transition-generated.ts",
+const leatherfaceRouteGeneratedMoves = {
+  sourcePath: "characters/leatherface-route-generated.ts",
   characterId: characterIds.leatherface,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -3690,7 +3690,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOne: {
@@ -3706,7 +3706,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFour: {
@@ -3722,7 +3722,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBOne: {
@@ -3738,7 +3738,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBThree: {
@@ -3754,7 +3754,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOneTwo: {
@@ -3770,7 +3770,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThree: {
@@ -3786,7 +3786,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwoOneDTwo: {
@@ -3808,7 +3808,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       mb: {
@@ -3825,7 +3825,7 @@ const leatherfaceTransitionGeneratedMoves = {
           variationIds: [`${characterIds.leatherface}:killer`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       one: {
@@ -3841,7 +3841,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwo: {
@@ -3857,7 +3857,7 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoTwo: {
@@ -3873,15 +3873,15 @@ const leatherfaceTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.leatherface}:killer`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const liuKangTransitionGeneratedMoves = {
-  sourcePath: "characters/liu-kang-transition-generated.ts",
+const liuKangRouteGeneratedMoves = {
+  sourcePath: "characters/liu-kang-route-generated.ts",
   characterId: characterIds.liuKang,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -3900,7 +3900,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneTwo: {
@@ -3916,7 +3916,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeFour: {
@@ -3932,7 +3932,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBTwo: {
@@ -3948,7 +3948,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dDOne: {
@@ -3964,7 +3964,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -3980,7 +3980,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -3996,7 +3996,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBFOne: {
@@ -4013,7 +4013,7 @@ const liuKangTransitionGeneratedMoves = {
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDDOne: {
@@ -4030,7 +4030,7 @@ const liuKangTransitionGeneratedMoves = {
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exFBFFour: {
@@ -4053,7 +4053,7 @@ const liuKangTransitionGeneratedMoves = {
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fBFFour: {
@@ -4069,7 +4069,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fFourFour: {
@@ -4085,7 +4085,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOneTwo: {
@@ -4101,7 +4101,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwoOneThree: {
@@ -4117,7 +4117,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneThree: {
@@ -4133,7 +4133,7 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneTwo: {
@@ -4149,15 +4149,15 @@ const liuKangTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.liuKang}:flame-fist`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const predatorTransitionGeneratedMoves = {
-  sourcePath: "characters/predator-transition-generated.ts",
+const predatorRouteGeneratedMoves = {
+  sourcePath: "characters/predator-route-generated.ts",
   characterId: characterIds.predator,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -4176,7 +4176,7 @@ const predatorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.predator}:hunter`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bFTwo: {
@@ -4192,7 +4192,7 @@ const predatorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.predator}:hunter`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeOneOne: {
@@ -4208,7 +4208,7 @@ const predatorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.predator}:hunter`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dDOne: {
@@ -4224,7 +4224,7 @@ const predatorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.predator}:hunter`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDBFour: {
@@ -4241,7 +4241,7 @@ const predatorTransitionGeneratedMoves = {
           variationIds: [`${characterIds.predator}:hunter`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFour: {
@@ -4257,7 +4257,7 @@ const predatorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.predator}:hunter`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       threeTwo: {
@@ -4273,15 +4273,15 @@ const predatorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.predator}:hunter`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const quanChiTransitionGeneratedMoves = {
-  sourcePath: "characters/quan-chi-transition-generated.ts",
+const quanChiRouteGeneratedMoves = {
+  sourcePath: "characters/quan-chi-route-generated.ts",
   characterId: characterIds.quanChi,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -4300,7 +4300,7 @@ const quanChiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.quanChi}:summoner`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeTwoFour: {
@@ -4316,7 +4316,7 @@ const quanChiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.quanChi}:summoner`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fFour: {
@@ -4332,7 +4332,7 @@ const quanChiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.quanChi}:summoner`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneFourOne: {
@@ -4348,7 +4348,7 @@ const quanChiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.quanChi}:summoner`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwo: {
@@ -4364,15 +4364,15 @@ const quanChiTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.quanChi}:summoner`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const raidenTransitionGeneratedMoves = {
-  sourcePath: "characters/raiden-transition-generated.ts",
+const raidenRouteGeneratedMoves = {
+  sourcePath: "characters/raiden-route-generated.ts",
   characterId: characterIds.raiden,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -4391,7 +4391,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneFour: {
@@ -4407,7 +4407,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneOne: {
@@ -4423,7 +4423,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeFour: {
@@ -4439,7 +4439,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeTwo: {
@@ -4455,7 +4455,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -4471,7 +4471,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBTwo: {
@@ -4487,7 +4487,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFTwo: {
@@ -4503,7 +4503,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDFTwo: {
@@ -4520,7 +4520,7 @@ const raidenTransitionGeneratedMoves = {
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fOneTwoBTwo: {
@@ -4542,7 +4542,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOneFour: {
@@ -4558,7 +4558,7 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOneThree: {
@@ -4574,15 +4574,15 @@ const raidenTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.raiden}:thunder-god`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const reptileTransitionGeneratedMoves = {
-  sourcePath: "characters/reptile-transition-generated.ts",
+const reptileRouteGeneratedMoves = {
+  sourcePath: "characters/reptile-route-generated.ts",
   characterId: characterIds.reptile,
   sourceIds: ["community-combo-source"],
   universal: {
@@ -4598,7 +4598,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     bFTwo: {
@@ -4613,7 +4613,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     bThree: {
@@ -4628,7 +4628,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     bTwo: {
@@ -4643,7 +4643,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     dBFour: {
@@ -4658,7 +4658,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     dBThree: {
@@ -4673,7 +4673,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     dBTwo: {
@@ -4688,7 +4688,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     dFThree: {
@@ -4703,7 +4703,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     dOne: {
@@ -4718,7 +4718,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     dThree: {
@@ -4733,7 +4733,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     dTwo: {
@@ -4748,7 +4748,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     exDDThree: {
@@ -4764,7 +4764,7 @@ const reptileTransitionGeneratedMoves = {
         kind: "universal",
       },
       meterCost: 1,
-      tags: ["transition-source", "meter"],
+      tags: ["route-source", "meter"],
       sourceIds: ["community-combo-source"],
     },
     fFourOne: {
@@ -4779,7 +4779,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     fFourOneTwo: {
@@ -4794,7 +4794,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     fTwoOne: {
@@ -4809,7 +4809,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     mb: {
@@ -4825,7 +4825,7 @@ const reptileTransitionGeneratedMoves = {
         kind: "universal",
       },
       meterCost: 1,
-      tags: ["transition-source", "meter"],
+      tags: ["route-source", "meter"],
       sourceIds: ["community-combo-source"],
     },
     oneFourOne: {
@@ -4840,7 +4840,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     oneTwo: {
@@ -4855,7 +4855,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     twoOne: {
@@ -4870,7 +4870,7 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
     twoOneTwoFour: {
@@ -4885,15 +4885,15 @@ const reptileTransitionGeneratedMoves = {
       availability: {
         kind: "universal",
       },
-      tags: ["transition-source"],
+      tags: ["route-source"],
       sourceIds: ["community-combo-source"],
     },
   },
   variations: {},
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const scorpionTransitionGeneratedMoves = {
-  sourcePath: "characters/scorpion-transition-generated.ts",
+const scorpionRouteGeneratedMoves = {
+  sourcePath: "characters/scorpion-route-generated.ts",
   characterId: characterIds.scorpion,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -4912,7 +4912,7 @@ const scorpionTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.scorpion}:ninjutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -4928,7 +4928,7 @@ const scorpionTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.scorpion}:ninjutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBThree: {
@@ -4944,7 +4944,7 @@ const scorpionTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.scorpion}:ninjutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -4960,7 +4960,7 @@ const scorpionTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.scorpion}:ninjutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwo: {
@@ -4976,7 +4976,7 @@ const scorpionTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.scorpion}:ninjutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOneFour: {
@@ -4992,15 +4992,15 @@ const scorpionTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.scorpion}:ninjutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const shinnokTransitionGeneratedMoves = {
-  sourcePath: "characters/shinnok-transition-generated.ts",
+const shinnokRouteGeneratedMoves = {
+  sourcePath: "characters/shinnok-route-generated.ts",
   characterId: characterIds.shinnok,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -5019,7 +5019,7 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOne: {
@@ -5035,7 +5035,7 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThree: {
@@ -5051,7 +5051,7 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBTwo: {
@@ -5067,7 +5067,7 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -5083,7 +5083,7 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -5099,7 +5099,7 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fFourOneDTwo: {
@@ -5121,7 +5121,7 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       mb: {
@@ -5138,7 +5138,7 @@ const shinnokTransitionGeneratedMoves = {
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       oneOne: {
@@ -5154,7 +5154,7 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneTwo: {
@@ -5170,7 +5170,7 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       threeOneTwo: {
@@ -5186,15 +5186,15 @@ const shinnokTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.shinnok}:bone-shaper`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const sonyaBladeTransitionGeneratedMoves = {
-  sourcePath: "characters/sonya-blade-transition-generated.ts",
+const sonyaBladeRouteGeneratedMoves = {
+  sourcePath: "characters/sonya-blade-route-generated.ts",
   characterId: characterIds.sonyaBlade,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -5213,7 +5213,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneFour: {
@@ -5229,7 +5229,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeThreeTwoOneTwo: {
@@ -5252,7 +5252,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBOne: {
@@ -5268,7 +5268,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFOne: {
@@ -5284,7 +5284,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDDOne: {
@@ -5301,7 +5301,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFour: {
@@ -5317,7 +5317,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -5333,7 +5333,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwo: {
@@ -5349,7 +5349,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       one: {
@@ -5365,7 +5365,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwo: {
@@ -5381,7 +5381,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoFour: {
@@ -5397,7 +5397,7 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoOne: {
@@ -5413,15 +5413,15 @@ const sonyaBladeTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.sonyaBlade}:demolition`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const subZeroTransitionGeneratedMoves = {
-  sourcePath: "characters/sub-zero-transition-generated.ts",
+const subZeroRouteGeneratedMoves = {
+  sourcePath: "characters/sub-zero-route-generated.ts",
   characterId: characterIds.subZero,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -5440,7 +5440,7 @@ const subZeroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.subZero}:grandmaster`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOneTwo: {
@@ -5456,7 +5456,7 @@ const subZeroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.subZero}:grandmaster`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -5472,7 +5472,7 @@ const subZeroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.subZero}:grandmaster`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fFourTwo: {
@@ -5488,15 +5488,15 @@ const subZeroTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.subZero}:grandmaster`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const takedaTransitionGeneratedMoves = {
-  sourcePath: "characters/takeda-transition-generated.ts",
+const takedaRouteGeneratedMoves = {
+  sourcePath: "characters/takeda-route-generated.ts",
   characterId: characterIds.takeda,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -5515,7 +5515,7 @@ const takedaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bFTwo: {
@@ -5531,7 +5531,7 @@ const takedaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThree: {
@@ -5547,7 +5547,7 @@ const takedaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwoOne: {
@@ -5563,7 +5563,7 @@ const takedaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBThree: {
@@ -5579,7 +5579,7 @@ const takedaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dOne: {
@@ -5595,7 +5595,7 @@ const takedaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -5611,7 +5611,7 @@ const takedaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDBOne: {
@@ -5628,7 +5628,7 @@ const takedaTransitionGeneratedMoves = {
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFour: {
@@ -5644,7 +5644,7 @@ const takedaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneTwo: {
@@ -5660,15 +5660,15 @@ const takedaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.takeda}:shirai-ryu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const tanyaTransitionGeneratedMoves = {
-  sourcePath: "characters/tanya-transition-generated.ts",
+const tanyaRouteGeneratedMoves = {
+  sourcePath: "characters/tanya-route-generated.ts",
   characterId: characterIds.tanya,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -5687,7 +5687,7 @@ const tanyaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFOne: {
@@ -5703,7 +5703,7 @@ const tanyaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dFTwo: {
@@ -5719,7 +5719,7 @@ const tanyaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBFFour: {
@@ -5736,7 +5736,7 @@ const tanyaTransitionGeneratedMoves = {
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDFOne: {
@@ -5753,7 +5753,7 @@ const tanyaTransitionGeneratedMoves = {
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       exDFTwo: {
@@ -5770,7 +5770,7 @@ const tanyaTransitionGeneratedMoves = {
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFourThree: {
@@ -5786,7 +5786,7 @@ const tanyaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -5802,7 +5802,7 @@ const tanyaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fTwo: {
@@ -5818,7 +5818,7 @@ const tanyaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOne: {
@@ -5834,7 +5834,7 @@ const tanyaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneTwo: {
@@ -5850,7 +5850,7 @@ const tanyaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoUThree: {
@@ -5866,15 +5866,15 @@ const tanyaTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tanya}:kobu-jutsu`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const tremorTransitionGeneratedMoves = {
-  sourcePath: "characters/tremor-transition-generated.ts",
+const tremorRouteGeneratedMoves = {
+  sourcePath: "characters/tremor-route-generated.ts",
   characterId: characterIds.tremor,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -5893,7 +5893,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThree: {
@@ -5909,7 +5909,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThreeTwo: {
@@ -5925,7 +5925,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -5941,7 +5941,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       d: {
@@ -5957,7 +5957,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBTwo: {
@@ -5973,7 +5973,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBTwoD: {
@@ -5989,7 +5989,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBTwoU: {
@@ -6005,7 +6005,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exBFFour: {
@@ -6022,7 +6022,7 @@ const tremorTransitionGeneratedMoves = {
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFour: {
@@ -6038,7 +6038,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOneTwo: {
@@ -6054,7 +6054,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -6070,7 +6070,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneTwoThree: {
@@ -6086,7 +6086,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOne: {
@@ -6102,7 +6102,7 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOneDFour: {
@@ -6118,15 +6118,15 @@ const tremorTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.tremor}:crystalline`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-const triborgTransitionGeneratedMoves = {
-  sourcePath: "characters/triborg-transition-generated.ts",
+const triborgRouteGeneratedMoves = {
+  sourcePath: "characters/triborg-route-generated.ts",
   characterId: characterIds.triborg,
   sourceIds: ["community-combo-source"],
   universal: {},
@@ -6145,7 +6145,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bFOne: {
@@ -6161,7 +6161,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bTwo: {
@@ -6177,7 +6177,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFour: {
@@ -6193,7 +6193,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBThree: {
@@ -6209,7 +6209,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dDThree: {
@@ -6225,7 +6225,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dTwo: {
@@ -6241,7 +6241,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDBFour: {
@@ -6258,7 +6258,7 @@ const triborgTransitionGeneratedMoves = {
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fF: {
@@ -6274,7 +6274,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fFourThree: {
@@ -6290,7 +6290,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOne: {
@@ -6306,7 +6306,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOneThree: {
@@ -6322,7 +6322,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       four: {
@@ -6338,7 +6338,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThreeFour: {
@@ -6354,7 +6354,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneFour: {
@@ -6370,7 +6370,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOne: {
@@ -6386,7 +6386,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:cyrax`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
@@ -6404,7 +6404,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:sektor`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bOne: {
@@ -6420,7 +6420,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:sektor`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       bThree: {
@@ -6436,7 +6436,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:sektor`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       dBFour: {
@@ -6452,7 +6452,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:sektor`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       exDDThree: {
@@ -6469,7 +6469,7 @@ const triborgTransitionGeneratedMoves = {
           variationIds: [`${characterIds.triborg}:sektor`],
         },
         meterCost: 1,
-        tags: ["transition-source", "meter"],
+        tags: ["route-source", "meter"],
         sourceIds: ["community-combo-source"],
       },
       fFourThree: {
@@ -6485,7 +6485,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:sektor`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fOneThree: {
@@ -6501,7 +6501,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:sektor`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       fThreeFour: {
@@ -6517,7 +6517,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:sektor`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       oneOneFour: {
@@ -6533,7 +6533,7 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:sektor`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
       twoOne: {
@@ -6549,170 +6549,245 @@ const triborgTransitionGeneratedMoves = {
           kind: "variation",
           variationIds: [`${characterIds.triborg}:sektor`],
         },
-        tags: ["transition-source"],
+        tags: ["route-source"],
         sourceIds: ["community-combo-source"],
       },
     },
   },
 } as const satisfies MkxlAuthoredCharacterMoves;
 
-export const mkxlXlFinalTransitionGeneratedMoveRegistry = {
+export const mkxlXlFinalRouteGeneratedMoveRegistry = {
   alien: {
-    universal: alienTransitionGeneratedMoves.universal,
-    tarkatan: alienTransitionGeneratedMoves.variations.tarkatan,
+    universal: alienRouteGeneratedMoves.universal,
+    acidic: {},
+    konjurer: {},
+    tarkatan: alienRouteGeneratedMoves.variations.tarkatan,
   },
   boRaiCho: {
-    universal: boRaiChoTransitionGeneratedMoves.universal,
-    bartitsu: boRaiChoTransitionGeneratedMoves.variations.bartitsu,
+    universal: boRaiChoRouteGeneratedMoves.universal,
+    bartitsu: boRaiChoRouteGeneratedMoves.variations.bartitsu,
+    dragonBreath: {},
+    drunkenMaster: {},
   },
   cassieCage: {
-    universal: cassieCageTransitionGeneratedMoves.universal,
-    hollywood: cassieCageTransitionGeneratedMoves.variations.hollywood,
+    universal: cassieCageRouteGeneratedMoves.universal,
+    brawler: {},
+    hollywood: cassieCageRouteGeneratedMoves.variations.hollywood,
+    specOps: {},
   },
   dvorah: {
-    universal: dvorahTransitionGeneratedMoves.universal,
-    broodMother: dvorahTransitionGeneratedMoves.variations.broodMother,
+    universal: dvorahRouteGeneratedMoves.universal,
+    broodMother: dvorahRouteGeneratedMoves.variations.broodMother,
+    swarmQueen: {},
+    venomous: {},
   },
   ermac: {
-    universal: ermacTransitionGeneratedMoves.universal,
-    masterOfSouls: ermacTransitionGeneratedMoves.variations.masterOfSouls,
+    universal: ermacRouteGeneratedMoves.universal,
+    masterOfSouls: ermacRouteGeneratedMoves.variations.masterOfSouls,
+    mystic: {},
+    spectral: {},
   },
   erronBlack: {
-    universal: erronBlackTransitionGeneratedMoves.universal,
-    outlaw: erronBlackTransitionGeneratedMoves.variations.outlaw,
+    universal: erronBlackRouteGeneratedMoves.universal,
+    gunslinger: {},
+    marksman: {},
+    outlaw: erronBlackRouteGeneratedMoves.variations.outlaw,
   },
   ferraTorr: {
-    universal: ferraTorrTransitionGeneratedMoves.universal,
-    ruthless: ferraTorrTransitionGeneratedMoves.variations.ruthless,
+    universal: ferraTorrRouteGeneratedMoves.universal,
+    lackey: {},
+    ruthless: ferraTorrRouteGeneratedMoves.variations.ruthless,
+    vicious: {},
   },
   goro: {
-    universal: goroTransitionGeneratedMoves.universal,
-    kuatanWarrior: goroTransitionGeneratedMoves.variations.kuatanWarrior,
+    universal: goroRouteGeneratedMoves.universal,
+    dragonFangs: {},
+    kuatanWarrior: goroRouteGeneratedMoves.variations.kuatanWarrior,
+    tigrarFury: {},
   },
   jacquiBriggs: {
-    universal: jacquiBriggsTransitionGeneratedMoves.universal,
-    fullAuto: jacquiBriggsTransitionGeneratedMoves.variations.fullAuto,
+    universal: jacquiBriggsRouteGeneratedMoves.universal,
+    fullAuto: jacquiBriggsRouteGeneratedMoves.variations.fullAuto,
+    highTech: {},
+    shotgun: {},
   },
   jasonVoorhees: {
-    universal: jasonVoorheesTransitionGeneratedMoves.universal,
-    slasher: jasonVoorheesTransitionGeneratedMoves.variations.slasher,
+    universal: jasonVoorheesRouteGeneratedMoves.universal,
+    relentless: {},
+    slasher: jasonVoorheesRouteGeneratedMoves.variations.slasher,
+    unstoppable: {},
   },
   jax: {
-    universal: jaxTransitionGeneratedMoves.universal,
-    heavyWeapons: jaxTransitionGeneratedMoves.variations.heavyWeapons,
+    universal: jaxRouteGeneratedMoves.universal,
+    heavyWeapons: jaxRouteGeneratedMoves.variations.heavyWeapons,
+    pumpedUp: {},
+    wrestler: {},
   },
   johnnyCage: {
-    universal: johnnyCageTransitionGeneratedMoves.universal,
-    stuntDouble: johnnyCageTransitionGeneratedMoves.variations.stuntDouble,
+    universal: johnnyCageRouteGeneratedMoves.universal,
+    aList: {},
+    fisticuffs: {},
+    stuntDouble: johnnyCageRouteGeneratedMoves.variations.stuntDouble,
   },
   kano: {
-    universal: kanoTransitionGeneratedMoves.universal,
-    cutthroat: kanoTransitionGeneratedMoves.variations.cutthroat,
+    universal: kanoRouteGeneratedMoves.universal,
+    commando: {},
+    cutthroat: kanoRouteGeneratedMoves.variations.cutthroat,
+    cybernetic: {},
   },
   kenshi: {
-    universal: kenshiTransitionGeneratedMoves.universal,
-    possessed: kenshiTransitionGeneratedMoves.variations.possessed,
+    universal: kenshiRouteGeneratedMoves.universal,
+    balanced: {},
+    kenjutsu: {},
+    possessed: kenshiRouteGeneratedMoves.variations.possessed,
+  },
+  kitana: {
+    universal: {},
+    assassin: {},
+    mournful: {},
+    royalStorm: {},
   },
   kotalKahn: {
-    universal: kotalKahnTransitionGeneratedMoves.universal,
-    warGod: kotalKahnTransitionGeneratedMoves.variations.warGod,
+    universal: kotalKahnRouteGeneratedMoves.universal,
+    bloodGod: {},
+    sunGod: {},
+    warGod: kotalKahnRouteGeneratedMoves.variations.warGod,
   },
   kungJin: {
-    universal: kungJinTransitionGeneratedMoves.universal,
-    bojutsu: kungJinTransitionGeneratedMoves.variations.bojutsu,
+    universal: kungJinRouteGeneratedMoves.universal,
+    ancestral: {},
+    bojutsu: kungJinRouteGeneratedMoves.variations.bojutsu,
+    shaolin: {},
   },
   kungLao: {
-    universal: kungLaoTransitionGeneratedMoves.universal,
-    tempest: kungLaoTransitionGeneratedMoves.variations.tempest,
+    universal: kungLaoRouteGeneratedMoves.universal,
+    buzzSaw: {},
+    hatTrick: {},
+    tempest: kungLaoRouteGeneratedMoves.variations.tempest,
   },
   leatherface: {
-    universal: leatherfaceTransitionGeneratedMoves.universal,
-    killer: leatherfaceTransitionGeneratedMoves.variations.killer,
+    universal: leatherfaceRouteGeneratedMoves.universal,
+    butcher: {},
+    killer: leatherfaceRouteGeneratedMoves.variations.killer,
+    prettyLady: {},
   },
   liuKang: {
-    universal: liuKangTransitionGeneratedMoves.universal,
-    flameFist: liuKangTransitionGeneratedMoves.variations.flameFist,
+    universal: liuKangRouteGeneratedMoves.universal,
+    dragonsFire: {},
+    dualist: {},
+    flameFist: liuKangRouteGeneratedMoves.variations.flameFist,
+  },
+  mileena: {
+    universal: {},
+    ethereal: {},
+    piercing: {},
+    ravenous: {},
   },
   predator: {
-    universal: predatorTransitionGeneratedMoves.universal,
-    hunter: predatorTransitionGeneratedMoves.variations.hunter,
+    universal: predatorRouteGeneratedMoves.universal,
+    hishQuTen: {},
+    hunter: predatorRouteGeneratedMoves.variations.hunter,
+    warrior: {},
   },
   quanChi: {
-    universal: quanChiTransitionGeneratedMoves.universal,
-    summoner: quanChiTransitionGeneratedMoves.variations.summoner,
+    universal: quanChiRouteGeneratedMoves.universal,
+    sorcerer: {},
+    summoner: quanChiRouteGeneratedMoves.variations.summoner,
+    warlock: {},
   },
   raiden: {
-    universal: raidenTransitionGeneratedMoves.universal,
-    thunderGod: raidenTransitionGeneratedMoves.variations.thunderGod,
+    universal: raidenRouteGeneratedMoves.universal,
+    displacer: {},
+    masterOfStorms: {},
+    thunderGod: raidenRouteGeneratedMoves.variations.thunderGod,
   },
   reptile: {
-    universal: reptileTransitionGeneratedMoves.universal,
+    universal: reptileRouteGeneratedMoves.universal,
+    deceptive: {},
+    nimble: {},
+    noxious: {},
   },
   scorpion: {
-    universal: scorpionTransitionGeneratedMoves.universal,
-    ninjutsu: scorpionTransitionGeneratedMoves.variations.ninjutsu,
+    universal: scorpionRouteGeneratedMoves.universal,
+    hellfire: {},
+    inferno: {},
+    ninjutsu: scorpionRouteGeneratedMoves.variations.ninjutsu,
   },
   shinnok: {
-    universal: shinnokTransitionGeneratedMoves.universal,
-    boneShaper: shinnokTransitionGeneratedMoves.variations.boneShaper,
+    universal: shinnokRouteGeneratedMoves.universal,
+    boneShaper: shinnokRouteGeneratedMoves.variations.boneShaper,
+    impostor: {},
+    necromancer: {},
   },
   sonyaBlade: {
-    universal: sonyaBladeTransitionGeneratedMoves.universal,
-    demolition: sonyaBladeTransitionGeneratedMoves.variations.demolition,
+    universal: sonyaBladeRouteGeneratedMoves.universal,
+    covertOps: {},
+    demolition: sonyaBladeRouteGeneratedMoves.variations.demolition,
+    specialForces: {},
   },
   subZero: {
-    universal: subZeroTransitionGeneratedMoves.universal,
-    grandmaster: subZeroTransitionGeneratedMoves.variations.grandmaster,
+    universal: subZeroRouteGeneratedMoves.universal,
+    cryomancer: {},
+    grandmaster: subZeroRouteGeneratedMoves.variations.grandmaster,
+    unbreakable: {},
   },
   takeda: {
-    universal: takedaTransitionGeneratedMoves.universal,
-    shiraiRyu: takedaTransitionGeneratedMoves.variations.shiraiRyu,
+    universal: takedaRouteGeneratedMoves.universal,
+    lasher: {},
+    ronin: {},
+    shiraiRyu: takedaRouteGeneratedMoves.variations.shiraiRyu,
   },
   tanya: {
-    universal: tanyaTransitionGeneratedMoves.universal,
-    kobuJutsu: tanyaTransitionGeneratedMoves.variations.kobuJutsu,
+    universal: tanyaRouteGeneratedMoves.universal,
+    dragonNaginata: {},
+    kobuJutsu: tanyaRouteGeneratedMoves.variations.kobuJutsu,
+    pyromancer: {},
   },
   tremor: {
-    universal: tremorTransitionGeneratedMoves.universal,
-    crystalline: tremorTransitionGeneratedMoves.variations.crystalline,
+    universal: tremorRouteGeneratedMoves.universal,
+    aftershock: {},
+    crystalline: tremorRouteGeneratedMoves.variations.crystalline,
+    metallic: {},
   },
   triborg: {
-    universal: triborgTransitionGeneratedMoves.universal,
-    cyrax: triborgTransitionGeneratedMoves.variations.cyrax,
-    sektor: triborgTransitionGeneratedMoves.variations.sektor,
+    universal: triborgRouteGeneratedMoves.universal,
+    cyberSubZero: {},
+    cyrax: triborgRouteGeneratedMoves.variations.cyrax,
+    sektor: triborgRouteGeneratedMoves.variations.sektor,
+    smoke: {},
   },
 } as const;
 
-export const mkxlXlFinalTransitionGeneratedMoves = [
-  alienTransitionGeneratedMoves,
-  boRaiChoTransitionGeneratedMoves,
-  cassieCageTransitionGeneratedMoves,
-  dvorahTransitionGeneratedMoves,
-  ermacTransitionGeneratedMoves,
-  erronBlackTransitionGeneratedMoves,
-  ferraTorrTransitionGeneratedMoves,
-  goroTransitionGeneratedMoves,
-  jacquiBriggsTransitionGeneratedMoves,
-  jasonVoorheesTransitionGeneratedMoves,
-  jaxTransitionGeneratedMoves,
-  johnnyCageTransitionGeneratedMoves,
-  kanoTransitionGeneratedMoves,
-  kenshiTransitionGeneratedMoves,
-  kotalKahnTransitionGeneratedMoves,
-  kungJinTransitionGeneratedMoves,
-  kungLaoTransitionGeneratedMoves,
-  leatherfaceTransitionGeneratedMoves,
-  liuKangTransitionGeneratedMoves,
-  predatorTransitionGeneratedMoves,
-  quanChiTransitionGeneratedMoves,
-  raidenTransitionGeneratedMoves,
-  reptileTransitionGeneratedMoves,
-  scorpionTransitionGeneratedMoves,
-  shinnokTransitionGeneratedMoves,
-  sonyaBladeTransitionGeneratedMoves,
-  subZeroTransitionGeneratedMoves,
-  takedaTransitionGeneratedMoves,
-  tanyaTransitionGeneratedMoves,
-  tremorTransitionGeneratedMoves,
-  triborgTransitionGeneratedMoves,
+export const mkxlXlFinalRouteGeneratedMoves = [
+  alienRouteGeneratedMoves,
+  boRaiChoRouteGeneratedMoves,
+  cassieCageRouteGeneratedMoves,
+  dvorahRouteGeneratedMoves,
+  ermacRouteGeneratedMoves,
+  erronBlackRouteGeneratedMoves,
+  ferraTorrRouteGeneratedMoves,
+  goroRouteGeneratedMoves,
+  jacquiBriggsRouteGeneratedMoves,
+  jasonVoorheesRouteGeneratedMoves,
+  jaxRouteGeneratedMoves,
+  johnnyCageRouteGeneratedMoves,
+  kanoRouteGeneratedMoves,
+  kenshiRouteGeneratedMoves,
+  kotalKahnRouteGeneratedMoves,
+  kungJinRouteGeneratedMoves,
+  kungLaoRouteGeneratedMoves,
+  leatherfaceRouteGeneratedMoves,
+  liuKangRouteGeneratedMoves,
+  predatorRouteGeneratedMoves,
+  quanChiRouteGeneratedMoves,
+  raidenRouteGeneratedMoves,
+  reptileRouteGeneratedMoves,
+  scorpionRouteGeneratedMoves,
+  shinnokRouteGeneratedMoves,
+  sonyaBladeRouteGeneratedMoves,
+  subZeroRouteGeneratedMoves,
+  takedaRouteGeneratedMoves,
+  tanyaRouteGeneratedMoves,
+  tremorRouteGeneratedMoves,
+  triborgRouteGeneratedMoves,
 ] as const;

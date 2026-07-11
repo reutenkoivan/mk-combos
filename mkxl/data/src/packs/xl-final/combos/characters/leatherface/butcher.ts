@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.leatherface;
 const variationSlug = "butcher";
@@ -38,10 +38,10 @@ const leatherfaceButcherStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.leatherface.universal.openingAssault,
-    transitions.leatherface.universal.risingAssault,
-    transitions.leatherface.butcher.butcherTechnique,
-    transitions.leatherface.universal.closingStrikeEnhanced,
+    moves.leatherface.universal.openingAssault,
+    moves.leatherface.universal.risingAssault,
+    moves.leatherface.butcher.butcherTechnique,
+    moves.leatherface.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

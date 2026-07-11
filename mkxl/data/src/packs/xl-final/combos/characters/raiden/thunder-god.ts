@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.raiden;
 const variationSlug = "thunder-god";
@@ -38,10 +38,10 @@ const raidenThunderGodStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.raiden.universal.openingAssault,
-    transitions.raiden.universal.risingAssault,
-    transitions.raiden.thunderGod.thunderGodTechnique,
-    transitions.raiden.universal.closingStrike,
+    moves.raiden.universal.openingAssault,
+    moves.raiden.universal.risingAssault,
+    moves.raiden.thunderGod.thunderGodTechnique,
+    moves.raiden.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -71,7 +71,7 @@ const raidenThunderGodCommunityBeginner001Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.raiden.thunderGod.twoOneFour, transitions.raiden.thunderGod.dFTwo],
+  route: [moves.raiden.thunderGod.twoOneFour, moves.raiden.thunderGod.dFTwo],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const raidenThunderGodCommunityBeginner002Combo = {
@@ -102,10 +102,10 @@ const raidenThunderGodCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.raiden.thunderGod.twoOneFour,
-    transitions.raiden.thunderGod.exDFTwo,
-    transitions.raiden.thunderGod.bOneFour,
-    transitions.raiden.thunderGod.bFThree,
+    moves.raiden.thunderGod.twoOneFour,
+    moves.raiden.thunderGod.exDFTwo,
+    moves.raiden.thunderGod.bOneFour,
+    moves.raiden.thunderGod.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -137,11 +137,11 @@ const raidenThunderGodCommunityBeginner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.raiden.thunderGod.fOneTwoBTwo,
-    transitions.raiden.thunderGod.bOneFour,
-    transitions.general.run,
-    transitions.raiden.thunderGod.twoOneFour,
-    transitions.raiden.thunderGod.bFThree,
+    moves.raiden.thunderGod.fOneTwoBTwo,
+    moves.raiden.thunderGod.bOneFour,
+    moves.general.universal.run,
+    moves.raiden.thunderGod.twoOneFour,
+    moves.raiden.thunderGod.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -173,11 +173,11 @@ const raidenThunderGodCommunityBeginner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.raiden.thunderGod.bThreeTwo,
-    transitions.raiden.thunderGod.bOneFour,
-    transitions.general.run,
-    transitions.raiden.thunderGod.twoOneFour,
-    transitions.raiden.thunderGod.bFThree,
+    moves.raiden.thunderGod.bThreeTwo,
+    moves.raiden.thunderGod.bOneFour,
+    moves.general.universal.run,
+    moves.raiden.thunderGod.twoOneFour,
+    moves.raiden.thunderGod.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -209,12 +209,12 @@ const raidenThunderGodCommunityOptimal023Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.raiden.thunderGod.bOneOne,
-    transitions.general.run,
-    transitions.raiden.thunderGod.twoOneFour,
-    transitions.raiden.thunderGod.exDFTwo,
-    transitions.raiden.thunderGod.bThreeFour,
-    transitions.raiden.thunderGod.bFThree,
+    moves.raiden.thunderGod.bOneOne,
+    moves.general.universal.run,
+    moves.raiden.thunderGod.twoOneFour,
+    moves.raiden.thunderGod.exDFTwo,
+    moves.raiden.thunderGod.bThreeFour,
+    moves.raiden.thunderGod.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -246,12 +246,12 @@ const raidenThunderGodCommunityCorner026Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.raiden.thunderGod.bTwo,
-    transitions.raiden.thunderGod.bTwo,
-    transitions.raiden.thunderGod.bOneFour,
-    transitions.general.run,
-    transitions.raiden.thunderGod.twoOneFour,
-    transitions.raiden.thunderGod.dFTwo,
+    moves.raiden.thunderGod.bTwo,
+    moves.raiden.thunderGod.bTwo,
+    moves.raiden.thunderGod.bOneFour,
+    moves.general.universal.run,
+    moves.raiden.thunderGod.twoOneFour,
+    moves.raiden.thunderGod.dFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -283,13 +283,14 @@ const raidenThunderGodCommunityCorner029Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.raiden.thunderGod.bThreeTwo,
-    transitions.raiden.thunderGod.twoOneThree,
-    transitions.raiden.thunderGod.bOneFour,
-    transitions.general.run,
-    transitions.raiden.thunderGod.twoOneFour,
-    transitions.raiden.thunderGod.exDFTwo,
-    transitions.raiden.thunderGod.bOneFourIntoDBTwo,
+    moves.raiden.thunderGod.bThreeTwo,
+    moves.raiden.thunderGod.twoOneThree,
+    moves.raiden.thunderGod.bOneFour,
+    moves.general.universal.run,
+    moves.raiden.thunderGod.twoOneFour,
+    moves.raiden.thunderGod.exDFTwo,
+    moves.raiden.thunderGod.bOneFour,
+    moves.raiden.thunderGod.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

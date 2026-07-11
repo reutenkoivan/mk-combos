@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kitana;
 const variationSlug = "assassin";
@@ -38,10 +38,10 @@ const kitanaAssassinStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kitana.universal.openingAssault,
-    transitions.kitana.universal.risingAssault,
-    transitions.kitana.assassin.assassinTechnique,
-    transitions.kitana.universal.closingStrikeEnhanced,
+    moves.kitana.universal.openingAssault,
+    moves.kitana.universal.risingAssault,
+    moves.kitana.assassin.assassinTechnique,
+    moves.kitana.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

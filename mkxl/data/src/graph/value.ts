@@ -1,11 +1,11 @@
 import { mkxlSeededCombos } from "../combos/value";
+import { mkxlMoves } from "../movelists/value";
 import { toReadableEn } from "../shared/runtime";
 import { mkxlStages } from "../stages/value";
-import { mkxlTransitions } from "../transitions/value";
 import type { MkxlGraphEdge, MkxlStageGraphFragment, MkxlVariationGraph } from "./type";
 
 const stageGraphSourceIds = ["in-game-practice-mode"] as const;
-const transitionById = new Map(mkxlTransitions.map((transition) => [transition.id, transition]));
+const moveById = new Map(mkxlMoves.map((move) => [move.id, move]));
 
 const createRouteEdge = (
   comboId: string,
@@ -18,9 +18,9 @@ const createRouteEdge = (
   id: `${comboId}:edge-${index + 1}`,
   fromNodeId,
   toNodeId,
-  transitionId: step.transitionId,
+  moveId: step.moveId,
   frameWindow: index === 0 ? undefined : { start: 0, end: 12, kind: "combo-link" },
-  tags: transitionById.get(step.transitionId)?.tags ?? [],
+  tags: moveById.get(step.moveId)?.tags ?? [],
   sourceIds,
 });
 
@@ -39,12 +39,12 @@ export const mkxlVariationGraphs = mkxlSeededCombos.map((combo) => {
       { id: startNodeId, label: toReadableEn("Start"), kind: "start" },
       ...combo.route.map((step, index) => {
         const nodeId = pathNodeIds[index] ?? `${combo.id}:step-${index + 1}:node`;
-        const routeEntry = transitionById.get(step.transitionId);
+        const routeEntry = moveById.get(step.moveId);
 
         return {
           id: nodeId,
-          label: routeEntry?.label ?? toReadableEn(step.transitionId),
-          kind: "transition" as const,
+          label: routeEntry?.label ?? toReadableEn(step.moveId),
+          kind: "move" as const,
         };
       }),
       { id: endNodeId, label: toReadableEn("End"), kind: "end" },

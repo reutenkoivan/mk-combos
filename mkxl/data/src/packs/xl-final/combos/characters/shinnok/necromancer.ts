@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.shinnok;
 const variationSlug = "necromancer";
@@ -38,10 +38,10 @@ const shinnokNecromancerStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.shinnok.universal.openingAssault,
-    transitions.shinnok.universal.risingAssault,
-    transitions.shinnok.necromancer.necromancerTechnique,
-    transitions.shinnok.universal.closingStrike,
+    moves.shinnok.universal.openingAssault,
+    moves.shinnok.universal.risingAssault,
+    moves.shinnok.necromancer.necromancerTechnique,
+    moves.shinnok.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

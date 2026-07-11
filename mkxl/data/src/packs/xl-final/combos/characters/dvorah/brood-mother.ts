@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.dvorah;
 const variationSlug = "brood-mother";
@@ -42,10 +42,10 @@ const dvorahBroodMotherStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.dvorah.universal.openingAssault,
-    transitions.dvorah.universal.risingAssault,
-    transitions.dvorah.broodMother.broodMotherTechnique,
-    transitions.dvorah.universal.closingStrike,
+    moves.dvorah.universal.openingAssault,
+    moves.dvorah.universal.risingAssault,
+    moves.dvorah.broodMother.broodMotherTechnique,
+    moves.dvorah.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -75,7 +75,11 @@ const dvorahBroodMotherCommunityBeginner001Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.dvorah.broodMother.oneOneBTwoIntoFOneOneTwoIntoDBFour],
+  route: [
+    moves.dvorah.broodMother.oneOneBTwo,
+    moves.dvorah.broodMother.fOneOneTwo,
+    moves.dvorah.broodMother.dBFour,
+  ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const dvorahBroodMotherCommunityBeginner002Combo = {
@@ -105,8 +109,10 @@ const dvorahBroodMotherCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.twoOneTwoIntoDBOne,
-    transitions.dvorah.broodMother.fOneOneTwoIntoDBFour,
+    moves.dvorah.broodMother.twoOneTwo,
+    moves.dvorah.broodMother.dBOne,
+    moves.dvorah.broodMother.fOneOneTwo,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -137,9 +143,11 @@ const dvorahBroodMotherCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.fOneOneIntoDFThree,
-    transitions.dvorah.broodMother.fFourFour,
-    transitions.dvorah.broodMother.fFourFourIntoDBFour,
+    moves.dvorah.broodMother.fOneOne,
+    moves.dvorah.broodMother.dFThree,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -170,8 +178,10 @@ const dvorahBroodMotherCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.bOneIntoExDFOne,
-    transitions.dvorah.broodMother.fOneOneTwoIntoDBFour,
+    moves.dvorah.broodMother.bOne,
+    moves.dvorah.broodMother.exDFOne,
+    moves.dvorah.broodMother.fOneOneTwo,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -202,9 +212,10 @@ const dvorahBroodMotherCommunityOptimal007Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.oneOneBTwo,
-    transitions.dvorah.broodMother.dOne,
-    transitions.dvorah.broodMother.fFourFourIntoDBFour,
+    moves.dvorah.broodMother.oneOneBTwo,
+    moves.dvorah.broodMother.dOne,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -236,11 +247,14 @@ const dvorahBroodMotherCommunityOptimal008Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.oneOneTwoIntoExDFOne,
-    transitions.dvorah.broodMother.twoOneTwoIntoDFThree,
-    transitions.dvorah.broodMother.fThreeFour,
-    transitions.dvorah.broodMother.dOne,
-    transitions.dvorah.broodMother.fFourFourIntoDBFour,
+    moves.dvorah.broodMother.oneOneTwo,
+    moves.dvorah.broodMother.exDFOne,
+    moves.dvorah.broodMother.twoOneTwo,
+    moves.dvorah.broodMother.dFThree,
+    moves.dvorah.broodMother.fThreeFour,
+    moves.dvorah.broodMother.dOne,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -272,10 +286,12 @@ const dvorahBroodMotherCommunityOptimal009Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.twoOneTwoIntoDFThree,
-    transitions.dvorah.broodMother.fThreeFour,
-    transitions.dvorah.broodMother.dOne,
-    transitions.dvorah.broodMother.fFourFourIntoDBFour,
+    moves.dvorah.broodMother.twoOneTwo,
+    moves.dvorah.broodMother.dFThree,
+    moves.dvorah.broodMother.fThreeFour,
+    moves.dvorah.broodMother.dOne,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -307,11 +323,13 @@ const dvorahBroodMotherCommunityOptimal010Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.fOneOneIntoDFThree,
-    transitions.dvorah.broodMother.fThreeFour,
-    transitions.dvorah.broodMother.dOne,
-    transitions.dvorah.broodMother.fThreeFour,
-    transitions.dvorah.broodMother.fourFourIntoDBFour,
+    moves.dvorah.broodMother.fOneOne,
+    moves.dvorah.broodMother.dFThree,
+    moves.dvorah.broodMother.fThreeFour,
+    moves.dvorah.broodMother.dOne,
+    moves.dvorah.broodMother.fThreeFour,
+    moves.dvorah.broodMother.fourFour,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -343,11 +361,12 @@ const dvorahBroodMotherCommunityOptimal014Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.fThreeFour,
-    transitions.dvorah.broodMother.dOne,
-    transitions.dvorah.broodMother.fThreeFour,
-    transitions.dvorah.broodMother.dOne,
-    transitions.dvorah.broodMother.fFourFourIntoDBFour,
+    moves.dvorah.broodMother.fThreeFour,
+    moves.dvorah.broodMother.dOne,
+    moves.dvorah.broodMother.fThreeFour,
+    moves.dvorah.broodMother.dOne,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -379,11 +398,12 @@ const dvorahBroodMotherCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.oneOneBTwo,
-    transitions.dvorah.broodMother.dOne,
-    transitions.dvorah.broodMother.fFourFour,
-    transitions.dvorah.broodMother.dOne,
-    transitions.dvorah.broodMother.fFourFourIntoDBFour,
+    moves.dvorah.broodMother.oneOneBTwo,
+    moves.dvorah.broodMother.dOne,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.dOne,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -415,11 +435,13 @@ const dvorahBroodMotherCommunityCorner023Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.dvorah.broodMother.fOneOneIntoDFFour,
-    transitions.dvorah.broodMother.fFourFour,
-    transitions.dvorah.broodMother.fFourFour,
-    transitions.dvorah.broodMother.dOne,
-    transitions.dvorah.broodMother.fFourFourIntoDBFour,
+    moves.dvorah.broodMother.fOneOne,
+    moves.dvorah.broodMother.dFFour,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.dOne,
+    moves.dvorah.broodMother.fFourFour,
+    moves.dvorah.broodMother.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

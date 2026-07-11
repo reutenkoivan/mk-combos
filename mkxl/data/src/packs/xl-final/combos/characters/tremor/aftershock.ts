@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.tremor;
 const variationSlug = "aftershock";
@@ -38,10 +38,10 @@ const tremorAftershockStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.tremor.universal.openingAssault,
-    transitions.tremor.universal.risingAssault,
-    transitions.tremor.aftershock.aftershockTechnique,
-    transitions.tremor.universal.closingStrike,
+    moves.tremor.universal.openingAssault,
+    moves.tremor.universal.risingAssault,
+    moves.tremor.aftershock.aftershockTechnique,
+    moves.tremor.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

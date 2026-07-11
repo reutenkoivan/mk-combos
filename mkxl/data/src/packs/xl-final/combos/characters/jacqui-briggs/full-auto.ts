@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.jacquiBriggs;
 const variationSlug = "full-auto";
@@ -38,10 +38,10 @@ const jacquiBriggsFullAutoStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.jacquiBriggs.universal.openingAssault,
-    transitions.jacquiBriggs.universal.risingAssault,
-    transitions.jacquiBriggs.fullAuto.fullAutoTechnique,
-    transitions.jacquiBriggs.universal.closingStrike,
+    moves.jacquiBriggs.universal.openingAssault,
+    moves.jacquiBriggs.universal.risingAssault,
+    moves.jacquiBriggs.fullAuto.fullAutoTechnique,
+    moves.jacquiBriggs.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -73,9 +73,11 @@ const jacquiBriggsFullAutoCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.twoThreeIntoDBThree,
-    transitions.jacquiBriggs.fullAuto.dash,
-    transitions.jacquiBriggs.fullAuto.oneTwoOneTwoIntoBFFour,
+    moves.jacquiBriggs.fullAuto.twoThree,
+    moves.jacquiBriggs.fullAuto.dBThree,
+    moves.general.universal.dash,
+    moves.jacquiBriggs.fullAuto.oneTwoOneTwo,
+    moves.jacquiBriggs.fullAuto.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -106,8 +108,10 @@ const jacquiBriggsFullAutoCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.fOneTwoIntoDBTwo,
-    transitions.jacquiBriggs.fullAuto.fOneIntoBFFour,
+    moves.jacquiBriggs.fullAuto.fOneTwo,
+    moves.jacquiBriggs.fullAuto.dBTwo,
+    moves.jacquiBriggs.fullAuto.fOne,
+    moves.jacquiBriggs.fullAuto.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -138,9 +142,10 @@ const jacquiBriggsFullAutoCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.bThreeThreeIntoDBThree,
-    transitions.jacquiBriggs.fullAuto.bFTwo,
-    transitions.jacquiBriggs.fullAuto.bFOne,
+    moves.jacquiBriggs.fullAuto.bThreeThree,
+    moves.jacquiBriggs.fullAuto.dBThree,
+    moves.jacquiBriggs.fullAuto.bFTwo,
+    moves.jacquiBriggs.fullAuto.bFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -172,9 +177,11 @@ const jacquiBriggsFullAutoCommunityBeginner006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.bTwoIntoExDBTwo,
-    transitions.jacquiBriggs.fullAuto.dash,
-    transitions.jacquiBriggs.fullAuto.threeThreeIntoBFFour,
+    moves.jacquiBriggs.fullAuto.bTwo,
+    moves.jacquiBriggs.fullAuto.exDBTwo,
+    moves.general.universal.dash,
+    moves.jacquiBriggs.fullAuto.threeThree,
+    moves.jacquiBriggs.fullAuto.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -206,11 +213,14 @@ const jacquiBriggsFullAutoCommunityOptimal014Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.bTwoIntoExDBTwo,
-    transitions.jacquiBriggs.fullAuto.dash,
-    transitions.jacquiBriggs.fullAuto.oneIntoFTwoUTwo,
-    transitions.jacquiBriggs.fullAuto.dUFour,
-    transitions.jacquiBriggs.fullAuto.fourIntoBFFour,
+    moves.jacquiBriggs.fullAuto.bTwo,
+    moves.jacquiBriggs.fullAuto.exDBTwo,
+    moves.general.universal.dash,
+    moves.jacquiBriggs.fullAuto.one,
+    moves.jacquiBriggs.fullAuto.fTwoUTwo,
+    moves.jacquiBriggs.fullAuto.dUFour,
+    moves.jacquiBriggs.fullAuto.four,
+    moves.jacquiBriggs.fullAuto.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -242,11 +252,14 @@ const jacquiBriggsFullAutoCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.oneTwoOneIntoDBThree,
-    transitions.jacquiBriggs.fullAuto.threeThreeIntoDBTwo,
-    transitions.jacquiBriggs.fullAuto.fTwoUTwo,
-    transitions.jacquiBriggs.fullAuto.dUFour,
-    transitions.jacquiBriggs.fullAuto.oneOneFourIntoBFFour,
+    moves.jacquiBriggs.fullAuto.oneTwoOne,
+    moves.jacquiBriggs.fullAuto.dBThree,
+    moves.jacquiBriggs.fullAuto.threeThree,
+    moves.jacquiBriggs.fullAuto.dBTwo,
+    moves.jacquiBriggs.fullAuto.fTwoUTwo,
+    moves.jacquiBriggs.fullAuto.dUFour,
+    moves.jacquiBriggs.fullAuto.oneOneFour,
+    moves.jacquiBriggs.fullAuto.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -278,11 +291,14 @@ const jacquiBriggsFullAutoCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.oneTwoOneIntoExDBThree,
-    transitions.jacquiBriggs.fullAuto.threeThreeIntoDBTwo,
-    transitions.jacquiBriggs.fullAuto.fTwoUTwo,
-    transitions.jacquiBriggs.fullAuto.dUFour,
-    transitions.jacquiBriggs.fullAuto.oneOneFourIntoBFFour,
+    moves.jacquiBriggs.fullAuto.oneTwoOne,
+    moves.jacquiBriggs.fullAuto.exDBThree,
+    moves.jacquiBriggs.fullAuto.threeThree,
+    moves.jacquiBriggs.fullAuto.dBTwo,
+    moves.jacquiBriggs.fullAuto.fTwoUTwo,
+    moves.jacquiBriggs.fullAuto.dUFour,
+    moves.jacquiBriggs.fullAuto.oneOneFour,
+    moves.jacquiBriggs.fullAuto.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -314,11 +330,14 @@ const jacquiBriggsFullAutoCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.bThreeThreeIntoDBThree,
-    transitions.jacquiBriggs.fullAuto.threeThreeIntoDBTwo,
-    transitions.jacquiBriggs.fullAuto.fTwoUTwo,
-    transitions.jacquiBriggs.fullAuto.dUFour,
-    transitions.jacquiBriggs.fullAuto.oneOneFourIntoBFFour,
+    moves.jacquiBriggs.fullAuto.bThreeThree,
+    moves.jacquiBriggs.fullAuto.dBThree,
+    moves.jacquiBriggs.fullAuto.threeThree,
+    moves.jacquiBriggs.fullAuto.dBTwo,
+    moves.jacquiBriggs.fullAuto.fTwoUTwo,
+    moves.jacquiBriggs.fullAuto.dUFour,
+    moves.jacquiBriggs.fullAuto.oneOneFour,
+    moves.jacquiBriggs.fullAuto.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -350,11 +369,14 @@ const jacquiBriggsFullAutoCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.bThreeThreeIntoExDBThree,
-    transitions.jacquiBriggs.fullAuto.threeThreeIntoDBTwo,
-    transitions.jacquiBriggs.fullAuto.fTwoUTwo,
-    transitions.jacquiBriggs.fullAuto.dUFour,
-    transitions.jacquiBriggs.fullAuto.oneOneFourIntoBFFour,
+    moves.jacquiBriggs.fullAuto.bThreeThree,
+    moves.jacquiBriggs.fullAuto.exDBThree,
+    moves.jacquiBriggs.fullAuto.threeThree,
+    moves.jacquiBriggs.fullAuto.dBTwo,
+    moves.jacquiBriggs.fullAuto.fTwoUTwo,
+    moves.jacquiBriggs.fullAuto.dUFour,
+    moves.jacquiBriggs.fullAuto.oneOneFour,
+    moves.jacquiBriggs.fullAuto.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -386,10 +408,13 @@ const jacquiBriggsFullAutoCommunityCorner021Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jacquiBriggs.fullAuto.bTwoIntoExDBThree,
-    transitions.jacquiBriggs.fullAuto.threeThreeIntoDBTwo,
-    transitions.jacquiBriggs.fullAuto.oneOne,
-    transitions.jacquiBriggs.fullAuto.oneOneFourIntoBFFour,
+    moves.jacquiBriggs.fullAuto.bTwo,
+    moves.jacquiBriggs.fullAuto.exDBThree,
+    moves.jacquiBriggs.fullAuto.threeThree,
+    moves.jacquiBriggs.fullAuto.dBTwo,
+    moves.jacquiBriggs.fullAuto.oneOne,
+    moves.jacquiBriggs.fullAuto.oneOneFour,
+    moves.jacquiBriggs.fullAuto.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

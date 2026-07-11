@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kenshi;
 const variationSlug = "balanced";
@@ -42,10 +42,10 @@ const kenshiBalancedStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kenshi.universal.openingAssault,
-    transitions.kenshi.universal.risingAssault,
-    transitions.kenshi.balanced.balancedTechnique,
-    transitions.kenshi.universal.closingStrikeEnhanced,
+    moves.kenshi.universal.openingAssault,
+    moves.kenshi.universal.risingAssault,
+    moves.kenshi.balanced.balancedTechnique,
+    moves.kenshi.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

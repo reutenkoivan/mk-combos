@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.cassieCage;
 const variationSlug = "hollywood";
@@ -38,10 +38,10 @@ const cassieCageHollywoodStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.cassieCage.universal.openingAssault,
-    transitions.cassieCage.universal.risingAssault,
-    transitions.cassieCage.hollywood.hollywoodTechnique,
-    transitions.cassieCage.universal.closingStrike,
+    moves.cassieCage.universal.openingAssault,
+    moves.cassieCage.universal.risingAssault,
+    moves.cassieCage.hollywood.hollywoodTechnique,
+    moves.cassieCage.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -73,13 +73,16 @@ const cassieCageHollywoodCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.cassieCage.hollywood.twoFourTwo,
-    transitions.cassieCage.hollywood.oneTwoOne,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.oneTwoThreeIntoDBTwo,
-    transitions.cassieCage.hollywood.bOneIntoDBTwo,
-    transitions.cassieCage.hollywood.bOneIntoDBTwo,
+    moves.cassieCage.hollywood.twoFourTwo,
+    moves.cassieCage.hollywood.oneTwoOne,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.oneTwoThree,
+    moves.cassieCage.hollywood.dBTwo,
+    moves.cassieCage.hollywood.bOne,
+    moves.cassieCage.hollywood.dBTwo,
+    moves.cassieCage.hollywood.bOne,
+    moves.cassieCage.hollywood.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -111,12 +114,15 @@ const cassieCageHollywoodCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.cassieCage.hollywood.fThreeIntoExDBTwo,
-    transitions.cassieCage.hollywood.oneTwoOne,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.oneTwoThreeIntoDBTwo,
-    transitions.cassieCage.hollywood.bOneIntoDBTwo,
+    moves.cassieCage.hollywood.fThree,
+    moves.cassieCage.hollywood.exDBTwo,
+    moves.cassieCage.hollywood.oneTwoOne,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.oneTwoThree,
+    moves.cassieCage.hollywood.dBTwo,
+    moves.cassieCage.hollywood.bOne,
+    moves.cassieCage.hollywood.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -148,13 +154,17 @@ const cassieCageHollywoodCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.cassieCage.hollywood.fFourFourIntoBFFour,
-    transitions.cassieCage.hollywood.oneTwoOne,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.oneTwoThreeIntoDBTwo,
-    transitions.cassieCage.hollywood.bOneIntoDBTwo,
-    transitions.cassieCage.hollywood.bOneIntoDBTwo,
+    moves.cassieCage.hollywood.fFourFour,
+    moves.cassieCage.hollywood.bFFour,
+    moves.cassieCage.hollywood.oneTwoOne,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.oneTwoThree,
+    moves.cassieCage.hollywood.dBTwo,
+    moves.cassieCage.hollywood.bOne,
+    moves.cassieCage.hollywood.dBTwo,
+    moves.cassieCage.hollywood.bOne,
+    moves.cassieCage.hollywood.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -186,12 +196,15 @@ const cassieCageHollywoodCommunityCorner020Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.cassieCage.hollywood.bOneTwoIntoDBTwo,
-    transitions.cassieCage.hollywood.oneTwoOne,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.oneTwoThreeIntoDBTwo,
-    transitions.cassieCage.hollywood.bOneIntoDBTwo,
+    moves.cassieCage.hollywood.bOneTwo,
+    moves.cassieCage.hollywood.dBTwo,
+    moves.cassieCage.hollywood.oneTwoOne,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.oneTwoThree,
+    moves.cassieCage.hollywood.dBTwo,
+    moves.cassieCage.hollywood.bOne,
+    moves.cassieCage.hollywood.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -223,12 +236,16 @@ const cassieCageHollywoodCommunityCorner021Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.cassieCage.hollywood.oneOneTwoIntoOneTwoOne,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.twoOneUFour,
-    transitions.cassieCage.hollywood.oneTwoThreeIntoDBTwo,
-    transitions.cassieCage.hollywood.bOneIntoDBTwo,
-    transitions.cassieCage.hollywood.bOneIntoDBTwo,
+    moves.cassieCage.hollywood.oneOneTwo,
+    moves.cassieCage.hollywood.oneTwoOne,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.twoOneUFour,
+    moves.cassieCage.hollywood.oneTwoThree,
+    moves.cassieCage.hollywood.dBTwo,
+    moves.cassieCage.hollywood.bOne,
+    moves.cassieCage.hollywood.dBTwo,
+    moves.cassieCage.hollywood.bOne,
+    moves.cassieCage.hollywood.dBTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

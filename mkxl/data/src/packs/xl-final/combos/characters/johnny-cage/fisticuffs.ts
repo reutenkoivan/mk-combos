@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.johnnyCage;
 const variationSlug = "fisticuffs";
@@ -38,10 +38,10 @@ const johnnyCageFisticuffsStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.johnnyCage.universal.openingAssault,
-    transitions.johnnyCage.universal.risingAssault,
-    transitions.johnnyCage.fisticuffs.fisticuffsTechnique,
-    transitions.johnnyCage.universal.closingStrike,
+    moves.johnnyCage.universal.openingAssault,
+    moves.johnnyCage.universal.risingAssault,
+    moves.johnnyCage.fisticuffs.fisticuffsTechnique,
+    moves.johnnyCage.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

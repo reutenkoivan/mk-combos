@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.liuKang;
 const variationSlug = "flame-fist";
@@ -38,10 +38,10 @@ const liuKangFlameFistStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.liuKang.universal.openingAssault,
-    transitions.liuKang.universal.risingAssault,
-    transitions.liuKang.flameFist.flameFistTechnique,
-    transitions.liuKang.universal.closingStrike,
+    moves.liuKang.universal.openingAssault,
+    moves.liuKang.universal.risingAssault,
+    moves.liuKang.flameFist.flameFistTechnique,
+    moves.liuKang.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,8 +72,9 @@ const liuKangFlameFistCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.oneOneTwoIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.oneOneTwo,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -104,8 +105,9 @@ const liuKangFlameFistCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.fFourFourIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.fFourFour,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -136,9 +138,9 @@ const liuKangFlameFistCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.oneOneThree,
-    transitions.liuKang.flameFist.bThreeFour,
-    transitions.liuKang.flameFist.dTwo,
+    moves.liuKang.flameFist.oneOneThree,
+    moves.liuKang.flameFist.bThreeFour,
+    moves.liuKang.flameFist.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -168,7 +170,7 @@ const liuKangFlameFistCommunityBeginner004Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.liuKang.flameFist.bThreeFour, transitions.liuKang.flameFist.dTwo],
+  route: [moves.liuKang.flameFist.bThreeFour, moves.liuKang.flameFist.dTwo],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const liuKangFlameFistCommunityBeginner005Combo = {
@@ -198,9 +200,9 @@ const liuKangFlameFistCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.bOneTwo,
-    transitions.liuKang.flameFist.fBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.bOneTwo,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -231,10 +233,11 @@ const liuKangFlameFistCommunityOptimal006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.oneOneThree,
-    transitions.liuKang.flameFist.bThreeFour,
-    transitions.liuKang.flameFist.bOneTwoIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.oneOneThree,
+    moves.liuKang.flameFist.bThreeFour,
+    moves.liuKang.flameFist.bOneTwo,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -266,13 +269,13 @@ const liuKangFlameFistCommunityOptimal007Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.bOneTwo,
-    transitions.liuKang.flameFist.exDDOne,
-    transitions.liuKang.flameFist.oneOneThree,
-    transitions.liuKang.flameFist.bThreeFour,
-    transitions.liuKang.flameFist.bOneTwo,
-    transitions.liuKang.flameFist.fBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.bOneTwo,
+    moves.liuKang.flameFist.exDDOne,
+    moves.liuKang.flameFist.oneOneThree,
+    moves.liuKang.flameFist.bThreeFour,
+    moves.liuKang.flameFist.bOneTwo,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -304,9 +307,11 @@ const liuKangFlameFistCommunityOptimal008Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.oneOneTwoIntoExDDOne,
-    transitions.liuKang.flameFist.fFourFourIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.oneOneTwo,
+    moves.liuKang.flameFist.exDDOne,
+    moves.liuKang.flameFist.fFourFour,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -336,7 +341,11 @@ const liuKangFlameFistCommunityOptimal009Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.liuKang.flameFist.fFourFourIntoFBFFour, transitions.liuKang.flameFist.xray],
+  route: [
+    moves.liuKang.flameFist.fFourFour,
+    moves.liuKang.flameFist.fBFFour,
+    moves.general.universal.xray,
+  ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const liuKangFlameFistCommunityOptimal010Combo = {
@@ -367,11 +376,13 @@ const liuKangFlameFistCommunityOptimal010Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.fOneTwoIntoExDDOne,
-    transitions.liuKang.flameFist.oneOneThree,
-    transitions.liuKang.flameFist.bThreeFour,
-    transitions.liuKang.flameFist.bOneTwoIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.fOneTwo,
+    moves.liuKang.flameFist.exDDOne,
+    moves.liuKang.flameFist.oneOneThree,
+    moves.liuKang.flameFist.bThreeFour,
+    moves.liuKang.flameFist.bOneTwo,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -403,11 +414,13 @@ const liuKangFlameFistCommunityCorner011Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.fTwoOneThreeIntoExBFOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.exBFOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -439,11 +452,13 @@ const liuKangFlameFistCommunityCorner012Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.fTwoOneThreeIntoDBTwo,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.dBTwo,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -475,13 +490,15 @@ const liuKangFlameFistCommunityCorner013Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.oneOneTwo,
-    transitions.liuKang.flameFist.exDDOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoDBTwo,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.oneOneTwo,
+    moves.liuKang.flameFist.exDDOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.dBTwo,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -513,12 +530,14 @@ const liuKangFlameFistCommunityCorner014Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.fFourFourIntoExFBFFour,
-    transitions.liuKang.flameFist.dBTwo,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.fFourFour,
+    moves.liuKang.flameFist.exFBFFour,
+    moves.liuKang.flameFist.dBTwo,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -550,12 +569,14 @@ const liuKangFlameFistCommunityCorner015Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.fFourFourIntoExBFOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.fFourFour,
+    moves.liuKang.flameFist.exBFOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -587,13 +608,15 @@ const liuKangFlameFistCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.fFourFourIntoExFBFFour,
-    transitions.liuKang.flameFist.exBFOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.fFourFour,
+    moves.liuKang.flameFist.exFBFFour,
+    moves.liuKang.flameFist.exBFOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -625,15 +648,17 @@ const liuKangFlameFistCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.dDOne,
-    transitions.liuKang.flameFist.fFourFourIntoExFBFFour,
-    transitions.liuKang.flameFist.exBFOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.dDOne,
+    moves.liuKang.flameFist.fFourFour,
+    moves.liuKang.flameFist.exFBFFour,
+    moves.liuKang.flameFist.exBFOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -665,12 +690,13 @@ const liuKangFlameFistCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.oneOneThree,
-    transitions.liuKang.flameFist.bThreeFour,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.oneOneThree,
+    moves.liuKang.flameFist.bThreeFour,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -702,13 +728,15 @@ const liuKangFlameFistCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.liuKang.flameFist.fOneTwoIntoExDDOne,
-    transitions.liuKang.flameFist.oneOneThree,
-    transitions.liuKang.flameFist.bThreeFour,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.dOne,
-    transitions.liuKang.flameFist.fTwoOneThreeIntoFBFFour,
-    transitions.liuKang.flameFist.bFThree,
+    moves.liuKang.flameFist.fOneTwo,
+    moves.liuKang.flameFist.exDDOne,
+    moves.liuKang.flameFist.oneOneThree,
+    moves.liuKang.flameFist.bThreeFour,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.dOne,
+    moves.liuKang.flameFist.fTwoOneThree,
+    moves.liuKang.flameFist.fBFFour,
+    moves.liuKang.flameFist.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

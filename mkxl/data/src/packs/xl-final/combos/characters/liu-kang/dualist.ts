@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.liuKang;
 const variationSlug = "dualist";
@@ -38,10 +38,10 @@ const liuKangDualistStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.liuKang.universal.openingAssault,
-    transitions.liuKang.universal.risingAssault,
-    transitions.liuKang.dualist.dualistTechnique,
-    transitions.liuKang.universal.closingStrike,
+    moves.liuKang.universal.openingAssault,
+    moves.liuKang.universal.risingAssault,
+    moves.liuKang.dualist.dualistTechnique,
+    moves.liuKang.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

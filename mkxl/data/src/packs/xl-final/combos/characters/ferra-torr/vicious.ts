@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.ferraTorr;
 const variationSlug = "vicious";
@@ -42,10 +42,10 @@ const ferraTorrViciousStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.ferraTorr.universal.openingAssault,
-    transitions.ferraTorr.universal.risingAssault,
-    transitions.ferraTorr.vicious.viciousTechnique,
-    transitions.ferraTorr.universal.closingStrikeEnhanced,
+    moves.ferraTorr.universal.openingAssault,
+    moves.ferraTorr.universal.risingAssault,
+    moves.ferraTorr.vicious.viciousTechnique,
+    moves.ferraTorr.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.tanya;
 const variationSlug = "kobu-jutsu";
@@ -38,10 +38,10 @@ const tanyaKobuJutsuStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.tanya.universal.openingAssault,
-    transitions.tanya.universal.risingAssault,
-    transitions.tanya.kobuJutsu.kobuJutsuTechnique,
-    transitions.tanya.universal.closingStrike,
+    moves.tanya.universal.openingAssault,
+    moves.tanya.universal.risingAssault,
+    moves.tanya.kobuJutsu.kobuJutsuTechnique,
+    moves.tanya.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -71,7 +71,7 @@ const tanyaKobuJutsuCommunityBeginner001Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.tanya.kobuJutsu.twoUThree, transitions.tanya.kobuJutsu.fFourThree],
+  route: [moves.tanya.kobuJutsu.twoUThree, moves.tanya.kobuJutsu.fFourThree],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const tanyaKobuJutsuCommunityBeginner002Combo = {
@@ -101,9 +101,10 @@ const tanyaKobuJutsuCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tanya.kobuJutsu.oneOneTwoIntoExDFOne,
-    transitions.tanya.kobuJutsu.twoUThree,
-    transitions.tanya.kobuJutsu.fFourThree,
+    moves.tanya.kobuJutsu.oneOneTwo,
+    moves.tanya.kobuJutsu.exDFOne,
+    moves.tanya.kobuJutsu.twoUThree,
+    moves.tanya.kobuJutsu.fFourThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -134,9 +135,10 @@ const tanyaKobuJutsuCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tanya.kobuJutsu.bThreeOneIntoExDFOne,
-    transitions.tanya.kobuJutsu.twoUThree,
-    transitions.tanya.kobuJutsu.fFourThree,
+    moves.tanya.kobuJutsu.bThreeOne,
+    moves.tanya.kobuJutsu.exDFOne,
+    moves.tanya.kobuJutsu.twoUThree,
+    moves.tanya.kobuJutsu.fFourThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -167,9 +169,10 @@ const tanyaKobuJutsuCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tanya.kobuJutsu.fTwoIntoExDFOne,
-    transitions.tanya.kobuJutsu.twoUThree,
-    transitions.tanya.kobuJutsu.fFourThree,
+    moves.tanya.kobuJutsu.fTwo,
+    moves.tanya.kobuJutsu.exDFOne,
+    moves.tanya.kobuJutsu.twoUThree,
+    moves.tanya.kobuJutsu.fFourThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -200,10 +203,11 @@ const tanyaKobuJutsuCommunityOptimal007Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tanya.kobuJutsu.twoUThree,
-    transitions.tanya.kobuJutsu.fourIntoDFTwo,
-    transitions.tanya.kobuJutsu.dFOne,
-    transitions.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.twoUThree,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.dFOne,
+    moves.tanya.kobuJutsu.dFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -235,12 +239,13 @@ const tanyaKobuJutsuCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tanya.kobuJutsu.twoUThree,
-    transitions.tanya.kobuJutsu.four,
-    transitions.tanya.kobuJutsu.four,
-    transitions.tanya.kobuJutsu.oneOneTwoIntoDFTwo,
-    transitions.tanya.kobuJutsu.dFOne,
-    transitions.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.twoUThree,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.oneOneTwo,
+    moves.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.dFOne,
+    moves.tanya.kobuJutsu.dFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -272,15 +277,17 @@ const tanyaKobuJutsuCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tanya.kobuJutsu.oneOneTwoIntoDFTwo,
-    transitions.tanya.kobuJutsu.dFOne,
-    transitions.tanya.kobuJutsu.exDFTwo,
-    transitions.tanya.kobuJutsu.four,
-    transitions.tanya.kobuJutsu.four,
-    transitions.tanya.kobuJutsu.oneOne,
-    transitions.tanya.kobuJutsu.oneOneTwoIntoDFTwo,
-    transitions.tanya.kobuJutsu.dFOne,
-    transitions.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.oneOneTwo,
+    moves.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.dFOne,
+    moves.tanya.kobuJutsu.exDFTwo,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.oneOne,
+    moves.tanya.kobuJutsu.oneOneTwo,
+    moves.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.dFOne,
+    moves.tanya.kobuJutsu.dFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -312,15 +319,18 @@ const tanyaKobuJutsuCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tanya.kobuJutsu.oneOneTwoIntoDFTwo,
-    transitions.tanya.kobuJutsu.dFOne,
-    transitions.tanya.kobuJutsu.exDFTwo,
-    transitions.tanya.kobuJutsu.four,
-    transitions.tanya.kobuJutsu.four,
-    transitions.tanya.kobuJutsu.fourIntoExBFFour,
-    transitions.tanya.kobuJutsu.fourIntoDFTwo,
-    transitions.tanya.kobuJutsu.dFOne,
-    transitions.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.oneOneTwo,
+    moves.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.dFOne,
+    moves.tanya.kobuJutsu.exDFTwo,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.exBFFour,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.dFOne,
+    moves.tanya.kobuJutsu.dFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -352,15 +362,17 @@ const tanyaKobuJutsuCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.tanya.kobuJutsu.bThreeOneIntoDFTwo,
-    transitions.tanya.kobuJutsu.dFOne,
-    transitions.tanya.kobuJutsu.exDFTwo,
-    transitions.tanya.kobuJutsu.four,
-    transitions.tanya.kobuJutsu.four,
-    transitions.tanya.kobuJutsu.oneOne,
-    transitions.tanya.kobuJutsu.oneOneTwoIntoDFTwo,
-    transitions.tanya.kobuJutsu.dFOne,
-    transitions.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.bThreeOne,
+    moves.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.dFOne,
+    moves.tanya.kobuJutsu.exDFTwo,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.four,
+    moves.tanya.kobuJutsu.oneOne,
+    moves.tanya.kobuJutsu.oneOneTwo,
+    moves.tanya.kobuJutsu.dFTwo,
+    moves.tanya.kobuJutsu.dFOne,
+    moves.tanya.kobuJutsu.dFTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

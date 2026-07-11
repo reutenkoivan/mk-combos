@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kungLao;
 const variationSlug = "hat-trick";
@@ -38,10 +38,10 @@ const kungLaoHatTrickStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kungLao.universal.openingAssault,
-    transitions.kungLao.universal.risingAssault,
-    transitions.kungLao.hatTrick.hatTrickTechnique,
-    transitions.kungLao.universal.closingStrike,
+    moves.kungLao.universal.openingAssault,
+    moves.kungLao.universal.risingAssault,
+    moves.kungLao.hatTrick.hatTrickTechnique,
+    moves.kungLao.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

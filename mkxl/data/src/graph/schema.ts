@@ -6,7 +6,7 @@ export const MkxlGraphNodeSchema = z
   .object({
     id: MkxlIdSchema,
     label: MkxlLabelSchema,
-    kind: z.enum(["start", "move", "transition", "end", "stageInteraction"]),
+    kind: z.enum(["start", "move", "end", "stageInteraction"]),
   })
   .strict();
 
@@ -16,7 +16,6 @@ export const MkxlGraphEdgeSchema = z
     fromNodeId: MkxlIdSchema,
     toNodeId: MkxlIdSchema,
     moveId: MkxlIdSchema.optional(),
-    transitionId: MkxlIdSchema.optional(),
     interactableId: MkxlIdSchema.optional(),
     frameWindow: z
       .object({
@@ -30,8 +29,8 @@ export const MkxlGraphEdgeSchema = z
     sourceIds: MkxlSourceIdListSchema,
   })
   .strict()
-  .refine((edge) => Boolean(edge.moveId ?? edge.transitionId ?? edge.interactableId), {
-    message: "Graph edges must reference a move, transition, or interactable.",
+  .refine((edge) => Boolean(edge.moveId ?? edge.interactableId), {
+    message: "Graph edges must reference a move or interactable.",
     path: ["moveId"],
   });
 

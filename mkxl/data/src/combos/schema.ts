@@ -31,8 +31,8 @@ export const MkxlComboStageContextSchema = z.discriminatedUnion("kind", [
 export const MkxlComboRouteStepSchema = z.discriminatedUnion("kind", [
   z
     .object({
-      kind: z.literal("transition"),
-      transitionId: MkxlIdSchema,
+      kind: z.literal("move"),
+      moveId: MkxlIdSchema,
     })
     .strict(),
 ]);

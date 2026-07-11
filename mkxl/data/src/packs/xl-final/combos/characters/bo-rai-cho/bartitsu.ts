@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.boRaiCho;
 const variationSlug = "bartitsu";
@@ -38,10 +38,10 @@ const boRaiChoBartitsuStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.boRaiCho.universal.openingAssault,
-    transitions.boRaiCho.universal.risingAssault,
-    transitions.boRaiCho.bartitsu.bartitsuTechnique,
-    transitions.boRaiCho.universal.closingStrike,
+    moves.boRaiCho.universal.openingAssault,
+    moves.boRaiCho.universal.risingAssault,
+    moves.boRaiCho.bartitsu.bartitsuTechnique,
+    moves.boRaiCho.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -71,7 +71,11 @@ const boRaiChoBartitsuCommunityBeginner001Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.boRaiCho.bartitsu.twoOne, transitions.boRaiCho.bartitsu.fTwoIntoBFFour],
+  route: [
+    moves.boRaiCho.bartitsu.twoOne,
+    moves.boRaiCho.bartitsu.fTwo,
+    moves.boRaiCho.bartitsu.bFFour,
+  ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const boRaiChoBartitsuCommunityBeginner002Combo = {
@@ -101,8 +105,9 @@ const boRaiChoBartitsuCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.boRaiCho.bartitsu.threeFourOne,
-    transitions.boRaiCho.bartitsu.bTwoThreeThreeIntoBFFour,
+    moves.boRaiCho.bartitsu.threeFourOne,
+    moves.boRaiCho.bartitsu.bTwoThreeThree,
+    moves.boRaiCho.bartitsu.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

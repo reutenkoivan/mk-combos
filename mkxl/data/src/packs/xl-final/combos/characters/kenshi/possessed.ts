@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kenshi;
 const variationSlug = "possessed";
@@ -38,10 +38,10 @@ const kenshiPossessedStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kenshi.universal.openingAssault,
-    transitions.kenshi.universal.risingAssault,
-    transitions.kenshi.possessed.possessedTechnique,
-    transitions.kenshi.universal.closingStrike,
+    moves.kenshi.universal.openingAssault,
+    moves.kenshi.universal.risingAssault,
+    moves.kenshi.possessed.possessedTechnique,
+    moves.kenshi.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -71,7 +71,7 @@ const kenshiPossessedCommunityBeginner001Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.kenshi.possessed.oneOneFour, transitions.kenshi.possessed.bFThree],
+  route: [moves.kenshi.possessed.oneOneFour, moves.kenshi.possessed.bFThree],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const kenshiPossessedCommunityBeginner004Combo = {
@@ -100,7 +100,7 @@ const kenshiPossessedCommunityBeginner004Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.kenshi.possessed.bThreeTwoIntoDFFour],
+  route: [moves.kenshi.possessed.bThreeTwo, moves.kenshi.possessed.dFFour],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const kenshiPossessedCommunityBeginner005Combo = {
@@ -130,8 +130,10 @@ const kenshiPossessedCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kenshi.possessed.bThreeTwoIntoExDBFour,
-    transitions.kenshi.possessed.fThreeTwoIntoBFThree,
+    moves.kenshi.possessed.bThreeTwo,
+    moves.kenshi.possessed.exDBFour,
+    moves.kenshi.possessed.fThreeTwo,
+    moves.kenshi.possessed.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -162,12 +164,13 @@ const kenshiPossessedCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kenshi.possessed.oneOneFour,
-    transitions.kenshi.possessed.four,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.fourThreeIntoBFThree,
+    moves.kenshi.possessed.oneOneFour,
+    moves.kenshi.possessed.four,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.fourThree,
+    moves.kenshi.possessed.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -199,12 +202,14 @@ const kenshiPossessedCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kenshi.possessed.bThreeTwoIntoExDBFourB,
-    transitions.kenshi.possessed.dTwo,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.fourThreeIntoBFThree,
+    moves.kenshi.possessed.bThreeTwo,
+    moves.kenshi.possessed.exDBFourB,
+    moves.kenshi.possessed.dTwo,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.fourThree,
+    moves.kenshi.possessed.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -236,13 +241,15 @@ const kenshiPossessedCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kenshi.possessed.fourTwoOneIntoExDBFourB,
-    transitions.kenshi.possessed.dTwo,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.dOne,
-    transitions.kenshi.possessed.fourThreeIntoBFThree,
+    moves.kenshi.possessed.fourTwoOne,
+    moves.kenshi.possessed.exDBFourB,
+    moves.kenshi.possessed.dTwo,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.dOne,
+    moves.kenshi.possessed.fourThree,
+    moves.kenshi.possessed.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -274,10 +281,13 @@ const kenshiPossessedCommunityCorner020Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kenshi.possessed.fourTwoOneIntoExDBFourB,
-    transitions.kenshi.possessed.dTwo,
-    transitions.kenshi.possessed.fThreeTwoIntoExDBOne,
-    transitions.kenshi.possessed.fourThreeIntoBFThree,
+    moves.kenshi.possessed.fourTwoOne,
+    moves.kenshi.possessed.exDBFourB,
+    moves.kenshi.possessed.dTwo,
+    moves.kenshi.possessed.fThreeTwo,
+    moves.kenshi.possessed.exDBOne,
+    moves.kenshi.possessed.fourThree,
+    moves.kenshi.possessed.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

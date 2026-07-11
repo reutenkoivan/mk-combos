@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.mileena;
 const variationSlug = "ravenous";
@@ -42,10 +42,10 @@ const mileenaRavenousStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.mileena.universal.openingAssault,
-    transitions.mileena.universal.risingAssault,
-    transitions.mileena.ravenous.ravenousTechnique,
-    transitions.mileena.universal.closingStrikeEnhanced,
+    moves.mileena.universal.openingAssault,
+    moves.mileena.universal.risingAssault,
+    moves.mileena.ravenous.ravenousTechnique,
+    moves.mileena.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.dvorah;
 const variationSlug = "venomous";
@@ -38,10 +38,10 @@ const dvorahVenomousStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.dvorah.universal.openingAssault,
-    transitions.dvorah.universal.risingAssault,
-    transitions.dvorah.venomous.venomousTechnique,
-    transitions.dvorah.universal.closingStrike,
+    moves.dvorah.universal.openingAssault,
+    moves.dvorah.universal.risingAssault,
+    moves.dvorah.venomous.venomousTechnique,
+    moves.dvorah.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.scorpion;
 const variationSlug = "ninjutsu";
@@ -38,10 +38,10 @@ const scorpionNinjutsuStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.scorpion.universal.openingAssault,
-    transitions.scorpion.universal.risingAssault,
-    transitions.scorpion.ninjutsu.ninjutsuTechnique,
-    transitions.scorpion.universal.closingStrikeEnhanced,
+    moves.scorpion.universal.openingAssault,
+    moves.scorpion.universal.risingAssault,
+    moves.scorpion.ninjutsu.ninjutsuTechnique,
+    moves.scorpion.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,8 +72,10 @@ const scorpionNinjutsuCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.scorpion.ninjutsu.twoOneFourIntoDBThree,
-    transitions.scorpion.ninjutsu.twoOneFourIntoDBThree,
+    moves.scorpion.ninjutsu.twoOneFour,
+    moves.scorpion.ninjutsu.dBThree,
+    moves.scorpion.ninjutsu.twoOneFour,
+    moves.scorpion.ninjutsu.dBThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -104,10 +106,11 @@ const scorpionNinjutsuCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.scorpion.ninjutsu.fTwo,
-    transitions.scorpion.ninjutsu.bTwo,
-    transitions.scorpion.ninjutsu.bTwo,
-    transitions.scorpion.ninjutsu.bTwoIntoDTwo,
+    moves.scorpion.ninjutsu.fTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -138,10 +141,11 @@ const scorpionNinjutsuCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.scorpion.ninjutsu.bTwo,
-    transitions.scorpion.ninjutsu.bTwo,
-    transitions.scorpion.ninjutsu.bTwo,
-    transitions.scorpion.ninjutsu.bTwoIntoDTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -173,12 +177,13 @@ const scorpionNinjutsuCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.scorpion.ninjutsu.fTwo,
-    transitions.scorpion.ninjutsu.bTwo,
-    transitions.scorpion.ninjutsu.bTwo,
-    transitions.scorpion.ninjutsu.bTwo,
-    transitions.scorpion.ninjutsu.bTwo,
-    transitions.scorpion.ninjutsu.twoOneFourIntoBFFour,
+    moves.scorpion.ninjutsu.fTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.bTwo,
+    moves.scorpion.ninjutsu.twoOneFour,
+    moves.scorpion.ninjutsu.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

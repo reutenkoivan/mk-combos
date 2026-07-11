@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.alien;
 const variationSlug = "tarkatan";
@@ -42,10 +42,10 @@ const alienTarkatanStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.alien.universal.openingAssault,
-    transitions.alien.universal.risingAssault,
-    transitions.alien.tarkatan.tarkatanTechnique,
-    transitions.alien.universal.closingStrikeEnhanced,
+    moves.alien.universal.openingAssault,
+    moves.alien.universal.risingAssault,
+    moves.alien.tarkatan.tarkatanTechnique,
+    moves.alien.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -76,8 +76,9 @@ const alienTarkatanCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.alien.tarkatan.bOneOneUFour,
-    transitions.alien.tarkatan.twoOneFourIntoDFThree,
+    moves.alien.tarkatan.bOneOneUFour,
+    moves.alien.tarkatan.twoOneFour,
+    moves.alien.tarkatan.dFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -108,8 +109,10 @@ const alienTarkatanCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.alien.tarkatan.oneTwoIntoExBFFour,
-    transitions.alien.tarkatan.twoOneFourIntoDFThree,
+    moves.alien.tarkatan.oneTwo,
+    moves.alien.tarkatan.exBFFour,
+    moves.alien.tarkatan.twoOneFour,
+    moves.alien.tarkatan.dFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -140,8 +143,10 @@ const alienTarkatanCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.alien.tarkatan.fOneThreeFourIntoExBFOne,
-    transitions.alien.tarkatan.fOneThreeFourIntoDFThree,
+    moves.alien.tarkatan.fOneThreeFour,
+    moves.alien.tarkatan.exBFOne,
+    moves.alien.tarkatan.fOneThreeFour,
+    moves.alien.tarkatan.dFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -172,8 +177,10 @@ const alienTarkatanCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.alien.tarkatan.bThreeIntoExBFFour,
-    transitions.alien.tarkatan.twoOneFourIntoDFThree,
+    moves.alien.tarkatan.bThree,
+    moves.alien.tarkatan.exBFFour,
+    moves.alien.tarkatan.twoOneFour,
+    moves.alien.tarkatan.dFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -204,8 +211,10 @@ const alienTarkatanCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.alien.tarkatan.fFourIntoExBFFour,
-    transitions.alien.tarkatan.twoOneFourIntoDFThree,
+    moves.alien.tarkatan.fFour,
+    moves.alien.tarkatan.exBFFour,
+    moves.alien.tarkatan.twoOneFour,
+    moves.alien.tarkatan.dFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -237,9 +246,11 @@ const alienTarkatanCommunityOptimal009Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.alien.tarkatan.fOneThreeFourIntoExBFOne,
-    transitions.alien.tarkatan.bOneOneUFour,
-    transitions.alien.tarkatan.twoOneFourIntoDFThree,
+    moves.alien.tarkatan.fOneThreeFour,
+    moves.alien.tarkatan.exBFOne,
+    moves.alien.tarkatan.bOneOneUFour,
+    moves.alien.tarkatan.twoOneFour,
+    moves.alien.tarkatan.dFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -270,10 +281,11 @@ const alienTarkatanCommunityCorner015Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.alien.tarkatan.bOneOneUFour,
-    transitions.alien.tarkatan.uThree,
-    transitions.alien.tarkatan.uThree,
-    transitions.alien.tarkatan.twoOneFourIntoDFThree,
+    moves.alien.tarkatan.bOneOneUFour,
+    moves.alien.tarkatan.uThree,
+    moves.alien.tarkatan.uThree,
+    moves.alien.tarkatan.twoOneFour,
+    moves.alien.tarkatan.dFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -305,11 +317,13 @@ const alienTarkatanCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.alien.tarkatan.bOneOneUFour,
-    transitions.alien.tarkatan.uThree,
-    transitions.alien.tarkatan.uThree,
-    transitions.alien.tarkatan.twoOneFourIntoExBFOne,
-    transitions.alien.tarkatan.twoOneFourIntoDFThree,
+    moves.alien.tarkatan.bOneOneUFour,
+    moves.alien.tarkatan.uThree,
+    moves.alien.tarkatan.uThree,
+    moves.alien.tarkatan.twoOneFour,
+    moves.alien.tarkatan.exBFOne,
+    moves.alien.tarkatan.twoOneFour,
+    moves.alien.tarkatan.dFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

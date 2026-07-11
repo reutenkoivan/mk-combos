@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.dvorah;
 const variationSlug = "swarm-queen";
@@ -38,10 +38,10 @@ const dvorahSwarmQueenStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.dvorah.universal.openingAssault,
-    transitions.dvorah.universal.risingAssault,
-    transitions.dvorah.swarmQueen.swarmQueenTechnique,
-    transitions.dvorah.universal.closingStrike,
+    moves.dvorah.universal.openingAssault,
+    moves.dvorah.universal.risingAssault,
+    moves.dvorah.swarmQueen.swarmQueenTechnique,
+    moves.dvorah.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

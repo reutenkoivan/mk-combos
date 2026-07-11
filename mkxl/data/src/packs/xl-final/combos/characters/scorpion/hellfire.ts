@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.scorpion;
 const variationSlug = "hellfire";
@@ -38,10 +38,10 @@ const scorpionHellfireStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.scorpion.universal.openingAssault,
-    transitions.scorpion.universal.risingAssault,
-    transitions.scorpion.hellfire.hellfireTechnique,
-    transitions.scorpion.universal.closingStrike,
+    moves.scorpion.universal.openingAssault,
+    moves.scorpion.universal.risingAssault,
+    moves.scorpion.hellfire.hellfireTechnique,
+    moves.scorpion.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.triborg;
 const variationSlug = "smoke";
@@ -38,10 +38,10 @@ const triborgSmokeStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.triborg.universal.openingAssault,
-    transitions.triborg.universal.risingAssault,
-    transitions.triborg.smoke.smokeTechnique,
-    transitions.triborg.universal.closingStrikeEnhanced,
+    moves.triborg.universal.openingAssault,
+    moves.triborg.universal.risingAssault,
+    moves.triborg.smoke.smokeTechnique,
+    moves.triborg.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

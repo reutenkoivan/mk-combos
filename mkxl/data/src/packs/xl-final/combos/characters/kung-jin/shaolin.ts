@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kungJin;
 const variationSlug = "shaolin";
@@ -38,10 +38,10 @@ const kungJinShaolinStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kungJin.universal.openingAssault,
-    transitions.kungJin.universal.risingAssault,
-    transitions.kungJin.shaolin.shaolinTechnique,
-    transitions.kungJin.universal.closingStrikeEnhanced,
+    moves.kungJin.universal.openingAssault,
+    moves.kungJin.universal.risingAssault,
+    moves.kungJin.shaolin.shaolinTechnique,
+    moves.kungJin.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

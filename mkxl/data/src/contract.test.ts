@@ -42,8 +42,6 @@ import type {
   MkxlStageZone,
 } from "@mk-combos/mkxl-data/stages/type";
 import { mkxlStages } from "@mk-combos/mkxl-data/stages/value";
-import type { MkxlTransition } from "@mk-combos/mkxl-data/transitions/type";
-import { mkxlTransitions } from "@mk-combos/mkxl-data/transitions/value";
 import type { MkxlVariation } from "@mk-combos/mkxl-data/variations/type";
 import { mkxlVariations, mkxlVariationsByCharacterId } from "@mk-combos/mkxl-data/variations/value";
 import { describe, expect, it } from "vitest";
@@ -79,7 +77,6 @@ const acceptsPublicTypes = (_contract: {
   moveFrameData: MkxlMoveFrameData;
   moveNotationValue: MkxlMoveNotationValue;
   moveTree: MkxlMoveTree;
-  transition: MkxlTransition;
   id: MkxlId;
   label: MkxlLabel;
   pickerSlot: MkxlPickerSlot;
@@ -111,14 +108,12 @@ describe("@mk-combos/mkxl-data contract", () => {
     });
     expect(mkxlDataContractGroups.coverage.runtime).toBe("@mk-combos/mkxl-data/coverage/runtime");
     expect(mkxlDataContractGroups.combos.value).toBe("@mk-combos/mkxl-data/combos/value");
-    expect(mkxlDataContractGroups.transitions.value).toBe("@mk-combos/mkxl-data/transitions/value");
   });
 
   it("imports public data subpaths and value sets", () => {
     expect(mkxlCharacters).toHaveLength(33);
     expect(mkxlVariations).toHaveLength(100);
     expect(mkxlMovelists.length).toBeGreaterThanOrEqual(33);
-    expect(mkxlTransitions.length).toBeGreaterThan(0);
     expect(mkxlVariationsByCharacterId.triborg).toHaveLength(4);
     expect(mkxlSeededCombos.length).toBeGreaterThanOrEqual(mkxlVariations.length);
     expect(mkxlSeededComboIds).toHaveLength(mkxlSeededCombos.length);
@@ -151,7 +146,6 @@ describe("@mk-combos/mkxl-data contract", () => {
     const firstCombo = expectPresent(mkxlSeededCombos[0], "first combo");
     const firstMovelist = expectPresent(mkxlMovelists[0], "first movelist");
     const firstMove = expectPresent(firstMovelist.movelist[0], "first move");
-    const firstTransition = expectPresent(mkxlTransitions[0], "first transition");
     const firstVariation = expectPresent(mkxlVariations[0], "first variation");
     const firstStage = expectPresent(mkxlStages[0], "first stage");
     const firstZone = expectPresent(firstStage.zones[0], "first stage zone");
@@ -181,8 +175,8 @@ describe("@mk-combos/mkxl-data contract", () => {
     expect(Array.isArray(firstMovelist.moves)).toBe(false);
     expect(firstMove.notation).toEqual(["1", "1", "2"]);
     expect(firstComboRouteStep).toEqual({
-      kind: "transition",
-      transitionId: firstCombo.route[0]?.transitionId,
+      kind: "move",
+      moveId: firstCombo.route[0]?.moveId,
     });
     expect(firstCombo.notation[0]).toEqual(["1", "1", "2"]);
     expect(typeof firstMovePathMoveId).toBe("string");
@@ -208,7 +202,6 @@ describe("@mk-combos/mkxl-data contract", () => {
         moveFrameData: { startup: 1 },
         moveNotationValue: generalRunMoveNotationValue,
         moveTree: firstMovelist.moves,
-        transition: firstTransition,
         id: firstCharacter.id,
         label: firstCharacter.label,
         pickerSlot: firstVariation.pickerSlot,

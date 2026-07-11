@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.alien;
 const variationSlug = "konjurer";
@@ -38,10 +38,10 @@ const alienKonjurerStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.alien.universal.openingAssault,
-    transitions.alien.universal.risingAssault,
-    transitions.alien.konjurer.konjurerTechnique,
-    transitions.alien.universal.closingStrike,
+    moves.alien.universal.openingAssault,
+    moves.alien.universal.risingAssault,
+    moves.alien.konjurer.konjurerTechnique,
+    moves.alien.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

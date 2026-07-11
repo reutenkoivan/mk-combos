@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.erronBlack;
 const variationSlug = "marksman";
@@ -38,10 +38,10 @@ const erronBlackMarksmanStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.erronBlack.universal.openingAssault,
-    transitions.erronBlack.universal.risingAssault,
-    transitions.erronBlack.marksman.marksmanTechnique,
-    transitions.erronBlack.universal.closingStrike,
+    moves.erronBlack.universal.openingAssault,
+    moves.erronBlack.universal.risingAssault,
+    moves.erronBlack.marksman.marksmanTechnique,
+    moves.erronBlack.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

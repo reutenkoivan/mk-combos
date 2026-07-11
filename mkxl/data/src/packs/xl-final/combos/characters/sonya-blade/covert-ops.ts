@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.sonyaBlade;
 const variationSlug = "covert-ops";
@@ -38,10 +38,10 @@ const sonyaBladeCovertOpsStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.sonyaBlade.universal.openingAssault,
-    transitions.sonyaBlade.universal.risingAssault,
-    transitions.sonyaBlade.covertOps.covertOpsTechnique,
-    transitions.sonyaBlade.universal.closingStrike,
+    moves.sonyaBlade.universal.openingAssault,
+    moves.sonyaBlade.universal.risingAssault,
+    moves.sonyaBlade.covertOps.covertOpsTechnique,
+    moves.sonyaBlade.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

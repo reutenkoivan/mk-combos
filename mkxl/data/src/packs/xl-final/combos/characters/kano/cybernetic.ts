@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kano;
 const variationSlug = "cybernetic";
@@ -38,10 +38,10 @@ const kanoCyberneticStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kano.universal.openingAssault,
-    transitions.kano.universal.risingAssault,
-    transitions.kano.cybernetic.cyberneticTechnique,
-    transitions.kano.universal.closingStrike,
+    moves.kano.universal.openingAssault,
+    moves.kano.universal.risingAssault,
+    moves.kano.cybernetic.cyberneticTechnique,
+    moves.kano.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

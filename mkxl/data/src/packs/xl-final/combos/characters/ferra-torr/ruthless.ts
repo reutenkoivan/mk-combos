@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.ferraTorr;
 const variationSlug = "ruthless";
@@ -38,10 +38,10 @@ const ferraTorrRuthlessStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.ferraTorr.universal.openingAssault,
-    transitions.ferraTorr.universal.risingAssault,
-    transitions.ferraTorr.ruthless.ruthlessTechnique,
-    transitions.ferraTorr.universal.closingStrike,
+    moves.ferraTorr.universal.openingAssault,
+    moves.ferraTorr.universal.risingAssault,
+    moves.ferraTorr.ruthless.ruthlessTechnique,
+    moves.ferraTorr.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,9 +72,11 @@ const ferraTorrRuthlessCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.ferraTorr.ruthless.oneOneIntoExBFTwo,
-    transitions.ferraTorr.ruthless.fTwo,
-    transitions.ferraTorr.ruthless.fourIntoBFThree,
+    moves.ferraTorr.ruthless.oneOne,
+    moves.ferraTorr.ruthless.exBFTwo,
+    moves.ferraTorr.ruthless.fTwo,
+    moves.ferraTorr.ruthless.four,
+    moves.ferraTorr.ruthless.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -105,9 +107,11 @@ const ferraTorrRuthlessCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.ferraTorr.ruthless.oneOneIntoExDBTwo,
-    transitions.ferraTorr.ruthless.fTwo,
-    transitions.ferraTorr.ruthless.fourIntoBFThree,
+    moves.ferraTorr.ruthless.oneOne,
+    moves.ferraTorr.ruthless.exDBTwo,
+    moves.ferraTorr.ruthless.fTwo,
+    moves.ferraTorr.ruthless.four,
+    moves.ferraTorr.ruthless.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -138,9 +142,11 @@ const ferraTorrRuthlessCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.ferraTorr.ruthless.bOneTwoOneIntoExDBTwo,
-    transitions.ferraTorr.ruthless.fTwo,
-    transitions.ferraTorr.ruthless.fourIntoBFThree,
+    moves.ferraTorr.ruthless.bOneTwoOne,
+    moves.ferraTorr.ruthless.exDBTwo,
+    moves.ferraTorr.ruthless.fTwo,
+    moves.ferraTorr.ruthless.four,
+    moves.ferraTorr.ruthless.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -171,9 +177,10 @@ const ferraTorrRuthlessCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.ferraTorr.ruthless.fTwo,
-    transitions.ferraTorr.ruthless.oneOne,
-    transitions.ferraTorr.ruthless.fourIntoBFThree,
+    moves.ferraTorr.ruthless.fTwo,
+    moves.ferraTorr.ruthless.oneOne,
+    moves.ferraTorr.ruthless.four,
+    moves.ferraTorr.ruthless.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -205,10 +212,12 @@ const ferraTorrRuthlessCommunityOptimal009Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.ferraTorr.ruthless.bOneTwoOneIntoExBFTwo,
-    transitions.ferraTorr.ruthless.fTwo,
-    transitions.ferraTorr.ruthless.dTwo,
-    transitions.ferraTorr.ruthless.fThreeIntoDBFOne,
+    moves.ferraTorr.ruthless.bOneTwoOne,
+    moves.ferraTorr.ruthless.exBFTwo,
+    moves.ferraTorr.ruthless.fTwo,
+    moves.ferraTorr.ruthless.dTwo,
+    moves.ferraTorr.ruthless.fThree,
+    moves.ferraTorr.ruthless.dBFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

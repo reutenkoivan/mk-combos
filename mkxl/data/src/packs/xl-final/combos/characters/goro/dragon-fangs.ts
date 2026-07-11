@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.goro;
 const variationSlug = "dragon-fangs";
@@ -38,10 +38,10 @@ const goroDragonFangsStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.goro.universal.openingAssault,
-    transitions.goro.universal.risingAssault,
-    transitions.goro.dragonFangs.dragonFangsTechnique,
-    transitions.goro.universal.closingStrike,
+    moves.goro.universal.openingAssault,
+    moves.goro.universal.risingAssault,
+    moves.goro.dragonFangs.dragonFangsTechnique,
+    moves.goro.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

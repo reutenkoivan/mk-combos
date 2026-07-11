@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kano;
 const variationSlug = "cutthroat";
@@ -38,10 +38,10 @@ const kanoCutthroatStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kano.universal.openingAssault,
-    transitions.kano.universal.risingAssault,
-    transitions.kano.cutthroat.cutthroatTechnique,
-    transitions.kano.universal.closingStrike,
+    moves.kano.universal.openingAssault,
+    moves.kano.universal.risingAssault,
+    moves.kano.cutthroat.cutthroatTechnique,
+    moves.kano.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,9 +72,10 @@ const kanoCutthroatCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kano.cutthroat.fTwoOneTwo,
-    transitions.kano.cutthroat.fTwoOneTwo,
-    transitions.kano.cutthroat.fFourIntoBFThree,
+    moves.kano.cutthroat.fTwoOneTwo,
+    moves.kano.cutthroat.fTwoOneTwo,
+    moves.kano.cutthroat.fFour,
+    moves.kano.cutthroat.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -106,10 +107,12 @@ const kanoCutthroatCommunityBeginner006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kano.cutthroat.oneOneTwoIntoExDDThree,
-    transitions.kano.cutthroat.fTwoOneTwo,
-    transitions.kano.cutthroat.fTwoOneTwo,
-    transitions.kano.cutthroat.fFourIntoBFThree,
+    moves.kano.cutthroat.oneOneTwo,
+    moves.kano.cutthroat.exDDThree,
+    moves.kano.cutthroat.fTwoOneTwo,
+    moves.kano.cutthroat.fTwoOneTwo,
+    moves.kano.cutthroat.fFour,
+    moves.kano.cutthroat.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -141,10 +144,14 @@ const kanoCutthroatCommunityOptimal008Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kano.cutthroat.oneOneTwoIntoExDBOne,
-    transitions.kano.cutthroat.twoIntoDBOne,
-    transitions.kano.cutthroat.oneOneTwoIntoExDBOne,
-    transitions.kano.cutthroat.fourIntoBFThree,
+    moves.kano.cutthroat.oneOneTwo,
+    moves.kano.cutthroat.exDBOne,
+    moves.kano.cutthroat.two,
+    moves.kano.cutthroat.dBOne,
+    moves.kano.cutthroat.oneOneTwo,
+    moves.kano.cutthroat.exDBOne,
+    moves.kano.cutthroat.four,
+    moves.kano.cutthroat.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -176,10 +183,12 @@ const kanoCutthroatCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kano.cutthroat.oneOneTwoIntoExDDThree,
-    transitions.kano.cutthroat.bThreeOneTwo,
-    transitions.kano.cutthroat.bThreeOneTwo,
-    transitions.kano.cutthroat.oneOneTwoIntoBFThree,
+    moves.kano.cutthroat.oneOneTwo,
+    moves.kano.cutthroat.exDDThree,
+    moves.kano.cutthroat.bThreeOneTwo,
+    moves.kano.cutthroat.bThreeOneTwo,
+    moves.kano.cutthroat.oneOneTwo,
+    moves.kano.cutthroat.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -211,10 +220,12 @@ const kanoCutthroatCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kano.cutthroat.oneOneTwoIntoExDDThree,
-    transitions.kano.cutthroat.bThreeOneTwo,
-    transitions.kano.cutthroat.threeTwo,
-    transitions.kano.cutthroat.oneOneTwoIntoBFThree,
+    moves.kano.cutthroat.oneOneTwo,
+    moves.kano.cutthroat.exDDThree,
+    moves.kano.cutthroat.bThreeOneTwo,
+    moves.kano.cutthroat.threeTwo,
+    moves.kano.cutthroat.oneOneTwo,
+    moves.kano.cutthroat.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -245,9 +256,10 @@ const kanoCutthroatCommunityCorner021Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kano.cutthroat.bThreeOneTwo,
-    transitions.kano.cutthroat.bThreeOneTwo,
-    transitions.kano.cutthroat.oneOneTwoIntoBFThree,
+    moves.kano.cutthroat.bThreeOneTwo,
+    moves.kano.cutthroat.bThreeOneTwo,
+    moves.kano.cutthroat.oneOneTwo,
+    moves.kano.cutthroat.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -279,11 +291,13 @@ const kanoCutthroatCommunityCorner022Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kano.cutthroat.bOneTwoOneIntoDFTwo,
-    transitions.kano.cutthroat.dThree,
-    transitions.kano.cutthroat.dThree,
-    transitions.kano.cutthroat.dThree,
-    transitions.kano.cutthroat.oneOneTwoIntoBFThree,
+    moves.kano.cutthroat.bOneTwoOne,
+    moves.kano.cutthroat.dFTwo,
+    moves.kano.cutthroat.dThree,
+    moves.kano.cutthroat.dThree,
+    moves.kano.cutthroat.dThree,
+    moves.kano.cutthroat.oneOneTwo,
+    moves.kano.cutthroat.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

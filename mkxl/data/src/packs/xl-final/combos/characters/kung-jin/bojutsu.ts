@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kungJin;
 const variationSlug = "bojutsu";
@@ -42,10 +42,10 @@ const kungJinBojutsuStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kungJin.universal.openingAssault,
-    transitions.kungJin.universal.risingAssault,
-    transitions.kungJin.bojutsu.bojutsuTechnique,
-    transitions.kungJin.universal.closingStrike,
+    moves.kungJin.universal.openingAssault,
+    moves.kungJin.universal.risingAssault,
+    moves.kungJin.bojutsu.bojutsuTechnique,
+    moves.kungJin.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -75,7 +75,7 @@ const kungJinBojutsuCommunityBeginner002Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.kungJin.bojutsu.twoTwoOneIntoDBThree],
+  route: [moves.kungJin.bojutsu.twoTwoOne, moves.kungJin.bojutsu.dBThree],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const kungJinBojutsuCommunityCorner014Combo = {
@@ -105,9 +105,12 @@ const kungJinBojutsuCommunityCorner014Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungJin.bojutsu.oneOneOneIntoBFFour,
-    transitions.kungJin.bojutsu.fourIntoDBOne,
-    transitions.kungJin.bojutsu.threeFourThreeIntoDBThree,
+    moves.kungJin.bojutsu.oneOneOne,
+    moves.kungJin.bojutsu.bFFour,
+    moves.kungJin.bojutsu.four,
+    moves.kungJin.bojutsu.dBOne,
+    moves.kungJin.bojutsu.threeFourThree,
+    moves.kungJin.bojutsu.dBThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -138,9 +141,12 @@ const kungJinBojutsuCommunityCorner015Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungJin.bojutsu.bOneFourIntoBFFour,
-    transitions.kungJin.bojutsu.fourIntoDBOne,
-    transitions.kungJin.bojutsu.threeFourThreeIntoDBThree,
+    moves.kungJin.bojutsu.bOneFour,
+    moves.kungJin.bojutsu.bFFour,
+    moves.kungJin.bojutsu.four,
+    moves.kungJin.bojutsu.dBOne,
+    moves.kungJin.bojutsu.threeFourThree,
+    moves.kungJin.bojutsu.dBThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -171,9 +177,12 @@ const kungJinBojutsuCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungJin.bojutsu.fTwoFourIntoBFFour,
-    transitions.kungJin.bojutsu.fourIntoDBOne,
-    transitions.kungJin.bojutsu.threeFourThreeIntoDBThree,
+    moves.kungJin.bojutsu.fTwoFour,
+    moves.kungJin.bojutsu.bFFour,
+    moves.kungJin.bojutsu.four,
+    moves.kungJin.bojutsu.dBOne,
+    moves.kungJin.bojutsu.threeFourThree,
+    moves.kungJin.bojutsu.dBThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -205,9 +214,12 @@ const kungJinBojutsuCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungJin.bojutsu.twoTwoOneIntoExDBThree,
-    transitions.kungJin.bojutsu.fourIntoDBOne,
-    transitions.kungJin.bojutsu.threeFourThreeIntoDBThree,
+    moves.kungJin.bojutsu.twoTwoOne,
+    moves.kungJin.bojutsu.exDBThree,
+    moves.kungJin.bojutsu.four,
+    moves.kungJin.bojutsu.dBOne,
+    moves.kungJin.bojutsu.threeFourThree,
+    moves.kungJin.bojutsu.dBThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -239,10 +251,14 @@ const kungJinBojutsuCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kungJin.bojutsu.twoTwoOneIntoExDBThree,
-    transitions.kungJin.bojutsu.fourIntoExDBOne,
-    transitions.kungJin.bojutsu.fourIntoDBOne,
-    transitions.kungJin.bojutsu.threeFourIntoDBThree,
+    moves.kungJin.bojutsu.twoTwoOne,
+    moves.kungJin.bojutsu.exDBThree,
+    moves.kungJin.bojutsu.four,
+    moves.kungJin.bojutsu.exDBOne,
+    moves.kungJin.bojutsu.four,
+    moves.kungJin.bojutsu.dBOne,
+    moves.kungJin.bojutsu.threeFour,
+    moves.kungJin.bojutsu.dBThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

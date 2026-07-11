@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.quanChi;
 const variationSlug = "summoner";
@@ -38,10 +38,10 @@ const quanChiSummonerStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.quanChi.universal.openingAssault,
-    transitions.quanChi.universal.risingAssault,
-    transitions.quanChi.summoner.summonerTechnique,
-    transitions.quanChi.universal.closingStrike,
+    moves.quanChi.universal.openingAssault,
+    moves.quanChi.universal.risingAssault,
+    moves.quanChi.summoner.summonerTechnique,
+    moves.quanChi.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,9 +72,10 @@ const quanChiSummonerCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.quanChi.summoner.oneTwoIntoBFThree,
-    transitions.quanChi.summoner.bThreeTwoFour,
-    transitions.quanChi.summoner.oneFourOne,
+    moves.quanChi.summoner.oneTwo,
+    moves.quanChi.summoner.bFThree,
+    moves.quanChi.summoner.bThreeTwoFour,
+    moves.quanChi.summoner.oneFourOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -105,9 +106,10 @@ const quanChiSummonerCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.quanChi.summoner.fFourIntoBFThree,
-    transitions.quanChi.summoner.bThreeTwoFour,
-    transitions.quanChi.summoner.oneFourOne,
+    moves.quanChi.summoner.fFour,
+    moves.quanChi.summoner.bFThree,
+    moves.quanChi.summoner.bThreeTwoFour,
+    moves.quanChi.summoner.oneFourOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

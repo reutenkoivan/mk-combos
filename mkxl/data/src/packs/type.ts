@@ -4,7 +4,6 @@ import type { MkxlMove, MkxlMovelist, MkxlMoveTree } from "../movelists/type";
 import type { MkxlCharacter } from "../roster/type";
 import type { MkxlSourceIdList } from "../shared/type";
 import type { MkxlStage } from "../stages/type";
-import type { MkxlTransition } from "../transitions/type";
 import type { MkxlVariation } from "../variations/type";
 
 type MkxlNonEmptyReadonlyArray<T> = readonly [T, ...T[]];
@@ -14,12 +13,6 @@ type MkxlInputNotationValueList = readonly [string, ...string[]];
 type MkxlAuthoredMoveMap = Readonly<Record<string, MkxlMove>>;
 
 type MkxlAuthoredVariationMoveMap = Readonly<Record<string, MkxlAuthoredMoveMap>>;
-
-export type MkxlAuthoredTransition = Omit<MkxlTransition, "movePath" | "notation" | "route"> & {
-  readonly route: MkxlNonEmptyReadonlyArray<MkxlMove>;
-};
-
-type MkxlAuthoredComboRouteEntry = MkxlAuthoredTransition;
 
 export type MkxlAuthoredCharacterMoves = {
   readonly sourcePath: `characters/${string}.ts`;
@@ -33,7 +26,7 @@ export type MkxlAuthoredSeededCombo = Omit<
   MkxlSeededCombo,
   "characterId" | "movePath" | "notation" | "route" | "variationId"
 > & {
-  readonly route: MkxlNonEmptyReadonlyArray<MkxlAuthoredComboRouteEntry>;
+  readonly route: MkxlNonEmptyReadonlyArray<MkxlMove>;
 };
 
 export type MkxlAuthoredVariationCombos = {
@@ -91,7 +84,6 @@ export type MkxlDataPack = {
   readonly variations?: readonly MkxlVariation[];
   readonly stages?: readonly MkxlStage[];
   readonly inputNotationValues?: MkxlInputNotationValueList;
-  readonly transitions?: readonly MkxlAuthoredTransition[];
   readonly moves?: readonly MkxlAuthoredCharacterMoves[];
   readonly combos?: readonly MkxlAuthoredVariationCombos[];
   readonly movePatches?: readonly MkxlMovePatch[];
@@ -126,8 +118,6 @@ export type MkxlResolvedData = {
   readonly stageIds: readonly string[];
   readonly interactableIds: readonly string[];
   readonly inputNotationValues: MkxlInputNotationValueList;
-  readonly transitions: readonly MkxlTransition[];
-  readonly transitionIds: readonly string[];
   readonly movelistFiles: readonly MkxlResolvedCharacterMovelistFile[];
   readonly moveTreeRegistry: Readonly<Record<string, MkxlResolvedCharacterMovelistFile>>;
   readonly movelists: readonly MkxlMovelist[];

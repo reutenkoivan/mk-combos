@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.cassieCage;
 const variationSlug = "spec-ops";
@@ -38,10 +38,10 @@ const cassieCageSpecOpsStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.cassieCage.universal.openingAssault,
-    transitions.cassieCage.universal.risingAssault,
-    transitions.cassieCage.specOps.specOpsTechnique,
-    transitions.cassieCage.universal.closingStrike,
+    moves.cassieCage.universal.openingAssault,
+    moves.cassieCage.universal.risingAssault,
+    moves.cassieCage.specOps.specOpsTechnique,
+    moves.cassieCage.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

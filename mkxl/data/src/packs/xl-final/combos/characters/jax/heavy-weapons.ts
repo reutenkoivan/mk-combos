@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.jax;
 const variationSlug = "heavy-weapons";
@@ -38,10 +38,10 @@ const jaxHeavyWeaponsStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.jax.universal.openingAssault,
-    transitions.jax.universal.risingAssault,
-    transitions.jax.heavyWeapons.heavyWeaponsTechnique,
-    transitions.jax.universal.closingStrike,
+    moves.jax.universal.openingAssault,
+    moves.jax.universal.risingAssault,
+    moves.jax.heavyWeapons.heavyWeaponsTechnique,
+    moves.jax.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,10 +72,12 @@ const jaxHeavyWeaponsCommunityOptimal008Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jax.heavyWeapons.threeBTwo,
-    transitions.jax.heavyWeapons.fTwoOne,
-    transitions.jax.heavyWeapons.oneOne,
-    transitions.jax.heavyWeapons.fTwoOneTwoDIntoTwoIntoFour,
+    moves.jax.heavyWeapons.threeBTwo,
+    moves.jax.heavyWeapons.fTwoOne,
+    moves.jax.heavyWeapons.oneOne,
+    moves.jax.heavyWeapons.fTwoOneTwoD,
+    moves.jax.heavyWeapons.two,
+    moves.jax.heavyWeapons.four,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -107,12 +109,15 @@ const jaxHeavyWeaponsCommunityCorner015Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jax.heavyWeapons.bTwoIntoExBFTwoD,
-    transitions.jax.heavyWeapons.fTwoOne,
-    transitions.jax.heavyWeapons.oneOne,
-    transitions.jax.heavyWeapons.fTwoOneTwo,
-    transitions.jax.heavyWeapons.oneTwoFourIntoExDBOne,
-    transitions.jax.heavyWeapons.oneTwoIntoDBOne,
+    moves.jax.heavyWeapons.bTwo,
+    moves.jax.heavyWeapons.exBFTwoD,
+    moves.jax.heavyWeapons.fTwoOne,
+    moves.jax.heavyWeapons.oneOne,
+    moves.jax.heavyWeapons.fTwoOneTwo,
+    moves.jax.heavyWeapons.oneTwoFour,
+    moves.jax.heavyWeapons.exDBOne,
+    moves.jax.heavyWeapons.oneTwo,
+    moves.jax.heavyWeapons.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -144,10 +149,13 @@ const jaxHeavyWeaponsCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jax.heavyWeapons.bThreeIntoBFTwoD,
-    transitions.jax.heavyWeapons.oneOne,
-    transitions.jax.heavyWeapons.bThreeFourIntoExDBOne,
-    transitions.jax.heavyWeapons.oneTwoFourIntoDBOne,
+    moves.jax.heavyWeapons.bThree,
+    moves.jax.heavyWeapons.bFTwoD,
+    moves.jax.heavyWeapons.oneOne,
+    moves.jax.heavyWeapons.bThreeFour,
+    moves.jax.heavyWeapons.exDBOne,
+    moves.jax.heavyWeapons.oneTwoFour,
+    moves.jax.heavyWeapons.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -179,10 +187,14 @@ const jaxHeavyWeaponsCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jax.heavyWeapons.bThreeFourIntoExBFTwoD,
-    transitions.jax.heavyWeapons.bThreeFourIntoExDBOne,
-    transitions.jax.heavyWeapons.oneTwoFourIntoExDBOne,
-    transitions.jax.heavyWeapons.oneOneIntoDBOne,
+    moves.jax.heavyWeapons.bThreeFour,
+    moves.jax.heavyWeapons.exBFTwoD,
+    moves.jax.heavyWeapons.bThreeFour,
+    moves.jax.heavyWeapons.exDBOne,
+    moves.jax.heavyWeapons.oneTwoFour,
+    moves.jax.heavyWeapons.exDBOne,
+    moves.jax.heavyWeapons.oneOne,
+    moves.jax.heavyWeapons.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -214,11 +226,12 @@ const jaxHeavyWeaponsCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.jax.heavyWeapons.fTwoOneTwo,
-    transitions.jax.heavyWeapons.dOneTwo,
-    transitions.jax.heavyWeapons.oneOne,
-    transitions.jax.heavyWeapons.fTwoOneTwo,
-    transitions.jax.heavyWeapons.oneTwoFourIntoDBOne,
+    moves.jax.heavyWeapons.fTwoOneTwo,
+    moves.jax.heavyWeapons.dOneTwo,
+    moves.jax.heavyWeapons.oneOne,
+    moves.jax.heavyWeapons.fTwoOneTwo,
+    moves.jax.heavyWeapons.oneTwoFour,
+    moves.jax.heavyWeapons.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

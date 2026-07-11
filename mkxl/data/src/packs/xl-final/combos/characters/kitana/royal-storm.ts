@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kitana;
 const variationSlug = "royal-storm";
@@ -38,10 +38,10 @@ const kitanaRoyalStormStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kitana.universal.openingAssault,
-    transitions.kitana.universal.risingAssault,
-    transitions.kitana.royalStorm.royalStormTechnique,
-    transitions.kitana.universal.closingStrike,
+    moves.kitana.universal.openingAssault,
+    moves.kitana.universal.risingAssault,
+    moves.kitana.royalStorm.royalStormTechnique,
+    moves.kitana.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

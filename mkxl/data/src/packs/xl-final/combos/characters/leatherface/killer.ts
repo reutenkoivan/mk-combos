@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.leatherface;
 const variationSlug = "killer";
@@ -38,10 +38,10 @@ const leatherfaceKillerStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.leatherface.universal.openingAssault,
-    transitions.leatherface.universal.risingAssault,
-    transitions.leatherface.killer.killerTechnique,
-    transitions.leatherface.universal.closingStrike,
+    moves.leatherface.universal.openingAssault,
+    moves.leatherface.universal.risingAssault,
+    moves.leatherface.killer.killerTechnique,
+    moves.leatherface.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,9 +72,11 @@ const leatherfaceKillerCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.leatherface.killer.oneTwoTwo,
-    transitions.leatherface.killer.oneTwoIntoBDFour,
-    transitions.leatherface.killer.fOneTwoIntoDBOne,
+    moves.leatherface.killer.oneTwoTwo,
+    moves.leatherface.killer.oneTwo,
+    moves.leatherface.killer.bDFour,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -106,9 +108,11 @@ const leatherfaceKillerCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.leatherface.killer.fOneTwoIntoBDFour,
-    transitions.leatherface.killer.fTwoOneDTwo,
-    transitions.leatherface.killer.fOneTwoIntoDBOne,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.bDFour,
+    moves.leatherface.killer.fTwoOneDTwo,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -140,10 +144,14 @@ const leatherfaceKillerCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.leatherface.killer.fOneTwoIntoDBThreeIntoOne,
-    transitions.leatherface.killer.mb,
-    transitions.leatherface.killer.oneTwoIntoBDFour,
-    transitions.leatherface.killer.fOneTwoIntoDBOne,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBThree,
+    moves.leatherface.killer.one,
+    moves.leatherface.killer.mb,
+    moves.leatherface.killer.oneTwo,
+    moves.leatherface.killer.bDFour,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -175,9 +183,11 @@ const leatherfaceKillerCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.leatherface.killer.fTwoOneDTwo,
-    transitions.leatherface.killer.oneTwoIntoBDFour,
-    transitions.leatherface.killer.fOneTwoIntoDBOne,
+    moves.leatherface.killer.fTwoOneDTwo,
+    moves.leatherface.killer.oneTwo,
+    moves.leatherface.killer.bDFour,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -209,9 +219,11 @@ const leatherfaceKillerCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.leatherface.killer.fThreeIntoBDFour,
-    transitions.leatherface.killer.fTwoOneDTwo,
-    transitions.leatherface.killer.fOneTwoIntoDBOne,
+    moves.leatherface.killer.fThree,
+    moves.leatherface.killer.bDFour,
+    moves.leatherface.killer.fTwoOneDTwo,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -243,10 +255,14 @@ const leatherfaceKillerCommunityBeginner006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.leatherface.killer.bOneIntoDBThreeIntoOne,
-    transitions.leatherface.killer.mb,
-    transitions.leatherface.killer.oneTwoIntoBDFour,
-    transitions.leatherface.killer.fOneTwoIntoDBOne,
+    moves.leatherface.killer.bOne,
+    moves.leatherface.killer.dBThree,
+    moves.leatherface.killer.one,
+    moves.leatherface.killer.mb,
+    moves.leatherface.killer.oneTwo,
+    moves.leatherface.killer.bDFour,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -278,10 +294,14 @@ const leatherfaceKillerCommunityBeginner007Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.leatherface.killer.fThreeIntoDBThreeIntoOne,
-    transitions.leatherface.killer.mb,
-    transitions.leatherface.killer.oneTwoIntoBDFour,
-    transitions.leatherface.killer.fOneTwoIntoDBOne,
+    moves.leatherface.killer.fThree,
+    moves.leatherface.killer.dBThree,
+    moves.leatherface.killer.one,
+    moves.leatherface.killer.mb,
+    moves.leatherface.killer.oneTwo,
+    moves.leatherface.killer.bDFour,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -313,10 +333,13 @@ const leatherfaceKillerCommunityCorner019Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.leatherface.killer.bOneIntoBDFour,
-    transitions.leatherface.killer.fTwoOneDTwo,
-    transitions.leatherface.killer.fOneTwoIntoDBFour,
-    transitions.leatherface.killer.fOneTwoIntoDBFour,
+    moves.leatherface.killer.bOne,
+    moves.leatherface.killer.bDFour,
+    moves.leatherface.killer.fTwoOneDTwo,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBFour,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -348,10 +371,13 @@ const leatherfaceKillerCommunityCorner021Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.leatherface.killer.fThreeIntoBDFour,
-    transitions.leatherface.killer.fTwoOneDTwo,
-    transitions.leatherface.killer.fOneTwoIntoDBFour,
-    transitions.leatherface.killer.fOneTwoIntoDBFour,
+    moves.leatherface.killer.fThree,
+    moves.leatherface.killer.bDFour,
+    moves.leatherface.killer.fTwoOneDTwo,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBFour,
+    moves.leatherface.killer.fOneTwo,
+    moves.leatherface.killer.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

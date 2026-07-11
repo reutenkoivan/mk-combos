@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.predator;
 const variationSlug = "hish-qu-ten";
@@ -38,10 +38,10 @@ const predatorHishQuTenStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.predator.universal.openingAssault,
-    transitions.predator.universal.risingAssault,
-    transitions.predator.hishQuTen.hishQuTenTechnique,
-    transitions.predator.universal.closingStrike,
+    moves.predator.universal.openingAssault,
+    moves.predator.universal.risingAssault,
+    moves.predator.hishQuTen.hishQuTenTechnique,
+    moves.predator.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.shinnok;
 const variationSlug = "bone-shaper";
@@ -42,10 +42,10 @@ const shinnokBoneShaperStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.shinnok.universal.openingAssault,
-    transitions.shinnok.universal.risingAssault,
-    transitions.shinnok.boneShaper.boneShaperTechnique,
-    transitions.shinnok.universal.closingStrikeEnhanced,
+    moves.shinnok.universal.openingAssault,
+    moves.shinnok.universal.risingAssault,
+    moves.shinnok.boneShaper.boneShaperTechnique,
+    moves.shinnok.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -75,7 +75,7 @@ const shinnokBoneShaperCommunityBeginner001Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.shinnok.boneShaper.fFourOneDTwoIntoBFThree],
+  route: [moves.shinnok.boneShaper.fFourOneDTwo, moves.shinnok.boneShaper.bFThree],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const shinnokBoneShaperCommunityBeginner002Combo = {
@@ -104,7 +104,11 @@ const shinnokBoneShaperCommunityBeginner002Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.shinnok.boneShaper.bThree, transitions.shinnok.boneShaper.bOneIntoBFThree],
+  route: [
+    moves.shinnok.boneShaper.bThree,
+    moves.shinnok.boneShaper.bOne,
+    moves.shinnok.boneShaper.bFThree,
+  ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const shinnokBoneShaperCommunityBeginner003Combo = {
@@ -133,7 +137,7 @@ const shinnokBoneShaperCommunityBeginner003Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.shinnok.boneShaper.oneOneTwoIntoBFThree],
+  route: [moves.shinnok.boneShaper.oneOneTwo, moves.shinnok.boneShaper.bFThree],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const shinnokBoneShaperCommunityBeginner004Combo = {
@@ -164,9 +168,11 @@ const shinnokBoneShaperCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.shinnok.boneShaper.fFourOneDTwoDBTwoMb,
-    transitions.shinnok.boneShaper.dash,
-    transitions.shinnok.boneShaper.dTwo,
+    moves.shinnok.boneShaper.fFourOneDTwo,
+    moves.shinnok.boneShaper.dBTwo,
+    moves.shinnok.boneShaper.mb,
+    moves.general.universal.dash,
+    moves.shinnok.boneShaper.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -197,9 +203,11 @@ const shinnokBoneShaperCommunityBeginner006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.shinnok.boneShaper.bThree,
-    transitions.shinnok.boneShaper.bOneBFThreeMb,
-    transitions.shinnok.boneShaper.dTwo,
+    moves.shinnok.boneShaper.bThree,
+    moves.shinnok.boneShaper.bOne,
+    moves.shinnok.boneShaper.bFThree,
+    moves.shinnok.boneShaper.mb,
+    moves.shinnok.boneShaper.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -231,11 +239,12 @@ const shinnokBoneShaperCommunityCorner013Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.shinnok.boneShaper.fFourOneDTwo,
-    transitions.shinnok.boneShaper.dOne,
-    transitions.shinnok.boneShaper.dOne,
-    transitions.shinnok.boneShaper.dOne,
-    transitions.shinnok.boneShaper.oneOneTwoIntoBFThree,
+    moves.shinnok.boneShaper.fFourOneDTwo,
+    moves.shinnok.boneShaper.dOne,
+    moves.shinnok.boneShaper.dOne,
+    moves.shinnok.boneShaper.dOne,
+    moves.shinnok.boneShaper.oneOneTwo,
+    moves.shinnok.boneShaper.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -266,11 +275,12 @@ const shinnokBoneShaperCommunityCorner015Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.shinnok.boneShaper.bThree,
-    transitions.shinnok.boneShaper.bThree,
-    transitions.shinnok.boneShaper.dOne,
-    transitions.shinnok.boneShaper.dOne,
-    transitions.shinnok.boneShaper.oneOneTwoIntoBFThree,
+    moves.shinnok.boneShaper.bThree,
+    moves.shinnok.boneShaper.bThree,
+    moves.shinnok.boneShaper.dOne,
+    moves.shinnok.boneShaper.dOne,
+    moves.shinnok.boneShaper.oneOneTwo,
+    moves.shinnok.boneShaper.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -302,11 +312,14 @@ const shinnokBoneShaperCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.shinnok.boneShaper.bThree,
-    transitions.shinnok.boneShaper.bThree,
-    transitions.shinnok.boneShaper.oneOneTwoDBTwoMb,
-    transitions.shinnok.boneShaper.dTwo,
-    transitions.shinnok.boneShaper.oneOneTwoIntoBFThree,
+    moves.shinnok.boneShaper.bThree,
+    moves.shinnok.boneShaper.bThree,
+    moves.shinnok.boneShaper.oneOneTwo,
+    moves.shinnok.boneShaper.dBTwo,
+    moves.shinnok.boneShaper.mb,
+    moves.shinnok.boneShaper.dTwo,
+    moves.shinnok.boneShaper.oneOneTwo,
+    moves.shinnok.boneShaper.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -337,9 +350,10 @@ const shinnokBoneShaperCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.shinnok.boneShaper.threeOneTwo,
-    transitions.shinnok.boneShaper.dOne,
-    transitions.shinnok.boneShaper.oneOneTwoIntoBFThree,
+    moves.shinnok.boneShaper.threeOneTwo,
+    moves.shinnok.boneShaper.dOne,
+    moves.shinnok.boneShaper.oneOneTwo,
+    moves.shinnok.boneShaper.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -371,11 +385,14 @@ const shinnokBoneShaperCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.shinnok.boneShaper.threeOneTwo,
-    transitions.shinnok.boneShaper.dOne,
-    transitions.shinnok.boneShaper.oneOneTwoDBTwoMb,
-    transitions.shinnok.boneShaper.dTwo,
-    transitions.shinnok.boneShaper.oneOneIntoBFThree,
+    moves.shinnok.boneShaper.threeOneTwo,
+    moves.shinnok.boneShaper.dOne,
+    moves.shinnok.boneShaper.oneOneTwo,
+    moves.shinnok.boneShaper.dBTwo,
+    moves.shinnok.boneShaper.mb,
+    moves.shinnok.boneShaper.dTwo,
+    moves.shinnok.boneShaper.oneOne,
+    moves.shinnok.boneShaper.bFThree,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

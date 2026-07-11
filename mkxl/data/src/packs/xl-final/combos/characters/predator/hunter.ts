@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.predator;
 const variationSlug = "hunter";
@@ -38,10 +38,10 @@ const predatorHunterStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.predator.universal.openingAssault,
-    transitions.predator.universal.risingAssault,
-    transitions.predator.hunter.hunterTechnique,
-    transitions.predator.universal.closingStrike,
+    moves.predator.universal.openingAssault,
+    moves.predator.universal.risingAssault,
+    moves.predator.hunter.hunterTechnique,
+    moves.predator.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -73,11 +73,13 @@ const predatorHunterCommunityOptimal012Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.predator.hunter.threeTwoIntoExDBFour,
-    transitions.predator.hunter.dDOne,
-    transitions.predator.hunter.bFTwo,
-    transitions.predator.hunter.fFour,
-    transitions.predator.hunter.bThreeOneOneIntoBFFour,
+    moves.predator.hunter.threeTwo,
+    moves.predator.hunter.exDBFour,
+    moves.predator.hunter.dDOne,
+    moves.predator.hunter.bFTwo,
+    moves.predator.hunter.fFour,
+    moves.predator.hunter.bThreeOneOne,
+    moves.predator.hunter.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.triborg;
 const variationSlug = "cyrax";
@@ -38,10 +38,10 @@ const triborgCyraxStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.triborg.universal.openingAssault,
-    transitions.triborg.universal.risingAssault,
-    transitions.triborg.cyrax.cyraxTechnique,
-    transitions.triborg.universal.closingStrike,
+    moves.triborg.universal.openingAssault,
+    moves.triborg.universal.risingAssault,
+    moves.triborg.cyrax.cyraxTechnique,
+    moves.triborg.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,8 +72,10 @@ const triborgCyraxCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.cyrax.fFourThreeIntoExDBFour,
-    transitions.triborg.cyrax.fFourThreeIntoDBFour,
+    moves.triborg.cyrax.fFourThree,
+    moves.triborg.cyrax.exDBFour,
+    moves.triborg.cyrax.fFourThree,
+    moves.triborg.cyrax.dBFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -105,15 +107,16 @@ const triborgCyraxCommunityCorner024Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.cyrax.bTwo,
-    transitions.triborg.cyrax.four,
-    transitions.triborg.cyrax.twoOne,
-    transitions.triborg.cyrax.twoOne,
-    transitions.triborg.cyrax.oneOneFourIntoBFOne,
-    transitions.triborg.cyrax.dBThree,
-    transitions.triborg.cyrax.fThreeFour,
-    transitions.triborg.cyrax.b,
-    transitions.triborg.cyrax.dTwo,
+    moves.triborg.cyrax.bTwo,
+    moves.triborg.cyrax.four,
+    moves.triborg.cyrax.twoOne,
+    moves.triborg.cyrax.twoOne,
+    moves.triborg.cyrax.oneOneFour,
+    moves.triborg.cyrax.bFOne,
+    moves.triborg.cyrax.dBThree,
+    moves.triborg.cyrax.fThreeFour,
+    moves.triborg.cyrax.b,
+    moves.triborg.cyrax.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -145,14 +148,15 @@ const triborgCyraxCommunityCorner025Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.triborg.cyrax.bTwo,
-    transitions.triborg.cyrax.dTwo,
-    transitions.triborg.cyrax.fOne,
-    transitions.triborg.cyrax.fOneThreeIntoBFOne,
-    transitions.triborg.cyrax.dDThree,
-    transitions.triborg.cyrax.fF,
-    transitions.triborg.cyrax.dTwo,
-    transitions.triborg.cyrax.dTwo,
+    moves.triborg.cyrax.bTwo,
+    moves.triborg.cyrax.dTwo,
+    moves.triborg.cyrax.fOne,
+    moves.triborg.cyrax.fOneThree,
+    moves.triborg.cyrax.bFOne,
+    moves.triborg.cyrax.dDThree,
+    moves.triborg.cyrax.fF,
+    moves.triborg.cyrax.dTwo,
+    moves.triborg.cyrax.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.ermac;
 const variationSlug = "spectral";
@@ -38,10 +38,10 @@ const ermacSpectralStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.ermac.universal.openingAssault,
-    transitions.ermac.universal.risingAssault,
-    transitions.ermac.spectral.spectralTechnique,
-    transitions.ermac.universal.closingStrikeEnhanced,
+    moves.ermac.universal.openingAssault,
+    moves.ermac.universal.risingAssault,
+    moves.ermac.spectral.spectralTechnique,
+    moves.ermac.universal.closingStrikeEnhanced,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

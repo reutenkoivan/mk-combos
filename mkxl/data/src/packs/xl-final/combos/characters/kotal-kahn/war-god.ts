@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.kotalKahn;
 const variationSlug = "war-god";
@@ -38,10 +38,10 @@ const kotalKahnWarGodStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.kotalKahn.universal.openingAssault,
-    transitions.kotalKahn.universal.risingAssault,
-    transitions.kotalKahn.warGod.warGodTechnique,
-    transitions.kotalKahn.universal.closingStrike,
+    moves.kotalKahn.universal.openingAssault,
+    moves.kotalKahn.universal.risingAssault,
+    moves.kotalKahn.warGod.warGodTechnique,
+    moves.kotalKahn.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,10 +72,10 @@ const kotalKahnWarGodCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.dTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -106,9 +106,10 @@ const kotalKahnWarGodCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.oneOneFourIntoExDFOne,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.dTwo,
+    moves.kotalKahn.warGod.oneOneFour,
+    moves.kotalKahn.warGod.exDFOne,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -138,7 +139,7 @@ const kotalKahnWarGodCommunityBeginner003Combo = {
   },
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
-  route: [transitions.kotalKahn.warGod.fThreeFourIntoDFTwo],
+  route: [moves.kotalKahn.warGod.fThreeFour, moves.kotalKahn.warGod.dFTwo],
 } as const satisfies MkxlAuthoredSeededCombo;
 
 const kotalKahnWarGodCommunityBeginner004Combo = {
@@ -168,9 +169,10 @@ const kotalKahnWarGodCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fThreeIntoExDBOne,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.dTwo,
+    moves.kotalKahn.warGod.fThree,
+    moves.kotalKahn.warGod.exDBOne,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -201,9 +203,10 @@ const kotalKahnWarGodCommunityBeginner005Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.bOneIntoExDBOne,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.dTwo,
+    moves.kotalKahn.warGod.bOne,
+    moves.kotalKahn.warGod.exDBOne,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -234,10 +237,11 @@ const kotalKahnWarGodCommunityOptimal006Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.bOneTwoTwoIntoDBOne,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.bOneTwoTwo,
+    moves.kotalKahn.warGod.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -269,11 +273,13 @@ const kotalKahnWarGodCommunityOptimal007Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.bOneFourIntoExDFOne,
-    transitions.kotalKahn.warGod.bOneFourIntoDFOne,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.exDFOne,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -304,10 +310,11 @@ const kotalKahnWarGodCommunityOptimal008Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fOneBTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.bOneTwoTwoIntoDBOne,
+    moves.kotalKahn.warGod.fOneBTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.bOneTwoTwo,
+    moves.kotalKahn.warGod.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -338,10 +345,11 @@ const kotalKahnWarGodCommunityOptimal009Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fOneBTwo,
-    transitions.kotalKahn.warGod.one,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.bOneTwoTwoIntoDBOne,
+    moves.kotalKahn.warGod.fOneBTwo,
+    moves.kotalKahn.warGod.one,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.bOneTwoTwo,
+    moves.kotalKahn.warGod.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -373,11 +381,13 @@ const kotalKahnWarGodCommunityOptimal010Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fOneBTwo,
-    transitions.kotalKahn.warGod.oneF,
-    transitions.kotalKahn.warGod.two,
-    transitions.kotalKahn.warGod.bOneFourIntoExDFOne,
-    transitions.kotalKahn.warGod.bOneFourIntoDFOne,
+    moves.kotalKahn.warGod.fOneBTwo,
+    moves.kotalKahn.warGod.oneF,
+    moves.kotalKahn.warGod.two,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.exDFOne,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -409,10 +419,12 @@ const kotalKahnWarGodCommunityOptimal011Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.bOneFourIntoExDBOne,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.bOneFourIntoDFOne,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.exDBOne,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -444,10 +456,12 @@ const kotalKahnWarGodCommunityOptimal012Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.bOneIntoExDBOne,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.bOneFourIntoDFOne,
+    moves.kotalKahn.warGod.bOne,
+    moves.kotalKahn.warGod.exDBOne,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -479,10 +493,12 @@ const kotalKahnWarGodCommunityOptimal013Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fThreeIntoExDBOne,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.bOneFourIntoDFOne,
+    moves.kotalKahn.warGod.fThree,
+    moves.kotalKahn.warGod.exDBOne,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -514,12 +530,14 @@ const kotalKahnWarGodCommunityCorner015Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.bOneFourIntoExDFOne,
-    transitions.kotalKahn.warGod.bOneFourIntoDFOne,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.exDFOne,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -551,12 +569,14 @@ const kotalKahnWarGodCommunityCorner016Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fOneBTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.dOne,
-    transitions.kotalKahn.warGod.oneOneFourIntoExDFOne,
-    transitions.kotalKahn.warGod.bOneFourIntoDFOne,
+    moves.kotalKahn.warGod.fOneBTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.dOne,
+    moves.kotalKahn.warGod.oneOneFour,
+    moves.kotalKahn.warGod.exDFOne,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -588,10 +608,13 @@ const kotalKahnWarGodCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.oneOneFourIntoExDFThree,
-    transitions.kotalKahn.warGod.dOne,
-    transitions.kotalKahn.warGod.oneOneFourEXDFOne,
-    transitions.kotalKahn.warGod.bOneFourIntoDFOne,
+    moves.kotalKahn.warGod.oneOneFour,
+    moves.kotalKahn.warGod.exDFThree,
+    moves.kotalKahn.warGod.dOne,
+    moves.kotalKahn.warGod.oneOneFour,
+    moves.kotalKahn.warGod.exDFOne,
+    moves.kotalKahn.warGod.bOneFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -623,10 +646,12 @@ const kotalKahnWarGodCommunityCorner018Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.oneOneFourIntoExDFThree,
-    transitions.kotalKahn.warGod.dOne,
-    transitions.kotalKahn.warGod.dOne,
-    transitions.kotalKahn.warGod.oneOneFourIntoDBOne,
+    moves.kotalKahn.warGod.oneOneFour,
+    moves.kotalKahn.warGod.exDFThree,
+    moves.kotalKahn.warGod.dOne,
+    moves.kotalKahn.warGod.dOne,
+    moves.kotalKahn.warGod.oneOneFour,
+    moves.kotalKahn.warGod.dBOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -657,8 +682,10 @@ const kotalKahnWarGodCommunityCorner021Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.bOneTwoTwoIntoExDFThree,
-    transitions.kotalKahn.warGod.oneOneFourIntoDFOne,
+    moves.kotalKahn.warGod.bOneTwoTwo,
+    moves.kotalKahn.warGod.exDFThree,
+    moves.kotalKahn.warGod.oneOneFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -689,10 +716,11 @@ const kotalKahnWarGodCommunityCorner023Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.kotalKahn.warGod.fOneBTwo,
-    transitions.kotalKahn.warGod.fTwo,
-    transitions.kotalKahn.warGod.dTwo,
-    transitions.kotalKahn.warGod.dFourIntoDFOne,
+    moves.kotalKahn.warGod.fOneBTwo,
+    moves.kotalKahn.warGod.fTwo,
+    moves.kotalKahn.warGod.dTwo,
+    moves.kotalKahn.warGod.dFour,
+    moves.kotalKahn.warGod.dFOne,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

@@ -1,3 +1,4 @@
+import type { MkxlMove } from "../../../movelists/type";
 import { alienMoves } from "./characters/alien";
 import { boRaiChoMoves } from "./characters/bo-rai-cho";
 import { cassieCageMoves } from "./characters/cassie-cage";
@@ -32,610 +33,614 @@ import { takedaMoves } from "./characters/takeda";
 import { tanyaMoves } from "./characters/tanya";
 import { tremorMoves } from "./characters/tremor";
 import { triborgMoves } from "./characters/triborg";
-import { mkxlXlFinalTransitionGeneratedMoveRegistry } from "./transition-generated";
+import { mkxlXlFinalRouteGeneratedMoveRegistry } from "./route-generated";
 
-const generatedTransitionMoves = mkxlXlFinalTransitionGeneratedMoveRegistry as Readonly<
-  Record<string, Readonly<Record<string, object>>>
+type MkxlXlFinalMoveRegistryShape = Readonly<
+  Record<string, Readonly<Record<string, Readonly<Record<string, MkxlMove>>>>>
 >;
 
+const generatedRouteMoves = mkxlXlFinalRouteGeneratedMoveRegistry;
+
 export const mkxlXlFinalMoveRegistry = {
-  general: mkxlXlFinalGeneralMoves.universal,
+  general: {
+    universal: mkxlXlFinalGeneralMoves.universal,
+  },
   alien: {
     universal: {
       ...alienMoves.universal,
-      ...generatedTransitionMoves.alien?.universal,
+      ...generatedRouteMoves.alien.universal,
     },
     acidic: {
       ...alienMoves.variations.acidic,
-      ...generatedTransitionMoves.alien?.acidic,
+      ...generatedRouteMoves.alien.acidic,
     },
     konjurer: {
       ...alienMoves.variations.konjurer,
-      ...generatedTransitionMoves.alien?.konjurer,
+      ...generatedRouteMoves.alien.konjurer,
     },
     tarkatan: {
       ...alienMoves.variations.tarkatan,
-      ...generatedTransitionMoves.alien?.tarkatan,
+      ...generatedRouteMoves.alien.tarkatan,
     },
   },
   boRaiCho: {
     universal: {
       ...boRaiChoMoves.universal,
-      ...generatedTransitionMoves.boRaiCho?.universal,
+      ...generatedRouteMoves.boRaiCho.universal,
     },
     bartitsu: {
       ...boRaiChoMoves.variations.bartitsu,
-      ...generatedTransitionMoves.boRaiCho?.bartitsu,
+      ...generatedRouteMoves.boRaiCho.bartitsu,
     },
     dragonBreath: {
       ...boRaiChoMoves.variations.dragonBreath,
-      ...generatedTransitionMoves.boRaiCho?.dragonBreath,
+      ...generatedRouteMoves.boRaiCho.dragonBreath,
     },
     drunkenMaster: {
       ...boRaiChoMoves.variations.drunkenMaster,
-      ...generatedTransitionMoves.boRaiCho?.drunkenMaster,
+      ...generatedRouteMoves.boRaiCho.drunkenMaster,
     },
   },
   cassieCage: {
     universal: {
       ...cassieCageMoves.universal,
-      ...generatedTransitionMoves.cassieCage?.universal,
+      ...generatedRouteMoves.cassieCage.universal,
     },
     brawler: {
       ...cassieCageMoves.variations.brawler,
-      ...generatedTransitionMoves.cassieCage?.brawler,
+      ...generatedRouteMoves.cassieCage.brawler,
     },
     hollywood: {
       ...cassieCageMoves.variations.hollywood,
-      ...generatedTransitionMoves.cassieCage?.hollywood,
+      ...generatedRouteMoves.cassieCage.hollywood,
     },
     specOps: {
       ...cassieCageMoves.variations.specOps,
-      ...generatedTransitionMoves.cassieCage?.specOps,
+      ...generatedRouteMoves.cassieCage.specOps,
     },
   },
   dvorah: {
     universal: {
       ...dvorahMoves.universal,
-      ...generatedTransitionMoves.dvorah?.universal,
+      ...generatedRouteMoves.dvorah.universal,
     },
     broodMother: {
       ...dvorahMoves.variations.broodMother,
-      ...generatedTransitionMoves.dvorah?.broodMother,
+      ...generatedRouteMoves.dvorah.broodMother,
     },
     swarmQueen: {
       ...dvorahMoves.variations.swarmQueen,
-      ...generatedTransitionMoves.dvorah?.swarmQueen,
+      ...generatedRouteMoves.dvorah.swarmQueen,
     },
     venomous: {
       ...dvorahMoves.variations.venomous,
-      ...generatedTransitionMoves.dvorah?.venomous,
+      ...generatedRouteMoves.dvorah.venomous,
     },
   },
   ermac: {
     universal: {
       ...ermacMoves.universal,
-      ...generatedTransitionMoves.ermac?.universal,
+      ...generatedRouteMoves.ermac.universal,
     },
     masterOfSouls: {
       ...ermacMoves.variations.masterOfSouls,
-      ...generatedTransitionMoves.ermac?.masterOfSouls,
+      ...generatedRouteMoves.ermac.masterOfSouls,
     },
     mystic: {
       ...ermacMoves.variations.mystic,
-      ...generatedTransitionMoves.ermac?.mystic,
+      ...generatedRouteMoves.ermac.mystic,
     },
     spectral: {
       ...ermacMoves.variations.spectral,
-      ...generatedTransitionMoves.ermac?.spectral,
+      ...generatedRouteMoves.ermac.spectral,
     },
   },
   erronBlack: {
     universal: {
       ...erronBlackMoves.universal,
-      ...generatedTransitionMoves.erronBlack?.universal,
+      ...generatedRouteMoves.erronBlack.universal,
     },
     gunslinger: {
       ...erronBlackMoves.variations.gunslinger,
-      ...generatedTransitionMoves.erronBlack?.gunslinger,
+      ...generatedRouteMoves.erronBlack.gunslinger,
     },
     marksman: {
       ...erronBlackMoves.variations.marksman,
-      ...generatedTransitionMoves.erronBlack?.marksman,
+      ...generatedRouteMoves.erronBlack.marksman,
     },
     outlaw: {
       ...erronBlackMoves.variations.outlaw,
-      ...generatedTransitionMoves.erronBlack?.outlaw,
+      ...generatedRouteMoves.erronBlack.outlaw,
     },
   },
   ferraTorr: {
     universal: {
       ...ferraTorrMoves.universal,
-      ...generatedTransitionMoves.ferraTorr?.universal,
+      ...generatedRouteMoves.ferraTorr.universal,
     },
     lackey: {
       ...ferraTorrMoves.variations.lackey,
-      ...generatedTransitionMoves.ferraTorr?.lackey,
+      ...generatedRouteMoves.ferraTorr.lackey,
     },
     ruthless: {
       ...ferraTorrMoves.variations.ruthless,
-      ...generatedTransitionMoves.ferraTorr?.ruthless,
+      ...generatedRouteMoves.ferraTorr.ruthless,
     },
     vicious: {
       ...ferraTorrMoves.variations.vicious,
-      ...generatedTransitionMoves.ferraTorr?.vicious,
+      ...generatedRouteMoves.ferraTorr.vicious,
     },
   },
   goro: {
     universal: {
       ...goroMoves.universal,
-      ...generatedTransitionMoves.goro?.universal,
+      ...generatedRouteMoves.goro.universal,
     },
     dragonFangs: {
       ...goroMoves.variations.dragonFangs,
-      ...generatedTransitionMoves.goro?.dragonFangs,
+      ...generatedRouteMoves.goro.dragonFangs,
     },
     kuatanWarrior: {
       ...goroMoves.variations.kuatanWarrior,
-      ...generatedTransitionMoves.goro?.kuatanWarrior,
+      ...generatedRouteMoves.goro.kuatanWarrior,
     },
     tigrarFury: {
       ...goroMoves.variations.tigrarFury,
-      ...generatedTransitionMoves.goro?.tigrarFury,
+      ...generatedRouteMoves.goro.tigrarFury,
     },
   },
   jacquiBriggs: {
     universal: {
       ...jacquiBriggsMoves.universal,
-      ...generatedTransitionMoves.jacquiBriggs?.universal,
+      ...generatedRouteMoves.jacquiBriggs.universal,
     },
     fullAuto: {
       ...jacquiBriggsMoves.variations.fullAuto,
-      ...generatedTransitionMoves.jacquiBriggs?.fullAuto,
+      ...generatedRouteMoves.jacquiBriggs.fullAuto,
     },
     highTech: {
       ...jacquiBriggsMoves.variations.highTech,
-      ...generatedTransitionMoves.jacquiBriggs?.highTech,
+      ...generatedRouteMoves.jacquiBriggs.highTech,
     },
     shotgun: {
       ...jacquiBriggsMoves.variations.shotgun,
-      ...generatedTransitionMoves.jacquiBriggs?.shotgun,
+      ...generatedRouteMoves.jacquiBriggs.shotgun,
     },
   },
   jasonVoorhees: {
     universal: {
       ...jasonVoorheesMoves.universal,
-      ...generatedTransitionMoves.jasonVoorhees?.universal,
+      ...generatedRouteMoves.jasonVoorhees.universal,
     },
     relentless: {
       ...jasonVoorheesMoves.variations.relentless,
-      ...generatedTransitionMoves.jasonVoorhees?.relentless,
+      ...generatedRouteMoves.jasonVoorhees.relentless,
     },
     slasher: {
       ...jasonVoorheesMoves.variations.slasher,
-      ...generatedTransitionMoves.jasonVoorhees?.slasher,
+      ...generatedRouteMoves.jasonVoorhees.slasher,
     },
     unstoppable: {
       ...jasonVoorheesMoves.variations.unstoppable,
-      ...generatedTransitionMoves.jasonVoorhees?.unstoppable,
+      ...generatedRouteMoves.jasonVoorhees.unstoppable,
     },
   },
   jax: {
     universal: {
       ...jaxMoves.universal,
-      ...generatedTransitionMoves.jax?.universal,
+      ...generatedRouteMoves.jax.universal,
     },
     heavyWeapons: {
       ...jaxMoves.variations.heavyWeapons,
-      ...generatedTransitionMoves.jax?.heavyWeapons,
+      ...generatedRouteMoves.jax.heavyWeapons,
     },
     pumpedUp: {
       ...jaxMoves.variations.pumpedUp,
-      ...generatedTransitionMoves.jax?.pumpedUp,
+      ...generatedRouteMoves.jax.pumpedUp,
     },
     wrestler: {
       ...jaxMoves.variations.wrestler,
-      ...generatedTransitionMoves.jax?.wrestler,
+      ...generatedRouteMoves.jax.wrestler,
     },
   },
   johnnyCage: {
     universal: {
       ...johnnyCageMoves.universal,
-      ...generatedTransitionMoves.johnnyCage?.universal,
+      ...generatedRouteMoves.johnnyCage.universal,
     },
     aList: {
       ...johnnyCageMoves.variations.aList,
-      ...generatedTransitionMoves.johnnyCage?.aList,
+      ...generatedRouteMoves.johnnyCage.aList,
     },
     fisticuffs: {
       ...johnnyCageMoves.variations.fisticuffs,
-      ...generatedTransitionMoves.johnnyCage?.fisticuffs,
+      ...generatedRouteMoves.johnnyCage.fisticuffs,
     },
     stuntDouble: {
       ...johnnyCageMoves.variations.stuntDouble,
-      ...generatedTransitionMoves.johnnyCage?.stuntDouble,
+      ...generatedRouteMoves.johnnyCage.stuntDouble,
     },
   },
   kano: {
     universal: {
       ...kanoMoves.universal,
-      ...generatedTransitionMoves.kano?.universal,
+      ...generatedRouteMoves.kano.universal,
     },
     commando: {
       ...kanoMoves.variations.commando,
-      ...generatedTransitionMoves.kano?.commando,
+      ...generatedRouteMoves.kano.commando,
     },
     cutthroat: {
       ...kanoMoves.variations.cutthroat,
-      ...generatedTransitionMoves.kano?.cutthroat,
+      ...generatedRouteMoves.kano.cutthroat,
     },
     cybernetic: {
       ...kanoMoves.variations.cybernetic,
-      ...generatedTransitionMoves.kano?.cybernetic,
+      ...generatedRouteMoves.kano.cybernetic,
     },
   },
   kenshi: {
     universal: {
       ...kenshiMoves.universal,
-      ...generatedTransitionMoves.kenshi?.universal,
+      ...generatedRouteMoves.kenshi.universal,
     },
     balanced: {
       ...kenshiMoves.variations.balanced,
-      ...generatedTransitionMoves.kenshi?.balanced,
+      ...generatedRouteMoves.kenshi.balanced,
     },
     kenjutsu: {
       ...kenshiMoves.variations.kenjutsu,
-      ...generatedTransitionMoves.kenshi?.kenjutsu,
+      ...generatedRouteMoves.kenshi.kenjutsu,
     },
     possessed: {
       ...kenshiMoves.variations.possessed,
-      ...generatedTransitionMoves.kenshi?.possessed,
+      ...generatedRouteMoves.kenshi.possessed,
     },
   },
   kitana: {
     universal: {
       ...kitanaMoves.universal,
-      ...generatedTransitionMoves.kitana?.universal,
+      ...generatedRouteMoves.kitana.universal,
     },
     assassin: {
       ...kitanaMoves.variations.assassin,
-      ...generatedTransitionMoves.kitana?.assassin,
+      ...generatedRouteMoves.kitana.assassin,
     },
     mournful: {
       ...kitanaMoves.variations.mournful,
-      ...generatedTransitionMoves.kitana?.mournful,
+      ...generatedRouteMoves.kitana.mournful,
     },
     royalStorm: {
       ...kitanaMoves.variations.royalStorm,
-      ...generatedTransitionMoves.kitana?.royalStorm,
+      ...generatedRouteMoves.kitana.royalStorm,
     },
   },
   kotalKahn: {
     universal: {
       ...kotalKahnMoves.universal,
-      ...generatedTransitionMoves.kotalKahn?.universal,
+      ...generatedRouteMoves.kotalKahn.universal,
     },
     bloodGod: {
       ...kotalKahnMoves.variations.bloodGod,
-      ...generatedTransitionMoves.kotalKahn?.bloodGod,
+      ...generatedRouteMoves.kotalKahn.bloodGod,
     },
     sunGod: {
       ...kotalKahnMoves.variations.sunGod,
-      ...generatedTransitionMoves.kotalKahn?.sunGod,
+      ...generatedRouteMoves.kotalKahn.sunGod,
     },
     warGod: {
       ...kotalKahnMoves.variations.warGod,
-      ...generatedTransitionMoves.kotalKahn?.warGod,
+      ...generatedRouteMoves.kotalKahn.warGod,
     },
   },
   kungJin: {
     universal: {
       ...kungJinMoves.universal,
-      ...generatedTransitionMoves.kungJin?.universal,
+      ...generatedRouteMoves.kungJin.universal,
     },
     ancestral: {
       ...kungJinMoves.variations.ancestral,
-      ...generatedTransitionMoves.kungJin?.ancestral,
+      ...generatedRouteMoves.kungJin.ancestral,
     },
     bojutsu: {
       ...kungJinMoves.variations.bojutsu,
-      ...generatedTransitionMoves.kungJin?.bojutsu,
+      ...generatedRouteMoves.kungJin.bojutsu,
     },
     shaolin: {
       ...kungJinMoves.variations.shaolin,
-      ...generatedTransitionMoves.kungJin?.shaolin,
+      ...generatedRouteMoves.kungJin.shaolin,
     },
   },
   kungLao: {
     universal: {
       ...kungLaoMoves.universal,
-      ...generatedTransitionMoves.kungLao?.universal,
+      ...generatedRouteMoves.kungLao.universal,
     },
     buzzSaw: {
       ...kungLaoMoves.variations.buzzSaw,
-      ...generatedTransitionMoves.kungLao?.buzzSaw,
+      ...generatedRouteMoves.kungLao.buzzSaw,
     },
     hatTrick: {
       ...kungLaoMoves.variations.hatTrick,
-      ...generatedTransitionMoves.kungLao?.hatTrick,
+      ...generatedRouteMoves.kungLao.hatTrick,
     },
     tempest: {
       ...kungLaoMoves.variations.tempest,
-      ...generatedTransitionMoves.kungLao?.tempest,
+      ...generatedRouteMoves.kungLao.tempest,
     },
   },
   leatherface: {
     universal: {
       ...leatherfaceMoves.universal,
-      ...generatedTransitionMoves.leatherface?.universal,
+      ...generatedRouteMoves.leatherface.universal,
     },
     butcher: {
       ...leatherfaceMoves.variations.butcher,
-      ...generatedTransitionMoves.leatherface?.butcher,
+      ...generatedRouteMoves.leatherface.butcher,
     },
     killer: {
       ...leatherfaceMoves.variations.killer,
-      ...generatedTransitionMoves.leatherface?.killer,
+      ...generatedRouteMoves.leatherface.killer,
     },
     prettyLady: {
       ...leatherfaceMoves.variations.prettyLady,
-      ...generatedTransitionMoves.leatherface?.prettyLady,
+      ...generatedRouteMoves.leatherface.prettyLady,
     },
   },
   liuKang: {
     universal: {
       ...liuKangMoves.universal,
-      ...generatedTransitionMoves.liuKang?.universal,
+      ...generatedRouteMoves.liuKang.universal,
     },
     dragonsFire: {
       ...liuKangMoves.variations.dragonsFire,
-      ...generatedTransitionMoves.liuKang?.dragonsFire,
+      ...generatedRouteMoves.liuKang.dragonsFire,
     },
     dualist: {
       ...liuKangMoves.variations.dualist,
-      ...generatedTransitionMoves.liuKang?.dualist,
+      ...generatedRouteMoves.liuKang.dualist,
     },
     flameFist: {
       ...liuKangMoves.variations.flameFist,
-      ...generatedTransitionMoves.liuKang?.flameFist,
+      ...generatedRouteMoves.liuKang.flameFist,
     },
   },
   mileena: {
     universal: {
       ...mileenaMoves.universal,
-      ...generatedTransitionMoves.mileena?.universal,
+      ...generatedRouteMoves.mileena.universal,
     },
     ethereal: {
       ...mileenaMoves.variations.ethereal,
-      ...generatedTransitionMoves.mileena?.ethereal,
+      ...generatedRouteMoves.mileena.ethereal,
     },
     piercing: {
       ...mileenaMoves.variations.piercing,
-      ...generatedTransitionMoves.mileena?.piercing,
+      ...generatedRouteMoves.mileena.piercing,
     },
     ravenous: {
       ...mileenaMoves.variations.ravenous,
-      ...generatedTransitionMoves.mileena?.ravenous,
+      ...generatedRouteMoves.mileena.ravenous,
     },
   },
   predator: {
     universal: {
       ...predatorMoves.universal,
-      ...generatedTransitionMoves.predator?.universal,
+      ...generatedRouteMoves.predator.universal,
     },
     hishQuTen: {
       ...predatorMoves.variations.hishQuTen,
-      ...generatedTransitionMoves.predator?.hishQuTen,
+      ...generatedRouteMoves.predator.hishQuTen,
     },
     hunter: {
       ...predatorMoves.variations.hunter,
-      ...generatedTransitionMoves.predator?.hunter,
+      ...generatedRouteMoves.predator.hunter,
     },
     warrior: {
       ...predatorMoves.variations.warrior,
-      ...generatedTransitionMoves.predator?.warrior,
+      ...generatedRouteMoves.predator.warrior,
     },
   },
   quanChi: {
     universal: {
       ...quanChiMoves.universal,
-      ...generatedTransitionMoves.quanChi?.universal,
+      ...generatedRouteMoves.quanChi.universal,
     },
     sorcerer: {
       ...quanChiMoves.variations.sorcerer,
-      ...generatedTransitionMoves.quanChi?.sorcerer,
+      ...generatedRouteMoves.quanChi.sorcerer,
     },
     summoner: {
       ...quanChiMoves.variations.summoner,
-      ...generatedTransitionMoves.quanChi?.summoner,
+      ...generatedRouteMoves.quanChi.summoner,
     },
     warlock: {
       ...quanChiMoves.variations.warlock,
-      ...generatedTransitionMoves.quanChi?.warlock,
+      ...generatedRouteMoves.quanChi.warlock,
     },
   },
   raiden: {
     universal: {
       ...raidenMoves.universal,
-      ...generatedTransitionMoves.raiden?.universal,
+      ...generatedRouteMoves.raiden.universal,
     },
     displacer: {
       ...raidenMoves.variations.displacer,
-      ...generatedTransitionMoves.raiden?.displacer,
+      ...generatedRouteMoves.raiden.displacer,
     },
     masterOfStorms: {
       ...raidenMoves.variations.masterOfStorms,
-      ...generatedTransitionMoves.raiden?.masterOfStorms,
+      ...generatedRouteMoves.raiden.masterOfStorms,
     },
     thunderGod: {
       ...raidenMoves.variations.thunderGod,
-      ...generatedTransitionMoves.raiden?.thunderGod,
+      ...generatedRouteMoves.raiden.thunderGod,
     },
   },
   reptile: {
     universal: {
       ...reptileMoves.universal,
-      ...generatedTransitionMoves.reptile?.universal,
+      ...generatedRouteMoves.reptile.universal,
     },
     deceptive: {
       ...reptileMoves.variations.deceptive,
-      ...generatedTransitionMoves.reptile?.deceptive,
+      ...generatedRouteMoves.reptile.deceptive,
     },
     nimble: {
       ...reptileMoves.variations.nimble,
-      ...generatedTransitionMoves.reptile?.nimble,
+      ...generatedRouteMoves.reptile.nimble,
     },
     noxious: {
       ...reptileMoves.variations.noxious,
-      ...generatedTransitionMoves.reptile?.noxious,
+      ...generatedRouteMoves.reptile.noxious,
     },
   },
   scorpion: {
     universal: {
       ...scorpionMoves.universal,
-      ...generatedTransitionMoves.scorpion?.universal,
+      ...generatedRouteMoves.scorpion.universal,
     },
     hellfire: {
       ...scorpionMoves.variations.hellfire,
-      ...generatedTransitionMoves.scorpion?.hellfire,
+      ...generatedRouteMoves.scorpion.hellfire,
     },
     inferno: {
       ...scorpionMoves.variations.inferno,
-      ...generatedTransitionMoves.scorpion?.inferno,
+      ...generatedRouteMoves.scorpion.inferno,
     },
     ninjutsu: {
       ...scorpionMoves.variations.ninjutsu,
-      ...generatedTransitionMoves.scorpion?.ninjutsu,
+      ...generatedRouteMoves.scorpion.ninjutsu,
     },
   },
   shinnok: {
     universal: {
       ...shinnokMoves.universal,
-      ...generatedTransitionMoves.shinnok?.universal,
+      ...generatedRouteMoves.shinnok.universal,
     },
     boneShaper: {
       ...shinnokMoves.variations.boneShaper,
-      ...generatedTransitionMoves.shinnok?.boneShaper,
+      ...generatedRouteMoves.shinnok.boneShaper,
     },
     impostor: {
       ...shinnokMoves.variations.impostor,
-      ...generatedTransitionMoves.shinnok?.impostor,
+      ...generatedRouteMoves.shinnok.impostor,
     },
     necromancer: {
       ...shinnokMoves.variations.necromancer,
-      ...generatedTransitionMoves.shinnok?.necromancer,
+      ...generatedRouteMoves.shinnok.necromancer,
     },
   },
   sonyaBlade: {
     universal: {
       ...sonyaBladeMoves.universal,
-      ...generatedTransitionMoves.sonyaBlade?.universal,
+      ...generatedRouteMoves.sonyaBlade.universal,
     },
     covertOps: {
       ...sonyaBladeMoves.variations.covertOps,
-      ...generatedTransitionMoves.sonyaBlade?.covertOps,
+      ...generatedRouteMoves.sonyaBlade.covertOps,
     },
     demolition: {
       ...sonyaBladeMoves.variations.demolition,
-      ...generatedTransitionMoves.sonyaBlade?.demolition,
+      ...generatedRouteMoves.sonyaBlade.demolition,
     },
     specialForces: {
       ...sonyaBladeMoves.variations.specialForces,
-      ...generatedTransitionMoves.sonyaBlade?.specialForces,
+      ...generatedRouteMoves.sonyaBlade.specialForces,
     },
   },
   subZero: {
     universal: {
       ...subZeroMoves.universal,
-      ...generatedTransitionMoves.subZero?.universal,
+      ...generatedRouteMoves.subZero.universal,
     },
     cryomancer: {
       ...subZeroMoves.variations.cryomancer,
-      ...generatedTransitionMoves.subZero?.cryomancer,
+      ...generatedRouteMoves.subZero.cryomancer,
     },
     grandmaster: {
       ...subZeroMoves.variations.grandmaster,
-      ...generatedTransitionMoves.subZero?.grandmaster,
+      ...generatedRouteMoves.subZero.grandmaster,
     },
     unbreakable: {
       ...subZeroMoves.variations.unbreakable,
-      ...generatedTransitionMoves.subZero?.unbreakable,
+      ...generatedRouteMoves.subZero.unbreakable,
     },
   },
   takeda: {
     universal: {
       ...takedaMoves.universal,
-      ...generatedTransitionMoves.takeda?.universal,
+      ...generatedRouteMoves.takeda.universal,
     },
     lasher: {
       ...takedaMoves.variations.lasher,
-      ...generatedTransitionMoves.takeda?.lasher,
+      ...generatedRouteMoves.takeda.lasher,
     },
     ronin: {
       ...takedaMoves.variations.ronin,
-      ...generatedTransitionMoves.takeda?.ronin,
+      ...generatedRouteMoves.takeda.ronin,
     },
     shiraiRyu: {
       ...takedaMoves.variations.shiraiRyu,
-      ...generatedTransitionMoves.takeda?.shiraiRyu,
+      ...generatedRouteMoves.takeda.shiraiRyu,
     },
   },
   tanya: {
     universal: {
       ...tanyaMoves.universal,
-      ...generatedTransitionMoves.tanya?.universal,
+      ...generatedRouteMoves.tanya.universal,
     },
     dragonNaginata: {
       ...tanyaMoves.variations.dragonNaginata,
-      ...generatedTransitionMoves.tanya?.dragonNaginata,
+      ...generatedRouteMoves.tanya.dragonNaginata,
     },
     kobuJutsu: {
       ...tanyaMoves.variations.kobuJutsu,
-      ...generatedTransitionMoves.tanya?.kobuJutsu,
+      ...generatedRouteMoves.tanya.kobuJutsu,
     },
     pyromancer: {
       ...tanyaMoves.variations.pyromancer,
-      ...generatedTransitionMoves.tanya?.pyromancer,
+      ...generatedRouteMoves.tanya.pyromancer,
     },
   },
   tremor: {
     universal: {
       ...tremorMoves.universal,
-      ...generatedTransitionMoves.tremor?.universal,
+      ...generatedRouteMoves.tremor.universal,
     },
     aftershock: {
       ...tremorMoves.variations.aftershock,
-      ...generatedTransitionMoves.tremor?.aftershock,
+      ...generatedRouteMoves.tremor.aftershock,
     },
     crystalline: {
       ...tremorMoves.variations.crystalline,
-      ...generatedTransitionMoves.tremor?.crystalline,
+      ...generatedRouteMoves.tremor.crystalline,
     },
     metallic: {
       ...tremorMoves.variations.metallic,
-      ...generatedTransitionMoves.tremor?.metallic,
+      ...generatedRouteMoves.tremor.metallic,
     },
   },
   triborg: {
     universal: {
       ...triborgMoves.universal,
-      ...generatedTransitionMoves.triborg?.universal,
+      ...generatedRouteMoves.triborg.universal,
     },
     cyberSubZero: {
       ...triborgMoves.variations.cyberSubZero,
-      ...generatedTransitionMoves.triborg?.cyberSubZero,
+      ...generatedRouteMoves.triborg.cyberSubZero,
     },
     cyrax: {
       ...triborgMoves.variations.cyrax,
-      ...generatedTransitionMoves.triborg?.cyrax,
+      ...generatedRouteMoves.triborg.cyrax,
     },
     sektor: {
       ...triborgMoves.variations.sektor,
-      ...generatedTransitionMoves.triborg?.sektor,
+      ...generatedRouteMoves.triborg.sektor,
     },
     smoke: {
       ...triborgMoves.variations.smoke,
-      ...generatedTransitionMoves.triborg?.smoke,
+      ...generatedRouteMoves.triborg.smoke,
     },
   },
-} as const as { readonly [key: string]: any };
+} as const satisfies MkxlXlFinalMoveRegistryShape;

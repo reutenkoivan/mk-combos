@@ -32,7 +32,7 @@ import { takedaMoves } from "./characters/takeda";
 import { tanyaMoves } from "./characters/tanya";
 import { tremorMoves } from "./characters/tremor";
 import { triborgMoves } from "./characters/triborg";
-import { mkxlXlFinalTransitionGeneratedMoves } from "./transition-generated";
+import { mkxlXlFinalRouteGeneratedMoves } from "./route-generated";
 
 export const mkxlXlFinalMoves = [
   alienMoves,
@@ -69,5 +69,5 @@ export const mkxlXlFinalMoves = [
   tremorMoves,
   triborgMoves,
   mkxlXlFinalGeneralMoves,
-  ...mkxlXlFinalTransitionGeneratedMoves,
+  ...mkxlXlFinalRouteGeneratedMoves,
 ] as const;

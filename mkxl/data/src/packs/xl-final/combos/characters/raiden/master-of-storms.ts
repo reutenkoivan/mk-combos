@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.raiden;
 const variationSlug = "master-of-storms";
@@ -38,10 +38,10 @@ const raidenMasterOfStormsStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.raiden.universal.openingAssault,
-    transitions.raiden.universal.risingAssault,
-    transitions.raiden.masterOfStorms.masterOfStormsTechnique,
-    transitions.raiden.universal.closingStrike,
+    moves.raiden.universal.openingAssault,
+    moves.raiden.universal.risingAssault,
+    moves.raiden.masterOfStorms.masterOfStormsTechnique,
+    moves.raiden.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

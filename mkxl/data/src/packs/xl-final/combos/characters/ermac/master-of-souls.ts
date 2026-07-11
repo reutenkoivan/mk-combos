@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.ermac;
 const variationSlug = "master-of-souls";
@@ -38,10 +38,10 @@ const ermacMasterOfSoulsStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.ermac.universal.openingAssault,
-    transitions.ermac.universal.risingAssault,
-    transitions.ermac.masterOfSouls.masterOfSoulsTechnique,
-    transitions.ermac.universal.closingStrike,
+    moves.ermac.universal.openingAssault,
+    moves.ermac.universal.risingAssault,
+    moves.ermac.masterOfSouls.masterOfSoulsTechnique,
+    moves.ermac.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,9 +72,10 @@ const ermacMasterOfSoulsCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.ermac.masterOfSouls.oneOneTwoIntoBFTwo,
-    transitions.ermac.masterOfSouls.dBFour,
-    transitions.ermac.masterOfSouls.dTwo,
+    moves.ermac.masterOfSouls.oneOneTwo,
+    moves.ermac.masterOfSouls.bFTwo,
+    moves.ermac.masterOfSouls.dBFour,
+    moves.ermac.masterOfSouls.dTwo,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.tanya;
 const variationSlug = "pyromancer";
@@ -42,10 +42,10 @@ const tanyaPyromancerStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.tanya.universal.openingAssault,
-    transitions.tanya.universal.risingAssault,
-    transitions.tanya.pyromancer.pyromancerTechnique,
-    transitions.tanya.universal.closingStrike,
+    moves.tanya.universal.openingAssault,
+    moves.tanya.universal.risingAssault,
+    moves.tanya.pyromancer.pyromancerTechnique,
+    moves.tanya.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

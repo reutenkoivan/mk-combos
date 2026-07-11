@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.sonyaBlade;
 const variationSlug = "demolition";
@@ -38,10 +38,10 @@ const sonyaBladeDemolitionStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.sonyaBlade.universal.openingAssault,
-    transitions.sonyaBlade.universal.risingAssault,
-    transitions.sonyaBlade.demolition.demolitionTechnique,
-    transitions.sonyaBlade.universal.closingStrike,
+    moves.sonyaBlade.universal.openingAssault,
+    moves.sonyaBlade.universal.risingAssault,
+    moves.sonyaBlade.demolition.demolitionTechnique,
+    moves.sonyaBlade.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -72,10 +72,12 @@ const sonyaBladeDemolitionCommunityBeginner001Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.sonyaBlade.demolition.oneTwoOneIntoDFOne,
-    transitions.sonyaBlade.demolition.one,
-    transitions.sonyaBlade.demolition.oneTwo,
-    transitions.sonyaBlade.demolition.fTwoIntoBFFour,
+    moves.sonyaBlade.demolition.oneTwoOne,
+    moves.sonyaBlade.demolition.dFOne,
+    moves.sonyaBlade.demolition.one,
+    moves.sonyaBlade.demolition.oneTwo,
+    moves.sonyaBlade.demolition.fTwo,
+    moves.sonyaBlade.demolition.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -107,11 +109,13 @@ const sonyaBladeDemolitionCommunityBeginner002Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.sonyaBlade.demolition.fTwoIntoDFOne,
-    transitions.sonyaBlade.demolition.one,
-    transitions.sonyaBlade.demolition.dash,
-    transitions.sonyaBlade.demolition.oneTwo,
-    transitions.sonyaBlade.demolition.fTwoIntoBFFour,
+    moves.sonyaBlade.demolition.fTwo,
+    moves.sonyaBlade.demolition.dFOne,
+    moves.sonyaBlade.demolition.one,
+    moves.general.universal.dash,
+    moves.sonyaBlade.demolition.oneTwo,
+    moves.sonyaBlade.demolition.fTwo,
+    moves.sonyaBlade.demolition.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -143,10 +147,12 @@ const sonyaBladeDemolitionCommunityBeginner003Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.sonyaBlade.demolition.bThreeThreeTwoOneTwoIntoDFOne,
-    transitions.sonyaBlade.demolition.one,
-    transitions.sonyaBlade.demolition.oneTwo,
-    transitions.sonyaBlade.demolition.fTwoIntoBFFour,
+    moves.sonyaBlade.demolition.bThreeThreeTwoOneTwo,
+    moves.sonyaBlade.demolition.dFOne,
+    moves.sonyaBlade.demolition.one,
+    moves.sonyaBlade.demolition.oneTwo,
+    moves.sonyaBlade.demolition.fTwo,
+    moves.sonyaBlade.demolition.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -178,11 +184,13 @@ const sonyaBladeDemolitionCommunityBeginner004Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.sonyaBlade.demolition.bOneFourIntoDFOne,
-    transitions.sonyaBlade.demolition.one,
-    transitions.sonyaBlade.demolition.dash,
-    transitions.sonyaBlade.demolition.oneTwo,
-    transitions.sonyaBlade.demolition.fTwoIntoBFFour,
+    moves.sonyaBlade.demolition.bOneFour,
+    moves.sonyaBlade.demolition.dFOne,
+    moves.sonyaBlade.demolition.one,
+    moves.general.universal.dash,
+    moves.sonyaBlade.demolition.oneTwo,
+    moves.sonyaBlade.demolition.fTwo,
+    moves.sonyaBlade.demolition.bFFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -214,12 +222,13 @@ const sonyaBladeDemolitionCommunityCorner015Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.sonyaBlade.demolition.oneTwoOneIntoDBOne,
-    transitions.sonyaBlade.demolition.one,
-    transitions.sonyaBlade.demolition.fFour,
-    transitions.sonyaBlade.demolition.oneTwo,
-    transitions.sonyaBlade.demolition.oneTwo,
-    transitions.sonyaBlade.demolition.oneTwoFour,
+    moves.sonyaBlade.demolition.oneTwoOne,
+    moves.sonyaBlade.demolition.dBOne,
+    moves.sonyaBlade.demolition.one,
+    moves.sonyaBlade.demolition.fFour,
+    moves.sonyaBlade.demolition.oneTwo,
+    moves.sonyaBlade.demolition.oneTwo,
+    moves.sonyaBlade.demolition.oneTwoFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
@@ -251,14 +260,17 @@ const sonyaBladeDemolitionCommunityCorner017Combo = {
   gameVersion: "XL-final",
   sourceIds: ["community-combo-source"],
   route: [
-    transitions.sonyaBlade.demolition.oneTwoOneIntoDBOne,
-    transitions.sonyaBlade.demolition.one,
-    transitions.sonyaBlade.demolition.fourIntoDFOne,
-    transitions.sonyaBlade.demolition.one,
-    transitions.sonyaBlade.demolition.fourIntoExDDOne,
-    transitions.sonyaBlade.demolition.oneTwo,
-    transitions.sonyaBlade.demolition.oneTwo,
-    transitions.sonyaBlade.demolition.oneTwoFour,
+    moves.sonyaBlade.demolition.oneTwoOne,
+    moves.sonyaBlade.demolition.dBOne,
+    moves.sonyaBlade.demolition.one,
+    moves.sonyaBlade.demolition.four,
+    moves.sonyaBlade.demolition.dFOne,
+    moves.sonyaBlade.demolition.one,
+    moves.sonyaBlade.demolition.four,
+    moves.sonyaBlade.demolition.exDDOne,
+    moves.sonyaBlade.demolition.oneTwo,
+    moves.sonyaBlade.demolition.oneTwo,
+    moves.sonyaBlade.demolition.oneTwoFour,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

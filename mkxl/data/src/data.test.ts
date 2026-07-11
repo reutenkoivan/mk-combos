@@ -12,7 +12,6 @@ import {
 } from "@mk-combos/mkxl-data/movelists/value";
 import { mkxlCharacters } from "@mk-combos/mkxl-data/roster/value";
 import { mkxlInteractableIds, mkxlStages } from "@mk-combos/mkxl-data/stages/value";
-import { mkxlTransitions } from "@mk-combos/mkxl-data/transitions/value";
 import { mkxlVariations } from "@mk-combos/mkxl-data/variations/value";
 import { describe, expect, it } from "vitest";
 import { mkxlComboFileRegistry } from "./combos/registry";
@@ -26,7 +25,6 @@ import { mkxlXlFinalCharacterIds } from "./packs/xl-final/character-ids";
 import { mkxlXlFinalGeneralMoves } from "./packs/xl-final/moves/characters/general";
 import { scorpionMoves } from "./packs/xl-final/moves/characters/scorpion";
 import { mkxlXlFinalFgcNotation, mkxlXlFinalInputNotationValues } from "./packs/xl-final/notation";
-import { mkxlXlFinalTransitionRegistry as transitions } from "./packs/xl-final/transitions";
 
 const authoredPackRootPath = join(process.cwd(), "src/packs/xl-final");
 const comboCharactersRootPath = join(process.cwd(), "src/packs/xl-final/combos/characters");
@@ -232,7 +230,7 @@ describe("MKXL seeded data", () => {
     });
   });
 
-  it("keeps general moves reusable through transitions without character-owned clones", () => {
+  it("keeps general moves reusable through combo routes without character-owned clones", () => {
     const movesById = new Map(mkxlMoves.map((move) => [move.id, move]));
     const generalMovelist = mkxlMovelists.find((movelist) => movelist.characterId === "general");
     const runMove = movesById.get("general:run");
@@ -298,14 +296,14 @@ describe("MKXL seeded data", () => {
     }
   });
 
-  it("keeps authored combo routes sourced only from transitions", () => {
+  it("keeps authored combo routes sourced only from moves", () => {
     for (const entry of mkxlComboFileRegistry) {
       const sourceText = getSourceFileText(comboCharactersRootPath, entry.sourcePath);
       const characterKey = toCamelKey(entry.characterId);
       const expectedCharacterIdsImport =
         'import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";';
-      const expectedTransitionImport =
-        'import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";';
+      const expectedMoveImport =
+        'import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";';
       const routeBlocks = [...sourceText.matchAll(/route:\s*\[(?<body>[^\]]*)\]/gu)];
       const comboObjectDeclarations = [
         ...sourceText.matchAll(
@@ -323,13 +321,12 @@ describe("MKXL seeded data", () => {
         .split(",")
         .map((entry) => entry.trim())
         .filter(Boolean);
-      const transitionReferencePattern = /^transitions(?:\.[a-z][A-Za-z0-9]*){2,3},?$/u;
+      const moveReferencePattern = /^moves(?:\.[a-z][A-Za-z0-9]*){3},?$/u;
 
       expect(sourceText).toContain(expectedCharacterIdsImport);
-      expect(sourceText).toContain(expectedTransitionImport);
+      expect(sourceText).toContain(expectedMoveImport);
       expect(sourceText).not.toContain("Moves.");
       expect(sourceText).not.toContain("globalMoves.");
-      expect(sourceText).not.toContain("routeTransitions.");
       expect(sourceText).toContain("MkxlAuthoredSeededCombo");
       expect(sourceText).toContain(`const characterId = characterIds.${characterKey};`);
       expect(sourceText).toContain(`const variationSlug = "${entry.variationSlug}";`);
@@ -361,7 +358,7 @@ describe("MKXL seeded data", () => {
         expect(routeBody).not.toMatch(/\bmoveId\s*:/u);
         expect(routeBody).not.toMatch(/["'{}]/u);
         for (const routeEntry of routeEntries) {
-          expect(transitionReferencePattern.test(routeEntry)).toBe(true);
+          expect(moveReferencePattern.test(routeEntry)).toBe(true);
         }
       }
       expect(sourceText).not.toMatch(/\bmovePath\s*:/u);
@@ -521,7 +518,7 @@ describe("MKXL seeded data", () => {
           expect(labelEn ?? "").not.toMatch(/\bsignature\b/iu);
         }
         if (move.sourceIds.includes("community-combo-source")) {
-          expect(move.tags).toContain("transition-source");
+          expect(move.tags).toContain("route-source");
         }
 
         if (move.availability.kind === "variation") {
@@ -533,7 +530,7 @@ describe("MKXL seeded data", () => {
             expect(variationId.split(":")[0]).toBe(entry.characterId);
           }
         } else if (move.availability.kind === "universal") {
-          const expectedId = move.tags.includes("transition-source")
+          const expectedId = move.tags.includes("route-source")
             ? `${entry.characterId}:universal:${labelSlug}`
             : `${entry.characterId}:${labelSlug}`;
 
@@ -543,21 +540,14 @@ describe("MKXL seeded data", () => {
     }
   });
 
-  it("keeps transitions built from moves and combo routes built from transitions", () => {
+  it("keeps combo routes built from moves", () => {
     const movesById = new Map(mkxlMoves.map((move) => [move.id, move]));
-    const transitionsById = new Map(
-      mkxlTransitions.map((transition) => [transition.id, transition]),
-    );
     const moveNotationValues = new Set(mkxlMoveNotationValues);
-    const usedTransitionIds = new Set<string>();
 
-    expect(mkxlTransitions.length).toBeGreaterThan(366);
-
-    for (const transition of mkxlTransitions) {
+    for (const combo of mkxlSeededCombos) {
       const expectedMovePath = [];
       const expectedNotation = [];
-
-      for (const step of transition.route) {
+      for (const step of combo.route) {
         const move = movesById.get(step.moveId);
 
         expect(move).toBeDefined();
@@ -568,26 +558,6 @@ describe("MKXL seeded data", () => {
         expectedMovePath.push(move.id);
         expectedNotation.push(move.notation);
       }
-
-      expect(transition.movePath).toEqual(expectedMovePath);
-      expect(transition.notation).toEqual(expectedNotation);
-    }
-
-    for (const combo of mkxlSeededCombos) {
-      const expectedMovePath = [];
-      const expectedNotation = [];
-      for (const step of combo.route) {
-        const transition = transitionsById.get(step.transitionId);
-
-        expect(transition).toBeDefined();
-        if (!transition) {
-          continue;
-        }
-
-        usedTransitionIds.add(transition.id);
-        expectedMovePath.push(...transition.movePath);
-        expectedNotation.push(...transition.notation);
-      }
       expect(combo.movePath).toEqual(expectedMovePath);
       expect(combo.notation).toEqual(expectedNotation);
       for (const notationValues of combo.notation) {
@@ -596,8 +566,6 @@ describe("MKXL seeded data", () => {
         }
       }
     }
-
-    expect(usedTransitionIds).toEqual(new Set(mkxlTransitions.map((transition) => transition.id)));
   });
 
   it("compiles a patch pack that adds a move and combo without rewriting base data", () => {
@@ -621,18 +589,10 @@ describe("MKXL seeded data", () => {
       tags: ["variation", "patch-test"],
       sourceIds: ["in-game-practice-mode"],
     } as const;
-    const patchTransition = {
-      id: "scorpion:hellfire:test-patch-technique",
-      label: patchMove.label,
-      route: [patchMove],
-      tags: patchMove.tags,
-      sourceIds: patchMove.sourceIds,
-    } as const;
     const patchPack = {
       id: "test-patch",
       gameVersion: "test-patch",
       extends: mkxlXlFinalPack,
-      transitions: [patchTransition],
       movePatches: [
         {
           action: "add",
@@ -678,9 +638,9 @@ describe("MKXL seeded data", () => {
                 gameVersion: "test-patch",
                 sourceIds: ["in-game-practice-mode"],
                 route: [
-                  transitions.scorpion.universal.openingAssault,
-                  patchTransition,
-                  transitions.scorpion.universal.closingStrike,
+                  scorpionMoves.universal.openingAssault,
+                  patchMove,
+                  scorpionMoves.universal.closingStrike,
                 ],
               },
             ],

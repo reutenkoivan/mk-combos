@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.triborg;
 const variationSlug = "cyber-sub-zero";
@@ -38,10 +38,10 @@ const triborgCyberSubZeroStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.triborg.universal.openingAssault,
-    transitions.triborg.universal.risingAssault,
-    transitions.triborg.cyberSubZero.cyberSubZeroTechnique,
-    transitions.triborg.universal.closingStrike,
+    moves.triborg.universal.openingAssault,
+    moves.triborg.universal.risingAssault,
+    moves.triborg.cyberSubZero.cyberSubZeroTechnique,
+    moves.triborg.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 

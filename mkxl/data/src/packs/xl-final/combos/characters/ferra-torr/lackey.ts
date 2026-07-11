@@ -1,6 +1,6 @@
 import type { MkxlAuthoredSeededCombo, MkxlAuthoredVariationCombos } from "../../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../../character-ids";
-import { mkxlXlFinalTransitionRegistry as transitions } from "../../../transitions";
+import { mkxlXlFinalMoveRegistry as moves } from "../../../moves/registry";
 
 const characterId = characterIds.ferraTorr;
 const variationSlug = "lackey";
@@ -38,10 +38,10 @@ const ferraTorrLackeyStarter001Combo = {
     "in-game-practice-mode",
   ],
   route: [
-    transitions.ferraTorr.universal.openingAssault,
-    transitions.ferraTorr.universal.risingAssault,
-    transitions.ferraTorr.lackey.lackeyTechnique,
-    transitions.ferraTorr.universal.closingStrike,
+    moves.ferraTorr.universal.openingAssault,
+    moves.ferraTorr.universal.risingAssault,
+    moves.ferraTorr.lackey.lackeyTechnique,
+    moves.ferraTorr.universal.closingStrike,
   ],
 } as const satisfies MkxlAuthoredSeededCombo;
 
