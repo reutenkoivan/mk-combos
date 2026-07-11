@@ -37,10 +37,10 @@ Each item also has `Done when` so `done` has a clear meaning.
 | 9 | done | `mkxl/catalog` | `mkxl/catalog` | MKXL selectors, context parsing, filters, summaries, recovery behavior are implemented. |
 | 10 | done | `mkxl/builder` | `mkxl/builder` | MKXL graph composition, replay, valid moves, frame checks, interactables, stale detection work. |
 | 11 | done | `mkxl/business` | `mkxl/business` | `mkxlBusiness` exposes catalog/detail/lists/builder/backup/validation adapters. |
-| 12 | todo | `mk1/data` | `mk1/data` | Full MK1 roster, kameos, movelists, combos, graph data, localized content, coverage targets exist. |
-| 13 | todo | `mk1/catalog` | `mk1/catalog` | MK1 selectors, context parsing, character/kameo filtering, summaries, recovery behavior are implemented. |
-| 14 | todo | `mk1/builder` | `mk1/builder` | MK1 graph composition, replay, valid moves, kameo transitions, stale detection work. |
-| 15 | todo | `mk1/business` | `mk1/business` | `mk1Business` exposes catalog/detail/lists/builder/backup/validation adapters. |
+| 12 | done | `mk1/data` | `mk1/data` | Full MK1 roster, kameos, movelists, combos, graph data, localized content, coverage targets exist. |
+| 13 | done | `mk1/catalog` | `mk1/catalog` | MK1 selectors, context parsing, character/kameo filtering, summaries, recovery behavior are implemented. |
+| 14 | done | `mk1/builder` | `mk1/builder` | MK1 graph composition, replay, valid moves, kameo transitions, stale detection work. |
+| 15 | done | `mk1/business` | `mk1/business` | `mk1Business` exposes catalog/detail/lists/builder/backup/validation adapters. |
 | 16 | todo | No-UI Integration Validation | validation configs | Builds, import boundaries, data validation, graph validation, business compatibility pass. |
 | 17 | todo | `packages/ui` Design System Foundation | `packages/ui` | Tokens, Tailwind, recipes, Base UI wrappers, icons, notation registry, Storybook, visual/a11y setup exist. |
 | 18 | todo | `packages/ui` Base Primitives | `packages/ui` | Core primitives, surfaces, states, layouts, focus helpers are implemented. |

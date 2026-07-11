@@ -1,0 +1,57 @@
+{
+  "name": "@mk-combos/mk1-catalog",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "exports": {
+    "./context/runtime": "./src/context/runtime.ts",
+    "./context/schema": "./src/context/schema.ts",
+    "./context/type": "./src/context/type.ts",
+    "./context/value": "./src/context/value.ts",
+    "./contract": "./src/contract.ts",
+    "./filters/runtime": "./src/filters/runtime.ts",
+    "./filters/schema": "./src/filters/schema.ts",
+    "./filters/type": "./src/filters/type.ts",
+    "./filters/value": "./src/filters/value.ts",
+    "./selectors/runtime": "./src/selectors/runtime.ts",
+    "./summary/schema": "./src/summary/schema.ts",
+    "./summary/type": "./src/summary/type.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "exports": {
+      "./context/runtime": "./dist/context/runtime.mjs",
+      "./context/schema": "./dist/context/schema.mjs",
+      "./context/type": "./dist/context/type.mjs",
+      "./context/value": "./dist/context/value.mjs",
+      "./contract": "./dist/contract.mjs",
+      "./filters/runtime": "./dist/filters/runtime.mjs",
+      "./filters/schema": "./dist/filters/schema.mjs",
+      "./filters/type": "./dist/filters/type.mjs",
+      "./filters/value": "./dist/filters/value.mjs",
+      "./selectors/runtime": "./dist/selectors/runtime.mjs",
+      "./summary/schema": "./dist/summary/schema.mjs",
+      "./summary/type": "./dist/summary/type.mjs",
+      "./package.json": "./package.json"
+    }
+  },
+  "dependencies": {
+    "@mk-combos/contracts": "workspace:*",
+    "@mk-combos/mk1-data": "workspace:*",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.2",
+    "tsdown": "0.22.3",
+    "vite": "8.1.2",
+    "vitest": "4.1.9"
+  }
+}

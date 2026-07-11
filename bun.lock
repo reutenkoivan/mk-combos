@@ -24,6 +24,69 @@
         "vitest": "4.1.9",
       },
     },
+    "mk1/builder": {
+      "name": "@mk-combos/mk1-builder",
+      "version": "0.0.0",
+      "dependencies": {
+        "@mk-combos/builder-core": "workspace:*",
+        "@mk-combos/contracts": "workspace:*",
+        "@mk-combos/mk1-data": "workspace:*",
+        "zod": "4.4.3",
+      },
+      "devDependencies": {
+        "@types/node": "25.6.2",
+        "tsdown": "0.22.3",
+        "vite": "8.1.2",
+        "vitest": "4.1.9",
+      },
+    },
+    "mk1/business": {
+      "name": "@mk-combos/mk1-business",
+      "version": "0.0.0",
+      "dependencies": {
+        "@mk-combos/builder-core": "workspace:*",
+        "@mk-combos/contracts": "workspace:*",
+        "@mk-combos/mk1-builder": "workspace:*",
+        "@mk-combos/mk1-catalog": "workspace:*",
+        "@mk-combos/mk1-data": "workspace:*",
+        "zod": "4.4.3",
+      },
+      "devDependencies": {
+        "@types/node": "25.6.2",
+        "tsdown": "0.22.3",
+        "vite": "8.1.2",
+        "vitest": "4.1.9",
+      },
+    },
+    "mk1/catalog": {
+      "name": "@mk-combos/mk1-catalog",
+      "version": "0.0.0",
+      "dependencies": {
+        "@mk-combos/contracts": "workspace:*",
+        "@mk-combos/mk1-data": "workspace:*",
+        "zod": "4.4.3",
+      },
+      "devDependencies": {
+        "@types/node": "25.6.2",
+        "tsdown": "0.22.3",
+        "vite": "8.1.2",
+        "vitest": "4.1.9",
+      },
+    },
+    "mk1/data": {
+      "name": "@mk-combos/mk1-data",
+      "version": "0.0.0",
+      "dependencies": {
+        "@mk-combos/contracts": "workspace:*",
+        "zod": "4.4.3",
+      },
+      "devDependencies": {
+        "@types/node": "25.6.2",
+        "tsdown": "0.22.3",
+        "vite": "8.1.2",
+        "vitest": "4.1.9",
+      },
+    },
     "mkxl/builder": {
       "name": "@mk-combos/mkxl-builder",
       "version": "0.0.0",
@@ -291,6 +354,14 @@
     "@mk-combos/contracts": ["@mk-combos/contracts@workspace:packages/contracts"],
 
     "@mk-combos/controller-bridge": ["@mk-combos/controller-bridge@workspace:packages/controller-bridge"],
+
+    "@mk-combos/mk1-builder": ["@mk-combos/mk1-builder@workspace:mk1/builder"],
+
+    "@mk-combos/mk1-business": ["@mk-combos/mk1-business@workspace:mk1/business"],
+
+    "@mk-combos/mk1-catalog": ["@mk-combos/mk1-catalog@workspace:mk1/catalog"],
+
+    "@mk-combos/mk1-data": ["@mk-combos/mk1-data@workspace:mk1/data"],
 
     "@mk-combos/mkxl-builder": ["@mk-combos/mkxl-builder@workspace:mkxl/builder"],
 

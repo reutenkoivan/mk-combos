@@ -1,0 +1,46 @@
+{
+  "name": "@mk-combos/mk1-business",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./contract": "./src/contract.ts",
+    "./runtime": "./src/runtime.ts",
+    "./schema": "./src/schema.ts",
+    "./type": "./src/type.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./contract": "./dist/contract.mjs",
+      "./runtime": "./dist/runtime.mjs",
+      "./schema": "./dist/schema.mjs",
+      "./type": "./dist/type.mjs",
+      "./package.json": "./package.json"
+    }
+  },
+  "dependencies": {
+    "@mk-combos/builder-core": "workspace:*",
+    "@mk-combos/contracts": "workspace:*",
+    "@mk-combos/mk1-builder": "workspace:*",
+    "@mk-combos/mk1-catalog": "workspace:*",
+    "@mk-combos/mk1-data": "workspace:*",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.2",
+    "tsdown": "0.22.3",
+    "vite": "8.1.2",
+    "vitest": "4.1.9"
+  }
+}

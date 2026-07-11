@@ -1,0 +1,79 @@
+{
+  "name": "@mk-combos/mk1-data",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "validate:data": "bun run src/validate-data.ts"
+  },
+  "exports": {
+    "./combos/schema": "./src/combos/schema.ts",
+    "./combos/type": "./src/combos/type.ts",
+    "./combos/value": "./src/combos/value.ts",
+    "./contract": "./src/contract.ts",
+    "./coverage/runtime": "./src/coverage/runtime.ts",
+    "./coverage/schema": "./src/coverage/schema.ts",
+    "./coverage/type": "./src/coverage/type.ts",
+    "./coverage/value": "./src/coverage/value.ts",
+    "./game/schema": "./src/game/schema.ts",
+    "./game/type": "./src/game/type.ts",
+    "./game/value": "./src/game/value.ts",
+    "./graph/schema": "./src/graph/schema.ts",
+    "./graph/type": "./src/graph/type.ts",
+    "./graph/value": "./src/graph/value.ts",
+    "./kameos/schema": "./src/kameos/schema.ts",
+    "./kameos/type": "./src/kameos/type.ts",
+    "./kameos/value": "./src/kameos/value.ts",
+    "./movelists/schema": "./src/movelists/schema.ts",
+    "./movelists/type": "./src/movelists/type.ts",
+    "./movelists/value": "./src/movelists/value.ts",
+    "./roster/schema": "./src/roster/schema.ts",
+    "./roster/type": "./src/roster/type.ts",
+    "./roster/value": "./src/roster/value.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "exports": {
+      "./combos/schema": "./dist/combos/schema.mjs",
+      "./combos/type": "./dist/combos/type.mjs",
+      "./combos/value": "./dist/combos/value.mjs",
+      "./contract": "./dist/contract.mjs",
+      "./coverage/runtime": "./dist/coverage/runtime.mjs",
+      "./coverage/schema": "./dist/coverage/schema.mjs",
+      "./coverage/type": "./dist/coverage/type.mjs",
+      "./coverage/value": "./dist/coverage/value.mjs",
+      "./game/schema": "./dist/game/schema.mjs",
+      "./game/type": "./dist/game/type.mjs",
+      "./game/value": "./dist/game/value.mjs",
+      "./graph/schema": "./dist/graph/schema.mjs",
+      "./graph/type": "./dist/graph/type.mjs",
+      "./graph/value": "./dist/graph/value.mjs",
+      "./kameos/schema": "./dist/kameos/schema.mjs",
+      "./kameos/type": "./dist/kameos/type.mjs",
+      "./kameos/value": "./dist/kameos/value.mjs",
+      "./movelists/schema": "./dist/movelists/schema.mjs",
+      "./movelists/type": "./dist/movelists/type.mjs",
+      "./movelists/value": "./dist/movelists/value.mjs",
+      "./roster/schema": "./dist/roster/schema.mjs",
+      "./roster/type": "./dist/roster/type.mjs",
+      "./roster/value": "./dist/roster/value.mjs",
+      "./package.json": "./package.json"
+    }
+  },
+  "dependencies": {
+    "@mk-combos/contracts": "workspace:*",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.2",
+    "tsdown": "0.22.3",
+    "vite": "8.1.2",
+    "vitest": "4.1.9"
+  }
+}
