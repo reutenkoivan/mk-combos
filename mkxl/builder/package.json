@@ -1,0 +1,50 @@
+{
+  "name": "@mk-combos/mkxl-builder",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "exports": {
+    "./context/schema": "./src/context/schema.ts",
+    "./context/type": "./src/context/type.ts",
+    "./contract": "./src/contract.ts",
+    "./graph/runtime": "./src/graph/runtime.ts",
+    "./graph/schema": "./src/graph/schema.ts",
+    "./graph/type": "./src/graph/type.ts",
+    "./replay/runtime": "./src/replay/runtime.ts",
+    "./state/runtime": "./src/state/runtime.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "exports": {
+      "./context/schema": "./dist/context/schema.mjs",
+      "./context/type": "./dist/context/type.mjs",
+      "./contract": "./dist/contract.mjs",
+      "./graph/runtime": "./dist/graph/runtime.mjs",
+      "./graph/schema": "./dist/graph/schema.mjs",
+      "./graph/type": "./dist/graph/type.mjs",
+      "./replay/runtime": "./dist/replay/runtime.mjs",
+      "./state/runtime": "./dist/state/runtime.mjs",
+      "./package.json": "./package.json"
+    }
+  },
+  "dependencies": {
+    "@mk-combos/builder-core": "workspace:*",
+    "@mk-combos/contracts": "workspace:*",
+    "@mk-combos/mkxl-data": "workspace:*",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "25.6.2",
+    "tsdown": "0.22.3",
+    "vite": "8.1.2",
+    "vitest": "4.1.9"
+  }
+}
