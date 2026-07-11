@@ -19,6 +19,12 @@ This document is the canonical source for package ownership, import direction, r
   pure UI components;
 - public contracts мають бути стабільними, game-agnostic і forward-compatible.
 
+У UI-коді layout не будується через margin. Utility-класи й CSS-властивості
+`m-*`, `mx-*`, `my-*`, `mt-*`, `mb-*`, `ml-*`, `mr-*`, `space-x-*`,
+`space-y-*` і `margin*` не використовуються для позиціонування або відступів.
+Контейнер володіє розміщенням свого контенту через `flex` або `grid`, `gap-*`,
+`p-*`, `justify-*`, `items-*`, `content-*` і `self-*`.
+
 Зовнішній ввід системи завжди нормалізується на boundary через Zod `parse` або
 `transform` перед використанням як typed value. Це стосується зокрема
 `process.env`, browser/native APIs, persisted payloads, route/query input і

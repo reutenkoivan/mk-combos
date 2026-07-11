@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["node", "vitest/globals"]
+  },
+  "include": ["src/**/*", ".storybook/**/*", "tsdown.config.ts", "vitest.config.ts"]
+}

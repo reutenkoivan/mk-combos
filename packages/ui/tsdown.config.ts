@@ -1,0 +1,31 @@
+import { createTsdownConfig } from "@mk-combos/contracts/build/tsdown/config";
+
+export default createTsdownConfig({
+  entry: {
+    contract: "src/contract.ts",
+    "icons/alert-triangle": "src/icons/alert-triangle.tsx",
+    "icons/check": "src/icons/check.tsx",
+    "icons/chevron-down": "src/icons/chevron-down.tsx",
+    "icons/chevron-left": "src/icons/chevron-left.tsx",
+    "icons/chevron-right": "src/icons/chevron-right.tsx",
+    "icons/chevron-up": "src/icons/chevron-up.tsx",
+    "icons/circle-help": "src/icons/circle-help.tsx",
+    "icons/download": "src/icons/download.tsx",
+    "icons/edit": "src/icons/edit.tsx",
+    "icons/gamepad-2": "src/icons/gamepad-2.tsx",
+    "icons/menu": "src/icons/menu.tsx",
+    "icons/plus": "src/icons/plus.tsx",
+    "icons/search": "src/icons/search.tsx",
+    "icons/settings": "src/icons/settings.tsx",
+    "icons/trash-2": "src/icons/trash-2.tsx",
+    "icons/upload": "src/icons/upload.tsx",
+    "icons/x": "src/icons/x.tsx",
+    "notation/runtime": "src/notation/runtime.ts",
+    "notation/schema": "src/notation/schema.ts",
+    "notation/type": "src/notation/type.ts",
+    "notation/value": "src/notation/value.ts",
+    "tokens/schema": "src/tokens/schema.ts",
+    "tokens/type": "src/tokens/type.ts",
+    "tokens/value": "src/tokens/value.ts",
+  },
+});

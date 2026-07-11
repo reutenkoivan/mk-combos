@@ -40,6 +40,7 @@
     "storybook:build": "turbo run storybook:build",
     "test": "turbo run root:test test",
     "typecheck": "turbo run root:typecheck typecheck",
+    "ui:storybook": "turbo run storybook --filter=@mk-combos/ui",
     "validate:data": "turbo run validate:data",
     "validate:docs": "turbo run validate:docs"
   },

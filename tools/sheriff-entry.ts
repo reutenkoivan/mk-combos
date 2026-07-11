@@ -11,10 +11,12 @@ import { mkCombosMkxlBuilder } from "@mk-combos/mkxl-builder/contract";
 import { mkCombosMkxlBusiness } from "@mk-combos/mkxl-business/contract";
 import { mkCombosMkxlCatalog } from "@mk-combos/mkxl-catalog/contract";
 import { mkCombosMkxlData } from "@mk-combos/mkxl-data/contract";
+import { mkCombosUi } from "@mk-combos/ui/contract";
 
 void mkCombosContract;
 void mkCombosBuilderCore;
 void mkCombosControllerBridge;
+void mkCombosUi;
 void mkCombosMk1Data;
 void mkCombosMk1Catalog;
 void mkCombosMk1Builder;

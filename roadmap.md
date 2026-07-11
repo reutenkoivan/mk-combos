@@ -41,8 +41,8 @@ Each item also has `Done when` so `done` has a clear meaning.
 | 13 | done | `mk1/catalog` | `mk1/catalog` | MK1 selectors, context parsing, character/kameo filtering, summaries, recovery behavior are implemented. |
 | 14 | done | `mk1/builder` | `mk1/builder` | MK1 graph composition, replay, valid moves, kameo transitions, stale detection work. |
 | 15 | done | `mk1/business` | `mk1/business` | `mk1Business` exposes catalog/detail/lists/builder/backup/validation adapters. |
-| 16 | todo | No-UI Integration Validation | validation configs | Builds, import boundaries, data validation, graph validation, business compatibility pass. |
-| 17 | todo | `packages/ui` Design System Foundation | `packages/ui` | Tokens, Tailwind, recipes, Base UI wrappers, icons, notation registry, Storybook, visual/a11y setup exist. |
+| 16 | done | No-UI Integration Validation | validation configs | Builds, import boundaries, data validation, graph validation, business compatibility pass. |
+| 17 | done | `packages/ui` Design System Foundation | `packages/ui` | Tokens, Tailwind, recipes, Base UI wrappers, icons, notation registry, Storybook, visual/a11y setup exist. |
 | 18 | todo | `packages/ui` Base Primitives | `packages/ui` | Core primitives, surfaces, states, layouts, focus helpers are implemented. |
 | 19 | todo | `packages/ui` Shell/Settings Components | `packages/ui` | `UI-CMP-001`-`006`, `027`, `028`, `032`, `033`, `034`, `037` are implemented and covered. |
 | 20 | todo | `packages/ui` Catalog/Detail/List Components | `packages/ui` | `UI-CMP-007`-`015`, `017`-`023`, `029`, `030`, `031` are implemented and covered. |
