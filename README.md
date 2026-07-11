@@ -30,14 +30,12 @@ mk-combos/
 
   mkxl/
     data/
-    rules/
     catalog/
     builder/
     business/
 
   mk1/
     data/
-    rules/
     catalog/
     builder/
     business/
@@ -101,7 +99,6 @@ Each supported game has one app-facing business entry point.
 ```text
 mkxl/
   data/       # seeded combos, movelists, graph data, coverage targets
-  rules/      # variation, stage, interactable, patch, notation, validation rules
   catalog/    # catalog selectors, filters, summaries, route context helpers
   builder/    # MKXL graph composition, replay, valid next moves, stale checks
   business/   # @mk-combos/mkxl-business
@@ -109,14 +106,13 @@ mkxl/
 
 `@mk-combos/mkxl-business` exports `mkxlBusiness`.
 
-MKXL owns variation context and optional stage/interactable behavior. Stage-specific routes, stage interactions, and interactable usage policy never live in shared packages.
+MKXL owns variation context and optional stage/interactable behavior. `mkxl/data` owns seeded facts, schemas, coverage targets, and data validation; `mkxl/catalog` owns context parsing, recovery, filters, and summaries; `mkxl/builder` owns graph composition, valid next moves, replay, stale checks, and stage/interactable usage rules. Stage-specific routes, stage interactions, and interactable usage policy never live in shared packages.
 
 ### MK1
 
 ```text
 mk1/
   data/       # seeded combos, main roster, kameos, movelists, graph data
-  rules/      # kameo pairing, patch, notation, validation rules
   catalog/    # catalog selectors, filters, summaries, route context helpers
   builder/    # MK1 graph composition, replay, valid next moves, stale checks
   business/   # @mk-combos/mk1-business
@@ -124,7 +120,7 @@ mk1/
 
 `@mk-combos/mk1-business` exports `mk1Business`.
 
-MK1 owns main character + kameo context. MKXL variation/stage concepts must not appear in MK1 business contracts.
+MK1 owns main character + kameo context. `mk1/data` owns seeded facts, schemas, coverage targets, and data validation; `mk1/catalog` owns context parsing, recovery, filters, and summaries; `mk1/builder` owns graph composition, valid next moves, replay, stale checks, and kameo pairing/transition rules. MKXL variation/stage concepts must not appear in MK1 business contracts.
 
 ## Web App Integration
 
@@ -144,7 +140,7 @@ export const installedGames = [
 ] as const
 ```
 
-The web app may select a business entry point by `gameId`. It must not import `mkxl/data`, `mkxl/rules`, `mk1/data`, or `mk1/rules` directly from page code.
+The web app may select a business entry point by `gameId`. It must not import `mkxl/data` or `mk1/data` directly from page code.
 
 ## Routes
 
@@ -261,8 +257,8 @@ Acceptance:
 
 ### 3. MKXL Business Scope
 
-- Create `mkxl/data`, `mkxl/rules`, `mkxl/catalog`, `mkxl/builder`, and `mkxl/business`.
-- Define MKXL schemas for combos, movelists, graph data, variation overlays, stage interaction schemas, and coverage targets.
+- Create `mkxl/data`, `mkxl/catalog`, `mkxl/builder`, and `mkxl/business`.
+- Define MKXL data schemas for combos, movelists, graph data, variation data, stage interaction data, and coverage targets.
 - Implement MKXL catalog selectors and optional stage/interactable filters.
 - Implement MKXL builder composition: base character graph + variation overlay + optional stage interaction data.
 - Export `mkxlBusiness`.
@@ -276,8 +272,8 @@ Acceptance:
 
 ### 4. MK1 Business Scope
 
-- Create `mk1/data`, `mk1/rules`, `mk1/catalog`, `mk1/builder`, and `mk1/business`.
-- Define MK1 schemas for combos, main roster, kameos, movelists, graph data, kameo overlays, and coverage targets.
+- Create `mk1/data`, `mk1/catalog`, `mk1/builder`, and `mk1/business`.
+- Define MK1 data schemas for combos, main roster, kameos, movelists, graph data, kameo data, and coverage targets.
 - Implement MK1 catalog selectors and kameo context behavior.
 - Implement MK1 builder composition: base character graph + kameo overlay.
 - Export `mk1Business`.
@@ -385,7 +381,6 @@ Add a new root scope:
 ```text
 mk-new/
   data/
-  rules/
   catalog/
   builder/
   business/

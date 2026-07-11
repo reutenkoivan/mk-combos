@@ -71,7 +71,7 @@ MK1 variant не рендерить `UI-CMP-008 Variation Picker` і не вик
 
 ## Дані та контекст
 
-MK1 combo data contract належить `mk1/data` і `mk1/rules`. UI variant очікує prepared summary/context із такими полями:
+MK1 combo data contract належить `mk1/data`. `mk1/catalog` готує summary/context для UI variant із такими полями:
 
 - `id`;
 - `game = MK1`;

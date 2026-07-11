@@ -123,14 +123,12 @@ mk-combos/
 
   mkxl/
     data/
-    rules/
     catalog/
     builder/
     business/
 
   mk1/
     data/
-    rules/
     catalog/
     builder/
     business/
@@ -141,9 +139,9 @@ mk-combos/
 
 `packages/*` is the shared platform layer. It contains reusable contracts, UI primitives, active numbered UI components, builder primitives, builder presentation components, and controller input normalization.
 
-`mkxl/*` is the MKXL business scope. It owns MKXL data, rules, schemas, catalog behavior, builder behavior, validation, coverage, and the MKXL app-facing business entry point.
+`mkxl/*` is the MKXL business scope. It owns MKXL data, schemas, catalog behavior, builder behavior, validation, coverage, and the MKXL app-facing business entry point.
 
-`mk1/*` is the MK1 business scope. It owns MK1 data, rules, schemas, catalog behavior, builder behavior, validation, coverage, and the MK1 app-facing business entry point.
+`mk1/*` is the MK1 business scope. It owns MK1 data, schemas, catalog behavior, builder behavior, validation, coverage, and the MK1 app-facing business entry point.
 
 `apps/web` is the only product application. It installs the supported games, resolves the active game from the URL, renders shared routes, owns local browser persistence, and delegates game behavior to the active business entry point.
 
@@ -210,7 +208,6 @@ Each game has one app-facing business entry point. The entry point reduces abstr
 ```text
 mkxl/
   data/       # @mk-combos/mkxl-data
-  rules/      # @mk-combos/mkxl-rules
   catalog/    # @mk-combos/mkxl-catalog
   builder/    # @mk-combos/mkxl-builder
   business/   # @mk-combos/mkxl-business
@@ -220,11 +217,10 @@ mkxl/
 
 The MKXL scope owns:
 
-- MKXL roster, variation data, movelists, seeded combos, move graph data, coverage targets, and localized content;
-- MKXL schemas and validation;
-- MKXL stage, zone, segment, interactable, stage-specific edge, and interactable usage rules;
-- MKXL catalog selectors, optional stage/interactable filter behavior, and combo summary shaping;
-- MKXL builder graph composition, replay, valid next move calculation, stale detection, and custom combo output.
+- `mkxl/data`: roster, variation data, movelists, seeded combos, move graph data, stages, interactables, localized content, data schemas, coverage targets, and seeded data validation;
+- `mkxl/catalog`: catalog selectors, route context parsing and recovery, optional stage/interactable filter behavior, and combo summary shaping;
+- `mkxl/builder`: graph composition, stage/interactable usage rules, replay, valid next move calculation, frame checks, stale detection, and custom combo output;
+- `mkxl/business`: app-facing catalog/detail/lists/builder/backup/validation adapters.
 
 `mkxl/data` is the concrete reference for the target `mk*/data` data-layer pattern. Game data
 layers separate authored data from resolved public values. Versioned authored packs live under
@@ -245,7 +241,6 @@ game-specific exception is documented in this architecture.
 ```text
 mk1/
   data/       # @mk-combos/mk1-data
-  rules/      # @mk-combos/mk1-rules
   catalog/    # @mk-combos/mk1-catalog
   builder/    # @mk-combos/mk1-builder
   business/   # @mk-combos/mk1-business
@@ -255,11 +250,10 @@ mk1/
 
 The MK1 scope owns:
 
-- MK1 main fighter roster, kameo roster, movelists, seeded combos, move graph data, coverage targets, and localized content;
-- MK1 schemas and validation;
-- MK1 kameo pairing rules and kameo transition rules;
-- MK1 catalog selectors and combo summary shaping;
-- MK1 builder graph composition, replay, valid next move calculation, stale detection, and custom combo output.
+- `mk1/data`: main fighter roster, kameo roster, movelists, seeded combos, move graph data, localized content, data schemas, coverage targets, and seeded data validation;
+- `mk1/catalog`: catalog selectors, route context parsing and recovery, character/kameo filtering, and combo summary shaping;
+- `mk1/builder`: graph composition, kameo pairing and transition rules, replay, valid next move calculation, stale detection, and custom combo output;
+- `mk1/business`: app-facing catalog/detail/lists/builder/backup/validation adapters.
 
 ## Business Entry Point Shape
 
@@ -409,14 +403,12 @@ apps/web
 mkxl/business
   -> mkxl/catalog
   -> mkxl/builder
-  -> mkxl/rules
   -> mkxl/data
   -> packages/*
 
 mk1/business
   -> mk1/catalog
   -> mk1/builder
-  -> mk1/rules
   -> mk1/data
   -> packages/*
 
@@ -429,7 +421,7 @@ Forbidden:
 - `packages/*` importing from `mkxl/*` or `mk1/*`;
 - `mkxl/*` importing from `mk1/*`;
 - `mk1/*` importing from `mkxl/*`;
-- page-level web code importing from `mkxl/data`, `mkxl/rules`, `mk1/data`, or `mk1/rules` directly;
+- page-level web code importing from `mkxl/data` or `mk1/data` directly;
 - hardcoded game-specific business rules in shared UI components.
 
 ## Adding A New Game
@@ -439,7 +431,6 @@ Adding a new game should be localized:
 ```text
 mk-new/
   data/
-  rules/
   catalog/
   builder/
   business/
@@ -480,8 +471,8 @@ A balance patch or content update for an existing game stays inside that game's 
 
 Examples:
 
-- MK1 patch metadata belongs in `mk1/data` and `mk1/rules`.
-- MKXL stage interaction corrections belong in `mkxl/data`, `mkxl/rules`, and `mkxl/builder`.
+- MK1 patch metadata belongs in `mk1/data`; kameo transition effects belong in `mk1/builder`.
+- MKXL stage interaction corrections belong in `mkxl/data` and `mkxl/builder`.
 
 ## Documentation Rule
 
