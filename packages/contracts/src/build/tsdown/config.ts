@@ -1,5 +1,10 @@
 import { mkCombosEnv } from "@mk-combos/contracts/env/value";
 import { defineConfig, type UserConfig } from "tsdown";
+import { createReactCompilerBabelPlugin } from "#build/react-compiler/plugin";
+
+const toTsdownPluginArray = (plugins: UserConfig["plugins"] = []) => {
+  return Array.isArray(plugins) ? plugins : [plugins];
+};
 
 const logConfiguration = (finalConfig: UserConfig, options: UserConfig) => {
   const configTable = [
@@ -56,4 +61,10 @@ export const createTsdownConfig = (options: UserConfig = {}) =>
     }
 
     return finalConfig;
+  });
+
+export const createReactTsdownConfig = (options: UserConfig = {}) =>
+  createTsdownConfig({
+    ...options,
+    plugins: [createReactCompilerBabelPlugin(), ...toTsdownPluginArray(options.plugins)],
   });

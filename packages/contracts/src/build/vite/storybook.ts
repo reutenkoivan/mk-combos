@@ -1,5 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import { mergeConfig, type PluginOption, type UserConfig } from "vite";
+import { createReactCompilerBabelPlugin } from "#build/react-compiler/plugin";
 
 type PluginInput = PluginOption | PluginOption[] | undefined;
 
@@ -16,6 +17,6 @@ export const withStorybookViteConfig = (viteConfig: UserConfig, options: UserCon
       chunkSizeWarningLimit: 1200,
       ...build,
     },
-    plugins: [tailwindcss(), ...toPluginArray(plugins)],
+    plugins: [tailwindcss(), createReactCompilerBabelPlugin(), ...toPluginArray(plugins)],
   });
 };

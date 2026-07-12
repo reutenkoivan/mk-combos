@@ -1,6 +1,6 @@
-import { createTsdownConfig } from "@mk-combos/contracts/build/tsdown/config";
+import { createReactTsdownConfig } from "@mk-combos/contracts/build/tsdown/config";
 
-export default createTsdownConfig({
+export default createReactTsdownConfig({
   entry: {
     contract: "src/contract.ts",
     "icons/alert-triangle": "src/icons/alert-triangle.tsx",
@@ -24,6 +24,16 @@ export default createTsdownConfig({
     "notation/schema": "src/notation/schema.ts",
     "notation/type": "src/notation/type.ts",
     "notation/value": "src/notation/value.ts",
+    "primitives/button": "src/primitives/button.tsx",
+    "primitives/dialog": "src/primitives/dialog.tsx",
+    "primitives/disclosure": "src/primitives/disclosure.tsx",
+    "primitives/field": "src/primitives/field.tsx",
+    "primitives/focus": "src/primitives/focus.ts",
+    "primitives/layout": "src/primitives/layout.tsx",
+    "primitives/menu": "src/primitives/menu.tsx",
+    "primitives/popover": "src/primitives/popover.tsx",
+    "primitives/segmented-control": "src/primitives/segmented-control.tsx",
+    "primitives/state": "src/primitives/state.tsx",
     "tokens/schema": "src/tokens/schema.ts",
     "tokens/type": "src/tokens/type.ts",
     "tokens/value": "src/tokens/value.ts",

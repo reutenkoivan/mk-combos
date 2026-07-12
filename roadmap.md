@@ -43,7 +43,7 @@ Each item also has `Done when` so `done` has a clear meaning.
 | 15 | done | `mk1/business` | `mk1/business` | `mk1Business` exposes catalog/detail/lists/builder/backup/validation adapters. |
 | 16 | done | No-UI Integration Validation | validation configs | Builds, import boundaries, data validation, graph validation, business compatibility pass. |
 | 17 | done | `packages/ui` Design System Foundation | `packages/ui` | Tokens, Tailwind, recipes, Base UI wrappers, icons, notation registry, Storybook, visual/a11y setup exist. |
-| 18 | todo | `packages/ui` Base Primitives | `packages/ui` | Core primitives, surfaces, states, layouts, focus helpers are implemented. |
+| 18 | done | `packages/ui` Base Primitives | `packages/ui` | Core primitives, surfaces, states, layouts, focus helpers are implemented. |
 | 19 | todo | `packages/ui` Shell/Settings Components | `packages/ui` | `UI-CMP-001`-`006`, `027`, `028`, `032`, `033`, `034`, `037` are implemented and covered. |
 | 20 | todo | `packages/ui` Catalog/Detail/List Components | `packages/ui` | `UI-CMP-007`-`015`, `017`-`023`, `029`, `030`, `031` are implemented and covered. |
 | 21 | todo | `packages/ui` Builder Components | `packages/ui` | `UI-CMP-026`, `035`, internal `movePicker`, `036`, and model hooks are implemented and covered. |

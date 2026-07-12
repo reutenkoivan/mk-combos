@@ -1,5 +1,6 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig, type ViteUserConfig } from "vitest/config";
+import { createReactCompilerBabelPlugin } from "#build/react-compiler/plugin";
 
 const toPluginArray = (plugins: ViteUserConfig["plugins"] = []) => {
   return Array.isArray(plugins) ? plugins : [plugins];
@@ -10,7 +11,7 @@ export const createUnitConfig = (options: ViteUserConfig = {}) => {
 
   return defineConfig({
     ...config,
-    plugins: [react(), ...toPluginArray(plugins)],
+    plugins: [react(), createReactCompilerBabelPlugin(), ...toPluginArray(plugins)],
     test: {
       environment: "jsdom",
       globals: true,

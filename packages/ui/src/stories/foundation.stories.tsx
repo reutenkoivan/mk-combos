@@ -16,6 +16,12 @@ import { NotationIcon } from "../notation/renderer";
 import { createNotationLegendRows, mapNotationStep } from "../notation/runtime";
 import type { UiNotationIconKind } from "../notation/type";
 import { notationDisplayModes, uiNotationTokenKinds, uiNotationTokens } from "../notation/value";
+import { Button, IconButton } from "../primitives/button";
+import { DisclosurePanel, DisclosureRoot, DisclosureTrigger } from "../primitives/disclosure";
+import { Field, FieldLabel, FieldMessage, TextInput } from "../primitives/field";
+import { Grid, Group, Panel, Separator, Stack, Surface } from "../primitives/layout";
+import { SegmentedControl } from "../primitives/segmented-control";
+import { Badge, LoadingIndicator, StatusMessage } from "../primitives/state";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { fieldRecipe } from "../recipes/field";
@@ -191,6 +197,81 @@ const RecipeMatrix = () => (
   </div>
 );
 
+const PrimitiveMatrix = () => (
+  <Stack density="medium">
+    <Surface material="separated">
+      <Panel density="medium">
+        <Grid columns="two">
+          <Stack>
+            <Group>
+              <Button tone="accent">Save</Button>
+              <Button loading>Saving</Button>
+              <Button disabled>Disabled</Button>
+              <IconButton label="Open actions">
+                <MenuIcon decorative size={14} />
+              </IconButton>
+            </Group>
+
+            <Group>
+              <Badge tone="success">Ready</Badge>
+              <Badge tone="warning">Stale</Badge>
+              <LoadingIndicator label="Loading primitives" />
+            </Group>
+          </Stack>
+
+          <Field>
+            <FieldLabel htmlFor="primitive-query">Search</FieldLabel>
+            <TextInput
+              aria-describedby="primitive-query-message"
+              id="primitive-query"
+              invalid
+              placeholder="Find combo"
+              value="Very long localized input value without layout shift"
+            />
+            <FieldMessage id="primitive-query-message" invalid>
+              Invalid state stays adjacent to the field.
+            </FieldMessage>
+          </Field>
+        </Grid>
+
+        <Separator />
+
+        <Stack>
+          <SegmentedControl
+            aria-label="Display mode"
+            options={[
+              { label: "FGC", value: "FGC" },
+              { label: "PlayStation", value: "PlayStation" },
+              { label: "Xbox", value: "Xbox" },
+            ]}
+            value="PlayStation"
+          />
+          <StatusMessage tone="warning">
+            Long status text wraps inside its owning panel without overlapping neighboring controls.
+          </StatusMessage>
+        </Stack>
+
+        <DisclosureRoot open>
+          <DisclosureTrigger>
+            Open primitive disclosure with a long localized label
+          </DisclosureTrigger>
+          <DisclosurePanel>
+            <Stack>
+              <span>
+                Expanded panel content uses surface tokens and remains in regular reading order.
+              </span>
+              <Group>
+                <Button tone="accent">Primary action</Button>
+                <Button tone="destructive">Destructive action</Button>
+              </Group>
+            </Stack>
+          </DisclosurePanel>
+        </DisclosureRoot>
+      </Panel>
+    </Surface>
+  </Stack>
+);
+
 const IconMatrix = () => (
   <div className="flex flex-wrap gap-2">
     {iconExamples.map((Icon) => (
@@ -283,6 +364,9 @@ export const Default: Story = {
       <Section title="Recipes">
         <RecipeMatrix />
       </Section>
+      <Section title="Primitives">
+        <PrimitiveMatrix />
+      </Section>
       <Section title="Icons">
         <IconMatrix />
       </Section>
@@ -298,6 +382,9 @@ export const DarkIncreasedContrast: Story = {
     <StoryFrame contrast="increased" mode="dark">
       <Section title="Dark Increased Contrast Recipes">
         <RecipeMatrix />
+      </Section>
+      <Section title="Dark Increased Contrast Primitives">
+        <PrimitiveMatrix />
       </Section>
       <Section title="Dark Increased Contrast Notation">
         <NotationMatrix />
@@ -328,6 +415,7 @@ export const LongLabelsAndStates: Story = {
           <div className={surfaceRecipe({ density: "medium", material: "glass" })}>
             Functional material is reserved for owning surfaces and keeps text legible.
           </div>
+          <PrimitiveMatrix />
         </div>
       </Section>
     </StoryFrame>

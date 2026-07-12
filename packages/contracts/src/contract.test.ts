@@ -1,4 +1,7 @@
-import { createTsdownConfig } from "@mk-combos/contracts/build/tsdown/config";
+import {
+  createReactTsdownConfig,
+  createTsdownConfig,
+} from "@mk-combos/contracts/build/tsdown/config";
 import { createViteConfig } from "@mk-combos/contracts/build/vite/config";
 import { withStorybookViteConfig } from "@mk-combos/contracts/build/vite/storybook";
 import * as contractEntry from "@mk-combos/contracts/contract";
@@ -159,6 +162,7 @@ describe("@mk-combos/contracts", () => {
 
   it("resolves build and test contract subpaths", () => {
     expect(typeof createTsdownConfig).toBe("function");
+    expect(typeof createReactTsdownConfig).toBe("function");
     expect(typeof createViteConfig).toBe("function");
     expect(typeof withStorybookViteConfig).toBe("function");
     expect(typeof getMkCombosEnv).toBe("function");

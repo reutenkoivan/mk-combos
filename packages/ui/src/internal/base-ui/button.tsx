@@ -3,12 +3,19 @@ import type { ComponentPropsWithRef } from "react";
 
 import { cx } from "../../recipes/class-name";
 import { controlRecipe } from "../../recipes/control";
-import type { UiDensityMode, UiEmphasisMode, UiShapeMode, UiToneMode } from "../../tokens/type";
+import type {
+  UiDensityMode,
+  UiEmphasisMode,
+  UiPlacementMode,
+  UiShapeMode,
+  UiToneMode,
+} from "../../tokens/type";
 
 export type InternalButtonProps = ComponentPropsWithRef<typeof BaseButton> & {
   density?: UiDensityMode;
   emphasis?: UiEmphasisMode;
   loading?: boolean;
+  placement?: UiPlacementMode;
   shape?: UiShapeMode;
   tone?: UiToneMode;
 };
@@ -20,6 +27,7 @@ export function InternalButton(props: InternalButtonProps) {
     disabled,
     emphasis = "normal",
     loading = false,
+    placement = "inline",
     ref,
     shape = "fixed",
     tone = "neutral",
@@ -34,6 +42,7 @@ export function InternalButton(props: InternalButtonProps) {
         controlRecipe({
           density,
           emphasis,
+          placement,
           shape,
           state: disabled ? "disabled" : loading ? "loading" : "idle",
           tone,

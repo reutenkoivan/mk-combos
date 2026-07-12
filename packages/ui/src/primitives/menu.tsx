@@ -1,0 +1,276 @@
+import { Menu as BaseMenu } from "@base-ui/react/menu";
+import type { ReactNode } from "react";
+
+import { cx } from "../recipes/class-name";
+import { controlRecipe } from "../recipes/control";
+import { itemRecipe } from "../recipes/item";
+import { popupRecipe } from "../recipes/popup";
+import type {
+  UiDensityMode,
+  UiEmphasisMode,
+  UiMaterialMode,
+  UiSelectionState,
+  UiShapeMode,
+  UiToneMode,
+} from "../tokens/type";
+import {
+  mapBaseUiReason,
+  type UiPrimitiveOpenChangePayload,
+  type UiPrimitiveProps,
+} from "./internal";
+
+type FloatingSide = "bottom" | "left" | "right" | "top";
+type FloatingAlign = "center" | "end" | "start";
+
+export type MenuRootProps = {
+  children?: ReactNode;
+  defaultOpen?: boolean;
+  disabled?: boolean;
+  loopFocus?: boolean;
+  modal?: boolean;
+  onOpenChange?: (payload: UiPrimitiveOpenChangePayload) => void;
+  open?: boolean;
+  sourceFocusTarget?: string;
+};
+
+export function MenuRoot(props: MenuRootProps) {
+  const {
+    children,
+    defaultOpen,
+    disabled = false,
+    loopFocus = true,
+    modal = false,
+    onOpenChange,
+    open,
+    sourceFocusTarget,
+  } = props;
+
+  return (
+    <BaseMenu.Root
+      defaultOpen={defaultOpen}
+      disabled={disabled}
+      loopFocus={loopFocus}
+      modal={modal}
+      onOpenChange={(nextOpen, eventDetails) => {
+        onOpenChange?.({
+          open: nextOpen,
+          reason: mapBaseUiReason(eventDetails.reason),
+          sourceFocusTarget,
+        });
+      }}
+      open={open}
+    >
+      {children}
+    </BaseMenu.Root>
+  );
+}
+
+MenuRoot.displayName = "MenuRoot";
+
+export type MenuTriggerProps = UiPrimitiveProps<HTMLButtonElement> & {
+  density?: UiDensityMode;
+  disabled?: boolean;
+  emphasis?: UiEmphasisMode;
+  shape?: UiShapeMode;
+  tone?: UiToneMode;
+  type?: "button" | "reset" | "submit";
+};
+
+export function MenuTrigger(props: MenuTriggerProps) {
+  const {
+    children,
+    className,
+    density = "small",
+    disabled = false,
+    emphasis = "normal",
+    ref,
+    shape = "fixed",
+    tone = "neutral",
+    type = "button",
+    ...triggerProps
+  } = props;
+
+  return (
+    <BaseMenu.Trigger
+      {...triggerProps}
+      className={cx(controlRecipe({ density, emphasis, shape, tone }), className)}
+      data-disabled={disabled ? "true" : undefined}
+      data-ui-menu-trigger
+      disabled={disabled}
+      ref={ref}
+      type={type}
+    >
+      {children}
+    </BaseMenu.Trigger>
+  );
+}
+
+MenuTrigger.displayName = "MenuTrigger";
+
+export const MenuPortal = BaseMenu.Portal;
+
+export type MenuPositionerProps = UiPrimitiveProps<HTMLDivElement> & {
+  align?: FloatingAlign;
+  side?: FloatingSide;
+  sideOffset?: number;
+};
+
+export function MenuPositioner(props: MenuPositionerProps) {
+  const {
+    align = "end",
+    children,
+    className,
+    ref,
+    side = "bottom",
+    sideOffset = 8,
+    ...positionerProps
+  } = props;
+
+  return (
+    <BaseMenu.Positioner
+      {...positionerProps}
+      align={align}
+      className={cx("z-50", className)}
+      data-ui-menu-positioner
+      ref={ref}
+      side={side}
+      sideOffset={sideOffset}
+    >
+      {children}
+    </BaseMenu.Positioner>
+  );
+}
+
+MenuPositioner.displayName = "MenuPositioner";
+
+export type MenuPopupProps = UiPrimitiveProps<HTMLDivElement> & {
+  density?: UiDensityMode;
+  material?: UiMaterialMode;
+  shape?: UiShapeMode;
+};
+
+export function MenuPopup(props: MenuPopupProps) {
+  const {
+    children,
+    className,
+    density = "small",
+    material = "elevated",
+    ref,
+    shape = "fixed",
+    ...popupProps
+  } = props;
+
+  return (
+    <BaseMenu.Popup
+      {...popupProps}
+      className={cx("min-w-44", popupRecipe({ density, material, shape }), className)}
+      data-ui-menu-popup
+      data-ui-portal
+      ref={ref}
+    >
+      {children}
+    </BaseMenu.Popup>
+  );
+}
+
+MenuPopup.displayName = "MenuPopup";
+
+export type MenuGroupProps = UiPrimitiveProps<HTMLDivElement>;
+
+export function MenuGroup(props: MenuGroupProps) {
+  const { children, className, ref, ...groupProps } = props;
+
+  return (
+    <BaseMenu.Group
+      {...groupProps}
+      className={cx("grid gap-1", className)}
+      data-ui-menu-group
+      ref={ref}
+    >
+      {children}
+    </BaseMenu.Group>
+  );
+}
+
+MenuGroup.displayName = "MenuGroup";
+
+export type MenuGroupLabelProps = UiPrimitiveProps<HTMLDivElement>;
+
+export function MenuGroupLabel(props: MenuGroupLabelProps) {
+  const { children, className, ref, ...labelProps } = props;
+
+  return (
+    <BaseMenu.GroupLabel
+      {...labelProps}
+      className={cx("px-2 text-xs font-semibold text-[var(--ui-muted-text)]", className)}
+      data-ui-menu-group-label
+      ref={ref}
+    >
+      {children}
+    </BaseMenu.GroupLabel>
+  );
+}
+
+MenuGroupLabel.displayName = "MenuGroupLabel";
+
+export type MenuItemSelectPayload<Value extends string> = {
+  reason: "itemPress";
+  value: Value;
+};
+
+export type MenuItemProps<Value extends string = string> = UiPrimitiveProps<HTMLElement> & {
+  closeOnClick?: boolean;
+  density?: UiDensityMode;
+  disabled?: boolean;
+  label?: string;
+  onRequestSelect?: (payload: MenuItemSelectPayload<Value>) => void;
+  selection?: UiSelectionState;
+  shape?: UiShapeMode;
+  tone?: UiToneMode;
+  value: Value;
+};
+
+export function MenuItem<Value extends string = string>(props: MenuItemProps<Value>) {
+  const {
+    children,
+    className,
+    closeOnClick = true,
+    density = "small",
+    disabled = false,
+    label,
+    onRequestSelect,
+    ref,
+    selection = "none",
+    shape = "fixed",
+    tone = "neutral",
+    value,
+    ...itemProps
+  } = props;
+
+  return (
+    <BaseMenu.Item
+      {...itemProps}
+      className={cx(
+        itemRecipe({
+          density,
+          selection,
+          shape,
+          state: disabled ? "disabled" : selection === "selected" ? "selected" : "idle",
+          tone,
+        }),
+        className,
+      )}
+      closeOnClick={closeOnClick}
+      data-disabled={disabled ? "true" : undefined}
+      data-ui-menu-item={value}
+      disabled={disabled}
+      label={label}
+      onClick={() => onRequestSelect?.({ reason: "itemPress", value })}
+      ref={ref}
+    >
+      {children}
+    </BaseMenu.Item>
+  );
+}
+
+MenuItem.displayName = "MenuItem";

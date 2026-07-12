@@ -83,6 +83,10 @@ Shared build and test configuration belongs in internal contract packages:
 
 - `contracts/build` centralizes shared `tsdown`, Vite, Tailwind, React, and Storybook Vite configuration.
 - `contracts/test` centralizes shared Vitest, React Testing Library, Playwright configuration, and test setup.
+- React source compiled in this repository must use the shared React Compiler wiring from
+  `contracts/build` or `contracts/test`. React library packages build with
+  `createReactTsdownConfig`; local opt-outs or ad hoc compiler setup require an explicit
+  architecture exception.
 
 Tooling ownership:
 

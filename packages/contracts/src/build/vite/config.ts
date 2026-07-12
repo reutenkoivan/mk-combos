@@ -1,6 +1,7 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type PluginOption, type UserConfig } from "vite";
+import { createReactCompilerBabelPlugin } from "#build/react-compiler/plugin";
 
 type PluginInput = PluginOption | PluginOption[] | undefined;
 
@@ -17,6 +18,12 @@ export const createViteConfig = (options: MkCombosViteConfig = {}) => {
 
   return defineConfig({
     ...config,
-    plugins: [tailwindcss(), ...toPluginArray(preReactPlugins), react(), ...toPluginArray(plugins)],
+    plugins: [
+      tailwindcss(),
+      ...toPluginArray(preReactPlugins),
+      react(),
+      createReactCompilerBabelPlugin(),
+      ...toPluginArray(plugins),
+    ],
   });
 };

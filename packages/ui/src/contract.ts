@@ -41,6 +41,18 @@ export const uiContractGroups = {
     type: "@mk-combos/ui/notation/type",
     value: "@mk-combos/ui/notation/value",
   },
+  primitives: {
+    button: "@mk-combos/ui/primitives/button",
+    dialog: "@mk-combos/ui/primitives/dialog",
+    disclosure: "@mk-combos/ui/primitives/disclosure",
+    field: "@mk-combos/ui/primitives/field",
+    focus: "@mk-combos/ui/primitives/focus",
+    layout: "@mk-combos/ui/primitives/layout",
+    menu: "@mk-combos/ui/primitives/menu",
+    popover: "@mk-combos/ui/primitives/popover",
+    segmentedControl: "@mk-combos/ui/primitives/segmented-control",
+    state: "@mk-combos/ui/primitives/state",
+  },
   styles: {
     css: "@mk-combos/ui/styles.css",
   },

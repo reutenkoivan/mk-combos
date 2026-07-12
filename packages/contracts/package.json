@@ -8,6 +8,7 @@
     "./dist/test/unit/setup.mjs"
   ],
   "imports": {
+    "#build/react-compiler/plugin": "./src/build/react-compiler/plugin.ts",
     "#env/schema": "./src/env/schema.ts"
   },
   "scripts": {
@@ -73,13 +74,17 @@
     }
   },
   "devDependencies": {
+    "@babel/core": "8.0.1",
     "@playwright/test": "1.61.1",
+    "@rolldown/plugin-babel": "0.2.3",
     "@tailwindcss/vite": "4.3.2",
     "@testing-library/jest-dom": "6.9.1",
     "@testing-library/react": "16.3.2",
     "@testing-library/user-event": "14.6.1",
+    "@types/babel__core": "7.20.5",
     "@types/node": "25.6.2",
     "@vitejs/plugin-react": "6.0.3",
+    "babel-plugin-react-compiler": "1.0.0",
     "tsdown": "0.22.3",
     "vite": "8.1.2",
     "vitest": "4.1.9"

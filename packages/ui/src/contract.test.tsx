@@ -1,5 +1,5 @@
 import { notationDisplayModes } from "@mk-combos/contracts/settings/type";
-import { render, screen } from "@mk-combos/contracts/test/unit/react";
+import { fireEvent, render, screen } from "@mk-combos/contracts/test/unit/react";
 import * as contractEntry from "@mk-combos/ui/contract";
 import { AlertTriangleIcon, alertTriangleIcon } from "@mk-combos/ui/icons/alert-triangle";
 import { CheckIcon, checkIcon } from "@mk-combos/ui/icons/check";
@@ -51,6 +51,75 @@ import {
   notationDisplayModes as notationValueDisplayModes,
   uiNotationTokens,
 } from "@mk-combos/ui/notation/value";
+import { Button, type ButtonPressPayload, IconButton } from "@mk-combos/ui/primitives/button";
+import {
+  DialogBackdrop,
+  DialogClose,
+  DialogDescription,
+  DialogPopup,
+  DialogPortal,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+  type DialogTriggerProps,
+} from "@mk-combos/ui/primitives/dialog";
+import {
+  DisclosurePanel,
+  DisclosureRoot,
+  DisclosureTrigger,
+} from "@mk-combos/ui/primitives/disclosure";
+import {
+  Field,
+  FieldLabel,
+  FieldMessage,
+  TextInput,
+  type TextInputChangePayload,
+} from "@mk-combos/ui/primitives/field";
+import {
+  createFocusTarget,
+  findFocusTarget,
+  getFocusTargetAttributes,
+  getFocusTargetSelector,
+  restoreFocusTarget,
+} from "@mk-combos/ui/primitives/focus";
+import {
+  Grid,
+  Group,
+  Panel,
+  Separator,
+  Stack,
+  Surface,
+  UiRoot,
+} from "@mk-combos/ui/primitives/layout";
+import {
+  MenuGroup,
+  MenuGroupLabel,
+  MenuItem,
+  type MenuItemSelectPayload,
+  MenuPopup,
+  MenuPortal,
+  MenuPositioner,
+  MenuRoot,
+  MenuTrigger,
+  type MenuTriggerProps,
+} from "@mk-combos/ui/primitives/menu";
+import {
+  PopoverClose,
+  type PopoverCloseProps,
+  PopoverDescription,
+  PopoverPopup,
+  PopoverPortal,
+  PopoverPositioner,
+  PopoverRoot,
+  PopoverTitle,
+  PopoverTrigger,
+  type PopoverTriggerProps,
+} from "@mk-combos/ui/primitives/popover";
+import {
+  SegmentedControl,
+  type SegmentedControlOption,
+} from "@mk-combos/ui/primitives/segmented-control";
+import { Badge, LoadingIndicator, StatusMessage } from "@mk-combos/ui/primitives/state";
 import {
   uiContrastModes as schemaContrastModes,
   uiDensityModes as schemaDensityModes,
@@ -140,6 +209,19 @@ const acceptsNotationTypes = <
   },
 >() => true;
 
+const acceptsPrimitiveTypes = <
+  _Primitive extends {
+    buttonPayload: ButtonPressPayload;
+    dialogTriggerProps: DialogTriggerProps;
+    inputPayload: TextInputChangePayload;
+    menuItemPayload: MenuItemSelectPayload<"edit">;
+    menuTriggerProps: MenuTriggerProps;
+    popoverCloseProps: PopoverCloseProps;
+    popoverTriggerProps: PopoverTriggerProps;
+    segmentOption: SegmentedControlOption<"EN" | "UA">;
+  },
+>() => true;
+
 const notationControllerControlTokens = [
   "faceSouth",
   "faceEast",
@@ -203,6 +285,18 @@ describe("@mk-combos/ui foundation", () => {
       schema: "@mk-combos/ui/notation/schema",
       type: "@mk-combos/ui/notation/type",
       value: "@mk-combos/ui/notation/value",
+    });
+    expect(contractEntry.uiContractGroups.primitives).toEqual({
+      button: "@mk-combos/ui/primitives/button",
+      dialog: "@mk-combos/ui/primitives/dialog",
+      disclosure: "@mk-combos/ui/primitives/disclosure",
+      field: "@mk-combos/ui/primitives/field",
+      focus: "@mk-combos/ui/primitives/focus",
+      layout: "@mk-combos/ui/primitives/layout",
+      menu: "@mk-combos/ui/primitives/menu",
+      popover: "@mk-combos/ui/primitives/popover",
+      segmentedControl: "@mk-combos/ui/primitives/segmented-control",
+      state: "@mk-combos/ui/primitives/state",
     });
     expect(contractEntry.uiContractGroups.styles.css).toBe("@mk-combos/ui/styles.css");
     expect(contractEntry.uiContractGroups.icons.gamepad2).toBe("@mk-combos/ui/icons/gamepad-2");
@@ -348,6 +442,213 @@ describe("@mk-combos/ui foundation", () => {
     expect(recipeBarrel.separatorRecipe).toBe(separatorRecipe);
     expect(recipeBarrel.surfaceRecipe).toBe(surfaceRecipe);
     expect(recipeBarrel.cx("a", false, "b")).toBe("a b");
+  });
+
+  it("renders public base primitives with semantic callbacks and stable states", () => {
+    const buttonPayloads: Array<{ reason: "press"; sourceFocusTarget?: string }> = [];
+    const inputPayloads: Array<{ reason: "inputChange"; value: string }> = [];
+    const segmentPayloads: Array<{ reason: string; value: "EN" | "UA" }> = [];
+
+    render(
+      <UiRoot contrast="increased" theme="dark">
+        <Stack density="medium">
+          <Surface material="separated">
+            <Panel density="medium">
+              <Grid columns="two">
+                <Group>
+                  <Button
+                    onRequestPress={(payload) => buttonPayloads.push(payload)}
+                    sourceFocusTarget="save-action"
+                    tone="accent"
+                  >
+                    Save
+                  </Button>
+                  <Button loading>Saving</Button>
+                  <IconButton label="Open actions">
+                    <MenuIcon decorative size={14} />
+                  </IconButton>
+                </Group>
+                <Group>
+                  <Badge tone="success">Ready</Badge>
+                  <LoadingIndicator label="Loading data" />
+                  <StatusMessage tone="warning">Needs review</StatusMessage>
+                </Group>
+              </Grid>
+              <Separator aria-label="Primitive split" />
+              <Field>
+                <FieldLabel htmlFor="query">Query</FieldLabel>
+                <TextInput
+                  id="query"
+                  onValueChange={(payload) => inputPayloads.push(payload)}
+                  placeholder="Search"
+                  value=""
+                />
+                <FieldMessage invalid>Required field</FieldMessage>
+              </Field>
+              <SegmentedControl
+                aria-label="Language"
+                onValueChange={(payload) => segmentPayloads.push(payload)}
+                options={[
+                  { label: "English", value: "EN" },
+                  { label: "Ukrainian", value: "UA" },
+                ]}
+                value="UA"
+              />
+            </Panel>
+          </Surface>
+        </Stack>
+      </UiRoot>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.change(screen.getByRole("textbox", { name: "Query" }), {
+      target: { value: "Scorpion" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "English" }));
+
+    expect(screen.getByRole("button", { name: "Saving" }).getAttribute("aria-busy")).toBe("true");
+    expect(screen.getByRole("button", { name: "Open actions" })).toBeTruthy();
+    expect(screen.getAllByRole("status")[0]?.textContent).toBe("Loading data");
+    expect(screen.getByRole("alert").textContent).toBe("Required field");
+    expect(screen.getByRole("separator", { name: "Primitive split" })).toBeTruthy();
+    expect(buttonPayloads[0]).toEqual({
+      reason: "press",
+      sourceFocusTarget: "save-action",
+    });
+    expect(inputPayloads[0]).toEqual({
+      reason: "inputChange",
+      value: "Scorpion",
+    });
+    expect(segmentPayloads[0]).toEqual({
+      reason: "none",
+      value: "EN",
+    });
+    expect(buttonPayloads[0]).not.toHaveProperty("event");
+    expect(inputPayloads[0]).not.toHaveProperty("event");
+    expect(segmentPayloads[0]).not.toHaveProperty("event");
+    expect(acceptsPrimitiveTypes()).toBe(true);
+  });
+
+  it("wraps Base UI disclosure, popover, and menu mechanics behind semantic surfaces", () => {
+    const disclosurePayloads: Array<{ open: boolean; reason: string; sourceFocusTarget?: string }> =
+      [];
+    const menuPayloads: Array<{ reason: "itemPress"; value: "edit" }> = [];
+
+    render(
+      <div>
+        <DialogRoot modal={false}>
+          <DialogTrigger>Open lightweight dialog</DialogTrigger>
+        </DialogRoot>
+
+        <DisclosureRoot
+          onOpenChange={(payload) => disclosurePayloads.push(payload)}
+          open={false}
+          sourceFocusTarget="backup-trigger"
+        >
+          <DisclosureTrigger>Backup details</DisclosureTrigger>
+          <DisclosurePanel>Collapsed backup content</DisclosurePanel>
+        </DisclosureRoot>
+
+        <PopoverRoot open>
+          <PopoverTrigger>Open popover</PopoverTrigger>
+          <PopoverPortal>
+            <PopoverPositioner>
+              <PopoverPopup>
+                <PopoverTitle>Controller hints</PopoverTitle>
+                <PopoverDescription>Hints stay in an anchored surface.</PopoverDescription>
+                <PopoverClose>Close popover</PopoverClose>
+              </PopoverPopup>
+            </PopoverPositioner>
+          </PopoverPortal>
+        </PopoverRoot>
+
+        <MenuRoot open>
+          <MenuTrigger>Open actions menu</MenuTrigger>
+          <MenuPortal>
+            <MenuPositioner>
+              <MenuPopup>
+                <MenuGroup>
+                  <MenuGroupLabel>Actions</MenuGroupLabel>
+                  <MenuItem onRequestSelect={(payload) => menuPayloads.push(payload)} value="edit">
+                    Edit
+                  </MenuItem>
+                </MenuGroup>
+              </MenuPopup>
+            </MenuPositioner>
+          </MenuPortal>
+        </MenuRoot>
+      </div>,
+    );
+
+    const trigger = screen.getByRole("button", { name: "Backup details" });
+
+    expect(screen.getByRole("button", { name: "Open lightweight dialog" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Open popover" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Close popover" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Open actions menu" })).toBeTruthy();
+    expect(trigger.getAttribute("aria-expanded")).toBe("false");
+    expect(screen.queryByText("Collapsed backup content")).toBeNull();
+    expect(screen.getByText("Controller hints")).toBeTruthy();
+
+    fireEvent.click(trigger);
+    fireEvent.click(screen.getByRole("menuitem", { name: "Edit" }));
+
+    expect(disclosurePayloads[0]).toEqual({
+      open: true,
+      reason: "triggerPress",
+      sourceFocusTarget: "backup-trigger",
+    });
+    expect(menuPayloads[0]).toEqual({
+      reason: "itemPress",
+      value: "edit",
+    });
+    expect(disclosurePayloads[0]).not.toHaveProperty("event");
+    expect(menuPayloads[0]).not.toHaveProperty("event");
+  });
+
+  it("renders modal dialog primitives with accessible title and close control", () => {
+    render(
+      <DialogRoot open>
+        <DialogPortal>
+          <DialogBackdrop />
+          <DialogPopup>
+            <DialogTitle>Confirm import</DialogTitle>
+            <DialogDescription>Review backup before replacing local data.</DialogDescription>
+            <DialogClose>Close dialog</DialogClose>
+          </DialogPopup>
+        </DialogPortal>
+      </DialogRoot>,
+    );
+
+    expect(screen.getByRole("dialog", { name: "Confirm import" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Close dialog" })).toBeTruthy();
+  });
+
+  it("restores focus through UI-owned focus target helpers", () => {
+    const target = createFocusTarget("return-action");
+
+    render(
+      <button {...getFocusTargetAttributes(target)} type="button">
+        Return action
+      </button>,
+    );
+
+    const element = screen.getByRole("button", { name: "Return action" });
+    const result = restoreFocusTarget(target);
+
+    expect(getFocusTargetSelector(target)).toBe('[data-ui-focus-target="return-action"]');
+    expect(findFocusTarget(target)).toBe(element);
+    expect(result).toEqual({
+      reason: "restored",
+      restored: true,
+      targetId: "return-action",
+    });
+    expect(document.activeElement).toBe(element);
+    expect(restoreFocusTarget("missing-action")).toEqual({
+      reason: "targetMissing",
+      restored: false,
+      targetId: "missing-action",
+    });
   });
 
   it("renders icon facade components with accessible defaults", () => {
