@@ -1,4 +1,8 @@
-import { mkxlCatalogContextStatuses, mkxlCatalogRecoveryCodes } from "./context/value";
+import {
+  mkxlCatalogContextStatuses,
+  mkxlCatalogOptionAvailabilities,
+  mkxlCatalogRecoveryCodes,
+} from "./context/value";
 import {
   mkxlCatalogFilterIds,
   mkxlCatalogMultiSelectFilterIds,
@@ -34,6 +38,7 @@ export const mkCombosMkxlCatalog = {
     mkxlCatalogContextStatuses,
     mkxlCatalogFilterIds,
     mkxlCatalogMultiSelectFilterIds,
+    mkxlCatalogOptionAvailabilities,
     mkxlCatalogRangeFilterIds,
     mkxlCatalogRecoveryCodes,
   },

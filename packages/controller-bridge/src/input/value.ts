@@ -1,34 +1,40 @@
-export const controllerControlIds = [
-  "faceSouth",
-  "faceEast",
-  "faceWest",
-  "faceNorth",
-  "leftShoulder",
-  "rightShoulder",
-  "leftTrigger",
-  "rightTrigger",
-  "select",
-  "start",
-  "leftStickPress",
-  "rightStickPress",
-  "dpadUp",
-  "dpadDown",
-  "dpadLeft",
-  "dpadRight",
-  "home",
-  "leftStickLeft",
-  "leftStickRight",
-  "leftStickUp",
-  "leftStickDown",
-  "rightStickLeft",
-  "rightStickRight",
-  "rightStickUp",
-  "rightStickDown",
-] as const;
+export const controllerControlIds = {
+  dpadDown: "dpadDown",
+  dpadLeft: "dpadLeft",
+  dpadRight: "dpadRight",
+  dpadUp: "dpadUp",
+  faceEast: "faceEast",
+  faceNorth: "faceNorth",
+  faceSouth: "faceSouth",
+  faceWest: "faceWest",
+  home: "home",
+  leftShoulder: "leftShoulder",
+  leftStickDown: "leftStickDown",
+  leftStickLeft: "leftStickLeft",
+  leftStickPress: "leftStickPress",
+  leftStickRight: "leftStickRight",
+  leftStickUp: "leftStickUp",
+  leftTrigger: "leftTrigger",
+  rightShoulder: "rightShoulder",
+  rightStickDown: "rightStickDown",
+  rightStickLeft: "rightStickLeft",
+  rightStickPress: "rightStickPress",
+  rightStickRight: "rightStickRight",
+  rightStickUp: "rightStickUp",
+  rightTrigger: "rightTrigger",
+  select: "select",
+  start: "start",
+} as const;
 
-export const controllerControlSources = ["button", "axis"] as const;
+export const controllerControlSources = {
+  axis: "axis",
+  button: "button",
+} as const;
 
-export const controllerAxisDirections = ["negative", "positive"] as const;
+export const controllerAxisDirections = {
+  negative: "negative",
+  positive: "positive",
+} as const;
 
 export const standardGamepadButtonControls = [
   { id: "faceSouth", buttonIndex: 0 },

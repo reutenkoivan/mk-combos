@@ -1,5 +1,5 @@
 import { builderReplayStatuses } from "./replay/value";
-import { builderComboStateStatuses } from "./stale/value";
+import { builderComboStateStatuses, builderInvalidComboStateStatuses } from "./stale/value";
 import { builderTransitionStatuses } from "./transition/value";
 
 export const builderCoreContractGroups = {
@@ -36,6 +36,7 @@ export const mkCombosBuilderCore = {
   groups: builderCoreContractGroups,
   valueSets: {
     builderComboStateStatuses,
+    builderInvalidComboStateStatuses,
     builderReplayStatuses,
     builderTransitionStatuses,
   },

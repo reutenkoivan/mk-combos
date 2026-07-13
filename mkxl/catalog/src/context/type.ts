@@ -5,6 +5,7 @@ import type {
   MkxlCatalogContextOptionsSchema,
   MkxlCatalogContextSchema,
   MkxlCatalogContextStatusSchema,
+  MkxlCatalogOptionAvailabilitySchema,
   MkxlCatalogRecoveryCodeSchema,
   MkxlCatalogRecoverySchema,
   MkxlCatalogRequiredContextSchema,
@@ -20,6 +21,7 @@ export {
 } from "./value";
 
 export type MkxlCatalogContextStatus = z.output<typeof MkxlCatalogContextStatusSchema>;
+export type MkxlCatalogOptionAvailability = z.output<typeof MkxlCatalogOptionAvailabilitySchema>;
 
 export type MkxlCatalogRecoveryCode = z.output<typeof MkxlCatalogRecoveryCodeSchema>;
 

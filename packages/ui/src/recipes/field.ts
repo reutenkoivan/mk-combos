@@ -4,12 +4,37 @@ export const fieldRecipe = tv({
   base: [
     "inline-flex w-full items-center gap-2 border border-[var(--ui-control-border)]",
     "bg-[var(--ui-field)] text-[var(--ui-text)] shadow-[inset_0_1px_2px_rgb(18_28_45_/_6%)]",
-    "outline-none transition-[border-color,box-shadow]",
+    "cursor-text outline-none transition-[border-color,box-shadow]",
     "placeholder:text-[var(--ui-placeholder)]",
-    "data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50",
+    "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50",
   ].join(" "),
+  compoundVariants: [
+    {
+      class: "enabled:hover:border-[color-mix(in_srgb,var(--ui-destructive)_88%,var(--ui-text))]",
+      editable: true,
+      tone: "destructive",
+    },
+    {
+      class:
+        "enabled:hover:border-[color-mix(in_srgb,var(--ui-success-border)_82%,var(--ui-text))]",
+      editable: true,
+      tone: "success",
+    },
+    {
+      class:
+        "enabled:hover:border-[color-mix(in_srgb,var(--ui-warning-border)_82%,var(--ui-text))]",
+      editable: true,
+      tone: "warning",
+    },
+    {
+      class: "enabled:hover:border-[color-mix(in_srgb,var(--ui-destructive)_88%,var(--ui-text))]",
+      editable: true,
+      state: "invalid",
+    },
+  ],
   defaultVariants: {
     density: "medium",
+    editable: true,
     shape: "fixed",
     state: "idle",
     tone: "neutral",
@@ -20,6 +45,10 @@ export const fieldRecipe = tv({
       mini: "min-h-6 px-2 text-xs",
       small: "min-h-7 px-2 text-[13px]",
     },
+    editable: {
+      false: "",
+      true: "enabled:hover:border-[var(--ui-accent)]",
+    },
     shape: {
       capsule: "rounded-full",
       concentric: "rounded-[calc(var(--ui-radius-control)-2px)]",
@@ -27,7 +56,7 @@ export const fieldRecipe = tv({
     },
     state: {
       active: "border-[var(--ui-accent)]",
-      disabled: "pointer-events-none opacity-50",
+      disabled: "cursor-not-allowed opacity-50",
       focusVisible: "shadow-[var(--ui-focus-ring)]",
       hover: "border-[var(--ui-accent)]",
       idle: "",

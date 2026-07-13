@@ -1,4 +1,5 @@
 import { ComboIdSchema } from "@mk-combos/contracts/identity/schema";
+import { comboSources } from "@mk-combos/contracts/identity/value";
 import { z } from "zod/v4";
 
 import { Mk1InputNotationValueSchema } from "../movelists/schema";
@@ -35,7 +36,7 @@ export const Mk1ComboMetadataSchema = z
 export const Mk1SeededComboSchema = z
   .object({
     id: ComboIdSchema,
-    source: z.literal("seeded"),
+    source: z.literal(comboSources.seeded),
     gameId: z.literal("mk1"),
     title: Mk1LabelSchema,
     characterId: Mk1IdSchema,

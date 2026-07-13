@@ -448,3 +448,13 @@ UI-CMP-006 First-Launch Setup Form
 - Точний текст capabilities summary буде визначено під час UI copy pass.
 - Точний browser locale fallback для default language належить app-level settings logic.
 - Точний вигляд persistence warning буде узгоджено з shared system message styles.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

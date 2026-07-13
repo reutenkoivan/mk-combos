@@ -1,19 +1,21 @@
 import { mkxlXlFinalInputNotationValues } from "../packs/xl-final/notation";
 
-export const mkxlMoveCategories = [
-  "normal",
-  "string",
-  "throw",
-  "special",
-  "enhanced",
-  "xray",
-  "variation",
-  "stage",
-  "mechanic",
-] as const;
+export const mkxlMoveCategories = {
+  enhanced: "enhanced",
+  mechanic: "mechanic",
+  normal: "normal",
+  special: "special",
+  stage: "stage",
+  string: "string",
+  throw: "throw",
+  variation: "variation",
+  xray: "xray",
+} as const;
 
 export const mkxlInputNotationValues = mkxlXlFinalInputNotationValues;
 
 export const mkxlMoveNotationValues = mkxlInputNotationValues;
 
-export const mkxlInputsRegistry = mkxlInputNotationValues.map((notation) => ({ notation }));
+export const mkxlInputsRegistry = Object.values(mkxlInputNotationValues).map((notation) => ({
+  notation,
+}));

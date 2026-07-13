@@ -1,6 +1,6 @@
 import type { MkxlAuthoredCharacterMoves } from "../../../type";
 import { mkxlXlFinalCharacterIds as characterIds } from "../../character-ids";
-import { mkxlXlFinalFgcNotation as fgcNotation } from "../../notation";
+import { mkxlXlFinalInputNotationValues as fgcNotation } from "../../notation";
 
 const characterId = characterIds.jacquiBriggs;
 

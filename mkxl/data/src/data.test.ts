@@ -24,7 +24,10 @@ import { mkxlXlFinalPack } from "./packs/xl-final";
 import { mkxlXlFinalCharacterIds } from "./packs/xl-final/character-ids";
 import { mkxlXlFinalGeneralMoves } from "./packs/xl-final/moves/characters/general";
 import { scorpionMoves } from "./packs/xl-final/moves/characters/scorpion";
-import { mkxlXlFinalFgcNotation, mkxlXlFinalInputNotationValues } from "./packs/xl-final/notation";
+import {
+  mkxlXlFinalInputNotationOrder,
+  mkxlXlFinalInputNotationValues,
+} from "./packs/xl-final/notation";
 
 const authoredPackRootPath = join(process.cwd(), "src/packs/xl-final");
 const comboCharactersRootPath = join(process.cwd(), "src/packs/xl-final/combos/characters");
@@ -265,7 +268,7 @@ const createMovelistAlignmentSnapshot = () => {
   const registrySourcePaths: string[] = [];
   const sourcePathsOnDisk = collectCharacterSourcePaths(movelistCharactersRootPath);
   const moveTreeRegistryEntries = Object.entries(mkxlMoveTreeRegistry);
-  const moveNotationValues = new Set(mkxlMoveNotationValues);
+  const moveNotationValues = new Set(Object.values(mkxlMoveNotationValues));
   const moveTreeByCharacterId = new Map<string, unknown>();
   const movelistByCharacterId = new Map<string, (typeof mkxlMovelistFileRegistry)[number]>();
   const moveTreeCharacterIds = new Set<string>();
@@ -450,48 +453,49 @@ describe("MKXL seeded data", () => {
 
   it("keeps the xl-final FGC notation registry explicit and controller-atomic", () => {
     const notationSourceText = readFileSync(join(authoredPackRootPath, "notation.ts"), "utf8");
-    const registryValues = Object.values(mkxlXlFinalFgcNotation);
+    const registryValues = Object.values(mkxlXlFinalInputNotationValues);
 
-    expect(notationSourceText).toContain("mkxlXlFinalFgcNotation");
     expect(notationSourceText).toContain("mkxlXlFinalInputNotationValues");
     expect(notationSourceText).not.toContain("mkxlXlFinalStandardMoveNotation");
     expect(notationSourceText).not.toContain("mkxlXlFinalStandardMoveNotationValues");
     expect(notationSourceText).not.toMatch(/\bObject\.values\s*\(/u);
     expect(notationSourceText).not.toMatch(/\.(map|flatMap)\s*\(/u);
-    expect(Object.keys(mkxlXlFinalFgcNotation).some((key) => key.startsWith("community"))).toBe(
-      false,
-    );
+    expect(
+      Object.keys(mkxlXlFinalInputNotationValues).some((key) => key.startsWith("community")),
+    ).toBe(false);
     expect(new Set(registryValues).size).toBe(registryValues.length);
-    expect(new Set(mkxlXlFinalInputNotationValues)).toEqual(new Set(registryValues));
+    expect(new Set(Object.values(mkxlXlFinalInputNotationValues))).toEqual(new Set(registryValues));
     expect(mkxlInputNotationValues).toBe(mkxlXlFinalInputNotationValues);
-    expect(activeMkxlDataset.inputNotationValues).toBe(mkxlXlFinalInputNotationValues);
-    expect(mkxlInputNotationValues).toEqual([
-      "1",
-      "2",
-      "3",
-      "4",
-      "BLK",
-      "SS",
-      "INT",
-      "AMP",
-      "U",
-      "D",
-      "B",
-      "F",
-    ]);
-    expect(mkxlInputNotationValues).toContain(mkxlXlFinalFgcNotation.amplify);
-    expect(mkxlInputNotationValues).not.toContain("RUN");
-    expect(mkxlInputNotationValues).not.toContain("BF2");
-    expect(mkxlInputNotationValues).not.toContain("BF4+BLK");
-    expect(mkxlMoveNotationValues).toEqual(mkxlInputNotationValues);
+    expect(activeMkxlDataset.inputNotationValues).toBe(mkxlXlFinalInputNotationOrder);
+    expect(mkxlInputNotationValues).toEqual({
+      amplify: "AMP",
+      back: "B",
+      block: "BLK",
+      down: "D",
+      forward: "F",
+      four: "4",
+      interactable: "INT",
+      one: "1",
+      stanceSwitch: "SS",
+      three: "3",
+      two: "2",
+      up: "U",
+    });
+    expect(Object.values(mkxlInputNotationValues)).toContain(
+      mkxlXlFinalInputNotationValues.amplify,
+    );
+    expect(Object.values(mkxlInputNotationValues)).not.toContain("RUN");
+    expect(Object.values(mkxlInputNotationValues)).not.toContain("BF2");
+    expect(Object.values(mkxlInputNotationValues)).not.toContain("BF4+BLK");
+    expect(mkxlMoveNotationValues).toBe(mkxlInputNotationValues);
     expect(MkxlInputNotationValueSchema.safeParse("RUN").success).toBe(false);
     expect(MkxlInputNotationValueSchema.safeParse("BF2").success).toBe(false);
     expect(MkxlInputNotationValueSchema.safeParse("BF4+BLK").success).toBe(false);
     expect(MkxlInputNotationValueSchema.safeParse("AMP").success).toBe(true);
     expect(MkxlMoveNotationValueSchema.safeParse("RUN").success).toBe(false);
-    expect(MkxlMoveNotationValueSchema.safeParse(mkxlXlFinalFgcNotation.amplify).success).toBe(
-      true,
-    );
+    expect(
+      MkxlMoveNotationValueSchema.safeParse(mkxlXlFinalInputNotationValues.amplify).success,
+    ).toBe(true);
   });
 
   it("keeps xl-final general moves explicit and input-derived", () => {
@@ -507,7 +511,11 @@ describe("MKXL seeded data", () => {
     expect(mkxlXlFinalGeneralMoves.universal.run).toMatchObject({
       id: "general:run",
       category: "mechanic",
-      notation: [mkxlXlFinalFgcNotation.forward, mkxlXlFinalFgcNotation.forward, "BLK"],
+      notation: [
+        mkxlXlFinalInputNotationValues.forward,
+        mkxlXlFinalInputNotationValues.forward,
+        "BLK",
+      ],
       sourceIds: ["in-game-practice-mode"],
     });
   });
@@ -520,12 +528,16 @@ describe("MKXL seeded data", () => {
       (combo) => combo.id === "raiden-thunder-god-community-beginner-017",
     );
 
-    expect(mkxlMoveCategories).toContain("mechanic");
+    expect(Object.values(mkxlMoveCategories)).toContain("mechanic");
     expect(runMove).toMatchObject({
       id: "general:run",
       characterId: "general",
       category: "mechanic",
-      notation: [mkxlXlFinalFgcNotation.forward, mkxlXlFinalFgcNotation.forward, "BLK"],
+      notation: [
+        mkxlXlFinalInputNotationValues.forward,
+        mkxlXlFinalInputNotationValues.forward,
+        "BLK",
+      ],
       sourceIds: ["in-game-practice-mode"],
     });
     expect(movesById.has("scorpion:run")).toBe(false);
@@ -535,8 +547,8 @@ describe("MKXL seeded data", () => {
     expect(generalMovelist?.movelist).toContain(runMove);
     expect(combo?.movePath).toContain("general:run");
     expect(combo?.notation).toContainEqual([
-      mkxlXlFinalFgcNotation.forward,
-      mkxlXlFinalFgcNotation.forward,
+      mkxlXlFinalInputNotationValues.forward,
+      mkxlXlFinalInputNotationValues.forward,
       "BLK",
     ]);
   });
@@ -641,7 +653,7 @@ describe("MKXL seeded data", () => {
   });
 
   it("keeps authored move notation sourced from the xl-final registry", () => {
-    const registryKeys = new Set(Object.keys(mkxlXlFinalFgcNotation));
+    const registryKeys = new Set(Object.keys(mkxlXlFinalInputNotationValues));
     const sourcePathsOnDisk = collectCharacterSourcePaths(movelistCharactersRootPath);
 
     for (const sourcePath of sourcePathsOnDisk) {
@@ -649,7 +661,7 @@ describe("MKXL seeded data", () => {
       const notationBlocks = [...sourceText.matchAll(/notation:\s*\[(?<body>[\s\S]*?)\]/gu)];
 
       expect(sourceText).toContain(
-        'import { mkxlXlFinalFgcNotation as fgcNotation } from "../../notation";',
+        'import { mkxlXlFinalInputNotationValues as fgcNotation } from "../../notation";',
       );
       expect(sourceText).not.toMatch(/notation:\s*\[\s*["']/u);
       expect(notationBlocks.length).toBeGreaterThan(0);
@@ -732,7 +744,7 @@ describe("MKXL seeded data", () => {
 
   it("keeps combo routes built from moves", () => {
     const movesById = createMoveLookup();
-    const moveNotationValues = new Set(mkxlMoveNotationValues);
+    const moveNotationValues = new Set(Object.values(mkxlMoveNotationValues));
 
     for (const combo of mkxlSeededCombos) {
       const expectedMovePath = [];
@@ -767,9 +779,9 @@ describe("MKXL seeded data", () => {
         fallback: "Test Patch Technique",
       },
       notation: [
-        mkxlXlFinalFgcNotation.down,
-        mkxlXlFinalFgcNotation.back,
-        mkxlXlFinalFgcNotation.one,
+        mkxlXlFinalInputNotationValues.down,
+        mkxlXlFinalInputNotationValues.back,
+        mkxlXlFinalInputNotationValues.one,
       ],
       category: "variation",
       availability: {

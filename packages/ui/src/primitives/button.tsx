@@ -2,12 +2,14 @@ import type { ReactNode } from "react";
 
 import { InternalButton } from "../internal/base-ui/button";
 import type {
+  UiControlPresentationMode,
   UiDensityMode,
   UiEmphasisMode,
   UiPlacementMode,
   UiShapeMode,
   UiToneMode,
 } from "../tokens/type";
+import { uiControlPresentationModes } from "../tokens/value";
 import type { UiPrimitiveProps } from "./internal";
 
 export type ButtonPressPayload = {
@@ -16,6 +18,7 @@ export type ButtonPressPayload = {
 };
 
 export type ButtonProps = UiPrimitiveProps<HTMLButtonElement> & {
+  appearance?: UiControlPresentationMode;
   disabled?: boolean;
   density?: UiDensityMode;
   emphasis?: UiEmphasisMode;
@@ -64,7 +67,12 @@ export function IconButton(props: IconButtonProps) {
   const { children, label, ...buttonProps } = props;
 
   return (
-    <Button {...buttonProps} aria-label={label} data-ui-icon-button>
+    <Button
+      {...buttonProps}
+      appearance={uiControlPresentationModes.icon}
+      aria-label={label}
+      data-ui-icon-button
+    >
       {children}
     </Button>
   );

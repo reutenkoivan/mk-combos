@@ -1,4 +1,6 @@
+import type { NotationDisplayMode } from "@mk-combos/contracts/settings/type";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useState } from "react";
 
 import { AlertTriangleIcon } from "../icons/alert-triangle";
 import { CheckIcon } from "../icons/check";
@@ -19,7 +21,16 @@ import { notationDisplayModes, uiNotationTokenKinds, uiNotationTokens } from "..
 import { Button, IconButton } from "../primitives/button";
 import { DisclosurePanel, DisclosureRoot, DisclosureTrigger } from "../primitives/disclosure";
 import { Field, FieldLabel, FieldMessage, TextInput } from "../primitives/field";
-import { Grid, Group, Panel, Separator, Stack, Surface } from "../primitives/layout";
+import {
+  Grid,
+  Group,
+  gridColumnModes,
+  Panel,
+  Separator,
+  Stack,
+  Surface,
+  separatorOrientations,
+} from "../primitives/layout";
 import { SegmentedControl } from "../primitives/segmented-control";
 import { Badge, LoadingIndicator, StatusMessage } from "../primitives/state";
 import { cx } from "../recipes/class-name";
@@ -29,7 +40,20 @@ import { indicatorRecipe } from "../recipes/indicator";
 import { itemRecipe } from "../recipes/item";
 import { separatorRecipe } from "../recipes/separator";
 import { surfaceRecipe } from "../recipes/surface";
-import { uiSemanticTokens } from "../tokens/value";
+import type { UiContrastMode, UiThemeMode } from "../tokens/type";
+import {
+  uiContrastModes,
+  uiDensityModes,
+  uiEmphasisModes,
+  uiInteractionStates,
+  uiMaterialModes,
+  uiPlacementModes,
+  uiSelectionStates,
+  uiSemanticTokens,
+  uiShapeModes,
+  uiThemeModes,
+  uiToneModes,
+} from "../tokens/value";
 
 const meta = {
   component: FoundationStorySurface,
@@ -86,7 +110,7 @@ const notationRegistryTokenGroups = notationRegistryKindOrder
   .map((kind) => ({
     kind,
     label: notationRegistryKindLabels[kind],
-    tokens: uiNotationTokens.filter((token) => uiNotationTokenKinds[token] === kind),
+    tokens: Object.values(uiNotationTokens).filter((token) => uiNotationTokenKinds[token] === kind),
   }))
   .filter((group) => group.tokens.length > 0);
 
@@ -97,11 +121,11 @@ function FoundationStorySurface() {
 }
 
 const StoryFrame = (props: {
-  contrast?: "standard" | "increased";
-  mode?: "light" | "dark";
+  contrast?: UiContrastMode;
+  mode?: UiThemeMode;
   children: React.ReactNode;
 }) => {
-  const { children, contrast = "standard", mode = "light" } = props;
+  const { children, contrast = uiContrastModes.standard, mode = uiThemeModes.dark } = props;
 
   return (
     <div
@@ -117,7 +141,11 @@ const StoryFrame = (props: {
 const Section = (props: { children: React.ReactNode; title: string }) => (
   <section
     className={cx(
-      surfaceRecipe({ density: "medium", material: "separated", shape: "fixed" }),
+      surfaceRecipe({
+        density: uiDensityModes.medium,
+        material: uiMaterialModes.separated,
+        shape: uiShapeModes.fixed,
+      }),
       "flex flex-col gap-3",
     )}
   >
@@ -147,22 +175,41 @@ const TokenGrid = () => (
 const RecipeMatrix = () => (
   <div className="grid gap-3">
     <div className="flex flex-wrap gap-2">
-      <button className={controlRecipe({ emphasis: "normal", tone: "neutral" })} type="button">
+      <button
+        className={controlRecipe({
+          emphasis: uiEmphasisModes.normal,
+          tone: uiToneModes.neutral,
+        })}
+        type="button"
+      >
         Neutral
       </button>
-      <button className={controlRecipe({ emphasis: "prominent", tone: "accent" })} type="button">
+      <button
+        className={controlRecipe({
+          emphasis: uiEmphasisModes.prominent,
+          tone: uiToneModes.accent,
+        })}
+        type="button"
+      >
         Accent
       </button>
       <button
-        className={controlRecipe({ emphasis: "prominent", tone: "destructive" })}
+        className={controlRecipe({
+          emphasis: uiEmphasisModes.prominent,
+          tone: uiToneModes.destructive,
+        })}
         type="button"
       >
         Destructive
       </button>
-      <button className={controlRecipe({ state: "disabled" })} disabled type="button">
+      <button
+        className={controlRecipe({ state: uiInteractionStates.disabled })}
+        disabled
+        type="button"
+      >
         Disabled
       </button>
-      <button className={controlRecipe({ state: "loading" })} type="button">
+      <button className={controlRecipe({ state: uiInteractionStates.loading })} type="button">
         Loading
       </button>
     </div>
@@ -170,107 +217,162 @@ const RecipeMatrix = () => (
     <div className="grid gap-2 md:grid-cols-2">
       <input
         aria-label="Search notation"
-        className={fieldRecipe({ state: "idle" })}
+        className={fieldRecipe({ state: uiInteractionStates.idle })}
         placeholder="Search notation"
       />
       <input
         aria-invalid="true"
         aria-label="Invalid route name"
-        className={fieldRecipe({ state: "invalid" })}
+        className={fieldRecipe({ state: uiInteractionStates.invalid })}
         defaultValue="Long localized route label without overlap"
       />
     </div>
 
     <div className="grid gap-2">
-      <div className={itemRecipe({ selection: "selected" })}>
-        <span className={indicatorRecipe({ tone: "accent" })}>1</span>
+      <div className={itemRecipe({ selection: uiSelectionStates.selected })}>
+        <span className={indicatorRecipe({ tone: uiToneModes.accent })}>1</span>
         <span>Selected row keeps stable density</span>
         <span className="text-[var(--ui-muted-text)]">⌘K</span>
       </div>
-      <div className={itemRecipe({ state: "invalid", tone: "destructive" })}>
-        <span className={indicatorRecipe({ state: "invalid", tone: "destructive" })}>!</span>
+      <div
+        className={itemRecipe({
+          state: uiInteractionStates.invalid,
+          tone: uiToneModes.destructive,
+        })}
+      >
+        <span
+          className={indicatorRecipe({
+            state: uiInteractionStates.invalid,
+            tone: uiToneModes.destructive,
+          })}
+        >
+          !
+        </span>
         <span>Invalid state does not rely on color alone</span>
         <span className="text-[var(--ui-muted-text)]">State</span>
       </div>
-      <div className={separatorRecipe({ orientation: "horizontal" })} />
+      <div className={separatorRecipe({ orientation: separatorOrientations.horizontal })} />
     </div>
   </div>
 );
 
-const PrimitiveMatrix = () => (
-  <Stack density="medium">
-    <Surface material="separated">
-      <Panel density="medium">
-        <Grid columns="two">
-          <Stack>
-            <Group>
-              <Button tone="accent">Save</Button>
-              <Button loading>Saving</Button>
-              <Button disabled>Disabled</Button>
-              <IconButton label="Open actions">
-                <MenuIcon decorative size={14} />
-              </IconButton>
-            </Group>
+const PrimitiveMatrix = () => {
+  const [displayMode, setDisplayMode] = useState<NotationDisplayMode>(
+    notationDisplayModes.PlayStation,
+  );
+  const [disclosureOpen, setDisclosureOpen] = useState(true);
+  const [query, setQuery] = useState("Very long localized input value without layout shift");
+  const [status, setStatus] = useState("Primitives are ready for interaction");
 
-            <Group>
-              <Badge tone="success">Ready</Badge>
-              <Badge tone="warning">Stale</Badge>
-              <LoadingIndicator label="Loading primitives" />
-            </Group>
-          </Stack>
-
-          <Field>
-            <FieldLabel htmlFor="primitive-query">Search</FieldLabel>
-            <TextInput
-              aria-describedby="primitive-query-message"
-              id="primitive-query"
-              invalid
-              placeholder="Find combo"
-              value="Very long localized input value without layout shift"
-            />
-            <FieldMessage id="primitive-query-message" invalid>
-              Invalid state stays adjacent to the field.
-            </FieldMessage>
-          </Field>
-        </Grid>
-
-        <Separator />
-
-        <Stack>
-          <SegmentedControl
-            aria-label="Display mode"
-            options={[
-              { label: "FGC", value: "FGC" },
-              { label: "PlayStation", value: "PlayStation" },
-              { label: "Xbox", value: "Xbox" },
-            ]}
-            value="PlayStation"
-          />
-          <StatusMessage tone="warning">
-            Long status text wraps inside its owning panel without overlapping neighboring controls.
-          </StatusMessage>
-        </Stack>
-
-        <DisclosureRoot open>
-          <DisclosureTrigger>
-            Open primitive disclosure with a long localized label
-          </DisclosureTrigger>
-          <DisclosurePanel>
+  return (
+    <Stack density={uiDensityModes.medium}>
+      <Surface material={uiMaterialModes.separated}>
+        <Panel density={uiDensityModes.medium}>
+          <Grid columns={gridColumnModes.two}>
             <Stack>
-              <span>
-                Expanded panel content uses surface tokens and remains in regular reading order.
-              </span>
               <Group>
-                <Button tone="accent">Primary action</Button>
-                <Button tone="destructive">Destructive action</Button>
+                <Button
+                  onRequestPress={() => setStatus("Save requested")}
+                  tone={uiToneModes.accent}
+                >
+                  Save
+                </Button>
+                <Button loading>Saving</Button>
+                <Button disabled>Disabled</Button>
+                <IconButton
+                  label="Open actions"
+                  onRequestPress={() => setStatus("Icon action requested")}
+                >
+                  <MenuIcon decorative size={14} />
+                </IconButton>
+              </Group>
+
+              <Group>
+                <Badge tone={uiToneModes.success}>Ready</Badge>
+                <Badge tone={uiToneModes.warning}>Stale</Badge>
+                <LoadingIndicator label="Loading primitives" />
               </Group>
             </Stack>
-          </DisclosurePanel>
-        </DisclosureRoot>
-      </Panel>
-    </Surface>
-  </Stack>
-);
+
+            <Field>
+              <FieldLabel htmlFor="primitive-query">Search</FieldLabel>
+              <TextInput
+                aria-describedby="primitive-query-message"
+                id="primitive-query"
+                invalid
+                onValueChange={({ value }) => {
+                  setQuery(value);
+                  setStatus(`Search value: ${value || "empty"}`);
+                }}
+                placeholder="Find combo"
+                value={query}
+              />
+              <FieldMessage id="primitive-query-message" invalid>
+                Invalid state stays adjacent to the field.
+              </FieldMessage>
+            </Field>
+          </Grid>
+
+          <Separator />
+
+          <Stack>
+            <SegmentedControl
+              aria-label="Display mode"
+              onValueChange={({ value }) => {
+                setDisplayMode(value);
+                setStatus(`Display mode selected: ${value}`);
+              }}
+              options={[
+                { label: "FGC", value: notationDisplayModes.FGC },
+                { label: "PlayStation", value: notationDisplayModes.PlayStation },
+                { label: "Xbox", value: notationDisplayModes.Xbox },
+              ]}
+              value={displayMode}
+            />
+            <StatusMessage aria-live="polite">{status}</StatusMessage>
+            <StatusMessage tone={uiToneModes.warning}>
+              Long status text wraps inside its owning panel without overlapping neighboring
+              controls.
+            </StatusMessage>
+          </Stack>
+
+          <DisclosureRoot
+            onOpenChange={({ open }) => {
+              setDisclosureOpen(open);
+              setStatus(`Disclosure ${open ? "expanded" : "collapsed"}`);
+            }}
+            open={disclosureOpen}
+          >
+            <DisclosureTrigger>
+              Open primitive disclosure with a long localized label
+            </DisclosureTrigger>
+            <DisclosurePanel>
+              <Stack>
+                <span>
+                  Expanded panel content uses surface tokens and remains in regular reading order.
+                </span>
+                <Group>
+                  <Button
+                    onRequestPress={() => setStatus("Primary action requested")}
+                    tone={uiToneModes.accent}
+                  >
+                    Primary action
+                  </Button>
+                  <Button
+                    onRequestPress={() => setStatus("Destructive action requested")}
+                    tone={uiToneModes.destructive}
+                  >
+                    Destructive action
+                  </Button>
+                </Group>
+              </Stack>
+            </DisclosurePanel>
+          </DisclosureRoot>
+        </Panel>
+      </Surface>
+    </Stack>
+  );
+};
 
 const IconMatrix = () => (
   <div className="flex flex-wrap gap-2">
@@ -286,14 +388,14 @@ const IconMatrix = () => (
 );
 
 const NotationMatrix = () => {
-  const legendRows = createNotationLegendRows(notationDisplayModes);
+  const legendRows = createNotationLegendRows(Object.values(notationDisplayModes));
 
   return (
     <div className="grid gap-3">
       <div className="grid gap-2">
         {legendRows.map((row) => (
-          <div className={itemRecipe({ density: "small" })} key={row.mode}>
-            <NotationIcon descriptor={row.modeIcon} tone="accent" />
+          <div className={itemRecipe({ density: uiDensityModes.small })} key={row.mode}>
+            <NotationIcon descriptor={row.modeIcon} tone={uiToneModes.accent} />
             <span className="flex flex-wrap gap-1">
               {row.markerIcons.map((icon) => (
                 <NotationIcon descriptor={icon} key={icon.iconName} />
@@ -309,7 +411,7 @@ const NotationMatrix = () => {
           <div className="grid gap-2" key={group.kind}>
             <span className="text-xs font-semibold text-[var(--ui-muted-text)]">{group.label}</span>
             <div className="grid gap-1">
-              {notationDisplayModes.map((mode) => (
+              {Object.values(notationDisplayModes).map((mode) => (
                 <div
                   className="grid items-start gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]"
                   key={`${group.kind}-${mode}`}
@@ -337,7 +439,7 @@ const NotationMatrix = () => {
 
       <div className="grid gap-1">
         <span className="text-xs font-semibold text-[var(--ui-muted-text)]">Fallback</span>
-        {notationDisplayModes.map((mode) => (
+        {Object.values(notationDisplayModes).map((mode) => (
           <div
             className="grid items-start gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]"
             key={`fallback-${mode}`}
@@ -379,7 +481,7 @@ export const Default: Story = {
 
 export const DarkIncreasedContrast: Story = {
   render: () => (
-    <StoryFrame contrast="increased" mode="dark">
+    <StoryFrame contrast={uiContrastModes.increased} mode={uiThemeModes.dark}>
       <Section title="Dark Increased Contrast Recipes">
         <RecipeMatrix />
       </Section>
@@ -393,26 +495,52 @@ export const DarkIncreasedContrast: Story = {
   ),
 };
 
+export const LightThemeReference: Story = {
+  render: () => (
+    <StoryFrame mode={uiThemeModes.light}>
+      <Section title="Light Theme Recipes">
+        <RecipeMatrix />
+      </Section>
+      <Section title="Light Theme Primitives">
+        <PrimitiveMatrix />
+      </Section>
+    </StoryFrame>
+  ),
+};
+
 export const LongLabelsAndStates: Story = {
   render: () => (
-    <StoryFrame contrast="increased">
+    <StoryFrame contrast={uiContrastModes.increased}>
       <Section title="Long Labels, Disabled, Invalid">
         <div className="grid gap-2">
           <button
-            className={controlRecipe({ placement: "block", state: "disabled" })}
+            className={controlRecipe({
+              placement: uiPlacementModes.block,
+              state: uiInteractionStates.disabled,
+            })}
             disabled
             type="button"
           >
             Дуже довгий localized button label remains readable without overlap
           </button>
-          <div className={itemRecipe({ selection: "current", state: "focusVisible" })}>
-            <span className={indicatorRecipe({ tone: "warning" })}>!</span>
+          <div
+            className={itemRecipe({
+              selection: uiSelectionStates.current,
+              state: uiInteractionStates.focusVisible,
+            })}
+          >
+            <span className={indicatorRecipe({ tone: uiToneModes.warning })}>!</span>
             <span className="min-w-0 truncate">
               Long current list row with stable action accessory and predictable focus-visible state
             </span>
             <SettingsIcon size={14} />
           </div>
-          <div className={surfaceRecipe({ density: "medium", material: "glass" })}>
+          <div
+            className={surfaceRecipe({
+              density: uiDensityModes.medium,
+              material: uiMaterialModes.glass,
+            })}
+          >
             Functional material is reserved for owning surfaces and keeps text legible.
           </div>
           <PrimitiveMatrix />

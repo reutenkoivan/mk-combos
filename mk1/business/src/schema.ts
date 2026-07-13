@@ -1,7 +1,8 @@
 import { BuilderMovePathSchema } from "@mk-combos/builder-core/graph/schema";
 import { BuilderRuntimeSnapshotSchema } from "@mk-combos/builder-core/runtime/schema";
 import { BuilderComboStateSchema } from "@mk-combos/builder-core/stale/schema";
-import { ComboIdSchema } from "@mk-combos/contracts/identity/schema";
+import { ComboIdSchema, ComboSourceSchema } from "@mk-combos/contracts/identity/schema";
+import { comboSources } from "@mk-combos/contracts/identity/value";
 import { ValidationMessageSchema } from "@mk-combos/contracts/result/schema";
 import { LocalizedTextSchema } from "@mk-combos/contracts/settings/schema";
 import { Mk1BuilderContextSchema } from "@mk-combos/mk1-builder/context/schema";
@@ -20,7 +21,7 @@ const Mk1BusinessIdSchema = z
 
 const Mk1BusinessDateTimeSchema = z.iso.datetime();
 
-export const Mk1BusinessComboSourceSchema = z.enum(["seeded", "custom"]);
+export const Mk1BusinessComboSourceSchema = ComboSourceSchema;
 
 export const Mk1BusinessComboRefSchema = z
   .object({
@@ -34,7 +35,7 @@ export const Mk1BusinessCustomComboSchema = z
   .object({
     id: ComboIdSchema,
     gameId: z.literal("mk1"),
-    source: z.literal("custom"),
+    source: z.literal(comboSources.custom),
     title: LocalizedTextSchema.optional(),
     characterId: Mk1BusinessIdSchema,
     kameoId: Mk1BusinessIdSchema,
@@ -149,7 +150,7 @@ export const Mk1BusinessCustomComboSummarySchema = z
   .object({
     ref: Mk1BusinessComboRefSchema,
     gameId: z.literal("mk1"),
-    source: z.literal("custom"),
+    source: z.literal(comboSources.custom),
     title: LocalizedTextSchema,
     character: EntityLabelSchema,
     kameo: EntityLabelSchema,
@@ -170,7 +171,7 @@ export const Mk1BusinessCustomComboSummarySchema = z
 
 export const Mk1BusinessSeededComboDetailSchema = z
   .object({
-    source: z.literal("seeded"),
+    source: z.literal(comboSources.seeded),
     ref: Mk1BusinessComboRefSchema,
     summary: Mk1CatalogComboSummarySchema,
     comboState: BuilderComboStateSchema,
@@ -179,7 +180,7 @@ export const Mk1BusinessSeededComboDetailSchema = z
 
 export const Mk1BusinessCustomComboDetailSchema = z
   .object({
-    source: z.literal("custom"),
+    source: z.literal(comboSources.custom),
     ref: Mk1BusinessComboRefSchema,
     combo: Mk1BusinessCustomComboSchema,
     summary: Mk1BusinessCustomComboSummarySchema,

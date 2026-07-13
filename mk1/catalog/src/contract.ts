@@ -1,4 +1,8 @@
-import { mk1CatalogContextStatuses, mk1CatalogRecoveryCodes } from "./context/value";
+import {
+  mk1CatalogContextStatuses,
+  mk1CatalogOptionAvailabilities,
+  mk1CatalogRecoveryCodes,
+} from "./context/value";
 import {
   mk1CatalogFilterIds,
   mk1CatalogMultiSelectFilterIds,
@@ -34,6 +38,7 @@ export const mkCombosMk1Catalog = {
     mk1CatalogContextStatuses,
     mk1CatalogFilterIds,
     mk1CatalogMultiSelectFilterIds,
+    mk1CatalogOptionAvailabilities,
     mk1CatalogRangeFilterIds,
     mk1CatalogRecoveryCodes,
   },

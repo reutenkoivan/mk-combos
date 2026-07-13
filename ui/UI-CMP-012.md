@@ -27,7 +27,7 @@ Active game catalog business надає context descriptors, picker layout data,
 
 ## Роль і межі
 
-`UI-CMP-012` є compact work surface у Catalog, не route, не modal, не settings screen і не app-level toolbar.
+`UI-CMP-012` є mobile і tablet work surface у Catalog, не route, не modal, не settings screen і не app-level toolbar.
 
 Модуль відповідає за:
 
@@ -96,7 +96,7 @@ Active game catalog business надає context descriptors, picker layout data,
 
 Правила розміщення:
 
-- На `wide13_6Plus` character picker і game-specific picker можуть бути sibling columns; на `compact` вони stack-яться.
+- На `desktop` character picker і game-specific picker можуть бути sibling columns; на `mobile` і `tablet` вони stack-яться.
 - `UI-CMP-013` завжди стоїть нижче required context і не містить character/variation/kameo як duplicate facets.
 - ConfigRegion не містить combo cards; results починаються у `UI-CMP-010` нижче module.
 
@@ -117,7 +117,7 @@ Required pickers використовують explicit layout data:
 - `MK1.character`;
 - `MK1.kameo`.
 
-На viewport/device class від `13.6-inch` picker layouts використовують fixed in-game `row`/`column` positions. На менших екранах `UI-CMP-012` дозволяє compact reflow через `compactOrder`, але не змінює logical option order і не перетворює picker-и на generic dropdown/filter controls.
+На viewport/device class від `13.6-inch` picker layouts використовують fixed in-game `row`/`column` positions. На менших екранах `UI-CMP-012` дозволяє mobile і tablet reflow через `responsiveOrder`, але не змінює logical option order і не перетворює picker-и на generic dropdown/filter controls.
 
 ### `UI-CMP-013 Filter Control Group`
 
@@ -186,7 +186,7 @@ Rules:
 - selected game-specific context: `variation` або `kameo`;
 - available context options;
 - picker layout data для `MKXL.character`, `MKXL.variation`, `MK1.character` або `MK1.kameo`;
-- viewport class: `wide13_6Plus` або `compact`;
+- viewport class: `mobile`, `tablet` або `desktop`;
 - selected optional filters;
 - available optional facets;
 - result count;
@@ -219,7 +219,7 @@ Output payloads містять identifiers для target control/filter і не 
 - `noFilterResults`: live configuration не повернула combo.
 - `invalidDependentContext`: selected variation, kameo або interactable більше не сумісні з upstream context.
 - `wideInGameLayout`: required pickers використовують fixed in-game `row`/`column` positions.
-- `compactAdaptiveLayout`: required pickers реорганізовані через stable `compactOrder`.
+- `mobileOrTabletAdaptiveLayout`: required pickers реорганізовані через stable `responsiveOrder`.
 
 Deprecated для основного v1 UX:
 
@@ -256,8 +256,8 @@ Optional filters застосовуються live:
 
 Rules:
 
-- на `wide13_6Plus` character, variation і kameo picker-и не reflow-яться;
-- на `compact` picker-и можуть змінити visual grid через `compactOrder`;
+- на `desktop` character, variation і kameo picker-и не reflow-яться;
+- на `mobile` і `tablet` picker-и можуть змінити visual grid через `responsiveOrder`;
 - selected/focused state має зберігатися під час breakpoint transition;
 - `Clear filters` не очищає selected character, variation або kameo;
 - disabled picker slots без combo data не емітять selection;
@@ -309,8 +309,8 @@ Rules:
 - Поки picker або `UI-CMP-013` body має focus чи listbox open, combo list не отримує `confirm`, `openDetail` або `addToList`.
 - Після вибору MKXL character focus переходить до variation picker.
 - Після вибору MK1 main character focus переходить до kameo picker.
-- На `wide13_6Plus` picker navigation рухається по `row`/`column`.
-- На `compact` picker navigation рухається по `compactOrder`.
+- На `desktop` picker navigation рухається по `row`/`column`.
+- На `mobile` і `tablet` picker navigation рухається по `responsiveOrder`.
 - `navDown` із valid collapsed filter group може перейти до combo list після `UI-CMP-013` header.
 - Controller commands не мають вибирати variation, kameo або interactable, яких немає у current options.
 
@@ -356,3 +356,13 @@ Rules:
 - Stage change у MKXL прибирає incompatible interactable.
 - No-results показує recovery action.
 - Controller `openFilters`, `confirm`, `back`, `closePanel` не тригерять combo card actions у background.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

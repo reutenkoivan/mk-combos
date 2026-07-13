@@ -1,6 +1,8 @@
-import { controllerCommandMetadata } from "../command/value";
+import { controllerCapabilityStates } from "../capability/value";
+import { controllerCommandMetadata, knownControllerCommandIds } from "../command/value";
 import { normalizeGamepadSnapshot } from "../input/runtime";
 import type { ControllerControlState, ControllerGamepadSnapshot } from "../input/type";
+import { controllerControlIds } from "../input/value";
 import { detectControllerProfile } from "../profile/runtime";
 import type {
   ControllerBridgeConfig,
@@ -11,6 +13,7 @@ import type {
   ControllerCommandEvent,
   ControllerRepeatConfig,
 } from "./type";
+import { controllerCommandEventPhases } from "./value";
 
 export const defaultControllerRepeatConfig = {
   initialDelayMs: 450,
@@ -18,24 +21,68 @@ export const defaultControllerRepeatConfig = {
 } as const satisfies ControllerRepeatConfig;
 
 export const defaultControllerBindings = [
-  { controlId: "dpadUp", commandId: "navUp", repeat: true },
-  { controlId: "dpadDown", commandId: "navDown", repeat: true },
-  { controlId: "dpadLeft", commandId: "navLeft", repeat: true },
-  { controlId: "dpadRight", commandId: "navRight", repeat: true },
-  { controlId: "leftStickUp", commandId: "navUp", repeat: true },
-  { controlId: "leftStickDown", commandId: "navDown", repeat: true },
-  { controlId: "leftStickLeft", commandId: "navLeft", repeat: true },
-  { controlId: "leftStickRight", commandId: "navRight", repeat: true },
-  { controlId: "faceSouth", commandId: "confirm" },
-  { controlId: "faceEast", commandId: "back" },
-  { controlId: "faceWest", commandId: "openActions" },
-  { controlId: "faceNorth", commandId: "openFilters" },
-  { controlId: "leftShoulder", commandId: "previousTab" },
-  { controlId: "rightShoulder", commandId: "nextTab" },
-  { controlId: "leftTrigger", commandId: "builderPreviousGroup" },
-  { controlId: "rightTrigger", commandId: "builderNextGroup" },
-  { controlId: "select", commandId: "closePanel" },
-  { controlId: "start", commandId: "builderFinish" },
+  {
+    controlId: controllerControlIds.dpadUp,
+    commandId: knownControllerCommandIds.navUp,
+    repeat: true,
+  },
+  {
+    controlId: controllerControlIds.dpadDown,
+    commandId: knownControllerCommandIds.navDown,
+    repeat: true,
+  },
+  {
+    controlId: controllerControlIds.dpadLeft,
+    commandId: knownControllerCommandIds.navLeft,
+    repeat: true,
+  },
+  {
+    controlId: controllerControlIds.dpadRight,
+    commandId: knownControllerCommandIds.navRight,
+    repeat: true,
+  },
+  {
+    controlId: controllerControlIds.leftStickUp,
+    commandId: knownControllerCommandIds.navUp,
+    repeat: true,
+  },
+  {
+    controlId: controllerControlIds.leftStickDown,
+    commandId: knownControllerCommandIds.navDown,
+    repeat: true,
+  },
+  {
+    controlId: controllerControlIds.leftStickLeft,
+    commandId: knownControllerCommandIds.navLeft,
+    repeat: true,
+  },
+  {
+    controlId: controllerControlIds.leftStickRight,
+    commandId: knownControllerCommandIds.navRight,
+    repeat: true,
+  },
+  { controlId: controllerControlIds.faceSouth, commandId: knownControllerCommandIds.confirm },
+  { controlId: controllerControlIds.faceEast, commandId: knownControllerCommandIds.back },
+  { controlId: controllerControlIds.faceWest, commandId: knownControllerCommandIds.openActions },
+  { controlId: controllerControlIds.faceNorth, commandId: knownControllerCommandIds.openFilters },
+  {
+    controlId: controllerControlIds.leftShoulder,
+    commandId: knownControllerCommandIds.previousTab,
+  },
+  { controlId: controllerControlIds.rightShoulder, commandId: knownControllerCommandIds.nextTab },
+  {
+    controlId: controllerControlIds.leftTrigger,
+    commandId: knownControllerCommandIds.builderPreviousGroup,
+  },
+  {
+    controlId: controllerControlIds.rightTrigger,
+    commandId: knownControllerCommandIds.builderNextGroup,
+  },
+  {
+    controlId: controllerControlIds.select,
+    commandId: knownControllerCommandIds.openControllerHelp,
+  },
+  { controlId: controllerControlIds.start, commandId: knownControllerCommandIds.openGlobalMenu },
 ] as const satisfies readonly ControllerCommandBinding[];
 
 type HeldBinding = {
@@ -62,7 +109,7 @@ const selectActiveGamepad = (
   previousIndex: number | undefined,
 ) => {
   let previous: ControllerGamepadSnapshot | undefined;
-  let lowestIndexSnapshot: ControllerGamepadSnapshot | undefined;
+  let gesturingSnapshot: ControllerGamepadSnapshot | undefined;
 
   for (const snapshot of snapshots) {
     if (!snapshot.connected) {
@@ -77,12 +124,16 @@ const selectActiveGamepad = (
       previous = snapshot;
     }
 
-    if (lowestIndexSnapshot === undefined || snapshot.index < lowestIndexSnapshot.index) {
-      lowestIndexSnapshot = snapshot;
+    if (gesturingSnapshot === undefined) {
+      const normalized = normalizeGamepadSnapshot(snapshot);
+
+      if (normalized.pressedControls.length > 0) {
+        gesturingSnapshot = snapshot;
+      }
     }
   }
 
-  return previous ?? lowestIndexSnapshot;
+  return previous ?? gesturingSnapshot;
 };
 
 const toControlStateMap = (controls: readonly ControllerControlState[]) => {
@@ -114,10 +165,12 @@ const collectHeldControlIds = (heldBindings: ReadonlyMap<string, HeldBinding>) =
 export function createControllerBridge(options: ControllerBridgeConfig = {}) {
   let bridgeState: ControllerBridgeState = {
     connected: false,
+    lifecycleState: controllerCapabilityStates.awaitingGesture,
   };
   let activeGamepadId: string | undefined;
   let heldBindings = new Map<string, HeldBinding>();
   let sequence = 0;
+  let hasConnected = false;
 
   const resetHeldState = () => {
     heldBindings = new Map();
@@ -154,6 +207,25 @@ export function createControllerBridge(options: ControllerBridgeConfig = {}) {
 
   const process = (input: ControllerBridgePollInput): ControllerBridgePollResult => {
     const timestamp = input.timestamp;
+    const sourceState = input.sourceState ?? controllerCapabilityStates.ready;
+
+    if (sourceState !== controllerCapabilityStates.ready) {
+      const lifecycleState =
+        sourceState === controllerCapabilityStates.awaitingNeutral
+          ? controllerCapabilityStates.awaitingNeutral
+          : sourceState;
+      bridgeState = {
+        connected: false,
+        lastConnectedAt: bridgeState.lastConnectedAt,
+        lastDisconnectedAt: bridgeState.lastDisconnectedAt,
+        lifecycleState,
+      };
+      activeGamepadId = undefined;
+      resetHeldState();
+
+      return { events: [], state: bridgeState };
+    }
+
     const activeGamepad = selectActiveGamepad(
       input.gamepads,
       input.activeGamepadIndex ?? options.activeGamepadIndex,
@@ -166,6 +238,9 @@ export function createControllerBridge(options: ControllerBridgeConfig = {}) {
         connected: false,
         lastConnectedAt: bridgeState.lastConnectedAt,
         lastDisconnectedAt,
+        lifecycleState: hasConnected
+          ? controllerCapabilityStates.disconnected
+          : controllerCapabilityStates.awaitingGesture,
       };
       activeGamepadId = undefined;
       resetHeldState();
@@ -176,10 +251,11 @@ export function createControllerBridge(options: ControllerBridgeConfig = {}) {
       };
     }
 
-    if (
+    const changedController =
       activeGamepadId !== activeGamepad.id ||
-      bridgeState.activeGamepadIndex !== activeGamepad.index
-    ) {
+      bridgeState.activeGamepadIndex !== activeGamepad.index;
+
+    if (changedController) {
       resetHeldState();
     }
 
@@ -194,12 +270,35 @@ export function createControllerBridge(options: ControllerBridgeConfig = {}) {
     const pressedBindingKeys = new Set<string>();
     const events: ControllerCommandEvent[] = [];
 
+    const hasPressedControls = normalized.pressedControls.length > 0;
+    const requiresNeutral =
+      changedController || bridgeState.lifecycleState !== controllerCapabilityStates.ready;
+
+    if (requiresNeutral) {
+      bridgeState = {
+        connected: true,
+        activeGamepadIndex: activeGamepad.index,
+        profileId: profile.id,
+        lastConnectedAt: bridgeState.lastConnectedAt ?? timestamp,
+        lastDisconnectedAt: bridgeState.lastDisconnectedAt,
+        lifecycleState: hasPressedControls
+          ? controllerCapabilityStates.awaitingNeutral
+          : controllerCapabilityStates.ready,
+      };
+      activeGamepadId = activeGamepad.id;
+      hasConnected = true;
+      resetHeldState();
+
+      return { activeGamepad: normalized, events: [], state: bridgeState };
+    }
+
     bridgeState = {
       connected: true,
       activeGamepadIndex: activeGamepad.index,
       profileId: profile.id,
       lastConnectedAt: bridgeState.lastConnectedAt ?? timestamp,
       lastDisconnectedAt: bridgeState.lastDisconnectedAt,
+      lifecycleState: controllerCapabilityStates.ready,
     };
     activeGamepadId = activeGamepad.id;
 
@@ -220,7 +319,15 @@ export function createControllerBridge(options: ControllerBridgeConfig = {}) {
           firstPressedAt: timestamp,
           lastEmittedAt: timestamp,
         });
-        events.push(emitCommand(binding, control, activeGamepad, "press", timestamp));
+        events.push(
+          emitCommand(
+            binding,
+            control,
+            activeGamepad,
+            controllerCommandEventPhases.press,
+            timestamp,
+          ),
+        );
         continue;
       }
 
@@ -231,7 +338,15 @@ export function createControllerBridge(options: ControllerBridgeConfig = {}) {
 
       if (repeat && pastInitialDelay && pastRepeatInterval) {
         held.lastEmittedAt = timestamp;
-        events.push(emitCommand(binding, control, activeGamepad, "repeat", timestamp));
+        events.push(
+          emitCommand(
+            binding,
+            control,
+            activeGamepad,
+            controllerCommandEventPhases.repeat,
+            timestamp,
+          ),
+        );
       }
     }
 
@@ -254,10 +369,12 @@ export function createControllerBridge(options: ControllerBridgeConfig = {}) {
     reset: () => {
       bridgeState = {
         connected: false,
+        lifecycleState: controllerCapabilityStates.awaitingGesture,
       };
       activeGamepadId = undefined;
       resetHeldState();
       sequence = 0;
+      hasConnected = false;
     },
   };
 }

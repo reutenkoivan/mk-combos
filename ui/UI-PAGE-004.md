@@ -114,7 +114,7 @@ Combo Detail є shared page. Route має форму `/:gameId/combos/:source/:c
 
 ## Анатомія
 
-Розміщення починається з header, далі основний detail workspace; у широкому режимі whiteboard і frame meter стоять поруч, у compact вони стають вертикальною послідовністю. Page-owned dialogs і menus відкриваються поверх DetailSurface.
+Розміщення починається з header, далі основний detail workspace; у широкому режимі whiteboard і frame meter стоять поруч, у mobile і tablet вони стають вертикальною послідовністю. Page-owned dialogs і menus відкриваються поверх DetailSurface.
 
 ```jsx
 <ComboDetailPage ui="UI-PAGE-004">
@@ -176,7 +176,7 @@ Combo Detail є shared page. Route має форму `/:gameId/combos/:source/:c
 Правила розміщення:
 
 - Header завжди передує read-only whiteboard/frame workspace, щоб combo identity була першою в reading order.
-- На `wide13_6Plus` `UI-CMP-035` є головною лівою region, а `UI-CMP-036` стоїть праворуч як inspection panel; на `compact` frame meter іде нижче whiteboard.
+- На `desktop` `UI-CMP-035` є головною лівою region, а `UI-CMP-036` стоїть праворуч як inspection panel; на `mobile` і `tablet` frame meter іде нижче whiteboard.
 - `UI-CMP-018` є anchored overlay від action source, а `UI-CMP-021` є singleton dialog на рівні сторінки.
 - Error state стоїть у page content або overlay layer залежно від severity, але його model і recovery intents належать сторінці.
 
@@ -201,11 +201,11 @@ DetailSurface має:
 Header має показувати:
 
 - combo title або readable fallback;
-- combo characteristic chips: source type, active game, character, variation або kameo, stage context, difficulty, route type, starter, position, meter або інші compact fields, якщо вони доступні;
+- combo characteristic chips: source type, active game, character, variation або kameo, stage context, difficulty, route type, starter, position, meter або інші mobile і tablet fields, якщо вони доступні;
 - `UI-CMP-031 Stale/Invalid Combo Marker`, якщо custom combo stale або invalid;
 - primary Add-To-List action, яка відкриває page-level `UI-CMP-021 Add-To-List Dialog`;
 - primary return action до previous list context або Catalog fallback;
-- compact disabled або unavailable reason для primary actions, якщо дія недоступна.
+- mobile і tablet disabled або unavailable reason для primary actions, якщо дія недоступна.
 
 Stale/Invalid marker у header має:
 
@@ -338,7 +338,7 @@ Availability rules:
 - repair доступний для stale або invalid custom combo;
 - disabled action має readable disabled reason або не показується;
 - actions не мають бути hover-only;
-- Add-To-List лишається primary action у header, але compact layouts можуть також показати secondary access у actions menu.
+- Add-To-List лишається primary action у header, але mobile і tablet layouts можуть також показати secondary access у actions menu.
 
 #### UI-CMP-021 Add-To-List Dialog
 
@@ -488,7 +488,7 @@ Source, gameVersion або localized notes відкриті у disclosure.
 
 ### `actionsOpen`
 
-Contextual actions menu або compact action panel відкритий.
+Contextual actions menu або mobile і tablet action panel відкритий.
 
 Очікуваний UI:
 
@@ -741,3 +741,13 @@ Controller commands не мають:
 - Точний visual layout для detail workspace, metadata density і action placement буде узгоджено під час UI implementation pass.
 - `UI-CMP-014`, `UI-CMP-017` і `UI-CMP-018` лишаються component references у цьому pass; окремі specs для них можуть бути описані пізніше.
 - Policy для add-to-list stale custom combo може бути disabled або marked risky залежно від app-level product decision.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

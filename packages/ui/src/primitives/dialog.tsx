@@ -1,11 +1,13 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
 import type { ReactNode } from "react";
 
+import { useBaseUiOpenChangeHandler } from "../internal/base-ui/use-open-change-handler";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { popupRecipe } from "../recipes/popup";
 import { surfaceRecipe } from "../recipes/surface";
 import type {
+  UiControlPresentationMode,
   UiDensityMode,
   UiEmphasisMode,
   UiMaterialMode,
@@ -13,10 +15,14 @@ import type {
   UiToneMode,
 } from "../tokens/type";
 import {
-  mapBaseUiReason,
-  type UiPrimitiveOpenChangePayload,
-  type UiPrimitiveProps,
-} from "./internal";
+  uiControlPresentationModes,
+  uiDensityModes,
+  uiEmphasisModes,
+  uiMaterialModes,
+  uiShapeModes,
+  uiToneModes,
+} from "../tokens/value";
+import type { UiPrimitiveOpenChangePayload, UiPrimitiveProps } from "./internal";
 
 export type DialogRootProps = {
   children?: ReactNode;
@@ -38,19 +44,14 @@ export function DialogRoot(props: DialogRootProps) {
     open,
     sourceFocusTarget,
   } = props;
+  const handleOpenChange = useBaseUiOpenChangeHandler({ onOpenChange, sourceFocusTarget });
 
   return (
     <BaseDialog.Root
       defaultOpen={defaultOpen}
       disablePointerDismissal={disablePointerDismissal}
       modal={modal}
-      onOpenChange={(nextOpen, eventDetails) => {
-        onOpenChange?.({
-          open: nextOpen,
-          reason: mapBaseUiReason(eventDetails.reason),
-          sourceFocusTarget,
-        });
-      }}
+      onOpenChange={handleOpenChange}
       open={open}
     >
       {children}
@@ -61,6 +62,7 @@ export function DialogRoot(props: DialogRootProps) {
 DialogRoot.displayName = "DialogRoot";
 
 export type DialogTriggerProps = UiPrimitiveProps<HTMLButtonElement> & {
+  appearance?: UiControlPresentationMode;
   density?: UiDensityMode;
   disabled?: boolean;
   emphasis?: UiEmphasisMode;
@@ -71,14 +73,15 @@ export type DialogTriggerProps = UiPrimitiveProps<HTMLButtonElement> & {
 
 export function DialogTrigger(props: DialogTriggerProps) {
   const {
+    appearance = uiControlPresentationModes.filled,
     children,
     className,
-    density = "small",
+    density = uiDensityModes.small,
     disabled = false,
-    emphasis = "normal",
+    emphasis = uiEmphasisModes.normal,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     type = "button",
     ...triggerProps
   } = props;
@@ -86,7 +89,7 @@ export function DialogTrigger(props: DialogTriggerProps) {
   return (
     <BaseDialog.Trigger
       {...triggerProps}
-      className={cx(controlRecipe({ density, emphasis, shape, tone }), className)}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
       data-disabled={disabled ? "true" : undefined}
       data-ui-dialog-trigger
       disabled={disabled}
@@ -129,10 +132,10 @@ export function DialogPopup(props: DialogPopupProps) {
   const {
     children,
     className,
-    density = "medium",
-    material = "elevated",
+    density = uiDensityModes.medium,
+    material = uiMaterialModes.elevated,
     ref,
-    shape = "fixed",
+    shape = uiShapeModes.fixed,
     ...popupProps
   } = props;
 
@@ -142,7 +145,7 @@ export function DialogPopup(props: DialogPopupProps) {
       className={cx(
         popupRecipe({ density, material, shape }),
         surfaceRecipe({ density, material, shape }),
-        "fixed inset-x-4 top-4 grid max-h-[calc(100vh-2rem)] overflow-auto sm:left-1/2 sm:top-1/2 sm:w-[min(32rem,calc(100vw-2rem))] sm:-translate-x-1/2 sm:-translate-y-1/2",
+        "fixed inset-x-0 bottom-0 grid max-h-[min(88dvh,48rem)] overflow-auto rounded-b-none px-[max(1rem,env(safe-area-inset-left))] pb-[max(1rem,env(safe-area-inset-bottom))] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:w-[min(34rem,calc(100vw-2rem))] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[var(--ui-radius-surface)] sm:p-4",
         className,
       )}
       data-ui-dialog-popup
@@ -195,6 +198,7 @@ export function DialogDescription(props: DialogDescriptionProps) {
 DialogDescription.displayName = "DialogDescription";
 
 export type DialogCloseProps = UiPrimitiveProps<HTMLButtonElement> & {
+  appearance?: UiControlPresentationMode;
   density?: UiDensityMode;
   disabled?: boolean;
   emphasis?: UiEmphasisMode;
@@ -205,14 +209,15 @@ export type DialogCloseProps = UiPrimitiveProps<HTMLButtonElement> & {
 
 export function DialogClose(props: DialogCloseProps) {
   const {
+    appearance = uiControlPresentationModes.filled,
     children,
     className,
-    density = "small",
+    density = uiDensityModes.small,
     disabled = false,
-    emphasis = "normal",
+    emphasis = uiEmphasisModes.normal,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     type = "button",
     ...closeProps
   } = props;
@@ -220,7 +225,7 @@ export function DialogClose(props: DialogCloseProps) {
   return (
     <BaseDialog.Close
       {...closeProps}
-      className={cx(controlRecipe({ density, emphasis, shape, tone }), className)}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
       data-disabled={disabled ? "true" : undefined}
       data-ui-dialog-close
       disabled={disabled}

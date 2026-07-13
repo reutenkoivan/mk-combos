@@ -1,1 +1,4 @@
-export const comboSources = ["seeded", "custom"] as const;
+export const comboSources = {
+  custom: "custom",
+  seeded: "seeded",
+} as const;

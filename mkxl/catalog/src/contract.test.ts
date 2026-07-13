@@ -4,9 +4,11 @@ import {
   mkxlCatalogRouteQueryKeys as contextSchemaRouteQueryKeys,
   mkxlCatalogContextStatuses as contextSchemaStatuses,
   MkxlCatalogContextSchema,
+  MkxlCatalogOptionAvailabilitySchema,
 } from "@mk-combos/mkxl-catalog/context/schema";
 import type {
   MkxlCatalogContext,
+  MkxlCatalogOptionAvailability,
   MkxlCatalogRecoveryCode,
   MkxlCatalogRequiredContext,
   MkxlCatalogRouteQueryKey,
@@ -16,7 +18,12 @@ import {
   mkxlCatalogRouteQueryKeys as contextTypeRouteQueryKeys,
   mkxlCatalogContextStatuses as contextTypeStatuses,
 } from "@mk-combos/mkxl-catalog/context/type";
-import { mkxlCatalogContextStatuses } from "@mk-combos/mkxl-catalog/context/value";
+import {
+  mkxlCatalogContextStatuses,
+  mkxlCatalogOptionAvailabilities,
+  mkxlCatalogRecoveryCodes,
+  mkxlCatalogRouteQueryKeys,
+} from "@mk-combos/mkxl-catalog/context/value";
 import * as contractEntry from "@mk-combos/mkxl-catalog/contract";
 import { mkCombosMkxlCatalog, mkxlCatalogContractGroups } from "@mk-combos/mkxl-catalog/contract";
 import * as filterRuntime from "@mk-combos/mkxl-catalog/filters/runtime";
@@ -40,7 +47,11 @@ import {
   mkxlCatalogMultiSelectFilterIds as filterTypeMultiSelectIds,
   mkxlCatalogRangeFilterIds as filterTypeRangeIds,
 } from "@mk-combos/mkxl-catalog/filters/type";
-import { mkxlCatalogFilterIds } from "@mk-combos/mkxl-catalog/filters/value";
+import {
+  mkxlCatalogFilterIds,
+  mkxlCatalogMultiSelectFilterIds,
+  mkxlCatalogRangeFilterIds,
+} from "@mk-combos/mkxl-catalog/filters/value";
 import * as selectorRuntime from "@mk-combos/mkxl-catalog/selectors/runtime";
 import { MkxlCatalogComboSummarySchema } from "@mk-combos/mkxl-catalog/summary/schema";
 import type { MkxlCatalogComboSummary } from "@mk-combos/mkxl-catalog/summary/type";
@@ -53,6 +64,7 @@ const acceptsPublicTypes = (_contract: {
   filters: MkxlCatalogFilters;
   multiSelectFacet: MkxlCatalogMultiSelectFacet;
   multiSelectFilterId: MkxlCatalogMultiSelectFilterId;
+  optionAvailability: MkxlCatalogOptionAvailability;
   rangeFacet: MkxlCatalogRangeFacet;
   rangeFilterId: MkxlCatalogRangeFilterId;
   recoveryCode: MkxlCatalogRecoveryCode;
@@ -143,6 +155,7 @@ describe("@mk-combos/mkxl-catalog contract", () => {
           options: [],
         },
         multiSelectFilterId: "starter",
+        optionAvailability: mkxlCatalogOptionAvailabilities.available,
         rangeFacet: facets.find(
           (facet): facet is MkxlCatalogRangeFacet => facet.kind === "range",
         ) ?? {
@@ -164,25 +177,70 @@ describe("@mk-combos/mkxl-catalog contract", () => {
   });
 
   it("keeps value-set re-exports intentional", () => {
+    expect(mkxlCatalogContextStatuses).toEqual({
+      characterSelected: "characterSelected",
+      empty: "empty",
+      ready: "ready",
+    });
+    expect(mkxlCatalogRecoveryCodes).toEqual({
+      incompatibleInteractable: "incompatibleInteractable",
+      invalidCharacter: "invalidCharacter",
+      invalidDamageRange: "invalidDamageRange",
+      invalidInteractable: "invalidInteractable",
+      invalidStage: "invalidStage",
+      invalidVariation: "invalidVariation",
+    });
+    expect(mkxlCatalogRouteQueryKeys).toEqual({
+      character: "character",
+      damageMax: "damageMax",
+      damageMin: "damageMin",
+      difficulty: "difficulty",
+      interactable: "interactable",
+      meter: "meter",
+      position: "position",
+      routeType: "routeType",
+      stage: "stage",
+      starter: "starter",
+      tag: "tag",
+      variation: "variation",
+    });
+    expect(mkxlCatalogOptionAvailabilities).toEqual({
+      available: "available",
+      disabledNoComboData: "disabledNoComboData",
+    });
+    expect(
+      MkxlCatalogOptionAvailabilitySchema.safeParse(mkxlCatalogOptionAvailabilities.available)
+        .success,
+    ).toBe(true);
+    expect(MkxlCatalogOptionAvailabilitySchema.safeParse("hidden").success).toBe(false);
     expect(contextSchemaStatuses).toBe(mkxlCatalogContextStatuses);
     expect(contextTypeStatuses).toBe(mkxlCatalogContextStatuses);
     expect(contextSchemaRecoveryCodes).toBe(mkCombosMkxlCatalog.valueSets.mkxlCatalogRecoveryCodes);
     expect(contextTypeRecoveryCodes).toBe(mkCombosMkxlCatalog.valueSets.mkxlCatalogRecoveryCodes);
-    expect(contextSchemaRouteQueryKeys).toEqual([
-      "character",
-      "variation",
-      "starter",
-      "position",
-      "meter",
-      "damageMin",
-      "damageMax",
-      "difficulty",
-      "routeType",
-      "tag",
-      "stage",
-      "interactable",
-    ]);
+    expect(contextSchemaRouteQueryKeys).toBe(mkxlCatalogRouteQueryKeys);
     expect(contextTypeRouteQueryKeys).toBe(contextSchemaRouteQueryKeys);
+    expect(mkxlCatalogMultiSelectFilterIds).toEqual({
+      difficulty: "difficulty",
+      interactable: "interactable",
+      meter: "meter",
+      position: "position",
+      routeType: "routeType",
+      stage: "stage",
+      starter: "starter",
+      tags: "tags",
+    });
+    expect(mkxlCatalogRangeFilterIds).toEqual({ damage: "damage" });
+    expect(mkxlCatalogFilterIds).toEqual({
+      damage: "damage",
+      difficulty: "difficulty",
+      interactable: "interactable",
+      meter: "meter",
+      position: "position",
+      routeType: "routeType",
+      stage: "stage",
+      starter: "starter",
+      tags: "tags",
+    });
     expect(filterSchemaIds).toBe(mkxlCatalogFilterIds);
     expect(filterTypeIds).toBe(mkxlCatalogFilterIds);
     expect(filterSchemaMultiSelectIds).toBe(
@@ -193,5 +251,8 @@ describe("@mk-combos/mkxl-catalog contract", () => {
     );
     expect(filterSchemaRangeIds).toBe(mkCombosMkxlCatalog.valueSets.mkxlCatalogRangeFilterIds);
     expect(filterTypeRangeIds).toBe(mkCombosMkxlCatalog.valueSets.mkxlCatalogRangeFilterIds);
+    expect(mkCombosMkxlCatalog.valueSets.mkxlCatalogOptionAvailabilities).toBe(
+      mkxlCatalogOptionAvailabilities,
+    );
   });
 });

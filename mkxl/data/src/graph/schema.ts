@@ -1,12 +1,15 @@
 import { z } from "zod/v4";
 
 import { MkxlIdSchema, MkxlLabelSchema, MkxlSourceIdListSchema } from "../shared/schema";
+import { mkxlGraphNodeKinds } from "./constants";
+
+export const MkxlGraphNodeKindSchema = z.enum(mkxlGraphNodeKinds);
 
 export const MkxlGraphNodeSchema = z
   .object({
     id: MkxlIdSchema,
     label: MkxlLabelSchema,
-    kind: z.enum(["start", "move", "end", "stageInteraction"]),
+    kind: MkxlGraphNodeKindSchema,
   })
   .strict();
 

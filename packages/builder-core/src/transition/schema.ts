@@ -51,7 +51,7 @@ export const BuilderTransitionCandidateSchema = z
 export const BuilderTransitionAcceptedSchema = z
   .object({
     ok: z.literal(true),
-    status: z.literal("accepted"),
+    status: z.literal(builderTransitionStatuses.accepted),
     candidate: BuilderTransitionCandidateSchema,
     step: BuilderPathStepSchema,
     fromRuntime: BuilderRuntimeSnapshotSchema.optional(),
@@ -64,7 +64,7 @@ export const BuilderTransitionAcceptedSchema = z
 export const BuilderTransitionRejectedSchema = z
   .object({
     ok: z.literal(false),
-    status: z.literal("rejected"),
+    status: z.literal(builderTransitionStatuses.rejected),
     attemptedMoveId: BuilderMoveIdSchema,
     edgeId: BuilderGraphEdgeIdSchema.optional(),
     fromRuntime: BuilderRuntimeSnapshotSchema.optional(),

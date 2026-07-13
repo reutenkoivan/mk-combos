@@ -1,9 +1,11 @@
 import type { ValidationMessage } from "@mk-combos/contracts/result/type";
+import { validationSeverities } from "@mk-combos/contracts/result/value";
 import type { MkxlSeededCombo } from "@mk-combos/mkxl-data/combos/type";
 import { mkxlStages } from "@mk-combos/mkxl-data/stages/value";
 
 import { MkxlCatalogFiltersSchema } from "./schema";
 import type { MkxlCatalogFilterFacet, MkxlCatalogFilterOption, MkxlCatalogFilters } from "./type";
+import { mkxlCatalogMultiSelectFilterIds, mkxlCatalogRangeFilterIds } from "./value";
 
 type PlainRouteQuery = Readonly<Record<string, string | readonly string[] | undefined>>;
 
@@ -37,7 +39,7 @@ for (const stage of mkxlStages) {
 }
 
 const toMessage = (code: string, message: string, path: readonly string[]): ValidationMessage => ({
-  severity: "warning",
+  severity: validationSeverities.warning,
   code,
   message,
   path,
@@ -670,22 +672,22 @@ const createFacetDescriptors = (
   return [
     {
       kind: "multiSelect",
-      id: "starter",
+      id: mkxlCatalogMultiSelectFilterIds.starter,
       options: createOptionsFromCounts(aggregation.starterCounts, selectedStarters),
     },
     {
       kind: "multiSelect",
-      id: "position",
+      id: mkxlCatalogMultiSelectFilterIds.position,
       options: createOptionsFromCounts(aggregation.positionCounts, selectedPositions),
     },
     {
       kind: "multiSelect",
-      id: "meter",
+      id: mkxlCatalogMultiSelectFilterIds.meter,
       options: createMeterOptions(aggregation.meterCounts, selectedMeter),
     },
     {
       kind: "range",
-      id: "damage",
+      id: mkxlCatalogRangeFilterIds.damage,
       min: aggregation.minDamage,
       max: aggregation.maxDamage,
       selectedMin: filters.damage?.min,
@@ -693,27 +695,27 @@ const createFacetDescriptors = (
     },
     {
       kind: "multiSelect",
-      id: "difficulty",
+      id: mkxlCatalogMultiSelectFilterIds.difficulty,
       options: createOptionsFromCounts(aggregation.difficultyCounts, selectedDifficulties),
     },
     {
       kind: "multiSelect",
-      id: "routeType",
+      id: mkxlCatalogMultiSelectFilterIds.routeType,
       options: createOptionsFromCounts(aggregation.routeTypeCounts, selectedRouteTypes),
     },
     {
       kind: "multiSelect",
-      id: "tags",
+      id: mkxlCatalogMultiSelectFilterIds.tags,
       options: createOptionsFromCounts(aggregation.tagCounts, selectedTags),
     },
     {
       kind: "multiSelect",
-      id: "stage",
+      id: mkxlCatalogMultiSelectFilterIds.stage,
       options: stageOptions,
     },
     {
       kind: "multiSelect",
-      id: "interactable",
+      id: mkxlCatalogMultiSelectFilterIds.interactable,
       options: interactableOptions,
     },
   ] satisfies readonly MkxlCatalogFilterFacet[];

@@ -10,6 +10,7 @@ import type {
   Mk1CatalogRouteQueryKeySchema,
   Mk1CatalogRouteQuerySchema,
 } from "./schema";
+import type { mk1CatalogOptionAvailabilities } from "./value";
 
 export {
   mk1CatalogContextStatuses,
@@ -31,7 +32,8 @@ export type Mk1CatalogPlainRouteQuery = z.output<typeof Mk1CatalogPlainRouteQuer
 
 export type Mk1CatalogRouteQuery = z.output<typeof Mk1CatalogRouteQuerySchema>;
 
-export type Mk1CatalogOptionAvailability = "available" | "disabledNoComboData";
+export type Mk1CatalogOptionAvailability =
+  (typeof mk1CatalogOptionAvailabilities)[keyof typeof mk1CatalogOptionAvailabilities];
 
 export type Mk1CatalogCharacterOption = {
   readonly id: string;

@@ -1,17 +1,28 @@
-export const mk1InputNotationValues = [
-  "1",
-  "2",
-  "3",
-  "4",
-  "K",
-  "AMP",
-  "U",
-  "D",
-  "B",
-  "F",
-  "SS",
-] as const;
+export const mk1InputNotationValues = {
+  "1": "1",
+  "2": "2",
+  "3": "3",
+  "4": "4",
+  AMP: "AMP",
+  B: "B",
+  D: "D",
+  F: "F",
+  K: "K",
+  SS: "SS",
+  U: "U",
+} as const;
 
-export const mk1MoveNotationValues = [...mk1InputNotationValues] as const;
+export const mk1MoveNotationValues = { ...mk1InputNotationValues } as const;
 
-export const mk1MoveCategories = ["normal", "special", "kameo", "mechanic"] as const;
+export const mk1MoveCategories = {
+  kameo: "kameo",
+  mechanic: "mechanic",
+  normal: "normal",
+  special: "special",
+} as const;
+
+export const mk1MoveOwnerKinds = {
+  character: "character",
+  general: "general",
+  kameo: "kameo",
+} as const;

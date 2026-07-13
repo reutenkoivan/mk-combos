@@ -1,6 +1,8 @@
 import { BuilderRuntimeSnapshotSchema } from "@mk-combos/builder-core/runtime/schema";
 import type { BuilderRuntimeSnapshot } from "@mk-combos/builder-core/runtime/type";
+import { builderComboStateStatuses } from "@mk-combos/builder-core/stale/value";
 import type { ComboId } from "@mk-combos/contracts/identity/type";
+import { comboSources } from "@mk-combos/contracts/identity/value";
 import { err, ok } from "@mk-combos/contracts/result/runtime";
 import type { AppError, AppResult, ValidationMessage } from "@mk-combos/contracts/result/type";
 import type { LocalizedText } from "@mk-combos/contracts/settings/type";
@@ -262,11 +264,11 @@ const summarizeMkxlCustomCombo = (
   return MkxlBusinessCustomComboSummarySchema.parse({
     ref: {
       gameId: "mkxl",
-      source: "custom",
+      source: comboSources.custom,
       comboId: combo.id,
     },
     gameId: "mkxl",
-    source: "custom",
+    source: comboSources.custom,
     title: customTitle(combo),
     character: {
       ...entityLabel(
@@ -307,17 +309,17 @@ const foundSeededDetail = (summary: MkxlCatalogComboSummary): MkxlBusinessComboL
     movePath: summary.movePath,
   });
   const detail = {
-    source: "seeded",
+    source: comboSources.seeded,
     ref: {
       gameId: "mkxl",
-      source: "seeded",
+      source: comboSources.seeded,
       comboId: summary.ref.comboId,
     },
     summary,
     comboState,
   };
   const messages =
-    comboState.status === "fresh"
+    comboState.status === builderComboStateStatuses.fresh
       ? []
       : [
           message(
@@ -338,7 +340,7 @@ const foundSeededDetail = (summary: MkxlCatalogComboSummary): MkxlBusinessComboL
 const foundCustomDetail = (combo: MkxlBusinessCustomCombo): MkxlBusinessComboLookup => {
   const summary = summarizeMkxlCustomCombo(combo);
   const messages =
-    summary.comboState.status === "fresh"
+    summary.comboState.status === builderComboStateStatuses.fresh
       ? []
       : [
           message(
@@ -352,7 +354,7 @@ const foundCustomDetail = (combo: MkxlBusinessCustomCombo): MkxlBusinessComboLoo
   return MkxlBusinessComboLookupSchema.parse({
     status: "found",
     detail: {
-      source: "custom",
+      source: comboSources.custom,
       ref: summary.ref,
       combo,
       summary,
@@ -387,7 +389,7 @@ const lookupMkxlBusinessCombo = (input: {
     return ref;
   }
 
-  if (ref.value.source === "seeded") {
+  if (ref.value.source === comboSources.seeded) {
     const summary = getMkxlCatalogComboSummary(ref.value.comboId);
 
     return ok(summary ? foundSeededDetail(summary) : notFoundLookup(ref.value));

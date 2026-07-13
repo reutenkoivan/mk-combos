@@ -20,6 +20,11 @@ import type {
   MkxlCatalogRouteQuery,
   MkxlCatalogVariationOption,
 } from "./type";
+import {
+  mkxlCatalogContextStatuses,
+  mkxlCatalogOptionAvailabilities,
+  mkxlCatalogRouteQueryKeys,
+} from "./value";
 
 const charactersById = new Map<string, (typeof mkxlCharacters)[number]>();
 
@@ -105,7 +110,10 @@ const getCharacterOptions = (): readonly MkxlCatalogCharacterOption[] => {
       shortLabel: character.shortLabel,
       rosterOrder: character.rosterOrder,
       comboCount,
-      availability: comboCount > 0 ? "available" : "disabledNoComboData",
+      availability:
+        comboCount > 0
+          ? mkxlCatalogOptionAvailabilities.available
+          : mkxlCatalogOptionAvailabilities.disabledNoComboData,
     });
   }
 
@@ -131,7 +139,10 @@ const getVariationOptions = (
       variationOrder: variation.variationOrder,
       pickerSlot: variation.pickerSlot,
       comboCount,
-      availability: comboCount > 0 ? "available" : "disabledNoComboData",
+      availability:
+        comboCount > 0
+          ? mkxlCatalogOptionAvailabilities.available
+          : mkxlCatalogOptionAvailabilities.disabledNoComboData,
     });
   }
 
@@ -155,16 +166,16 @@ const canonicalRouteQueryFromInput = (
 
   addString("character", firstValue(query.character));
   addString("variation", firstValue(query.variation));
-  addArray("starter", nonEmptyValues(query.starter));
-  addArray("position", nonEmptyValues(query.position));
-  addArray("meter", nonEmptyValues(query.meter));
+  addArray(mkxlCatalogRouteQueryKeys.starter, nonEmptyValues(query.starter));
+  addArray(mkxlCatalogRouteQueryKeys.position, nonEmptyValues(query.position));
+  addArray(mkxlCatalogRouteQueryKeys.meter, nonEmptyValues(query.meter));
   addString("damageMin", firstValue(query.damageMin));
   addString("damageMax", firstValue(query.damageMax));
-  addArray("difficulty", nonEmptyValues(query.difficulty));
-  addArray("routeType", nonEmptyValues(query.routeType));
-  addArray("tag", nonEmptyValues(query.tag));
-  addString("stage", firstValue(query.stage));
-  addArray("interactable", nonEmptyValues(query.interactable));
+  addArray(mkxlCatalogRouteQueryKeys.difficulty, nonEmptyValues(query.difficulty));
+  addArray(mkxlCatalogRouteQueryKeys.routeType, nonEmptyValues(query.routeType));
+  addArray(mkxlCatalogRouteQueryKeys.tag, nonEmptyValues(query.tag));
+  addString(mkxlCatalogRouteQueryKeys.stage, firstValue(query.stage));
+  addArray(mkxlCatalogRouteQueryKeys.interactable, nonEmptyValues(query.interactable));
 
   return canonicalQuery;
 };
@@ -173,13 +184,13 @@ export const getMkxlCatalogContextStatus = (
   context: MkxlCatalogContext,
 ): MkxlCatalogContextStatus => {
   if (context.characterId && context.variationId) {
-    return "ready";
+    return mkxlCatalogContextStatuses.ready;
   }
   if (context.characterId) {
-    return "characterSelected";
+    return mkxlCatalogContextStatuses.characterSelected;
   }
 
-  return "empty";
+  return mkxlCatalogContextStatuses.empty;
 };
 
 export const getMkxlCatalogContextOptions = (

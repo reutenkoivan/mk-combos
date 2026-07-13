@@ -3,8 +3,9 @@ import { BuilderTransitionCandidateSchema } from "@mk-combos/builder-core/transi
 import { z } from "zod/v4";
 
 import { MkxlBuilderIdSchema } from "../context/schema";
+import { mkxlBuilderMoveChoiceKinds } from "./value";
 
-export const MkxlBuilderMoveChoiceKindSchema = z.enum(["move", "interactable"]);
+export const MkxlBuilderMoveChoiceKindSchema = z.enum(mkxlBuilderMoveChoiceKinds);
 
 export const MkxlBuilderMoveChoiceSchema = z
   .object({

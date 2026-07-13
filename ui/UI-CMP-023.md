@@ -54,7 +54,7 @@
 
 Правила розміщення:
 
-- На `wide13_6Plus` character і game-specific selectors можуть стояти поруч; на `compact` вони stack-яться.
+- На `desktop` character і game-specific selectors можуть стояти поруч; на `mobile` і `tablet` вони stack-яться.
 - Stage context стоїть нижче required selectors і показується тільки для prepared MKXL model.
 - Анатомія не створює graph і не застосовує game rules; вона рендерить prepared setup model.
 
@@ -84,3 +84,13 @@ Payload містить field id, value, mode, reason і source focus target.
 - Context validation controlled сторінкою.
 - MKXL-only fields не з'являються для MK1.
 - Confirm event не містить browser events.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

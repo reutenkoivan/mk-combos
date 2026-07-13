@@ -33,7 +33,7 @@ describe("MK1 seeded data", () => {
 
   it("keeps combo routes derived from move notation", () => {
     const movesById = new Map(mk1Moves.map((move) => [move.id, move]));
-    const notationValues = new Set(mk1MoveNotationValues);
+    const notationValues = new Set(Object.values(mk1MoveNotationValues));
 
     for (const combo of mk1SeededCombos) {
       const expectedMovePath: string[] = [];

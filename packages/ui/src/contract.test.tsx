@@ -1,6 +1,14 @@
 import { notationDisplayModes } from "@mk-combos/contracts/settings/type";
 import { fireEvent, render, screen } from "@mk-combos/contracts/test/unit/react";
 import * as contractEntry from "@mk-combos/ui/contract";
+import { getControllerFocusAttributes, moveFocus } from "@mk-combos/ui/focus-navigation/runtime";
+import {
+  uiFocusDirections as schemaFocusDirections,
+  UiFocusNavigationScopeSchema,
+} from "@mk-combos/ui/focus-navigation/schema";
+import type { UiFocusDirection, UiFocusNeighbors } from "@mk-combos/ui/focus-navigation/type";
+import { uiFocusDirections as typeFocusDirections } from "@mk-combos/ui/focus-navigation/type";
+import { uiFocusDirections } from "@mk-combos/ui/focus-navigation/value";
 import { AlertTriangleIcon, alertTriangleIcon } from "@mk-combos/ui/icons/alert-triangle";
 import { CheckIcon, checkIcon } from "@mk-combos/ui/icons/check";
 import { ChevronDownIcon, chevronDownIcon } from "@mk-combos/ui/icons/chevron-down";
@@ -49,6 +57,8 @@ import {
 } from "@mk-combos/ui/notation/type";
 import {
   notationDisplayModes as notationValueDisplayModes,
+  uiNotationIconKinds,
+  uiNotationTokenStates,
   uiNotationTokens,
 } from "@mk-combos/ui/notation/value";
 import { Button, type ButtonPressPayload, IconButton } from "@mk-combos/ui/primitives/button";
@@ -69,6 +79,22 @@ import {
   DisclosureTrigger,
 } from "@mk-combos/ui/primitives/disclosure";
 import {
+  DrawerBackdrop,
+  DrawerClose,
+  type DrawerClosePressPayload,
+  DrawerContent,
+  DrawerDescription,
+  DrawerPopup,
+  DrawerPortal,
+  DrawerRoot,
+  type DrawerSwipeDirection,
+  DrawerTitle,
+  DrawerTrigger,
+  type DrawerTriggerProps,
+  DrawerViewport,
+  drawerSwipeDirections,
+} from "@mk-combos/ui/primitives/drawer";
+import {
   Field,
   FieldLabel,
   FieldMessage,
@@ -81,15 +107,31 @@ import {
   getFocusTargetAttributes,
   getFocusTargetSelector,
   restoreFocusTarget,
+  type UiFocusRestoreReason,
+  uiFocusRestoreReasons,
 } from "@mk-combos/ui/primitives/focus";
 import {
+  type UiPrimitiveInteractionReason,
+  uiPrimitiveInteractionReasons,
+} from "@mk-combos/ui/primitives/interaction";
+import {
   Grid,
+  type GridColumnMode,
   Group,
+  gridColumnModes,
   Panel,
   Separator,
+  type SeparatorOrientation,
   Stack,
   Surface,
+  separatorOrientations,
+  type UiAlign,
+  type UiJustify,
   UiRoot,
+  uiAlignments,
+  uiJustifications,
+  WorkstationSection,
+  type WorkstationSectionProps,
 } from "@mk-combos/ui/primitives/layout";
 import {
   MenuGroup,
@@ -116,12 +158,19 @@ import {
   type PopoverTriggerProps,
 } from "@mk-combos/ui/primitives/popover";
 import {
+  type UiFloatingAlignment,
+  type UiFloatingSide,
+  uiFloatingAlignments,
+  uiFloatingSides,
+} from "@mk-combos/ui/primitives/positioning";
+import {
   SegmentedControl,
   type SegmentedControlOption,
 } from "@mk-combos/ui/primitives/segmented-control";
 import { Badge, LoadingIndicator, StatusMessage } from "@mk-combos/ui/primitives/state";
 import {
   uiContrastModes as schemaContrastModes,
+  uiControlPresentationModes as schemaControlPresentationModes,
   uiDensityModes as schemaDensityModes,
   uiEmphasisModes as schemaEmphasisModes,
   uiInteractionStates as schemaInteractionStates,
@@ -132,12 +181,14 @@ import {
   uiShapeModes as schemaShapeModes,
   uiThemeModes as schemaThemeModes,
   uiToneModes as schemaToneModes,
+  UiControlPresentationModeSchema,
   UiSemanticTokenSchema,
   UiThemeModeSchema,
   UiToneModeSchema,
 } from "@mk-combos/ui/tokens/schema";
 import type {
   UiContrastMode,
+  UiControlPresentationMode,
   UiDensityMode,
   UiEmphasisMode,
   UiInteractionState,
@@ -146,10 +197,13 @@ import type {
   UiSelectionState,
   UiSemanticToken,
   UiSemanticTokenName,
+  UiShapeMode,
   UiThemeMode,
+  UiToneMode,
 } from "@mk-combos/ui/tokens/type";
 import {
   uiContrastModes as typeContrastModes,
+  uiControlPresentationModes as typeControlPresentationModes,
   uiDensityModes as typeDensityModes,
   uiEmphasisModes as typeEmphasisModes,
   uiInteractionStates as typeInteractionStates,
@@ -162,7 +216,21 @@ import {
   uiThemeModes as typeThemeModes,
   uiToneModes as typeToneModes,
 } from "@mk-combos/ui/tokens/type";
-import { uiSemanticTokenNames, uiSemanticTokens } from "@mk-combos/ui/tokens/value";
+import {
+  uiContrastModes,
+  uiControlPresentationModes,
+  uiDensityModes,
+  uiEmphasisModes,
+  uiInteractionStates,
+  uiMaterialModes,
+  uiPlacementModes,
+  uiSelectionStates,
+  uiSemanticTokenNames,
+  uiSemanticTokens,
+  uiShapeModes,
+  uiThemeModes,
+  uiToneModes,
+} from "@mk-combos/ui/tokens/value";
 import { describe, expect, it } from "vitest";
 
 import { InternalButton } from "./internal/base-ui/button";
@@ -177,6 +245,7 @@ import {
   InternalDialogTrigger,
 } from "./internal/base-ui/dialog";
 import { NotationIcon } from "./notation/renderer";
+import { mapBaseUiReason } from "./primitives/internal";
 import * as recipeBarrel from "./recipes";
 import { controlRecipe } from "./recipes/control";
 import { fieldRecipe } from "./recipes/field";
@@ -189,6 +258,7 @@ import { surfaceRecipe } from "./recipes/surface";
 const acceptsUiTokenTypes = <
   _Tokens extends {
     contrast: UiContrastMode;
+    controlPresentation: UiControlPresentationMode;
     density: UiDensityMode;
     emphasis: UiEmphasisMode;
     interaction: UiInteractionState;
@@ -196,7 +266,9 @@ const acceptsUiTokenTypes = <
     placement: UiPlacementMode;
     selection: UiSelectionState;
     tokenName: UiSemanticTokenName;
+    shape: UiShapeMode;
     theme: UiThemeMode;
+    tone: UiToneMode;
   },
 >() => true;
 
@@ -212,6 +284,9 @@ const acceptsNotationTypes = <
 const acceptsPrimitiveTypes = <
   _Primitive extends {
     buttonPayload: ButtonPressPayload;
+    drawerDirection: DrawerSwipeDirection;
+    drawerClosePayload: DrawerClosePressPayload;
+    drawerTriggerProps: DrawerTriggerProps;
     dialogTriggerProps: DialogTriggerProps;
     inputPayload: TextInputChangePayload;
     menuItemPayload: MenuItemSelectPayload<"edit">;
@@ -219,6 +294,16 @@ const acceptsPrimitiveTypes = <
     popoverCloseProps: PopoverCloseProps;
     popoverTriggerProps: PopoverTriggerProps;
     segmentOption: SegmentedControlOption<"EN" | "UA">;
+    workstationSection: WorkstationSectionProps;
+    focusNeighbors: UiFocusNeighbors;
+    focusRestoreReason: UiFocusRestoreReason;
+    floatingAlignment: UiFloatingAlignment;
+    floatingSide: UiFloatingSide;
+    gridColumns: GridColumnMode;
+    interactionReason: UiPrimitiveInteractionReason;
+    layoutAlign: UiAlign;
+    layoutJustify: UiJustify;
+    separatorOrientation: SeparatorOrientation;
   },
 >() => true;
 
@@ -286,21 +371,259 @@ describe("@mk-combos/ui foundation", () => {
       type: "@mk-combos/ui/notation/type",
       value: "@mk-combos/ui/notation/value",
     });
+    expect(contractEntry.uiContractGroups.focusNavigation).toEqual({
+      runtime: "@mk-combos/ui/focus-navigation/runtime",
+      schema: "@mk-combos/ui/focus-navigation/schema",
+      type: "@mk-combos/ui/focus-navigation/type",
+      value: "@mk-combos/ui/focus-navigation/value",
+    });
+    expect(contractEntry.uiContractGroups.hooks).toEqual({
+      fieldMessage: "@mk-combos/ui/hooks/field-message",
+      focusNavigation: "@mk-combos/ui/hooks/focus-navigation",
+      intents: "@mk-combos/ui/hooks/intents",
+      openState: "@mk-combos/ui/hooks/open-state",
+      responsiveMode: "@mk-combos/ui/hooks/responsive-mode",
+    });
+    expect(contractEntry.uiContractGroups.components.controllerAccessGate).toBe(
+      "@mk-combos/ui/components/controller-access-gate",
+    );
     expect(contractEntry.uiContractGroups.primitives).toEqual({
       button: "@mk-combos/ui/primitives/button",
       dialog: "@mk-combos/ui/primitives/dialog",
+      drawer: "@mk-combos/ui/primitives/drawer",
       disclosure: "@mk-combos/ui/primitives/disclosure",
       field: "@mk-combos/ui/primitives/field",
       focus: "@mk-combos/ui/primitives/focus",
+      interaction: "@mk-combos/ui/primitives/interaction",
       layout: "@mk-combos/ui/primitives/layout",
       menu: "@mk-combos/ui/primitives/menu",
       popover: "@mk-combos/ui/primitives/popover",
+      positioning: "@mk-combos/ui/primitives/positioning",
       segmentedControl: "@mk-combos/ui/primitives/segmented-control",
       state: "@mk-combos/ui/primitives/state",
     });
     expect(contractEntry.uiContractGroups.styles.css).toBe("@mk-combos/ui/styles.css");
     expect(contractEntry.uiContractGroups.icons.gamepad2).toBe("@mk-combos/ui/icons/gamepad-2");
     expect(contractEntry.mkCombosUi.valueSets.notationDisplayModes).toBe(notationDisplayModes);
+    expect(contractEntry.mkCombosUi.valueSets.uiFocusDirections).toBe(uiFocusDirections);
+    expect(schemaFocusDirections).toBe(uiFocusDirections);
+    expect(typeFocusDirections).toBe(uiFocusDirections);
+  });
+
+  it("keeps focus navigation strict and deterministic", () => {
+    const direction: UiFocusDirection = "right";
+    const scope = UiFocusNavigationScopeSchema.parse({
+      availableCommandIds: ["navRight"],
+      entryTargetId: "a",
+      fallbackTargetId: "a",
+      id: "test",
+      targets: [
+        { id: "a", neighbors: { right: "b" } },
+        { id: "b", neighbors: { left: "a" } },
+      ],
+    });
+
+    expect(moveFocus(scope, "a", direction)).toBe("b");
+    expect(getControllerFocusAttributes({ focused: true, targetId: "b" })).toEqual({
+      "data-controller-focused": "true",
+      "data-ui-focus-target": "b",
+    });
+    expect(
+      UiFocusNavigationScopeSchema.safeParse({ ...scope, nativeKeyboardEvent: {} }).success,
+    ).toBe(false);
+  });
+
+  it("publishes exact closed foundation dictionaries", () => {
+    expect(uiThemeModes).toEqual({ dark: "dark", light: "light" });
+    expect(uiContrastModes).toEqual({ increased: "increased", standard: "standard" });
+    expect(uiSemanticTokenNames).toEqual({
+      accent: "accent",
+      "accent-strong": "accent-strong",
+      "accent-text": "accent-text",
+      content: "content",
+      control: "control",
+      "control-active": "control-active",
+      "control-border": "control-border",
+      "control-hover": "control-hover",
+      destructive: "destructive",
+      "destructive-border": "destructive-border",
+      "destructive-soft": "destructive-soft",
+      dialog: "dialog",
+      field: "field",
+      glass: "glass",
+      highlight: "highlight",
+      inspector: "inspector",
+      menu: "menu",
+      "muted-text": "muted-text",
+      placeholder: "placeholder",
+      popover: "popover",
+      selection: "selection",
+      "selection-muted": "selection-muted",
+      "selection-text": "selection-text",
+      separator: "separator",
+      shadow: "shadow",
+      sidebar: "sidebar",
+      success: "success",
+      "success-border": "success-border",
+      "success-soft": "success-soft",
+      text: "text",
+      toolbar: "toolbar",
+      warning: "warning",
+      "warning-border": "warning-border",
+      "warning-soft": "warning-soft",
+      window: "window",
+    });
+    expect(uiDensityModes).toEqual({ medium: "medium", mini: "mini", small: "small" });
+    expect(uiShapeModes).toEqual({ capsule: "capsule", concentric: "concentric", fixed: "fixed" });
+    expect(uiMaterialModes).toEqual({
+      elevated: "elevated",
+      glass: "glass",
+      none: "none",
+      opaque: "opaque",
+      separated: "separated",
+    });
+    expect(uiToneModes).toEqual({
+      accent: "accent",
+      destructive: "destructive",
+      neutral: "neutral",
+      success: "success",
+      warning: "warning",
+    });
+    expect(uiEmphasisModes).toEqual({
+      normal: "normal",
+      prominent: "prominent",
+      subtle: "subtle",
+    });
+    expect(uiControlPresentationModes).toEqual({ filled: "filled", icon: "icon" });
+    expect(uiInteractionStates).toEqual({
+      active: "active",
+      disabled: "disabled",
+      focusVisible: "focusVisible",
+      hover: "hover",
+      idle: "idle",
+      invalid: "invalid",
+      loading: "loading",
+      open: "open",
+      selected: "selected",
+    });
+    expect(uiSelectionStates).toEqual({
+      current: "current",
+      mixed: "mixed",
+      none: "none",
+      selected: "selected",
+    });
+    expect(uiPlacementModes).toEqual({
+      block: "block",
+      floating: "floating",
+      inline: "inline",
+      sidebar: "sidebar",
+      toolbar: "toolbar",
+    });
+    expect(uiFocusDirections).toEqual({ down: "down", left: "left", right: "right", up: "up" });
+    expect(uiNotationIconKinds).toEqual({
+      attack: "attack",
+      control: "control",
+      direction: "direction",
+      displayMode: "displayMode",
+      frameWindow: "frameWindow",
+      modifier: "modifier",
+      separator: "separator",
+      state: "state",
+    });
+    expect(uiNotationTokenStates).toEqual({
+      disabled: "disabled",
+      focused: "focused",
+      highlighted: "highlighted",
+      invalid: "invalid",
+      ready: "ready",
+      stale: "stale",
+      unavailable: "unavailable",
+    });
+    expect(uiNotationTokens).toEqual({
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      AMP: "AMP",
+      B: "B",
+      BLK: "BLK",
+      D: "D",
+      F: "F",
+      INT: "INT",
+      K: "K",
+      SS: "SS",
+      U: "U",
+      dpadDown: "dpadDown",
+      dpadLeft: "dpadLeft",
+      dpadRight: "dpadRight",
+      dpadUp: "dpadUp",
+      faceEast: "faceEast",
+      faceNorth: "faceNorth",
+      faceSouth: "faceSouth",
+      faceWest: "faceWest",
+      home: "home",
+      leftShoulder: "leftShoulder",
+      leftStickDown: "leftStickDown",
+      leftStickLeft: "leftStickLeft",
+      leftStickPress: "leftStickPress",
+      leftStickRight: "leftStickRight",
+      leftStickUp: "leftStickUp",
+      leftTrigger: "leftTrigger",
+      rightShoulder: "rightShoulder",
+      rightStickDown: "rightStickDown",
+      rightStickLeft: "rightStickLeft",
+      rightStickPress: "rightStickPress",
+      rightStickRight: "rightStickRight",
+      rightStickUp: "rightStickUp",
+      rightTrigger: "rightTrigger",
+      select: "select",
+      start: "start",
+    });
+    expect(uiPrimitiveInteractionReasons).toEqual({
+      closePress: "closePress",
+      closeWatcher: "closeWatcher",
+      escapeKey: "escapeKey",
+      focusOut: "focusOut",
+      imperativeAction: "imperativeAction",
+      itemPress: "itemPress",
+      listNavigation: "listNavigation",
+      none: "none",
+      outsidePress: "outsidePress",
+      swipe: "swipe",
+      triggerFocus: "triggerFocus",
+      triggerHover: "triggerHover",
+      triggerPress: "triggerPress",
+    });
+    expect(uiFloatingSides).toEqual({ bottom: "bottom", left: "left", right: "right", top: "top" });
+    expect(uiFloatingAlignments).toEqual({ center: "center", end: "end", start: "start" });
+    expect(drawerSwipeDirections).toEqual({ down: "down", left: "left", right: "right", up: "up" });
+    expect(uiFocusRestoreReasons).toEqual({
+      documentUnavailable: "documentUnavailable",
+      restored: "restored",
+      targetDisabled: "targetDisabled",
+      targetMissing: "targetMissing",
+    });
+    expect(uiAlignments).toEqual({
+      center: "center",
+      end: "end",
+      start: "start",
+      stretch: "stretch",
+    });
+    expect(uiJustifications).toEqual({
+      between: "between",
+      center: "center",
+      end: "end",
+      start: "start",
+    });
+    expect(gridColumnModes).toEqual({ auto: "auto", one: "one", three: "three", two: "two" });
+    expect(separatorOrientations).toEqual({ horizontal: "horizontal", vertical: "vertical" });
+
+    expect(contractEntry.mkCombosUi.valueSets.uiThemeModes).toBe(uiThemeModes);
+    expect(contractEntry.mkCombosUi.valueSets.uiNotationTokens).toBe(uiNotationTokens);
+    expect(contractEntry.mkCombosUi.valueSets.uiPrimitiveInteractionReasons).toBe(
+      uiPrimitiveInteractionReasons,
+    );
+    expect(contractEntry.mkCombosUi.valueSets.uiFloatingSides).toBe(uiFloatingSides);
   });
 
   it("keeps token schemas strict and semantic", () => {
@@ -314,11 +637,13 @@ describe("@mk-combos/ui foundation", () => {
       name: "window",
     });
     expect(UiThemeModeSchema.safeParse("dark").success).toBe(true);
+    expect(UiControlPresentationModeSchema.safeParse("icon").success).toBe(true);
     expect(UiToneModeSchema.safeParse("purple").success).toBe(false);
     expect(UiSemanticTokenSchema.safeParse({ ...token, rawColor: "#fff" }).success).toBe(false);
-    expect(uiSemanticTokenNames).toContain("selection-muted");
+    expect(Object.values(uiSemanticTokenNames)).toContain("selection-muted");
     expect(schemaThemeModes).toBe(typeThemeModes);
     expect(schemaContrastModes).toBe(typeContrastModes);
+    expect(schemaControlPresentationModes).toBe(typeControlPresentationModes);
     expect(schemaDensityModes).toBe(typeDensityModes);
     expect(schemaEmphasisModes).toBe(typeEmphasisModes);
     expect(schemaInteractionStates).toBe(typeInteractionStates);
@@ -329,6 +654,7 @@ describe("@mk-combos/ui foundation", () => {
     expect(schemaShapeModes).toBe(typeShapeModes);
     expect(schemaToneModes).toBe(typeToneModes);
     expect(typeSemanticTokens).toBe(uiSemanticTokens);
+    expect(uiControlPresentationModes).toEqual({ filled: "filled", icon: "icon" });
     expect(acceptsUiTokenTypes()).toBe(true);
   });
 
@@ -370,7 +696,7 @@ describe("@mk-combos/ui foundation", () => {
       }),
     );
     expect(UiNotationTokenSchema.safeParse("K").success).toBe(true);
-    expect(uiNotationTokens).toContain("BLK");
+    expect(Object.values(uiNotationTokens)).toContain("BLK");
     expect(UiNotationIconDescriptorSchema.safeParse({ ...token, rawSvg: "<svg />" }).success).toBe(
       false,
     );
@@ -382,12 +708,12 @@ describe("@mk-combos/ui foundation", () => {
     expect(notationTypeDisplayModes).toBe(notationDisplayModes);
     expect(notationValueDisplayModes).toBe(notationDisplayModes);
     expect(typeNotationDisplayModeIconNames.FGC).toBe("notation-display-fgc");
-    expect(typeNotationIconKinds).toContain("frameWindow");
-    expect(typeNotationIconKinds).toContain("control");
+    expect(Object.values(typeNotationIconKinds)).toContain("frameWindow");
+    expect(Object.values(typeNotationIconKinds)).toContain("control");
     expect(typeNotationModeTokenIconNames.PlayStation["1"]).toBe("notation-playstation-square");
     expect(typeNotationModeTokenLabels.Xbox["3"]).toBe("A");
     expect(typeNotationTokenKinds.K).toBe("attack");
-    expect(typeNotationTokenStates).toContain("stale");
+    expect(Object.values(typeNotationTokenStates)).toContain("stale");
     expect(typeNotationTokens).toBe(uiNotationTokens);
     expect(acceptsNotationTypes()).toBe(true);
   });
@@ -395,7 +721,7 @@ describe("@mk-combos/ui foundation", () => {
   it("covers every standard controller control in notation registry", () => {
     for (const token of notationControllerControlTokens) {
       expect(UiNotationTokenSchema.safeParse(token).success).toBe(true);
-      expect(uiNotationTokens).toContain(token);
+      expect(Object.values(uiNotationTokens)).toContain(token);
       expect(typeNotationModeTokenLabels.PlayStation[token].length).toBeGreaterThan(0);
       expect(typeNotationModeTokenLabels.Xbox[token].length).toBeGreaterThan(0);
       expect(typeNotationModeTokenIconNames.PlayStation[token]).toMatch(/^notation-playstation-/);
@@ -427,10 +753,60 @@ describe("@mk-combos/ui foundation", () => {
   });
 
   it("produces recipe classes from semantic axes", () => {
-    expect(controlRecipe({ emphasis: "prominent", tone: "accent" })).toContain("var(--ui-accent)");
-    expect(fieldRecipe({ state: "invalid" })).toContain("var(--ui-destructive)");
+    const filledControlClasses = controlRecipe();
+    const iconControlClasses = controlRecipe({ appearance: "icon" });
+    const prominentAccentClasses = controlRecipe({ emphasis: "prominent", tone: "accent" });
+    const selectedControlClasses = controlRecipe({ state: "selected" });
+    const disabledControlClasses = controlRecipe({ state: "disabled" });
+    const loadingControlClasses = controlRecipe({ state: "loading" });
+    const editableFieldClasses = fieldRecipe();
+    const invalidFieldClasses = fieldRecipe({ state: "invalid" });
+    const readOnlyFieldClasses = fieldRecipe({ editable: false });
+    const disabledFieldClasses = fieldRecipe({ state: "disabled" });
+    const loadingFieldClasses = fieldRecipe({ state: "loading" });
+    const interactiveItemClasses = itemRecipe({ interactive: true });
+    const selectedItemClasses = itemRecipe({ interactive: true, selection: "selected" });
+    const disabledItemClasses = itemRecipe({ interactive: true, state: "disabled" });
+    const loadingItemClasses = itemRecipe({ interactive: true, state: "loading" });
+    const staticItemClasses = itemRecipe();
+
+    expect(filledControlClasses).toContain("cursor-pointer");
+    expect(filledControlClasses).toContain("enabled:hover:bg-[var(--ui-control-hover)]");
+    expect(prominentAccentClasses).toContain("var(--ui-accent)");
+    expect(prominentAccentClasses).toContain("enabled:hover:bg-[color-mix");
+    expect(selectedControlClasses).toContain("var(--ui-selection-muted)");
+    expect(selectedControlClasses).toContain("enabled:hover:bg-[color-mix");
+    expect(iconControlClasses).toContain("border-transparent");
+    expect(iconControlClasses).toContain("bg-transparent");
+    expect(iconControlClasses).toContain("cursor-pointer");
+    expect(iconControlClasses).toContain("shadow-none");
+    expect(iconControlClasses).toContain("enabled:hover:border-transparent");
+    expect(iconControlClasses).toContain("enabled:hover:bg-transparent");
+    expect(iconControlClasses).toContain("enabled:hover:text-[var(--ui-accent-strong)]");
+    expect(disabledControlClasses).toContain("cursor-not-allowed");
+    expect(disabledControlClasses).not.toContain("pointer-events-none");
+    expect(loadingControlClasses).toContain("cursor-wait");
+    expect(editableFieldClasses).toContain("cursor-text");
+    expect(editableFieldClasses).toContain("enabled:hover:border-[var(--ui-accent)]");
+    expect(invalidFieldClasses).toContain("var(--ui-destructive)");
+    expect(invalidFieldClasses).toContain("enabled:hover:border-[color-mix");
+    expect(readOnlyFieldClasses).toContain("cursor-text");
+    expect(readOnlyFieldClasses).not.toContain("hover:");
+    expect(disabledFieldClasses).toContain("cursor-not-allowed");
+    expect(disabledFieldClasses).not.toContain("pointer-events-none");
+    expect(loadingFieldClasses).toContain("cursor-wait");
     expect(surfaceRecipe({ material: "glass" })).toContain("backdrop-blur");
-    expect(itemRecipe({ selection: "selected" })).toContain("var(--ui-selection)");
+    expect(interactiveItemClasses).toContain("[&:not([data-disabled=true])]:cursor-pointer");
+    expect(interactiveItemClasses).toContain(
+      "[&:not([data-disabled=true])]:hover:bg-[var(--ui-control-hover)]",
+    );
+    expect(selectedItemClasses).toContain("var(--ui-selection)");
+    expect(selectedItemClasses).toContain("[&:not([data-disabled=true])]:hover:bg-[color-mix");
+    expect(disabledItemClasses).toContain("cursor-not-allowed");
+    expect(disabledItemClasses).not.toContain("pointer-events-none");
+    expect(loadingItemClasses).toContain("cursor-wait");
+    expect(staticItemClasses).not.toContain("cursor-pointer");
+    expect(staticItemClasses).not.toContain("hover:");
     expect(indicatorRecipe({ tone: "warning" })).toContain("var(--ui-warning)");
     expect(popupRecipe({ material: "elevated" })).toContain("var(--ui-shadow)");
     expect(separatorRecipe({ orientation: "vertical" })).toContain("w-px");
@@ -452,6 +828,9 @@ describe("@mk-combos/ui foundation", () => {
     render(
       <UiRoot contrast="increased" theme="dark">
         <Stack density="medium">
+          <WorkstationSection description="Prepared module" title="Combat workstation">
+            <p>Section content</p>
+          </WorkstationSection>
           <Surface material="separated">
             <Panel density="medium">
               <Grid columns="two">
@@ -463,7 +842,9 @@ describe("@mk-combos/ui foundation", () => {
                   >
                     Save
                   </Button>
-                  <Button loading>Saving</Button>
+                  <Button disabled loading>
+                    Saving
+                  </Button>
                   <IconButton label="Open actions">
                     <MenuIcon decorative size={14} />
                   </IconButton>
@@ -485,6 +866,7 @@ describe("@mk-combos/ui foundation", () => {
                 />
                 <FieldMessage invalid>Required field</FieldMessage>
               </Field>
+              <TextInput aria-label="Read only query" readOnly value="Locked" />
               <SegmentedControl
                 aria-label="Language"
                 onValueChange={(payload) => segmentPayloads.push(payload)}
@@ -507,7 +889,37 @@ describe("@mk-combos/ui foundation", () => {
     fireEvent.click(screen.getByRole("button", { name: "English" }));
 
     expect(screen.getByRole("button", { name: "Saving" }).getAttribute("aria-busy")).toBe("true");
-    expect(screen.getByRole("button", { name: "Open actions" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Saving" }).getAttribute("data-loading")).toBe(
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Save" }).className).toContain("cursor-pointer");
+    expect(screen.getByRole("button", { name: "Save" }).className).toContain("enabled:hover:bg");
+    expect(screen.getByRole("button", { name: "Saving" }).className).toContain("cursor-wait");
+    expect(screen.getByRole("button", { name: "Saving" }).className).not.toContain(
+      "pointer-events-none",
+    );
+    expect(screen.getByRole("button", { name: "Saving" })).toHaveProperty("disabled", true);
+    expect(screen.getByRole("button", { name: "Open actions" }).className).toContain(
+      "cursor-pointer",
+    );
+    expect(screen.getByRole("button", { name: "Open actions" }).className).toContain(
+      "enabled:hover:bg-transparent",
+    );
+    expect(screen.getByRole("textbox", { name: "Query" }).className).toContain("cursor-text");
+    expect(screen.getByRole("textbox", { name: "Query" }).className).toContain(
+      "enabled:hover:border-[var(--ui-accent)]",
+    );
+    expect(screen.getByRole("textbox", { name: "Read only query" }).className).toContain(
+      "cursor-text",
+    );
+    expect(screen.getByRole("textbox", { name: "Read only query" }).className).not.toContain(
+      "hover:",
+    );
+    expect(screen.getByRole("button", { name: "English" }).className).toContain("cursor-pointer");
+    expect(screen.getByRole("button", { name: "English" }).className).toContain("enabled:hover:bg");
+    expect(screen.getByRole("button", { name: "Ukrainian" }).className).toContain(
+      "enabled:hover:bg-[color-mix",
+    );
     expect(screen.getAllByRole("status")[0]?.textContent).toBe("Loading data");
     expect(screen.getByRole("alert").textContent).toBe("Required field");
     expect(screen.getByRole("separator", { name: "Primitive split" })).toBeTruthy();
@@ -527,6 +939,69 @@ describe("@mk-combos/ui foundation", () => {
     expect(inputPayloads[0]).not.toHaveProperty("event");
     expect(segmentPayloads[0]).not.toHaveProperty("event");
     expect(acceptsPrimitiveTypes()).toBe(true);
+  });
+
+  it("keeps disabled controls and items inert while exposing semantic cursors", () => {
+    const buttonPayloads: ButtonPressPayload[] = [];
+    const menuPayloads: MenuItemSelectPayload<"disabled-item">[] = [];
+    const segmentPayloads: Array<{ reason: string; value: "EN" | "UA" }> = [];
+
+    render(
+      <div>
+        <Button disabled onRequestPress={(payload) => buttonPayloads.push(payload)}>
+          Disabled action
+        </Button>
+        <TextInput aria-label="Disabled query" disabled value="Locked" />
+        <SegmentedControl
+          aria-label="Disabled option selector"
+          onValueChange={(payload) => segmentPayloads.push(payload)}
+          options={[
+            { label: "English", value: "EN" },
+            { disabled: true, label: "Ukrainian", value: "UA" },
+          ]}
+          value="EN"
+        />
+        <MenuRoot open>
+          <MenuTrigger>Disabled item menu</MenuTrigger>
+          <MenuPortal>
+            <MenuPositioner>
+              <MenuPopup>
+                <MenuItem
+                  disabled
+                  onRequestSelect={(payload) => menuPayloads.push(payload)}
+                  value="disabled-item"
+                >
+                  Disabled menu item
+                </MenuItem>
+              </MenuPopup>
+            </MenuPositioner>
+          </MenuPortal>
+        </MenuRoot>
+      </div>,
+    );
+
+    const disabledButton = screen.getByRole("button", { name: "Disabled action" });
+    const disabledField = screen.getByRole("textbox", { name: "Disabled query" });
+    const disabledSegment = screen.getByRole("button", { name: "Ukrainian" });
+    const disabledItem = screen.getByRole("menuitem", { name: "Disabled menu item" });
+
+    for (const element of [disabledButton, disabledField, disabledSegment, disabledItem]) {
+      expect(element.className).toContain("cursor-not-allowed");
+      expect(element.className).not.toContain("pointer-events-none");
+    }
+    expect(disabledButton).toHaveProperty("disabled", true);
+    expect(disabledField).toHaveProperty("disabled", true);
+    expect(disabledSegment).toHaveProperty("disabled", true);
+    expect(disabledItem.getAttribute("aria-disabled")).toBe("true");
+
+    fireEvent.click(disabledButton);
+    fireEvent.change(disabledField, { target: { value: "Changed" } });
+    fireEvent.click(disabledSegment);
+    fireEvent.click(disabledItem);
+
+    expect(buttonPayloads).toEqual([]);
+    expect(menuPayloads).toEqual([]);
+    expect(segmentPayloads).toEqual([]);
   });
 
   it("wraps Base UI disclosure, popover, and menu mechanics behind semantic surfaces", () => {
@@ -582,10 +1057,20 @@ describe("@mk-combos/ui foundation", () => {
 
     const trigger = screen.getByRole("button", { name: "Backup details" });
 
-    expect(screen.getByRole("button", { name: "Open lightweight dialog" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Open popover" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Close popover" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Open actions menu" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Open lightweight dialog" }).className).toContain(
+      "cursor-pointer",
+    );
+    expect(screen.getByRole("button", { name: "Open popover" }).className).toContain(
+      "cursor-pointer",
+    );
+    expect(screen.getByRole("button", { name: "Close popover" }).className).toContain(
+      "cursor-pointer",
+    );
+    expect(screen.getByRole("button", { name: "Open actions menu" }).className).toContain(
+      "cursor-pointer",
+    );
+    expect(screen.getByRole("menuitem", { name: "Edit" }).className).toContain("cursor-pointer");
+    expect(trigger.className).toContain("cursor-pointer");
     expect(trigger.getAttribute("aria-expanded")).toBe("false");
     expect(screen.queryByText("Collapsed backup content")).toBeNull();
     expect(screen.getByText("Controller hints")).toBeTruthy();
@@ -621,7 +1106,52 @@ describe("@mk-combos/ui foundation", () => {
     );
 
     expect(screen.getByRole("dialog", { name: "Confirm import" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "Close dialog" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Close dialog" }).className).toContain(
+      "cursor-pointer",
+    );
+  });
+
+  it("wraps a controlled drawer with semantic close payloads", () => {
+    const openPayloads: Array<{ open: boolean; reason: string; sourceFocusTarget?: string }> = [];
+
+    render(
+      <DrawerRoot
+        onOpenChange={(payload) => openPayloads.push(payload)}
+        open
+        sourceFocusTarget="navigation-trigger"
+        swipeDirection="right"
+      >
+        <DrawerTrigger>Open navigation</DrawerTrigger>
+        <DrawerPortal>
+          <DrawerBackdrop />
+          <DrawerViewport>
+            <DrawerPopup>
+              <DrawerContent>
+                <DrawerTitle>Navigation</DrawerTitle>
+                <DrawerDescription>Responsive destinations</DrawerDescription>
+                <DrawerClose>Close navigation</DrawerClose>
+              </DrawerContent>
+            </DrawerPopup>
+          </DrawerViewport>
+        </DrawerPortal>
+      </DrawerRoot>,
+    );
+
+    expect(screen.getByRole("dialog", { name: "Navigation" })).toBeTruthy();
+    const drawerTrigger = document.querySelector<HTMLButtonElement>("[data-ui-drawer-trigger]");
+    const closeButton = screen.getByRole("button", { name: "Close navigation" });
+
+    expect(drawerTrigger?.className).toContain("cursor-pointer");
+    expect(closeButton.className).toContain("cursor-pointer");
+    fireEvent.click(closeButton);
+    expect(openPayloads[0]).toEqual({
+      open: false,
+      reason: "closePress",
+      sourceFocusTarget: "navigation-trigger",
+    });
+    expect(openPayloads[0]).not.toHaveProperty("event");
+    expect(mapBaseUiReason("swipe")).toBe("swipe");
+    expect(mapBaseUiReason("close-watcher")).toBe("closeWatcher");
   });
 
   it("restores focus through UI-owned focus target helpers", () => {
@@ -668,6 +1198,23 @@ describe("@mk-combos/ui foundation", () => {
 
     expect(screen.getByRole("img", { name: "Open menu" })).toBeTruthy();
     expect(screen.queryByRole("img", { name: "Decorative controller" })).toBeNull();
+  });
+
+  it("normalizes semantic icon sizes to bounded SVG dimensions", () => {
+    const { container } = render(
+      <div>
+        <ChevronDownIcon data-testid="semantic-icon" size="small" />
+        <MenuIcon data-testid="numeric-icon" size={14} />
+      </div>,
+    );
+
+    const semanticIcon = container.querySelector('[data-testid="semantic-icon"]');
+    const numericIcon = container.querySelector('[data-testid="numeric-icon"]');
+
+    expect(semanticIcon?.getAttribute("width")).toBe("16");
+    expect(semanticIcon?.getAttribute("height")).toBe("16");
+    expect(numericIcon?.getAttribute("width")).toBe("14");
+    expect(numericIcon?.getAttribute("height")).toBe("14");
   });
 
   it("renders notation descriptors as platform glyphs", () => {

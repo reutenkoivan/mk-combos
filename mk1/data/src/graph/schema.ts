@@ -1,12 +1,15 @@
 import { z } from "zod/v4";
 
 import { Mk1IdSchema, Mk1LabelSchema, Mk1SourceIdListSchema } from "../shared/schema";
+import { mk1GraphNodeKinds } from "./constants";
+
+export const Mk1GraphNodeKindSchema = z.enum(mk1GraphNodeKinds);
 
 export const Mk1GraphNodeSchema = z
   .object({
     id: Mk1IdSchema,
     label: Mk1LabelSchema,
-    kind: z.enum(["start", "move", "kameo", "end"]),
+    kind: Mk1GraphNodeKindSchema,
   })
   .strict();
 

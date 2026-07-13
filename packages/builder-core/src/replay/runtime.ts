@@ -1,4 +1,5 @@
 import type { BuilderReplayInvalid, BuilderReplayValid } from "./type";
+import { builderReplayStatuses } from "./value";
 
 export function createValidReplay(input: {
   originalPath: BuilderReplayValid["originalPath"];
@@ -9,7 +10,7 @@ export function createValidReplay(input: {
 }): BuilderReplayValid {
   const result: BuilderReplayValid = {
     ok: true,
-    status: "valid",
+    status: builderReplayStatuses.valid,
     originalPath: input.originalPath,
     acceptedPath: input.acceptedPath ?? input.originalPath,
     finalRuntime: input.finalRuntime,
@@ -36,7 +37,7 @@ export function createInvalidReplay(input: {
 }): BuilderReplayInvalid {
   const result: BuilderReplayInvalid = {
     ok: false,
-    status: "invalid",
+    status: builderReplayStatuses.invalid,
     originalPath: input.originalPath,
     validPrefix: input.validPrefix,
     invalidTail: input.invalidTail,

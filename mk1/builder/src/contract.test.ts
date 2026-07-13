@@ -3,11 +3,15 @@ import type { Mk1BuilderContext, Mk1BuilderId } from "@mk-combos/mk1-builder/con
 import * as contractEntry from "@mk-combos/mk1-builder/contract";
 import { mk1BuilderContractGroups, mkCombosMk1Builder } from "@mk-combos/mk1-builder/contract";
 import * as graphRuntime from "@mk-combos/mk1-builder/graph/runtime";
-import { Mk1BuilderMoveChoiceSchema } from "@mk-combos/mk1-builder/graph/schema";
+import {
+  Mk1BuilderMoveChoiceKindSchema,
+  Mk1BuilderMoveChoiceSchema,
+} from "@mk-combos/mk1-builder/graph/schema";
 import type {
   Mk1BuilderMoveChoice,
   Mk1BuilderMoveChoiceKind,
 } from "@mk-combos/mk1-builder/graph/type";
+import { mk1BuilderMoveChoiceKinds } from "@mk-combos/mk1-builder/graph/value";
 import * as replayRuntime from "@mk-combos/mk1-builder/replay/runtime";
 import * as stateRuntime from "@mk-combos/mk1-builder/state/runtime";
 import { describe, expect, it } from "vitest";
@@ -27,6 +31,18 @@ describe("@mk-combos/mk1-builder contract", () => {
     ]);
     expect(mkCombosMk1Builder.packageName).toBe("@mk-combos/mk1-builder");
     expect(mkCombosMk1Builder.groups).toBe(mk1BuilderContractGroups);
+    expect(mk1BuilderContractGroups.graph).toEqual({
+      runtime: "@mk-combos/mk1-builder/graph/runtime",
+      schema: "@mk-combos/mk1-builder/graph/schema",
+      type: "@mk-combos/mk1-builder/graph/type",
+      value: "@mk-combos/mk1-builder/graph/value",
+    });
+    expect(mk1BuilderMoveChoiceKinds).toEqual({ kameo: "kameo", move: "move" });
+    expect(mkCombosMk1Builder.valueSets.mk1BuilderMoveChoiceKinds).toBe(mk1BuilderMoveChoiceKinds);
+    expect(Mk1BuilderMoveChoiceKindSchema.safeParse(mk1BuilderMoveChoiceKinds.kameo).success).toBe(
+      true,
+    );
+    expect(Mk1BuilderMoveChoiceKindSchema.safeParse("interactable").success).toBe(false);
   });
 
   it("keeps public subpaths importable", () => {

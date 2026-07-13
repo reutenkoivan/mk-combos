@@ -1,7 +1,8 @@
 import { BuilderMovePathSchema } from "@mk-combos/builder-core/graph/schema";
 import { BuilderRuntimeSnapshotSchema } from "@mk-combos/builder-core/runtime/schema";
 import { BuilderComboStateSchema } from "@mk-combos/builder-core/stale/schema";
-import { ComboIdSchema } from "@mk-combos/contracts/identity/schema";
+import { ComboIdSchema, ComboSourceSchema } from "@mk-combos/contracts/identity/schema";
+import { comboSources } from "@mk-combos/contracts/identity/value";
 import { ValidationMessageSchema } from "@mk-combos/contracts/result/schema";
 import { LocalizedTextSchema } from "@mk-combos/contracts/settings/schema";
 import { MkxlBuilderContextSchema } from "@mk-combos/mkxl-builder/context/schema";
@@ -23,7 +24,7 @@ const MkxlBusinessIdSchema = z
 
 const MkxlBusinessDateTimeSchema = z.iso.datetime();
 
-export const MkxlBusinessComboSourceSchema = z.enum(["seeded", "custom"]);
+export const MkxlBusinessComboSourceSchema = ComboSourceSchema;
 
 export const MkxlBusinessComboRefSchema = z
   .object({
@@ -37,7 +38,7 @@ export const MkxlBusinessCustomComboSchema = z
   .object({
     id: ComboIdSchema,
     gameId: z.literal("mkxl"),
-    source: z.literal("custom"),
+    source: z.literal(comboSources.custom),
     title: LocalizedTextSchema.optional(),
     characterId: MkxlBusinessIdSchema,
     variationId: MkxlBusinessIdSchema,
@@ -147,7 +148,7 @@ export const MkxlBusinessCustomComboSummarySchema = z
   .object({
     ref: MkxlBusinessComboRefSchema,
     gameId: z.literal("mkxl"),
-    source: z.literal("custom"),
+    source: z.literal(comboSources.custom),
     title: LocalizedTextSchema,
     character: z
       .object({
@@ -198,7 +199,7 @@ export const MkxlBusinessCustomComboSummarySchema = z
 
 export const MkxlBusinessSeededComboDetailSchema = z
   .object({
-    source: z.literal("seeded"),
+    source: z.literal(comboSources.seeded),
     ref: MkxlBusinessComboRefSchema,
     summary: MkxlCatalogComboSummarySchema,
     comboState: BuilderComboStateSchema,
@@ -207,7 +208,7 @@ export const MkxlBusinessSeededComboDetailSchema = z
 
 export const MkxlBusinessCustomComboDetailSchema = z
   .object({
-    source: z.literal("custom"),
+    source: z.literal(comboSources.custom),
     ref: MkxlBusinessComboRefSchema,
     combo: MkxlBusinessCustomComboSchema,
     summary: MkxlBusinessCustomComboSummarySchema,

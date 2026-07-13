@@ -39,14 +39,19 @@ import {
 } from "@mk-combos/builder-core/stale/runtime";
 import {
   BuilderComboStateSchema,
+  BuilderInvalidComboStateStatusSchema,
   builderComboStateStatuses as staleSchemaStatuses,
 } from "@mk-combos/builder-core/stale/schema";
 import type {
   BuilderComboState,
   BuilderComboStateStatus,
+  BuilderInvalidComboStateStatus,
 } from "@mk-combos/builder-core/stale/type";
 import { builderComboStateStatuses as staleTypeStatuses } from "@mk-combos/builder-core/stale/type";
-import { builderComboStateStatuses as staleRuntimeStatuses } from "@mk-combos/builder-core/stale/value";
+import {
+  builderInvalidComboStateStatuses,
+  builderComboStateStatuses as staleRuntimeStatuses,
+} from "@mk-combos/builder-core/stale/value";
 import { acceptTransition, rejectTransition } from "@mk-combos/builder-core/transition/runtime";
 import {
   BuilderTransitionResultSchema,
@@ -110,6 +115,7 @@ const acceptsPublicTypes = (_contract: {
   replayStatus: BuilderReplayStatus;
   invalidBoundary: BuilderInvalidBoundary;
   comboStateStatus: BuilderComboStateStatus;
+  invalidComboStateStatus: BuilderInvalidComboStateStatus;
 }) => true;
 
 describe("@mk-combos/builder-core contract", () => {
@@ -149,18 +155,27 @@ describe("@mk-combos/builder-core contract", () => {
   });
 
   it("keeps public value-set re-exports intentional", () => {
-    expect(transitionRuntimeStatuses).toEqual(["accepted", "rejected"]);
+    expect(transitionRuntimeStatuses).toEqual({ accepted: "accepted", rejected: "rejected" });
     expect(transitionSchemaStatuses).toBe(transitionRuntimeStatuses);
     expect(transitionTypeStatuses).toBe(transitionRuntimeStatuses);
-    expect(replayRuntimeStatuses).toEqual(["valid", "invalid"]);
+    expect(replayRuntimeStatuses).toEqual({ invalid: "invalid", valid: "valid" });
     expect(replaySchemaStatuses).toBe(replayRuntimeStatuses);
     expect(replayTypeStatuses).toBe(replayRuntimeStatuses);
-    expect(staleRuntimeStatuses).toEqual(["fresh", "stale", "invalid"]);
+    expect(staleRuntimeStatuses).toEqual({ fresh: "fresh", invalid: "invalid", stale: "stale" });
+    expect(builderInvalidComboStateStatuses).toEqual({ invalid: "invalid", stale: "stale" });
+    expect(
+      BuilderInvalidComboStateStatusSchema.safeParse(builderInvalidComboStateStatuses.stale)
+        .success,
+    ).toBe(true);
+    expect(BuilderInvalidComboStateStatusSchema.safeParse("fresh").success).toBe(false);
     expect(staleSchemaStatuses).toBe(staleRuntimeStatuses);
     expect(staleTypeStatuses).toBe(staleRuntimeStatuses);
     expect(mkCombosBuilderCore.valueSets.builderTransitionStatuses).toBe(transitionRuntimeStatuses);
     expect(mkCombosBuilderCore.valueSets.builderReplayStatuses).toBe(replayRuntimeStatuses);
     expect(mkCombosBuilderCore.valueSets.builderComboStateStatuses).toBe(staleRuntimeStatuses);
+    expect(mkCombosBuilderCore.valueSets.builderInvalidComboStateStatuses).toBe(
+      builderInvalidComboStateStatuses,
+    );
   });
 
   it("keeps graph and runtime primitives open and game agnostic", () => {
@@ -199,6 +214,7 @@ describe("@mk-combos/builder-core contract", () => {
         replayStatus: "valid",
         invalidBoundary: { index: 0 },
         comboStateStatus: "fresh",
+        invalidComboStateStatus: "stale",
       }),
     ).toBe(true);
   });

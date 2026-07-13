@@ -4,6 +4,8 @@ import { toReadableEn } from "../shared/runtime";
 import { mkxlStages } from "../stages/value";
 import type { MkxlGraphEdge, MkxlStageGraphFragment, MkxlVariationGraph } from "./type";
 
+export { mkxlGraphNodeKinds } from "./constants";
+
 const stageGraphSourceIds = ["in-game-practice-mode"] as const;
 const moveById = new Map<string, (typeof mkxlMoves)[number]>();
 

@@ -1,35 +1,37 @@
-export const knownControllerCommandIds = [
-  "navUp",
-  "navDown",
-  "navLeft",
-  "navRight",
-  "confirm",
-  "back",
-  "closePanel",
-  "openFilters",
-  "openDetail",
-  "openActions",
-  "addToList",
-  "removeFromList",
-  "closeDetail",
-  "nextTab",
-  "previousTab",
-  "builderSelectMove",
-  "builderUndoMove",
-  "builderFinish",
-  "builderCancel",
-  "builderNextGroup",
-  "builderPreviousGroup",
-] as const;
+export const knownControllerCommandIds = {
+  addToList: "addToList",
+  back: "back",
+  builderCancel: "builderCancel",
+  builderFinish: "builderFinish",
+  builderNextGroup: "builderNextGroup",
+  builderPreviousGroup: "builderPreviousGroup",
+  builderSelectMove: "builderSelectMove",
+  builderUndoMove: "builderUndoMove",
+  closeDetail: "closeDetail",
+  closePanel: "closePanel",
+  confirm: "confirm",
+  navDown: "navDown",
+  navLeft: "navLeft",
+  navRight: "navRight",
+  navUp: "navUp",
+  nextTab: "nextTab",
+  openActions: "openActions",
+  openControllerHelp: "openControllerHelp",
+  openDetail: "openDetail",
+  openFilters: "openFilters",
+  openGlobalMenu: "openGlobalMenu",
+  previousTab: "previousTab",
+  removeFromList: "removeFromList",
+} as const;
 
-export const controllerCommandGroups = [
-  "navigation",
-  "panel",
-  "catalog",
-  "list",
-  "detail",
-  "builder",
-] as const;
+export const controllerCommandGroups = {
+  builder: "builder",
+  catalog: "catalog",
+  detail: "detail",
+  list: "list",
+  navigation: "navigation",
+  panel: "panel",
+} as const;
 
 export const controllerCommandMetadata = [
   {
@@ -70,6 +72,16 @@ export const controllerCommandMetadata = [
     id: "closePanel",
     group: "panel",
     label: { EN: "Close panel", fallback: "Close panel" },
+  },
+  {
+    id: "openGlobalMenu",
+    group: "panel",
+    label: { EN: "Open global menu", fallback: "Open global menu" },
+  },
+  {
+    id: "openControllerHelp",
+    group: "panel",
+    label: { EN: "Open controller help", fallback: "Open controller help" },
   },
   {
     id: "openFilters",

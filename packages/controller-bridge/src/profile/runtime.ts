@@ -3,7 +3,7 @@ import type { LocalizedText } from "@mk-combos/contracts/settings/type";
 import type { ControllerGamepadSnapshot } from "../input/type";
 import { ControllerProfileListSchema } from "./schema";
 import type { ControllerProfile } from "./type";
-import { controllerProfiles } from "./value";
+import { controllerProfileIds, controllerProfiles } from "./value";
 
 const runtimeControllerProfiles = ControllerProfileListSchema.parse(controllerProfiles);
 
@@ -14,7 +14,7 @@ for (const profile of runtimeControllerProfiles) {
 }
 
 const requireFallbackProfile = (): ControllerProfile => {
-  const fallbackProfile = profileById.get("standard");
+  const fallbackProfile = profileById.get(controllerProfileIds.standard);
 
   if (fallbackProfile === undefined) {
     throw new Error("Standard controller profile is not registered.");
@@ -39,7 +39,7 @@ export function detectControllerProfile(input: Pick<ControllerGamepadSnapshot, "
   const normalizedId = normalizeId(input.id);
 
   for (const profile of runtimeControllerProfiles) {
-    if (profile.id === "standard") {
+    if (profile.id === controllerProfileIds.standard) {
       continue;
     }
     if (profile.matchers.some((matcher) => normalizedId.includes(matcher))) {
@@ -47,7 +47,9 @@ export function detectControllerProfile(input: Pick<ControllerGamepadSnapshot, "
     }
   }
 
-  return getControllerProfile(input.mapping === "standard" ? "standard" : undefined);
+  return getControllerProfile(
+    input.mapping === controllerProfileIds.standard ? controllerProfileIds.standard : undefined,
+  );
 }
 
 export function getControllerButtonLabel(

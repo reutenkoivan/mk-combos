@@ -1,6 +1,9 @@
 import { z } from "zod/v4";
 
 import { MkxlIdSchema, MkxlLabelSchema, MkxlSourceIdListSchema } from "../shared/schema";
+import { mkxlInteractableUsagePolicies } from "./constants";
+
+export const MkxlInteractableUsagePolicySchema = z.enum(mkxlInteractableUsagePolicies);
 
 export const MkxlStageSegmentSchema = z
   .object({
@@ -24,7 +27,7 @@ export const MkxlInteractableSchema = z
     label: MkxlLabelSchema,
     zoneId: MkxlIdSchema.optional(),
     segmentId: MkxlIdSchema.optional(),
-    usagePolicy: z.enum(["oncePerCombo", "reusable", "disabled"]),
+    usagePolicy: MkxlInteractableUsagePolicySchema,
     tags: z.array(z.string().min(1)).readonly(),
     sourceIds: MkxlSourceIdListSchema,
   })

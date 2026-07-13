@@ -1,6 +1,7 @@
 import { cx } from "../recipes/class-name";
 import { indicatorRecipe } from "../recipes/indicator";
 import type { UiDensityMode, UiShapeMode, UiToneMode } from "../tokens/type";
+import { uiDensityModes, uiShapeModes, uiToneModes } from "../tokens/value";
 import type { UiPrimitiveProps } from "./internal";
 
 export type BadgeProps = UiPrimitiveProps<HTMLSpanElement> & {
@@ -13,10 +14,10 @@ export function Badge(props: BadgeProps) {
   const {
     children,
     className,
-    density = "small",
+    density = uiDensityModes.small,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     ...badgeProps
   } = props;
 
@@ -47,8 +48,8 @@ const statusToneClasses = {
 } as const;
 
 export function StatusMessage(props: StatusMessageProps) {
-  const { children, className, ref, role, tone = "neutral", ...messageProps } = props;
-  const resolvedRole = role ?? (tone === "destructive" ? "alert" : "status");
+  const { children, className, ref, role, tone = uiToneModes.neutral, ...messageProps } = props;
+  const resolvedRole = role ?? (tone === uiToneModes.destructive ? "alert" : "status");
 
   return (
     <div
@@ -76,7 +77,7 @@ export function LoadingIndicator(props: LoadingIndicatorProps) {
     label = "Loading",
     ref,
     role = "status",
-    tone = "neutral",
+    tone = uiToneModes.neutral,
     ...indicatorProps
   } = props;
 

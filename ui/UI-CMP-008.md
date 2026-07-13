@@ -54,7 +54,7 @@ type PickerSlot = {
   optionId?: string;
   row: number;
   column: number;
-  compactOrder?: number;
+  responsiveOrder?: number;
   status: "selectable" | "disabledNoComboData" | "placeholder";
 };
 ```
@@ -82,8 +82,8 @@ Rules:
 
 Rules:
 
-- використовувати `compactOrder`, якщо він заданий;
-- якщо `compactOrder` відсутній, logical order виводиться з `row`, потім `column`;
+- використовувати `responsiveOrder`, якщо він заданий;
+- якщо `responsiveOrder` відсутній, logical order виводиться з `row`, потім `column`;
 - selected/focused state зберігається під час переходу між layouts;
 - усі selectable і disabled variation slots лишаються reachable або readable.
 
@@ -128,7 +128,7 @@ Rules:
 
 Правила розміщення:
 
-- У `UI-CMP-012` компонент стоїть поруч із `UI-CMP-007` на `wide13_6Plus` або нижче нього на `compact`.
+- У `UI-CMP-012` компонент стоїть поруч із `UI-CMP-007` на `desktop` або нижче нього на `mobile` і `tablet`.
 - Variation slots використовують prepared `MKXL.variation` layout і не додають власне сортування.
 - Indicators і disabled state рендеряться всередині slot, не змінюючи геометрію сусідніх slots.
 
@@ -144,7 +144,7 @@ Rules:
 - `disabledReasons`: readable reasons для `disabledNoComboData`.
 - `loadingState`: variation layout або metadata ще готуються.
 - `invalidVariationContext`: selected route/deep link variation не сумісна з selected character.
-- `viewportClass`: `wide13_6Plus` або `compact`.
+- `responsiveMode`: `mobile`, `tablet` або `desktop`.
 - `focusedSlotId`: поточний focus target.
 - `activeLanguage`: `EN` або `UA`.
 
@@ -161,7 +161,7 @@ Rules:
 
 - in-game MKXL variation layout для selected character;
 - exact wide `row`/`column` placement;
-- compact adaptive order;
+- mobile і tablet adaptive order;
 - disabled variation slots без combo data;
 - selected/focused/hover/active states;
 - keyboard/controller navigation;
@@ -252,15 +252,15 @@ Route або restored context містить variation, яка не належи
 
 ### Wide And Compact Navigation
 
-На `wide13_6Plus`:
+На `desktop`:
 
 - directional navigation рухається по `row`/`column`;
 - visual positions не reflow-яться;
 - disabled slots не selectable.
 
-На `compact`:
+На `mobile` і `tablet`:
 
-- navigation рухається за `compactOrder`;
+- navigation рухається за `responsiveOrder`;
 - wrapping не змінює logical order;
 - focus не губиться під час reflow.
 
@@ -290,7 +290,7 @@ Variation очищається тільки якщо:
 
 - `UI-CMP-008` має окрему повну специфікацію.
 - `MKXL.variation` є explicit layout key.
-- Variation layout після selected character повторює in-game MKXL variation selection UI на `wide13_6Plus`.
+- Variation layout після selected character повторює in-game MKXL variation selection UI на `desktop`.
 - Compact layout може реорганізовуватись тільки через stable logical order.
 - Slot без combo data показується як `disabledNoComboData` і не selectable.
 - Selecting variation завершує required MKXL context.
@@ -309,9 +309,19 @@ Variation очищається тільки якщо:
 - Зміна character скидає incompatible selected variation.
 - `Clear filters` не очищає selected variation.
 - Controller navigation у wide layout рухається по `row`/`column`.
-- Controller navigation у compact layout рухається по `compactOrder`.
+- Controller navigation у mobile і tablet layout рухається по `responsiveOrder`.
 
 ## Відкриті уточнення
 
 - Exact `row`/`column` coordinates для `MKXL.variation` мають бути заведені в layout registry під час data implementation.
 - Точний copy disabled reasons має відповідати shared empty/error state style.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

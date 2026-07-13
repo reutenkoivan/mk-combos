@@ -1,8 +1,24 @@
-import { notationDisplayModes } from "@mk-combos/contracts/settings/type";
+import { notationDisplayModes } from "@mk-combos/contracts/settings/value";
 
+import {
+  backupDisclosureStates,
+  backupOperationStates,
+  backupPersistenceModes,
+  backupSliceStatuses,
+  backupValidationMessageTones,
+  backupValidationStatuses,
+  componentInteractionReasons,
+  componentOptionStatuses,
+  controllerAccessStates,
+  uiResponsiveModes,
+} from "./components/value";
+import { uiFocusDirections } from "./focus-navigation/value";
 import { uiNotationIconKinds, uiNotationTokenStates, uiNotationTokens } from "./notation/value";
+import { uiPrimitiveInteractionReasons } from "./primitives/interaction";
+import { uiFloatingAlignments, uiFloatingSides } from "./primitives/positioning";
 import {
   uiContrastModes,
+  uiControlPresentationModes,
   uiDensityModes,
   uiEmphasisModes,
   uiInteractionStates,
@@ -16,6 +32,38 @@ import {
 } from "./tokens/value";
 
 export const uiContractGroups = {
+  components: {
+    backupCollapsibleBlock: "@mk-combos/ui/components/backup-collapsible-block",
+    breadcrumbs: "@mk-combos/ui/components/breadcrumbs",
+    controllerHintStrip: "@mk-combos/ui/components/controller-hint-strip",
+    controllerAccessGate: "@mk-combos/ui/components/controller-access-gate",
+    displayModeSwitcher: "@mk-combos/ui/components/display-mode-switcher",
+    exportDialog: "@mk-combos/ui/components/export-dialog",
+    firstLaunchSetupForm: "@mk-combos/ui/components/first-launch-setup-form",
+    gameSwitcher: "@mk-combos/ui/components/game-switcher",
+    globalTopBar: "@mk-combos/ui/components/global-top-bar",
+    importPreviewDialog: "@mk-combos/ui/components/import-preview-dialog",
+    languageSwitcher: "@mk-combos/ui/components/language-switcher",
+    notationLegendTable: "@mk-combos/ui/components/notation-legend-table",
+    runtime: "@mk-combos/ui/components/runtime",
+    schema: "@mk-combos/ui/components/schema",
+    topBarDropdownMenu: "@mk-combos/ui/components/top-bar-dropdown-menu",
+    type: "@mk-combos/ui/components/type",
+    value: "@mk-combos/ui/components/value",
+  },
+  focusNavigation: {
+    runtime: "@mk-combos/ui/focus-navigation/runtime",
+    schema: "@mk-combos/ui/focus-navigation/schema",
+    type: "@mk-combos/ui/focus-navigation/type",
+    value: "@mk-combos/ui/focus-navigation/value",
+  },
+  hooks: {
+    fieldMessage: "@mk-combos/ui/hooks/field-message",
+    focusNavigation: "@mk-combos/ui/hooks/focus-navigation",
+    intents: "@mk-combos/ui/hooks/intents",
+    openState: "@mk-combos/ui/hooks/open-state",
+    responsiveMode: "@mk-combos/ui/hooks/responsive-mode",
+  },
   icons: {
     alertTriangle: "@mk-combos/ui/icons/alert-triangle",
     check: "@mk-combos/ui/icons/check",
@@ -44,12 +92,15 @@ export const uiContractGroups = {
   primitives: {
     button: "@mk-combos/ui/primitives/button",
     dialog: "@mk-combos/ui/primitives/dialog",
+    drawer: "@mk-combos/ui/primitives/drawer",
     disclosure: "@mk-combos/ui/primitives/disclosure",
     field: "@mk-combos/ui/primitives/field",
     focus: "@mk-combos/ui/primitives/focus",
+    interaction: "@mk-combos/ui/primitives/interaction",
     layout: "@mk-combos/ui/primitives/layout",
     menu: "@mk-combos/ui/primitives/menu",
     popover: "@mk-combos/ui/primitives/popover",
+    positioning: "@mk-combos/ui/primitives/positioning",
     segmentedControl: "@mk-combos/ui/primitives/segmented-control",
     state: "@mk-combos/ui/primitives/state",
   },
@@ -67,8 +118,18 @@ export const mkCombosUi = {
   packageName: "@mk-combos/ui",
   groups: uiContractGroups,
   valueSets: {
+    backupDisclosureStates,
+    backupOperationStates,
+    backupPersistenceModes,
+    backupSliceStatuses,
+    backupValidationMessageTones,
+    backupValidationStatuses,
+    componentInteractionReasons,
+    componentOptionStatuses,
+    controllerAccessStates,
     notationDisplayModes,
     uiContrastModes,
+    uiControlPresentationModes,
     uiDensityModes,
     uiEmphasisModes,
     uiInteractionStates,
@@ -82,5 +143,10 @@ export const mkCombosUi = {
     uiShapeModes,
     uiThemeModes,
     uiToneModes,
+    uiFocusDirections,
+    uiFloatingAlignments,
+    uiFloatingSides,
+    uiPrimitiveInteractionReasons,
+    uiResponsiveModes,
   },
 } as const;

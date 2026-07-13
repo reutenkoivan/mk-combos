@@ -3,6 +3,7 @@ import type { ChangeEvent } from "react";
 import { cx } from "../recipes/class-name";
 import { fieldRecipe } from "../recipes/field";
 import type { UiDensityMode, UiShapeMode, UiToneMode } from "../tokens/type";
+import { uiDensityModes, uiInteractionStates, uiShapeModes, uiToneModes } from "../tokens/value";
 import { densityGapClasses, type UiPrimitiveProps } from "./internal";
 
 export type FieldProps = UiPrimitiveProps<HTMLDivElement> & {
@@ -10,7 +11,7 @@ export type FieldProps = UiPrimitiveProps<HTMLDivElement> & {
 };
 
 export function Field(props: FieldProps) {
-  const { children, className, density = "small", ref, ...fieldProps } = props;
+  const { children, className, density = uiDensityModes.small, ref, ...fieldProps } = props;
 
   return (
     <div
@@ -75,9 +76,10 @@ export function TextInput(props: TextInputProps) {
     disabled = false,
     invalid = false,
     onValueChange,
+    readOnly = false,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     type = "text",
     ...inputProps
   } = props;
@@ -94,8 +96,13 @@ export function TextInput(props: TextInputProps) {
       aria-invalid={invalid || undefined}
       className={cx(
         fieldRecipe({
+          editable: !disabled && !readOnly,
           shape,
-          state: disabled ? "disabled" : invalid ? "invalid" : "idle",
+          state: disabled
+            ? uiInteractionStates.disabled
+            : invalid
+              ? uiInteractionStates.invalid
+              : uiInteractionStates.idle,
           tone,
         }),
         className,
@@ -104,6 +111,7 @@ export function TextInput(props: TextInputProps) {
       data-ui-text-input
       disabled={disabled}
       onChange={handleChange}
+      readOnly={readOnly}
       ref={ref}
       type={type}
     />
@@ -132,10 +140,10 @@ export function FieldMessage(props: FieldMessageProps) {
     invalid = false,
     ref,
     role,
-    tone = "neutral",
+    tone = uiToneModes.neutral,
     ...messageProps
   } = props;
-  const resolvedTone = invalid ? "destructive" : tone;
+  const resolvedTone = invalid ? uiToneModes.destructive : tone;
 
   return (
     <div

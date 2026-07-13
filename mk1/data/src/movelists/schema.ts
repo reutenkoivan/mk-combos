@@ -1,7 +1,12 @@
 import { z } from "zod/v4";
 
 import { Mk1IdSchema, Mk1LabelSchema, Mk1SourceIdListSchema } from "../shared/schema";
-import { mk1InputNotationValues, mk1MoveCategories, mk1MoveNotationValues } from "./constants";
+import {
+  mk1InputNotationValues,
+  mk1MoveCategories,
+  mk1MoveNotationValues,
+  mk1MoveOwnerKinds,
+} from "./constants";
 
 export const Mk1InputNotationValueSchema = z.enum(mk1InputNotationValues);
 
@@ -9,7 +14,7 @@ export const Mk1MoveNotationValueSchema = z.enum(mk1MoveNotationValues);
 
 export const Mk1MoveCategorySchema = z.enum(mk1MoveCategories);
 
-export const Mk1MoveOwnerKindSchema = z.enum(["character", "kameo", "general"]);
+export const Mk1MoveOwnerKindSchema = z.enum(mk1MoveOwnerKinds);
 
 export const Mk1MoveAvailabilitySchema = z.discriminatedUnion("kind", [
   z

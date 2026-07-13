@@ -120,7 +120,7 @@ Named Lists є shared page. Route має форму `/:gameId/lists`. App-level 
 
 ## Анатомія
 
-Розміщення починається з header/toolbar, після нього йде lists workspace: index і detail стоять поруч на широкому екрані або stack-яться на compact. Dialogs є page-owned singleton overlays поверх workspace.
+Розміщення починається з header/toolbar, після нього йде lists workspace: index і detail стоять поруч на широкому екрані або stack-яться на mobile і tablet. Dialogs є page-owned singleton overlays поверх workspace.
 
 ```jsx
 <NamedListsPage ui="UI-PAGE-005">
@@ -174,8 +174,8 @@ Named Lists є shared page. Route має форму `/:gameId/lists`. App-level 
 
 Правила розміщення:
 
-- На `wide13_6Plus` index лишається лівою navigation region, а detail - правою content region.
-- На `compact` index показується над detail або як окрема routed sub-surface, але component models лишаються page-owned.
+- На `desktop` index лишається лівою navigation region, а detail - правою content region.
+- На `mobile` і `tablet` index показується над detail або як окрема routed sub-surface, але component models лишаються page-owned.
 - `UI-CMP-021` і `UI-CMP-022` не повторюються всередині list rows; сторінка відкриває один активний dialog за prepared context.
 - Empty/error states займають workspace slot, якщо list/detail content відсутній, або стоять під workspace як recoverable status.
 
@@ -852,3 +852,13 @@ Controller commands не мають:
 - Exact local persistence schema для list ids, item ids і timestamps буде визначено під час implementation pass, але behavior contract має зберегти per-game scope і source type + combo id references.
 - Pixel-level layout для index/detail responsive behavior буде визначено під час UI implementation.
 - Окремі повні specs для `UI-CMP-019`, `UI-CMP-020`, `UI-CMP-021` і `UI-CMP-022` можуть бути описані пізніше; цей документ фіксує page-level contracts для їх використання.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

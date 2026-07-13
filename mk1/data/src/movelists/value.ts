@@ -1,7 +1,12 @@
 import { definitiveMk1Dataset } from "../packs/definitive";
-import { mk1InputNotationValues, mk1MoveCategories, mk1MoveNotationValues } from "./constants";
+import {
+  mk1InputNotationValues,
+  mk1MoveCategories,
+  mk1MoveNotationValues,
+  mk1MoveOwnerKinds,
+} from "./constants";
 
-export { mk1InputNotationValues, mk1MoveCategories, mk1MoveNotationValues };
+export { mk1InputNotationValues, mk1MoveCategories, mk1MoveNotationValues, mk1MoveOwnerKinds };
 
 export const mk1Movelists = definitiveMk1Dataset.movelists;
 

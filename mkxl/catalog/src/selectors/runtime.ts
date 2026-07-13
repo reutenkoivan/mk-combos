@@ -7,6 +7,7 @@ import { mkxlVariations } from "@mk-combos/mkxl-data/variations/value";
 
 import { recoverMkxlCatalogContext } from "../context/runtime";
 import type { MkxlCatalogContext } from "../context/type";
+import { mkxlCatalogContextStatuses } from "../context/value";
 import {
   comboMatchesMkxlCatalogFilters,
   createMkxlCatalogFilterFacets,
@@ -69,7 +70,7 @@ for (const combo of mkxlSeededCombos) {
 const requiredContextCombos = (context: MkxlCatalogContext): readonly MkxlSeededCombo[] => {
   const recovered = recoverMkxlCatalogContext(context);
 
-  if (recovered.status !== "ready") {
+  if (recovered.status !== mkxlCatalogContextStatuses.ready) {
     return [];
   }
 

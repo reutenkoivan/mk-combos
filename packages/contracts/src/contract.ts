@@ -57,19 +57,23 @@ export const contractGroups = {
   identity: {
     schema: "@mk-combos/contracts/identity/schema",
     type: "@mk-combos/contracts/identity/type",
+    value: "@mk-combos/contracts/identity/value",
   },
   result: {
     runtime: "@mk-combos/contracts/result/runtime",
     schema: "@mk-combos/contracts/result/schema",
     type: "@mk-combos/contracts/result/type",
+    value: "@mk-combos/contracts/result/value",
   },
   routes: {
     schema: "@mk-combos/contracts/routes/schema",
     type: "@mk-combos/contracts/routes/type",
+    value: "@mk-combos/contracts/routes/value",
   },
   settings: {
     schema: "@mk-combos/contracts/settings/schema",
     type: "@mk-combos/contracts/settings/type",
+    value: "@mk-combos/contracts/settings/value",
   },
   test: {
     e2eConfig: "@mk-combos/contracts/test/e2e/config",

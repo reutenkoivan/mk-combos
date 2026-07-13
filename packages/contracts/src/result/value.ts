@@ -1,1 +1,5 @@
-export const validationSeverities = ["info", "warning", "error"] as const;
+export const validationSeverities = {
+  error: "error",
+  info: "info",
+  warning: "warning",
+} as const;

@@ -1,1 +1,4 @@
-export const builderTransitionStatuses = ["accepted", "rejected"] as const;
+export const builderTransitionStatuses = {
+  accepted: "accepted",
+  rejected: "rejected",
+} as const;

@@ -1,39 +1,41 @@
 import type { AriaRole, ReactNode, Ref } from "react";
+import { z } from "zod/v4";
 
-export type UiPrimitiveInteractionReason =
-  | "none"
-  | "triggerPress"
-  | "triggerHover"
-  | "triggerFocus"
-  | "outsidePress"
-  | "itemPress"
-  | "closePress"
-  | "focusOut"
-  | "escapeKey"
-  | "listNavigation"
-  | "imperativeAction";
+import { type UiPrimitiveInteractionReason, uiPrimitiveInteractionReasons } from "./interaction";
+
+export type {
+  UiPrimitiveInteractionReason,
+  UiPrimitiveOpenChangePayload,
+  UiPrimitiveValueChangePayload,
+} from "./interaction";
 
 const baseUiReasonMap: Record<string, UiPrimitiveInteractionReason> = {
-  "close-press": "closePress",
-  "escape-key": "escapeKey",
-  "focus-out": "focusOut",
-  "imperative-action": "imperativeAction",
-  "item-press": "itemPress",
-  "list-navigation": "listNavigation",
-  none: "none",
-  "outside-press": "outsidePress",
-  "trigger-focus": "triggerFocus",
-  "trigger-hover": "triggerHover",
-  "trigger-press": "triggerPress",
+  "close-press": uiPrimitiveInteractionReasons.closePress,
+  "close-watcher": uiPrimitiveInteractionReasons.closeWatcher,
+  "escape-key": uiPrimitiveInteractionReasons.escapeKey,
+  "focus-out": uiPrimitiveInteractionReasons.focusOut,
+  "imperative-action": uiPrimitiveInteractionReasons.imperativeAction,
+  "item-press": uiPrimitiveInteractionReasons.itemPress,
+  "list-navigation": uiPrimitiveInteractionReasons.listNavigation,
+  none: uiPrimitiveInteractionReasons.none,
+  "outside-press": uiPrimitiveInteractionReasons.outsidePress,
+  "trigger-focus": uiPrimitiveInteractionReasons.triggerFocus,
+  "trigger-hover": uiPrimitiveInteractionReasons.triggerHover,
+  "trigger-press": uiPrimitiveInteractionReasons.triggerPress,
+  swipe: uiPrimitiveInteractionReasons.swipe,
 };
 
-export const mapBaseUiReason = (reason: string | undefined): UiPrimitiveInteractionReason => {
-  if (!reason) {
-    return "none";
-  }
+const BaseUiReasonSchema = z
+  .string()
+  .optional()
+  .transform<UiPrimitiveInteractionReason>((reason) =>
+    reason
+      ? (baseUiReasonMap[reason] ?? uiPrimitiveInteractionReasons.none)
+      : uiPrimitiveInteractionReasons.none,
+  );
 
-  return baseUiReasonMap[reason] ?? "none";
-};
+export const mapBaseUiReason = (reason: string | undefined): UiPrimitiveInteractionReason =>
+  BaseUiReasonSchema.parse(reason);
 
 type UiPrimitiveDataAttributes = {
   [Key in `data-${string}`]?: string | number | boolean | undefined;
@@ -42,6 +44,7 @@ type UiPrimitiveDataAttributes = {
 type UiPrimitiveAriaProps = {
   "aria-busy"?: boolean | "false" | "true";
   "aria-controls"?: string;
+  "aria-current"?: "date" | "false" | "location" | "page" | "step" | "time" | "true";
   "aria-describedby"?: string;
   "aria-expanded"?: boolean | "false" | "true";
   "aria-invalid"?: boolean | "false" | "grammar" | "spelling" | "true";
@@ -58,17 +61,6 @@ export type UiPrimitiveProps<Element extends HTMLElement> = UiPrimitiveAriaProps
     className?: string;
     ref?: Ref<Element>;
   };
-
-export type UiPrimitiveOpenChangePayload = {
-  open: boolean;
-  reason: UiPrimitiveInteractionReason;
-  sourceFocusTarget?: string;
-};
-
-export type UiPrimitiveValueChangePayload<Value extends string> = {
-  reason: UiPrimitiveInteractionReason;
-  value: Value;
-};
 
 export const densityGapClasses = {
   medium: "gap-3",

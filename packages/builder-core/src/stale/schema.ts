@@ -7,16 +7,17 @@ import {
   BuilderReplayInvalidSchema,
   BuilderReplayValidSchema,
 } from "../replay/schema";
-import { builderComboStateStatuses } from "./value";
+import { builderComboStateStatuses, builderInvalidComboStateStatuses } from "./value";
 
 export { builderComboStateStatuses } from "./value";
 
 export const BuilderComboStateStatusSchema = z.enum(builderComboStateStatuses);
+export const BuilderInvalidComboStateStatusSchema = z.enum(builderInvalidComboStateStatuses);
 
 export const BuilderComboFreshStateSchema = z
   .object({
     ok: z.literal(true),
-    status: z.literal("fresh"),
+    status: z.literal(builderComboStateStatuses.fresh),
     currentPath: BuilderMovePathSchema,
     replay: BuilderReplayValidSchema.optional(),
     metadata: BuilderMetadataSchema.optional(),
@@ -26,7 +27,7 @@ export const BuilderComboFreshStateSchema = z
 export const BuilderComboStaleStateSchema = z
   .object({
     ok: z.literal(false),
-    status: z.literal("stale"),
+    status: z.literal(builderComboStateStatuses.stale),
     originalPath: BuilderMovePathSchema,
     validPrefix: BuilderMovePathSchema,
     invalidTail: BuilderMovePathSchema,
@@ -40,7 +41,7 @@ export const BuilderComboStaleStateSchema = z
 export const BuilderComboInvalidStateSchema = z
   .object({
     ok: z.literal(false),
-    status: z.literal("invalid"),
+    status: z.literal(builderComboStateStatuses.invalid),
     originalPath: BuilderMovePathSchema,
     validPrefix: BuilderMovePathSchema,
     invalidTail: BuilderMovePathSchema,

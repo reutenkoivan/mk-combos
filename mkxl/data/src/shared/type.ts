@@ -4,6 +4,7 @@ import type {
   MkxlIdSchema,
   MkxlLabelSchema,
   MkxlPickerSlotSchema,
+  MkxlPickerSlotStatusSchema,
   MkxlSourceIdListSchema,
   MkxlSourceIdSchema,
 } from "./schema";
@@ -15,5 +16,7 @@ export type MkxlLabel = z.output<typeof MkxlLabelSchema>;
 export type MkxlSourceId = z.output<typeof MkxlSourceIdSchema>;
 
 export type MkxlSourceIdList = z.output<typeof MkxlSourceIdListSchema>;
+
+export type MkxlPickerSlotStatus = z.output<typeof MkxlPickerSlotStatusSchema>;
 
 export type MkxlPickerSlot = z.output<typeof MkxlPickerSlotSchema>;

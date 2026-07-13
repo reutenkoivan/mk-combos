@@ -25,5 +25,8 @@ export default createTsdownConfig({
     "roster/schema": "src/roster/schema.ts",
     "roster/type": "src/roster/type.ts",
     "roster/value": "src/roster/value.ts",
+    "shared/schema": "src/shared/schema.ts",
+    "shared/type": "src/shared/type.ts",
+    "shared/value": "src/shared/value.ts",
   },
 });

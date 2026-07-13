@@ -3,11 +3,15 @@ import type { MkxlBuilderContext, MkxlBuilderId } from "@mk-combos/mkxl-builder/
 import * as contractEntry from "@mk-combos/mkxl-builder/contract";
 import { mkCombosMkxlBuilder, mkxlBuilderContractGroups } from "@mk-combos/mkxl-builder/contract";
 import * as graphRuntime from "@mk-combos/mkxl-builder/graph/runtime";
-import { MkxlBuilderMoveChoiceSchema } from "@mk-combos/mkxl-builder/graph/schema";
+import {
+  MkxlBuilderMoveChoiceKindSchema,
+  MkxlBuilderMoveChoiceSchema,
+} from "@mk-combos/mkxl-builder/graph/schema";
 import type {
   MkxlBuilderMoveChoice,
   MkxlBuilderMoveChoiceKind,
 } from "@mk-combos/mkxl-builder/graph/type";
+import { mkxlBuilderMoveChoiceKinds } from "@mk-combos/mkxl-builder/graph/value";
 import * as replayRuntime from "@mk-combos/mkxl-builder/replay/runtime";
 import * as stateRuntime from "@mk-combos/mkxl-builder/state/runtime";
 import { describe, expect, it } from "vitest";
@@ -35,6 +39,7 @@ describe("@mk-combos/mkxl-builder contract", () => {
       runtime: "@mk-combos/mkxl-builder/graph/runtime",
       schema: "@mk-combos/mkxl-builder/graph/schema",
       type: "@mk-combos/mkxl-builder/graph/type",
+      value: "@mk-combos/mkxl-builder/graph/value",
     });
     expect(mkxlBuilderContractGroups.replay).toEqual({
       runtime: "@mk-combos/mkxl-builder/replay/runtime",
@@ -42,6 +47,17 @@ describe("@mk-combos/mkxl-builder contract", () => {
     expect(mkxlBuilderContractGroups.state).toEqual({
       runtime: "@mk-combos/mkxl-builder/state/runtime",
     });
+    expect(mkxlBuilderMoveChoiceKinds).toEqual({
+      interactable: "interactable",
+      move: "move",
+    });
+    expect(mkCombosMkxlBuilder.valueSets.mkxlBuilderMoveChoiceKinds).toBe(
+      mkxlBuilderMoveChoiceKinds,
+    );
+    expect(
+      MkxlBuilderMoveChoiceKindSchema.safeParse(mkxlBuilderMoveChoiceKinds.interactable).success,
+    ).toBe(true);
+    expect(MkxlBuilderMoveChoiceKindSchema.safeParse("kameo").success).toBe(false);
   });
 
   it("keeps public subpaths importable", () => {

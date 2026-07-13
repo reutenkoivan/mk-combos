@@ -6,14 +6,27 @@ import type {
   MkxlComboRouteType,
   MkxlComboStageContext,
 } from "@mk-combos/mkxl-data/combos/type";
-import { mkxlSeededComboIds, mkxlSeededCombos } from "@mk-combos/mkxl-data/combos/value";
+import {
+  mkxlComboDifficulties,
+  mkxlComboPositions,
+  mkxlComboRouteTypes,
+  mkxlSeededComboIds,
+  mkxlSeededCombos,
+} from "@mk-combos/mkxl-data/combos/value";
 import * as contractEntry from "@mk-combos/mkxl-data/contract";
 import { mkCombosMkxlData, mkxlDataContractGroups } from "@mk-combos/mkxl-data/contract";
 import { validateMkxlData } from "@mk-combos/mkxl-data/coverage/runtime";
 import { mkxlCoverageTargets } from "@mk-combos/mkxl-data/coverage/value";
-import { mkxlDataSources, mkxlGame } from "@mk-combos/mkxl-data/game/value";
-import type { MkxlGraphNode } from "@mk-combos/mkxl-data/graph/type";
-import { mkxlStageGraphFragments, mkxlVariationGraphs } from "@mk-combos/mkxl-data/graph/value";
+import { MkxlDataSourceKindSchema } from "@mk-combos/mkxl-data/game/schema";
+import type { MkxlDataSourceKind } from "@mk-combos/mkxl-data/game/type";
+import { mkxlDataSourceKinds, mkxlDataSources, mkxlGame } from "@mk-combos/mkxl-data/game/value";
+import { MkxlGraphNodeKindSchema } from "@mk-combos/mkxl-data/graph/schema";
+import type { MkxlGraphNode, MkxlGraphNodeKind } from "@mk-combos/mkxl-data/graph/type";
+import {
+  mkxlGraphNodeKinds,
+  mkxlStageGraphFragments,
+  mkxlVariationGraphs,
+} from "@mk-combos/mkxl-data/graph/value";
 import {
   MkxlInputNotationValueSchema,
   MkxlMoveNotationValueSchema,
@@ -35,23 +48,30 @@ import {
   mkxlMoveNotationValues,
   mkxlMoves,
 } from "@mk-combos/mkxl-data/movelists/value";
-import { mkxlCharacters } from "@mk-combos/mkxl-data/roster/value";
-import type {
-  MkxlInteractable,
-  MkxlStageSegment,
-  MkxlStageZone,
-} from "@mk-combos/mkxl-data/stages/type";
-import { mkxlStages } from "@mk-combos/mkxl-data/stages/value";
-import type { MkxlVariation } from "@mk-combos/mkxl-data/variations/type";
-import { mkxlVariations, mkxlVariationsByCharacterId } from "@mk-combos/mkxl-data/variations/value";
-import { describe, expect, it } from "vitest";
+import { MkxlCharacterReleaseKindSchema } from "@mk-combos/mkxl-data/roster/schema";
+import type { MkxlCharacterReleaseKind } from "@mk-combos/mkxl-data/roster/type";
+import { mkxlCharacterReleaseKinds, mkxlCharacters } from "@mk-combos/mkxl-data/roster/value";
+import { MkxlPickerSlotStatusSchema } from "@mk-combos/mkxl-data/shared/schema";
 import type {
   MkxlId,
   MkxlLabel,
   MkxlPickerSlot,
+  MkxlPickerSlotStatus,
   MkxlSourceId,
   MkxlSourceIdList,
-} from "./shared/type";
+} from "@mk-combos/mkxl-data/shared/type";
+import { mkxlPickerSlotStatuses } from "@mk-combos/mkxl-data/shared/value";
+import { MkxlInteractableUsagePolicySchema } from "@mk-combos/mkxl-data/stages/schema";
+import type {
+  MkxlInteractable,
+  MkxlInteractableUsagePolicy,
+  MkxlStageSegment,
+  MkxlStageZone,
+} from "@mk-combos/mkxl-data/stages/type";
+import { mkxlInteractableUsagePolicies, mkxlStages } from "@mk-combos/mkxl-data/stages/value";
+import type { MkxlVariation } from "@mk-combos/mkxl-data/variations/type";
+import { mkxlVariations, mkxlVariationsByCharacterId } from "@mk-combos/mkxl-data/variations/value";
+import { describe, expect, it } from "vitest";
 
 const expectPresent = <T>(value: T | undefined, label: string): T => {
   expect(value).toBeDefined();
@@ -69,7 +89,9 @@ const acceptsPublicTypes = (_contract: {
   comboRouteStep: MkxlComboRouteStep;
   comboRouteType: MkxlComboRouteType;
   comboStageContext: MkxlComboStageContext;
+  dataSourceKind: MkxlDataSourceKind;
   graphNode: MkxlGraphNode;
+  graphNodeKind: MkxlGraphNodeKind;
   inputNotationValue: MkxlInputNotationValue;
   move: MkxlMove;
   moveAvailability: MkxlMoveAvailability;
@@ -80,11 +102,14 @@ const acceptsPublicTypes = (_contract: {
   id: MkxlId;
   label: MkxlLabel;
   pickerSlot: MkxlPickerSlot;
+  pickerSlotStatus: MkxlPickerSlotStatus;
   sourceId: MkxlSourceId;
   sourceIdList: MkxlSourceIdList;
   stageSegment: MkxlStageSegment;
   stageZone: MkxlStageZone;
   interactable: MkxlInteractable;
+  interactableUsagePolicy: MkxlInteractableUsagePolicy;
+  characterReleaseKind: MkxlCharacterReleaseKind;
   variation: MkxlVariation;
 }) => true;
 
@@ -108,6 +133,11 @@ describe("@mk-combos/mkxl-data contract", () => {
     });
     expect(mkxlDataContractGroups.coverage.runtime).toBe("@mk-combos/mkxl-data/coverage/runtime");
     expect(mkxlDataContractGroups.combos.value).toBe("@mk-combos/mkxl-data/combos/value");
+    expect(mkxlDataContractGroups.shared).toEqual({
+      schema: "@mk-combos/mkxl-data/shared/schema",
+      type: "@mk-combos/mkxl-data/shared/type",
+      value: "@mk-combos/mkxl-data/shared/value",
+    });
   });
 
   it("imports public data subpaths and value sets", () => {
@@ -125,22 +155,96 @@ describe("@mk-combos/mkxl-data contract", () => {
       label: "Community combo source",
       kind: "communityComboSource",
     });
-    expect(mkxlMoveCategories).toContain("variation");
-    expect(mkxlMoveCategories).toContain("mechanic");
-    expect(mkxlInputNotationValues).toContain("AMP");
-    expect(mkxlInputNotationValues).not.toContain("RUN");
-    expect(mkxlInputNotationValues).not.toContain("BF4+BLK");
+    expect(mkxlComboDifficulties).toEqual({ easy: "easy", hard: "hard", medium: "medium" });
+    expect(mkxlComboPositions).toEqual({
+      antiAir: "antiAir",
+      corner: "corner",
+      midscreen: "midscreen",
+    });
+    expect(mkxlComboRouteTypes).toEqual({
+      bnb: "bnb",
+      metered: "metered",
+      punish: "punish",
+      stage: "stage",
+    });
+    expect(mkxlDataSourceKinds).toEqual({
+      communityComboSource: "communityComboSource",
+      crossCheck: "crossCheck",
+      manualVerification: "manualVerification",
+      reference: "reference",
+    });
+    expect(mkxlGraphNodeKinds).toEqual({
+      end: "end",
+      move: "move",
+      stageInteraction: "stageInteraction",
+      start: "start",
+    });
+    expect(mkxlInputNotationValues).toEqual({
+      amplify: "AMP",
+      back: "B",
+      block: "BLK",
+      down: "D",
+      forward: "F",
+      four: "4",
+      interactable: "INT",
+      one: "1",
+      stanceSwitch: "SS",
+      three: "3",
+      two: "2",
+      up: "U",
+    });
+    expect(mkxlMoveCategories).toEqual({
+      enhanced: "enhanced",
+      mechanic: "mechanic",
+      normal: "normal",
+      special: "special",
+      stage: "stage",
+      string: "string",
+      throw: "throw",
+      variation: "variation",
+      xray: "xray",
+    });
+    expect(mkxlCharacterReleaseKinds).toEqual({
+      base: "base",
+      dlc: "dlc",
+      unlockable: "unlockable",
+    });
+    expect(mkxlInteractableUsagePolicies).toEqual({
+      disabled: "disabled",
+      oncePerCombo: "oncePerCombo",
+      reusable: "reusable",
+    });
+    expect(mkxlPickerSlotStatuses).toEqual({
+      disabledNoComboData: "disabledNoComboData",
+      placeholder: "placeholder",
+      selectable: "selectable",
+    });
     expect(MkxlInputNotationValueSchema.safeParse("AMP").success).toBe(true);
     expect(MkxlInputNotationValueSchema.safeParse("RUN").success).toBe(false);
     expect(MkxlInputNotationValueSchema.safeParse("BF4+BLK").success).toBe(false);
-    expect(mkxlMoveNotationValues).toEqual(mkxlInputNotationValues);
-    expect(mkxlMoveNotationValues).toContain("AMP");
-    expect(mkxlMoveNotationValues).not.toContain("RUN");
-    expect(mkxlMoveNotationValues).not.toContain("DASH");
-    expect(mkxlMoveNotationValues).not.toContain("XRAY");
+    expect(mkxlMoveNotationValues).toBe(mkxlInputNotationValues);
     expect(MkxlMoveNotationValueSchema.safeParse("RUN").success).toBe(false);
     expect(MkxlMoveNotationValueSchema.safeParse("DASH").success).toBe(false);
     expect(MkxlMoveNotationValueSchema.safeParse("XRAY").success).toBe(false);
+    expect(MkxlDataSourceKindSchema.safeParse(mkxlDataSourceKinds.reference).success).toBe(true);
+    expect(MkxlDataSourceKindSchema.safeParse("generated").success).toBe(false);
+    expect(MkxlGraphNodeKindSchema.safeParse(mkxlGraphNodeKinds.move).success).toBe(true);
+    expect(MkxlCharacterReleaseKindSchema.safeParse(mkxlCharacterReleaseKinds.base).success).toBe(
+      true,
+    );
+    expect(
+      MkxlInteractableUsagePolicySchema.safeParse(mkxlInteractableUsagePolicies.reusable).success,
+    ).toBe(true);
+    expect(MkxlPickerSlotStatusSchema.safeParse(mkxlPickerSlotStatuses.selectable).success).toBe(
+      true,
+    );
+    expect(mkCombosMkxlData.valueSets.mkxlDataSourceKinds).toBe(mkxlDataSourceKinds);
+    expect(mkCombosMkxlData.valueSets.mkxlGraphNodeKinds).toBe(mkxlGraphNodeKinds);
+    expect(mkCombosMkxlData.valueSets.mkxlCharacterReleaseKinds).toBe(mkxlCharacterReleaseKinds);
+    expect(mkCombosMkxlData.valueSets.mkxlInteractableUsagePolicies).toBe(
+      mkxlInteractableUsagePolicies,
+    );
+    expect(mkCombosMkxlData.valueSets.mkxlPickerSlotStatuses).toBe(mkxlPickerSlotStatuses);
     expect(mkxlInputsRegistry).toContainEqual({ notation: "1" });
     const firstCharacter = expectPresent(mkxlCharacters[0], "first character");
     const firstCombo = expectPresent(mkxlSeededCombos[0], "first combo");
@@ -194,7 +298,9 @@ describe("@mk-combos/mkxl-data contract", () => {
         comboRouteStep: firstComboRouteStep,
         comboRouteType: firstCombo.metadata.routeType,
         comboStageContext: firstCombo.stageContext,
+        dataSourceKind: mkxlDataSourceKinds.reference,
         graphNode: firstGraphNode,
+        graphNodeKind: mkxlGraphNodeKinds.move,
         inputNotationValue: firstInputNotationValue,
         move: firstMove,
         moveAvailability: firstMove.availability,
@@ -205,11 +311,14 @@ describe("@mk-combos/mkxl-data contract", () => {
         id: firstCharacter.id,
         label: firstCharacter.label,
         pickerSlot: firstVariation.pickerSlot,
+        pickerSlotStatus: mkxlPickerSlotStatuses.selectable,
         sourceId: firstSourceId,
         sourceIdList: firstCharacter.sourceIds,
         stageSegment: firstSegment,
         stageZone: firstZone,
         interactable: firstInteractable,
+        interactableUsagePolicy: mkxlInteractableUsagePolicies.reusable,
+        characterReleaseKind: mkxlCharacterReleaseKinds.base,
         variation: firstVariation,
       }),
     ).toBe(true);

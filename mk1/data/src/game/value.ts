@@ -1,5 +1,7 @@
 import { definitiveMk1Dataset } from "../packs/definitive";
 
+export { mk1DataSourceKinds } from "./constants";
+
 export const mk1DataSources = definitiveMk1Dataset.sources;
 
 export const mk1DataSourceIds = definitiveMk1Dataset.sourceIds;

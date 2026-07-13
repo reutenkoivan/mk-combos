@@ -1,4 +1,5 @@
 import { ComboIdSchema } from "@mk-combos/contracts/identity/schema";
+import { comboSources } from "@mk-combos/contracts/identity/value";
 import { LocalizedTextSchema } from "@mk-combos/contracts/settings/schema";
 import { Mk1ComboMetadataSchema } from "@mk-combos/mk1-data/combos/schema";
 import { Mk1InputNotationValueSchema } from "@mk-combos/mk1-data/movelists/schema";
@@ -21,12 +22,12 @@ export const Mk1CatalogComboSummarySchema = z
     ref: z
       .object({
         gameId: z.literal("mk1"),
-        source: z.literal("seeded"),
+        source: z.literal(comboSources.seeded),
         comboId: ComboIdSchema,
       })
       .strict(),
     gameId: z.literal("mk1"),
-    source: z.literal("seeded"),
+    source: z.literal(comboSources.seeded),
     title: LocalizedTextSchema,
     character: Mk1CatalogEntityLabelSchema.extend({
       shortLabel: LocalizedTextSchema.optional(),

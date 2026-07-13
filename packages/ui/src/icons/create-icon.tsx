@@ -5,9 +5,21 @@ export type MkCombosIconMetadata = {
   name: string;
 };
 
-export type MkCombosIconProps = LucideProps & {
+export type MkCombosIconSize = number | "medium" | "mini" | "small";
+
+export type MkCombosIconProps = Omit<LucideProps, "size"> & {
   decorative?: boolean;
+  size?: MkCombosIconSize;
 };
+
+const iconSizePixels = {
+  medium: 20,
+  mini: 14,
+  small: 16,
+} as const satisfies Record<Exclude<MkCombosIconSize, number>, number>;
+
+const resolveIconSize = (size: MkCombosIconSize | undefined) =>
+  typeof size === "string" ? iconSizePixels[size] : size;
 
 export const createIconComponent = (Icon: LucideIcon, metadata: MkCombosIconMetadata) => {
   function MkCombosIcon(props: MkCombosIconProps) {
@@ -17,6 +29,7 @@ export const createIconComponent = (Icon: LucideIcon, metadata: MkCombosIconMeta
       decorative = false,
       ref,
       role,
+      size,
       ...iconProps
     } = props;
 
@@ -28,6 +41,7 @@ export const createIconComponent = (Icon: LucideIcon, metadata: MkCombosIconMeta
         data-ui-icon={metadata.name}
         ref={ref}
         role={decorative ? undefined : (role ?? "img")}
+        size={resolveIconSize(size)}
       />
     );
   }

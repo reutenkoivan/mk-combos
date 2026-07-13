@@ -1,4 +1,5 @@
 import { ComboRefSchema } from "@mk-combos/contracts/identity/schema";
+import { comboSources } from "@mk-combos/contracts/identity/value";
 import { LocalizedTextSchema } from "@mk-combos/contracts/settings/schema";
 import {
   MkxlComboMetadataSchema,
@@ -20,7 +21,7 @@ export const MkxlCatalogComboSummarySchema = z
   .object({
     ref: ComboRefSchema,
     gameId: z.literal("mkxl"),
-    source: z.literal("seeded"),
+    source: z.literal(comboSources.seeded),
     title: LocalizedTextSchema,
     character: MkxlCatalogEntityLabelSchema.extend({
       shortLabel: LocalizedTextSchema.optional(),

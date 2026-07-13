@@ -31,16 +31,26 @@ const createGamepad = (
 describe("@mk-combos/controller-bridge integration", () => {
   it("connects gamepad profile detection, normalization, and command emission", () => {
     const bridge = createControllerBridge();
-    const result = bridge.process({
+    const activation = bridge.process({
       timestamp: 0,
       gamepads: [createGamepad({ id: "Xbox Wireless Controller", pressedButtons: [0] })],
     });
+    bridge.process({
+      timestamp: 10,
+      gamepads: [createGamepad({ id: "Xbox Wireless Controller" })],
+    });
+    const result = bridge.process({
+      timestamp: 20,
+      gamepads: [createGamepad({ id: "Xbox Wireless Controller", pressedButtons: [0] })],
+    });
 
-    expect(result.state).toMatchObject({
+    expect(activation.state).toMatchObject({
       connected: true,
       activeGamepadIndex: 0,
+      lifecycleState: "awaitingNeutral",
       profileId: "xbox",
     });
+    expect(activation.events).toEqual([]);
     expect(result.activeGamepad?.pressedControls).toContain("faceSouth");
     expect(result.events).toMatchObject([
       {
@@ -54,8 +64,13 @@ describe("@mk-combos/controller-bridge integration", () => {
 
   it("keeps stick navigation active through release threshold and releases below it", () => {
     const bridge = createControllerBridge();
-    const hardPress = bridge.process({
+    bridge.process({
       timestamp: 0,
+      gamepads: [createGamepad({ axes: [0.7, 0, 0, 0] })],
+    });
+    bridge.process({ timestamp: 10, gamepads: [createGamepad()] });
+    const hardPress = bridge.process({
+      timestamp: 20,
       gamepads: [createGamepad({ axes: [0.7, 0, 0, 0] })],
     });
     const softHeld = bridge.process({
@@ -88,16 +103,20 @@ describe("@mk-combos/controller-bridge integration", () => {
     const navigation = createGamepad({ pressedButtons: [12] });
     const action = createGamepad({ pressedButtons: [0] });
 
-    expect(bridge.process({ timestamp: 0, gamepads: [navigation] }).events).toMatchObject([
+    bridge.process({ timestamp: 0, gamepads: [navigation] });
+    bridge.process({ timestamp: 10, gamepads: [createGamepad()] });
+    expect(bridge.process({ timestamp: 20, gamepads: [navigation] }).events).toMatchObject([
       { commandId: "navUp", phase: "press" },
     ]);
-    expect(bridge.process({ timestamp: 299, gamepads: [navigation] }).events).toEqual([]);
-    expect(bridge.process({ timestamp: 300, gamepads: [navigation] }).events).toMatchObject([
+    expect(bridge.process({ timestamp: 319, gamepads: [navigation] }).events).toEqual([]);
+    expect(bridge.process({ timestamp: 320, gamepads: [navigation] }).events).toMatchObject([
       { commandId: "navUp", phase: "repeat" },
     ]);
 
     bridge.reset();
-    expect(bridge.process({ timestamp: 0, gamepads: [action] }).events).toMatchObject([
+    bridge.process({ timestamp: 0, gamepads: [action] });
+    bridge.process({ timestamp: 10, gamepads: [createGamepad()] });
+    expect(bridge.process({ timestamp: 20, gamepads: [action] }).events).toMatchObject([
       { commandId: "confirm", phase: "press" },
     ]);
     expect(bridge.process({ timestamp: 1000, gamepads: [action] }).events).toEqual([]);
@@ -107,7 +126,9 @@ describe("@mk-combos/controller-bridge integration", () => {
     const bridge = createControllerBridge();
     const heldAction = createGamepad({ pressedButtons: [0] });
 
-    expect(bridge.process({ timestamp: 0, gamepads: [heldAction] }).events).toMatchObject([
+    bridge.process({ timestamp: 0, gamepads: [heldAction] });
+    bridge.process({ timestamp: 10, gamepads: [createGamepad()] });
+    expect(bridge.process({ timestamp: 20, gamepads: [heldAction] }).events).toMatchObject([
       { commandId: "confirm", phase: "press" },
     ]);
     expect(bridge.process({ timestamp: 100, gamepads: [heldAction] }).events).toEqual([]);
@@ -120,7 +141,10 @@ describe("@mk-combos/controller-bridge integration", () => {
       connected: false,
       lastDisconnectedAt: 200,
     });
-    expect(bridge.process({ timestamp: 300, gamepads: [heldAction] }).events).toMatchObject([
+    expect(bridge.process({ timestamp: 300, gamepads: [heldAction] }).events).toEqual([]);
+    expect(bridge.getState().lifecycleState).toBe("awaitingNeutral");
+    bridge.process({ timestamp: 310, gamepads: [createGamepad()] });
+    expect(bridge.process({ timestamp: 320, gamepads: [heldAction] }).events).toMatchObject([
       { commandId: "confirm", phase: "press" },
     ]);
   });

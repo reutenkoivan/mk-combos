@@ -1,1 +1,4 @@
-export const builderReplayStatuses = ["valid", "invalid"] as const;
+export const builderReplayStatuses = {
+  invalid: "invalid",
+  valid: "valid",
+} as const;

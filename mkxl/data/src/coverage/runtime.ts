@@ -32,7 +32,7 @@ const genericMoveLabels = new Set([
 ]);
 
 const knownSourceIds = new Set<string>(mkxlDataSourceIds);
-const knownMoveNotationValues = new Set<string>(mkxlMoveNotationValues);
+const knownMoveNotationValues = new Set<string>(Object.values(mkxlMoveNotationValues));
 const generalMoveOwnerId = "general";
 
 const toCamelKey = (value: string) =>

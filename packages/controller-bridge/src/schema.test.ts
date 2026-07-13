@@ -1,4 +1,5 @@
 import { ControllerCommandBindingSchema } from "@mk-combos/controller-bridge/bridge/schema";
+import { ControllerBrowserSourceResultSchema } from "@mk-combos/controller-bridge/capability/schema";
 import { ControllerCommandMetadataSchema } from "@mk-combos/controller-bridge/command/schema";
 import {
   ControllerHintRequestSchema,
@@ -24,6 +25,23 @@ const baseGamepad = {
 } as const;
 
 describe("@mk-combos/controller-bridge schemas", () => {
+  it("keeps controller capability payloads strict", () => {
+    expect(
+      ControllerBrowserSourceResultSchema.parse({
+        gamepads: [],
+        reason: "gestureRequired",
+        state: "awaitingGesture",
+      }),
+    ).toEqual({ gamepads: [], reason: "gestureRequired", state: "awaitingGesture" });
+    expect(
+      ControllerBrowserSourceResultSchema.safeParse({
+        gamepads: [],
+        reason: "gestureRequired",
+        state: "awaitingGesture",
+        nativeEvent: {},
+      }).success,
+    ).toBe(false);
+  });
   it("keeps command and binding ids forward-compatible but strictly wrapped", () => {
     expect(
       ControllerCommandMetadataSchema.parse({

@@ -1,5 +1,18 @@
-export const mkxlComboDifficulties = ["easy", "medium", "hard"] as const;
+export const mkxlComboDifficulties = {
+  easy: "easy",
+  hard: "hard",
+  medium: "medium",
+} as const;
 
-export const mkxlComboPositions = ["midscreen", "corner", "antiAir"] as const;
+export const mkxlComboPositions = {
+  antiAir: "antiAir",
+  corner: "corner",
+  midscreen: "midscreen",
+} as const;
 
-export const mkxlComboRouteTypes = ["bnb", "punish", "metered", "stage"] as const;
+export const mkxlComboRouteTypes = {
+  bnb: "bnb",
+  metered: "metered",
+  punish: "punish",
+  stage: "stage",
+} as const;

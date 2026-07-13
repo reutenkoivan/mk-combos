@@ -86,7 +86,7 @@ It does not know routes, game data, local storage, or builder rules.
 
 Package name: `@mk-combos/ui`.
 
-Contains all active numbered `UI-CMP-*` components and generic React primitives: controls, dialogs, picker/list/filter primitives, cards where generic, semantic tokens, `NotationRenderer`, notation icon registry, `ComboWhiteboard`, internal `movePicker`, `ComboFrameMeter`, and builder presentation hooks.
+Contains all active numbered `UI-CMP-*` components and generic React primitives: controls, dialogs, picker/list/filter primitives, cards where generic, semantic tokens, `NotationRenderer`, notation icon registry, page-owned presentation state and intent hooks, responsive/focus-navigation hooks, `ComboWhiteboard`, internal `movePicker`, `ComboFrameMeter`, and builder presentation hooks.
 
 It renders prepared state and emits semantic UI events. It does not contain game-specific business logic or decide whether a move is valid.
 

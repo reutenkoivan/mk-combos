@@ -131,7 +131,7 @@ describe("@mk-combos/controller-bridge runtime", () => {
     ]);
   });
 
-  it("selects active gamepad by requested, previous, then lowest connected index", () => {
+  it("selects active gamepad by requested, previous, then first controller gesture", () => {
     const requestedIndex = processActiveGamepadIndex({
       activeGamepadIndex: 5,
       gamepads: [
@@ -156,24 +156,29 @@ describe("@mk-combos/controller-bridge runtime", () => {
         createGamepad({ id: "Previous", index: 3 }),
       ],
     });
-    const lowestIndex = processActiveGamepadIndex({
+    const gesturingIndex = processActiveGamepadIndex({
       gamepads: [
         createGamepad({ id: "High", index: 7 }),
         createGamepad({ id: "Disconnected", index: 0, connected: false }),
-        createGamepad({ id: "Low", index: 2 }),
+        createGamepad({ id: "Gesturing", index: 2, pressedButtons: [0] }),
       ],
     });
 
     expect(requestedIndex).toBe(5);
     expect(previousIndex).toBe(3);
-    expect(lowestIndex).toBe(2);
+    expect(gesturingIndex).toBe(2);
   });
 
   it("does not duplicate held non-repeat commands", () => {
     const bridge = createControllerBridge();
     const gamepad = createGamepad({ pressedButtons: [0] });
 
-    expect(bridge.process({ timestamp: 0, gamepads: [gamepad] }).events).toMatchObject([
+    expect(bridge.process({ timestamp: 0, gamepads: [gamepad] }).events).toEqual([]);
+    expect(bridge.getState().lifecycleState).toBe("awaitingNeutral");
+    expect(
+      bridge.process({ timestamp: 10, gamepads: [createGamepad()] }).state.lifecycleState,
+    ).toBe("ready");
+    expect(bridge.process({ timestamp: 20, gamepads: [gamepad] }).events).toMatchObject([
       { commandId: "confirm", phase: "press" },
     ]);
     expect(bridge.process({ timestamp: 1000, gamepads: [gamepad] }).events).toEqual([]);
@@ -192,17 +197,44 @@ describe("@mk-combos/controller-bridge runtime", () => {
     });
     const gamepad = createGamepad({ pressedButtons: [15] });
 
-    expect(bridge.process({ timestamp: 0, gamepads: [gamepad] }).events).toMatchObject([
+    bridge.process({ timestamp: 0, gamepads: [gamepad] });
+    bridge.process({ timestamp: 10, gamepads: [createGamepad()] });
+    expect(bridge.process({ timestamp: 20, gamepads: [gamepad] }).events).toMatchObject([
       { commandId: "navRight", phase: "press" },
     ]);
-    expect(bridge.process({ timestamp: 250, gamepads: [gamepad] }).events).toEqual([]);
-    expect(bridge.process({ timestamp: 300, gamepads: [gamepad] }).events).toMatchObject([
+    expect(bridge.process({ timestamp: 270, gamepads: [gamepad] }).events).toEqual([]);
+    expect(bridge.process({ timestamp: 320, gamepads: [gamepad] }).events).toMatchObject([
       { commandId: "navRight", phase: "repeat" },
     ]);
-    expect(bridge.process({ timestamp: 350, gamepads: [gamepad] }).events).toEqual([]);
-    expect(bridge.process({ timestamp: 400, gamepads: [gamepad] }).events).toMatchObject([
+    expect(bridge.process({ timestamp: 370, gamepads: [gamepad] }).events).toEqual([]);
+    expect(bridge.process({ timestamp: 420, gamepads: [gamepad] }).events).toMatchObject([
       { commandId: "navRight", phase: "repeat" },
     ]);
+  });
+
+  it("keeps session ownership and requires neutral after visibility resume", () => {
+    const bridge = createControllerBridge();
+    const ownerGesture = createGamepad({ id: "Owner", index: 4, pressedButtons: [0] });
+    const secondGesture = createGamepad({ id: "Second", index: 1, pressedButtons: [1] });
+
+    bridge.process({ timestamp: 0, gamepads: [ownerGesture, secondGesture] });
+    expect(bridge.getState().activeGamepadIndex).toBe(4);
+    bridge.process({
+      timestamp: 10,
+      gamepads: [createGamepad({ id: "Owner", index: 4 }), secondGesture],
+    });
+    expect(bridge.getState().lifecycleState).toBe("ready");
+
+    const suspended = bridge.process({
+      gamepads: [],
+      sourceState: "suspended",
+      timestamp: 20,
+    });
+    expect(suspended.state.lifecycleState).toBe("suspended");
+    expect(bridge.process({ timestamp: 30, gamepads: [ownerGesture] }).events).toEqual([]);
+    expect(bridge.getState().lifecycleState).toBe("awaitingNeutral");
+    bridge.process({ timestamp: 40, gamepads: [createGamepad({ id: "Owner", index: 4 })] });
+    expect(bridge.getState().lifecycleState).toBe("ready");
   });
 
   it("builds profile-specific hint labels", () => {

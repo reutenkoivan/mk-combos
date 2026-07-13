@@ -1,5 +1,5 @@
 import type { MkxlAuthoredCharacterMoves } from "../../../type";
-import { mkxlXlFinalFgcNotation as fgcNotation } from "../../notation";
+import { mkxlXlFinalInputNotationValues as fgcNotation } from "../../notation";
 
 const characterId = "general";
 

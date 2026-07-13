@@ -2,6 +2,7 @@ import type { z } from "zod/v4";
 
 import type {
   UiContrastModeSchema,
+  UiControlPresentationModeSchema,
   UiDensityModeSchema,
   UiEmphasisModeSchema,
   UiInteractionStateSchema,
@@ -17,6 +18,7 @@ import type {
 
 export {
   uiContrastModes,
+  uiControlPresentationModes,
   uiDensityModes,
   uiEmphasisModes,
   uiInteractionStates,
@@ -33,6 +35,8 @@ export {
 export type UiThemeMode = z.output<typeof UiThemeModeSchema>;
 
 export type UiContrastMode = z.output<typeof UiContrastModeSchema>;
+
+export type UiControlPresentationMode = z.output<typeof UiControlPresentationModeSchema>;
 
 export type UiSemanticTokenName = z.output<typeof UiSemanticTokenNameSchema>;
 

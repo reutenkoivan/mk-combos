@@ -6,6 +6,7 @@ import { mk1Characters } from "@mk-combos/mk1-data/roster/value";
 
 import { recoverMk1CatalogContext } from "../context/runtime";
 import type { Mk1CatalogContext } from "../context/type";
+import { mk1CatalogContextStatuses } from "../context/value";
 import {
   comboMatchesMk1CatalogFilters,
   createMk1CatalogFilterFacets,
@@ -39,7 +40,7 @@ for (const combo of mk1SeededCombos) {
 const requiredContextCombos = (context: Mk1CatalogContext): readonly Mk1SeededCombo[] => {
   const recovered = recoverMk1CatalogContext(context);
 
-  if (recovered.status !== "ready") {
+  if (recovered.status !== mk1CatalogContextStatuses.ready) {
     return [];
   }
 

@@ -1,5 +1,6 @@
 import { Collapsible as BaseCollapsible } from "@base-ui/react/collapsible";
 
+import { useBaseUiOpenChangeHandler } from "../internal/base-ui/use-open-change-handler";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { surfaceRecipe } from "../recipes/surface";
@@ -11,10 +12,13 @@ import type {
   UiToneMode,
 } from "../tokens/type";
 import {
-  mapBaseUiReason,
-  type UiPrimitiveOpenChangePayload,
-  type UiPrimitiveProps,
-} from "./internal";
+  uiDensityModes,
+  uiEmphasisModes,
+  uiMaterialModes,
+  uiShapeModes,
+  uiToneModes,
+} from "../tokens/value";
+import type { UiPrimitiveOpenChangePayload, UiPrimitiveProps } from "./internal";
 
 export type DisclosureRootProps = UiPrimitiveProps<HTMLDivElement> & {
   defaultOpen?: boolean;
@@ -36,6 +40,7 @@ export function DisclosureRoot(props: DisclosureRootProps) {
     sourceFocusTarget,
     ...rootProps
   } = props;
+  const handleOpenChange = useBaseUiOpenChangeHandler({ onOpenChange, sourceFocusTarget });
 
   return (
     <BaseCollapsible.Root
@@ -44,13 +49,7 @@ export function DisclosureRoot(props: DisclosureRootProps) {
       data-ui-disclosure
       defaultOpen={defaultOpen}
       disabled={disabled}
-      onOpenChange={(nextOpen, eventDetails) => {
-        onOpenChange?.({
-          open: nextOpen,
-          reason: mapBaseUiReason(eventDetails.reason),
-          sourceFocusTarget,
-        });
-      }}
+      onOpenChange={handleOpenChange}
       open={open}
       ref={ref}
     >
@@ -74,12 +73,12 @@ export function DisclosureTrigger(props: DisclosureTriggerProps) {
   const {
     children,
     className,
-    density = "small",
+    density = uiDensityModes.small,
     disabled = false,
-    emphasis = "normal",
+    emphasis = uiEmphasisModes.normal,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     type = "button",
     ...triggerProps
   } = props;
@@ -113,12 +112,12 @@ export function DisclosurePanel(props: DisclosurePanelProps) {
   const {
     children,
     className,
-    density = "small",
+    density = uiDensityModes.small,
     keepMounted = false,
-    material = "separated",
+    material = uiMaterialModes.separated,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     ...panelProps
   } = props;
 

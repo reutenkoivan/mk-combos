@@ -28,7 +28,7 @@ export const BuilderInvalidBoundarySchema = z
 export const BuilderReplayValidSchema = z
   .object({
     ok: z.literal(true),
-    status: z.literal("valid"),
+    status: z.literal(builderReplayStatuses.valid),
     originalPath: BuilderMovePathSchema,
     acceptedPath: BuilderMovePathSchema,
     finalRuntime: BuilderRuntimeSnapshotSchema,
@@ -40,7 +40,7 @@ export const BuilderReplayValidSchema = z
 export const BuilderReplayInvalidSchema = z
   .object({
     ok: z.literal(false),
-    status: z.literal("invalid"),
+    status: z.literal(builderReplayStatuses.invalid),
     originalPath: BuilderMovePathSchema,
     validPrefix: BuilderMovePathSchema,
     invalidTail: BuilderMovePathSchema,

@@ -1,11 +1,13 @@
 import { Menu as BaseMenu } from "@base-ui/react/menu";
 import type { ReactNode } from "react";
 
+import { useBaseUiOpenChangeHandler } from "../internal/base-ui/use-open-change-handler";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { itemRecipe } from "../recipes/item";
 import { popupRecipe } from "../recipes/popup";
 import type {
+  UiControlPresentationMode,
   UiDensityMode,
   UiEmphasisMode,
   UiMaterialMode,
@@ -14,13 +16,22 @@ import type {
   UiToneMode,
 } from "../tokens/type";
 import {
-  mapBaseUiReason,
-  type UiPrimitiveOpenChangePayload,
-  type UiPrimitiveProps,
-} from "./internal";
-
-type FloatingSide = "bottom" | "left" | "right" | "top";
-type FloatingAlign = "center" | "end" | "start";
+  uiControlPresentationModes,
+  uiDensityModes,
+  uiEmphasisModes,
+  uiInteractionStates,
+  uiMaterialModes,
+  uiSelectionStates,
+  uiShapeModes,
+  uiToneModes,
+} from "../tokens/value";
+import type { UiPrimitiveOpenChangePayload, UiPrimitiveProps } from "./internal";
+import {
+  type UiFloatingAlignment,
+  type UiFloatingSide,
+  uiFloatingAlignments,
+  uiFloatingSides,
+} from "./positioning";
 
 export type MenuRootProps = {
   children?: ReactNode;
@@ -44,6 +55,7 @@ export function MenuRoot(props: MenuRootProps) {
     open,
     sourceFocusTarget,
   } = props;
+  const handleOpenChange = useBaseUiOpenChangeHandler({ onOpenChange, sourceFocusTarget });
 
   return (
     <BaseMenu.Root
@@ -51,13 +63,7 @@ export function MenuRoot(props: MenuRootProps) {
       disabled={disabled}
       loopFocus={loopFocus}
       modal={modal}
-      onOpenChange={(nextOpen, eventDetails) => {
-        onOpenChange?.({
-          open: nextOpen,
-          reason: mapBaseUiReason(eventDetails.reason),
-          sourceFocusTarget,
-        });
-      }}
+      onOpenChange={handleOpenChange}
       open={open}
     >
       {children}
@@ -68,6 +74,7 @@ export function MenuRoot(props: MenuRootProps) {
 MenuRoot.displayName = "MenuRoot";
 
 export type MenuTriggerProps = UiPrimitiveProps<HTMLButtonElement> & {
+  appearance?: UiControlPresentationMode;
   density?: UiDensityMode;
   disabled?: boolean;
   emphasis?: UiEmphasisMode;
@@ -78,14 +85,15 @@ export type MenuTriggerProps = UiPrimitiveProps<HTMLButtonElement> & {
 
 export function MenuTrigger(props: MenuTriggerProps) {
   const {
+    appearance = uiControlPresentationModes.filled,
     children,
     className,
-    density = "small",
+    density = uiDensityModes.small,
     disabled = false,
-    emphasis = "normal",
+    emphasis = uiEmphasisModes.normal,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     type = "button",
     ...triggerProps
   } = props;
@@ -93,7 +101,7 @@ export function MenuTrigger(props: MenuTriggerProps) {
   return (
     <BaseMenu.Trigger
       {...triggerProps}
-      className={cx(controlRecipe({ density, emphasis, shape, tone }), className)}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
       data-disabled={disabled ? "true" : undefined}
       data-ui-menu-trigger
       disabled={disabled}
@@ -110,18 +118,18 @@ MenuTrigger.displayName = "MenuTrigger";
 export const MenuPortal = BaseMenu.Portal;
 
 export type MenuPositionerProps = UiPrimitiveProps<HTMLDivElement> & {
-  align?: FloatingAlign;
-  side?: FloatingSide;
+  align?: UiFloatingAlignment;
+  side?: UiFloatingSide;
   sideOffset?: number;
 };
 
 export function MenuPositioner(props: MenuPositionerProps) {
   const {
-    align = "end",
+    align = uiFloatingAlignments.end,
     children,
     className,
     ref,
-    side = "bottom",
+    side = uiFloatingSides.bottom,
     sideOffset = 8,
     ...positionerProps
   } = props;
@@ -153,10 +161,10 @@ export function MenuPopup(props: MenuPopupProps) {
   const {
     children,
     className,
-    density = "small",
-    material = "elevated",
+    density = uiDensityModes.small,
+    material = uiMaterialModes.elevated,
     ref,
-    shape = "fixed",
+    shape = uiShapeModes.fixed,
     ...popupProps
   } = props;
 
@@ -235,14 +243,14 @@ export function MenuItem<Value extends string = string>(props: MenuItemProps<Val
     children,
     className,
     closeOnClick = true,
-    density = "small",
+    density = uiDensityModes.small,
     disabled = false,
     label,
     onRequestSelect,
     ref,
-    selection = "none",
-    shape = "fixed",
-    tone = "neutral",
+    selection = uiSelectionStates.none,
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     value,
     ...itemProps
   } = props;
@@ -253,9 +261,14 @@ export function MenuItem<Value extends string = string>(props: MenuItemProps<Val
       className={cx(
         itemRecipe({
           density,
+          interactive: !disabled,
           selection,
           shape,
-          state: disabled ? "disabled" : selection === "selected" ? "selected" : "idle",
+          state: disabled
+            ? uiInteractionStates.disabled
+            : selection === uiSelectionStates.selected
+              ? uiInteractionStates.selected
+              : uiInteractionStates.idle,
           tone,
         }),
         className,

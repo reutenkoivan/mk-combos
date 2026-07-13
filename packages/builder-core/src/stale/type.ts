@@ -6,11 +6,13 @@ import type {
   BuilderComboStaleStateSchema,
   BuilderComboStateSchema,
   BuilderComboStateStatusSchema,
+  BuilderInvalidComboStateStatusSchema,
 } from "./schema";
 
 export { builderComboStateStatuses } from "./value";
 
 export type BuilderComboStateStatus = z.output<typeof BuilderComboStateStatusSchema>;
+export type BuilderInvalidComboStateStatus = z.output<typeof BuilderInvalidComboStateStatusSchema>;
 
 export type BuilderComboFreshState = z.output<typeof BuilderComboFreshStateSchema>;
 

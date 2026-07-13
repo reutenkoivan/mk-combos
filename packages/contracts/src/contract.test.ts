@@ -17,27 +17,36 @@ import { getMkCombosEnv } from "@mk-combos/contracts/env/runtime";
 import type { MkCombosEnv } from "@mk-combos/contracts/env/type";
 import { mkCombosEnv } from "@mk-combos/contracts/env/value";
 import { comboSources as identitySchemaComboSources } from "@mk-combos/contracts/identity/schema";
-import { comboSources as identityTypeComboSources } from "@mk-combos/contracts/identity/type";
+import {
+  type ComboSource,
+  comboSources as identityTypeComboSources,
+} from "@mk-combos/contracts/identity/type";
+import { comboSources } from "@mk-combos/contracts/identity/value";
 import { err, ok } from "@mk-combos/contracts/result/runtime";
 import { validationSeverities as resultSchemaValidationSeverities } from "@mk-combos/contracts/result/schema";
-import type { AppResult } from "@mk-combos/contracts/result/type";
+import type { AppResult, ValidationSeverity } from "@mk-combos/contracts/result/type";
 import { validationSeverities as resultTypeValidationSeverities } from "@mk-combos/contracts/result/type";
+import { validationSeverities } from "@mk-combos/contracts/result/value";
 import {
   appRouteKinds as routesSchemaAppRouteKinds,
   gameRouteKinds as routesSchemaGameRouteKinds,
 } from "@mk-combos/contracts/routes/schema";
+import type { AppRouteKind, GameRouteKind } from "@mk-combos/contracts/routes/type";
 import {
   appRouteKinds as routesTypeAppRouteKinds,
   gameRouteKinds as routesTypeGameRouteKinds,
 } from "@mk-combos/contracts/routes/type";
+import { appRouteKinds, gameRouteKinds } from "@mk-combos/contracts/routes/value";
 import {
   languageCodes as settingsSchemaLanguageCodes,
   notationDisplayModes as settingsSchemaNotationDisplayModes,
 } from "@mk-combos/contracts/settings/schema";
+import type { LanguageCode, NotationDisplayMode } from "@mk-combos/contracts/settings/type";
 import {
   languageCodes as settingsTypeLanguageCodes,
   notationDisplayModes as settingsTypeNotationDisplayModes,
 } from "@mk-combos/contracts/settings/type";
+import { languageCodes, notationDisplayModes } from "@mk-combos/contracts/settings/value";
 import { createE2eConfig } from "@mk-combos/contracts/test/e2e/config";
 import {
   type APIRequestContext,
@@ -77,14 +86,17 @@ describe("@mk-combos/contracts", () => {
     expect(contractGroups.identity).toEqual({
       schema: "@mk-combos/contracts/identity/schema",
       type: "@mk-combos/contracts/identity/type",
+      value: "@mk-combos/contracts/identity/value",
     });
     expect(contractGroups.routes).toEqual({
       schema: "@mk-combos/contracts/routes/schema",
       type: "@mk-combos/contracts/routes/type",
+      value: "@mk-combos/contracts/routes/value",
     });
     expect(contractGroups.settings).toEqual({
       schema: "@mk-combos/contracts/settings/schema",
       type: "@mk-combos/contracts/settings/type",
+      value: "@mk-combos/contracts/settings/value",
     });
     expect(contractGroups.backup).toEqual({
       schema: "@mk-combos/contracts/backup/schema",
@@ -94,6 +106,7 @@ describe("@mk-combos/contracts", () => {
       runtime: "@mk-combos/contracts/result/runtime",
       schema: "@mk-combos/contracts/result/schema",
       type: "@mk-combos/contracts/result/type",
+      value: "@mk-combos/contracts/result/value",
     });
     expect(contractGroups.env).toEqual({
       runtime: "@mk-combos/contracts/env/runtime",
@@ -174,24 +187,45 @@ describe("@mk-combos/contracts", () => {
   });
 
   it("keeps public value-set re-exports intentional", () => {
-    expect(identitySchemaComboSources).toEqual(["seeded", "custom"]);
+    expect(comboSources).toEqual({ custom: "custom", seeded: "seeded" });
+    expect(identitySchemaComboSources).toBe(comboSources);
     expect(identityTypeComboSources).toBe(identitySchemaComboSources);
-    expect(resultSchemaValidationSeverities).toEqual(["info", "warning", "error"]);
+    expect(validationSeverities).toEqual({ error: "error", info: "info", warning: "warning" });
+    expect(resultSchemaValidationSeverities).toBe(validationSeverities);
     expect(resultTypeValidationSeverities).toBe(resultSchemaValidationSeverities);
-    expect(routesSchemaGameRouteKinds).toEqual(["catalog", "comboDetail", "lists", "builder"]);
-    expect(routesTypeGameRouteKinds).toEqual(routesSchemaGameRouteKinds);
-    expect(routesSchemaAppRouteKinds).toEqual([
-      "catalog",
-      "comboDetail",
-      "lists",
-      "builder",
-      "settings",
-    ]);
-    expect(routesTypeAppRouteKinds).toEqual(routesSchemaAppRouteKinds);
-    expect(settingsSchemaLanguageCodes).toEqual(["EN", "UA"]);
+    expect(gameRouteKinds).toEqual({
+      builder: "builder",
+      catalog: "catalog",
+      comboDetail: "comboDetail",
+      lists: "lists",
+    });
+    expect(routesSchemaGameRouteKinds).toBe(gameRouteKinds);
+    expect(routesTypeGameRouteKinds).toBe(routesSchemaGameRouteKinds);
+    expect(appRouteKinds).toEqual({
+      builder: "builder",
+      catalog: "catalog",
+      comboDetail: "comboDetail",
+      lists: "lists",
+      settings: "settings",
+    });
+    expect(routesSchemaAppRouteKinds).toBe(appRouteKinds);
+    expect(routesTypeAppRouteKinds).toBe(routesSchemaAppRouteKinds);
+    expect(languageCodes).toEqual({ EN: "EN", UA: "UA" });
+    expect(settingsSchemaLanguageCodes).toBe(languageCodes);
     expect(settingsTypeLanguageCodes).toBe(settingsSchemaLanguageCodes);
-    expect(settingsSchemaNotationDisplayModes).toEqual(["FGC", "PlayStation", "Xbox"]);
+    expect(notationDisplayModes).toEqual({ FGC: "FGC", PlayStation: "PlayStation", Xbox: "Xbox" });
+    expect(settingsSchemaNotationDisplayModes).toBe(notationDisplayModes);
     expect(settingsTypeNotationDisplayModes).toBe(settingsSchemaNotationDisplayModes);
+
+    const typedValues = {
+      appRoute: appRouteKinds.settings satisfies AppRouteKind,
+      comboSource: comboSources.custom satisfies ComboSource,
+      gameRoute: gameRouteKinds.builder satisfies GameRouteKind,
+      language: languageCodes.UA satisfies LanguageCode,
+      notation: notationDisplayModes.FGC satisfies NotationDisplayMode,
+      severity: validationSeverities.warning satisfies ValidationSeverity,
+    };
+    expect(typedValues).toBeDefined();
   });
 
   it("keeps test helper re-exports intentional", () => {

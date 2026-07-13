@@ -94,7 +94,7 @@ Frame Meter показує SF6-style frame timeline і числові значе
 Правила розміщення:
 
 - Scope switch завжди передує timeline і визначає, який prepared inspection model показується.
-- На `wide13_6Plus` selected segment details можуть стояти праворуч від timeline; на `compact` вони йдуть нижче timeline.
+- На `desktop` selected segment details можуть стояти праворуч від timeline; на `mobile` і `tablet` вони йдуть нижче timeline.
 - Frame summary стоїть після selected details/timeline і не замінює invalid/repair annotations.
 - Selected segment, details open state і active scope готує `useComboFrameMeterModel`, який page component викликає на page рівні.
 
@@ -248,5 +248,15 @@ Frame Meter є окремою focus zone після `UI-CMP-035 Combo Whiteboard
 
 ## Відкриті уточнення
 
-- Точний visual design SF6-style timeline, segment colors і compact/expanded layout буде визначено під час UI реалізації.
+- Точний visual design SF6-style timeline, segment colors і mobile і tablet/expanded layout буде визначено під час UI реалізації.
 - Точний набір numeric frame fields залежить від доступної seeded frame data для конкретної гри та персонажа.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

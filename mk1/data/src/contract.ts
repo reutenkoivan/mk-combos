@@ -1,15 +1,17 @@
 import { mk1ComboDifficulties, mk1ComboPositions, mk1ComboRouteTypes } from "./combos/value";
 import { mk1CoverageTargets } from "./coverage/value";
-import { mk1DataSourceIds, mk1Game } from "./game/value";
-import { mk1CharacterGraphIds, mk1KameoGraphOverlayIds } from "./graph/value";
-import { mk1KameoIds } from "./kameos/value";
+import { mk1DataSourceIds, mk1DataSourceKinds, mk1Game } from "./game/value";
+import { mk1CharacterGraphIds, mk1GraphNodeKinds, mk1KameoGraphOverlayIds } from "./graph/value";
+import { mk1KameoIds, mk1KameoReleaseKinds } from "./kameos/value";
 import {
   mk1InputNotationValues,
   mk1MoveCategories,
   mk1MoveIds,
   mk1MoveNotationValues,
+  mk1MoveOwnerKinds,
 } from "./movelists/value";
-import { mk1CharacterIds } from "./roster/value";
+import { mk1CharacterIds, mk1CharacterReleaseKinds } from "./roster/value";
+import { mk1PickerSlotStatuses } from "./shared/value";
 
 export const mk1DataContractGroups = {
   combos: {
@@ -48,6 +50,11 @@ export const mk1DataContractGroups = {
     type: "@mk-combos/mk1-data/roster/type",
     value: "@mk-combos/mk1-data/roster/value",
   },
+  shared: {
+    schema: "@mk-combos/mk1-data/shared/schema",
+    type: "@mk-combos/mk1-data/shared/type",
+    value: "@mk-combos/mk1-data/shared/value",
+  },
 } as const;
 
 export const mkCombosMk1Data = {
@@ -62,11 +69,17 @@ export const mkCombosMk1Data = {
     mk1ComboPositions,
     mk1ComboRouteTypes,
     mk1DataSourceIds,
+    mk1DataSourceKinds,
+    mk1GraphNodeKinds,
     mk1InputNotationValues,
     mk1KameoGraphOverlayIds,
     mk1KameoIds,
+    mk1KameoReleaseKinds,
     mk1MoveCategories,
     mk1MoveIds,
     mk1MoveNotationValues,
+    mk1MoveOwnerKinds,
+    mk1CharacterReleaseKinds,
+    mk1PickerSlotStatuses,
   },
 } as const;

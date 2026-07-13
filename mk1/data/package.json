@@ -33,6 +33,9 @@
     "./roster/schema": "./src/roster/schema.ts",
     "./roster/type": "./src/roster/type.ts",
     "./roster/value": "./src/roster/value.ts",
+    "./shared/schema": "./src/shared/schema.ts",
+    "./shared/type": "./src/shared/type.ts",
+    "./shared/value": "./src/shared/value.ts",
     "./package.json": "./package.json"
   },
   "files": [
@@ -63,6 +66,9 @@
       "./roster/schema": "./dist/roster/schema.mjs",
       "./roster/type": "./dist/roster/type.mjs",
       "./roster/value": "./dist/roster/value.mjs",
+      "./shared/schema": "./dist/shared/schema.mjs",
+      "./shared/type": "./dist/shared/type.mjs",
+      "./shared/value": "./dist/shared/value.mjs",
       "./package.json": "./package.json"
     }
   },

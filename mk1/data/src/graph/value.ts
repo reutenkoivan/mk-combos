@@ -1,5 +1,7 @@
 import { definitiveMk1Dataset } from "../packs/definitive";
 
+export { mk1GraphNodeKinds } from "./constants";
+
 export const mk1CharacterGraphs = definitiveMk1Dataset.characterGraphs;
 
 export const mk1KameoGraphOverlays = definitiveMk1Dataset.kameoGraphOverlays;

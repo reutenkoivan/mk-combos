@@ -1,4 +1,8 @@
-export const controllerProfileIds = ["dualsense", "xbox", "standard"] as const;
+export const controllerProfileIds = {
+  dualsense: "dualsense",
+  standard: "standard",
+  xbox: "xbox",
+} as const;
 
 export const controllerProfileMatchers = {
   dualsense: ["dualsense", "dual sense", "dualshock", "playstation", "sony interactive"],

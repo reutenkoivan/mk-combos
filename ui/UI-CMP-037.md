@@ -432,3 +432,20 @@ Automated accessibility checks мають перевірити:
 - Exact icon component names будуть визначені під час UI implementation pass, але UI-owned SVG registry requirement є обов'язковим.
 - Exact mapping dictionary `FGC -> PlayStation/Xbox` належить shared UI/data layer і має збігатися між `UI-CMP-037` та [`UI-CMP-015`](./UI-CMP-015.md).
 - Exact modifier set може розширюватися разом із notation renderer, але нові markers мають додаватися через UI-owned SVG icons.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+
+## Flat Workspace Visual Contract
+
+- Компонент входить в один page canvas і не створює card wrapper для звичайного content flow.
+- Повна border, radius і shadow дозволені тільки owning overlay surface; peer content regions використовують spacing та один separator.
+- Standalone icon-only actions використовують transparent `icon` presentation без background, visible border або inset shadow у всіх states; focus лишається зовнішнім ring.
+- Text controls, `icon + text` actions, notation keycaps, validation і focus indicators зберігають необхідні interaction boundaries.

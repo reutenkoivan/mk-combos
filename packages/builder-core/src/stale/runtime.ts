@@ -4,6 +4,7 @@ import type {
   BuilderComboInvalidState,
   BuilderComboStaleState,
 } from "./type";
+import { builderComboStateStatuses } from "./value";
 
 export function createFreshComboState(input: {
   currentPath: BuilderComboFreshState["currentPath"];
@@ -12,7 +13,7 @@ export function createFreshComboState(input: {
 }): BuilderComboFreshState {
   const result: BuilderComboFreshState = {
     ok: true,
-    status: "fresh",
+    status: builderComboStateStatuses.fresh,
     currentPath: input.currentPath,
   };
 
@@ -37,7 +38,7 @@ export function createStaleComboState(input: {
 }): BuilderComboStaleState {
   const result: BuilderComboStaleState = {
     ok: false,
-    status: "stale",
+    status: builderComboStateStatuses.stale,
     originalPath: input.originalPath,
     validPrefix: input.validPrefix,
     invalidTail: input.invalidTail,
@@ -66,7 +67,7 @@ export function createInvalidComboState(input: {
 }): BuilderComboInvalidState {
   const result: BuilderComboInvalidState = {
     ok: false,
-    status: "invalid",
+    status: builderComboStateStatuses.invalid,
     originalPath: input.originalPath,
     validPrefix: input.validPrefix,
     invalidTail: input.invalidTail,

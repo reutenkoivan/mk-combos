@@ -8,32 +8,32 @@ body {
 .mk-combos-ui-root,
 [data-ui-theme="light"] {
   color-scheme: light;
-  --ui-window: #f4f5f7;
-  --ui-content: #ffffff;
-  --ui-sidebar: #ebeef3;
-  --ui-toolbar: #f9fafb;
-  --ui-inspector: #f7f8fa;
-  --ui-popover: #ffffff;
-  --ui-menu: #ffffff;
-  --ui-dialog: #ffffff;
-  --ui-glass: color-mix(in srgb, #ffffff 82%, transparent);
-  --ui-control: #f2f4f7;
-  --ui-control-hover: #e9edf3;
-  --ui-control-active: #dfe5ee;
-  --ui-control-border: #c8d0dc;
-  --ui-field: #ffffff;
-  --ui-text: #18202b;
-  --ui-muted-text: #586474;
-  --ui-placeholder: #717d8e;
-  --ui-separator: #d8dee8;
-  --ui-highlight: #eef4ff;
-  --ui-shadow: 0 14px 32px rgb(18 28 45 / 14%);
-  --ui-selection: #2764d8;
-  --ui-selection-muted: #dfeaff;
-  --ui-selection-text: #ffffff;
-  --ui-accent: #2764d8;
-  --ui-accent-strong: #174bb0;
-  --ui-accent-text: #ffffff;
+  --ui-window: #e9e5dd;
+  --ui-content: #f7f3ea;
+  --ui-sidebar: #ded8cc;
+  --ui-toolbar: #eee9df;
+  --ui-inspector: #e4ded2;
+  --ui-popover: #faf6ed;
+  --ui-menu: #faf6ed;
+  --ui-dialog: #faf6ed;
+  --ui-glass: color-mix(in srgb, #faf6ed 88%, transparent);
+  --ui-control: #e5dfd4;
+  --ui-control-hover: #d9d1c3;
+  --ui-control-active: #ccc1b1;
+  --ui-control-border: #afa595;
+  --ui-field: #fffaf1;
+  --ui-text: #1e1d1b;
+  --ui-muted-text: #615d55;
+  --ui-placeholder: #777168;
+  --ui-separator: #d5cec2;
+  --ui-highlight: #f4e0d5;
+  --ui-shadow: 0 18px 42px rgb(36 29 22 / 20%);
+  --ui-selection: #c6421c;
+  --ui-selection-muted: #f4d5c7;
+  --ui-selection-text: #fffaf3;
+  --ui-accent: #d44a21;
+  --ui-accent-strong: #a72f10;
+  --ui-accent-text: #fffaf3;
   --ui-destructive: #c83f3f;
   --ui-destructive-soft: #ffe8e8;
   --ui-destructive-border: #e3a0a0;
@@ -43,9 +43,10 @@ body {
   --ui-warning: #9a6500;
   --ui-warning-soft: #fff1cb;
   --ui-warning-border: #d8b55e;
-  --ui-radius-control: 7px;
-  --ui-radius-surface: 12px;
-  --ui-focus-ring: 0 0 0 2px var(--ui-window), 0 0 0 4px var(--ui-accent);
+  --ui-radius-control: 4px;
+  --ui-radius-surface: 9px;
+  --ui-focus-ring: 0 0 0 2px var(--ui-window), 0 0 0 5px var(--ui-accent);
+  --ui-font-display: "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
 }
 
 .mk-combos-ui-root,
@@ -58,6 +59,7 @@ body {
   font-size: 13px;
   line-height: 1.45;
   text-rendering: optimizeLegibility;
+  min-width: 0;
 }
 
 .mk-combos-ui-root *,
@@ -68,32 +70,32 @@ body {
 
 [data-ui-theme="dark"] {
   color-scheme: dark;
-  --ui-window: #14181f;
-  --ui-content: #1b2028;
-  --ui-sidebar: #171c24;
-  --ui-toolbar: #1f252e;
-  --ui-inspector: #181e27;
-  --ui-popover: #222936;
-  --ui-menu: #222936;
-  --ui-dialog: #222936;
-  --ui-glass: color-mix(in srgb, #222936 78%, transparent);
-  --ui-control: #262d38;
-  --ui-control-hover: #2d3542;
-  --ui-control-active: #354050;
-  --ui-control-border: #465266;
-  --ui-field: #1b212b;
-  --ui-text: #edf1f7;
-  --ui-muted-text: #a9b4c4;
-  --ui-placeholder: #8894a5;
-  --ui-separator: #384250;
-  --ui-highlight: #1d2c46;
-  --ui-shadow: 0 18px 44px rgb(0 0 0 / 34%);
-  --ui-selection: #6ea0ff;
-  --ui-selection-muted: #203354;
-  --ui-selection-text: #071326;
-  --ui-accent: #6ea0ff;
-  --ui-accent-strong: #9fbeff;
-  --ui-accent-text: #071326;
+  --ui-window: #0e0f0f;
+  --ui-content: #151615;
+  --ui-sidebar: #121312;
+  --ui-toolbar: #1c1d1b;
+  --ui-inspector: #121312;
+  --ui-popover: #20211f;
+  --ui-menu: #20211f;
+  --ui-dialog: #20211f;
+  --ui-glass: color-mix(in srgb, #20211f 84%, transparent);
+  --ui-control: #282a27;
+  --ui-control-hover: #333530;
+  --ui-control-active: #40423b;
+  --ui-control-border: #55574f;
+  --ui-field: #141513;
+  --ui-text: #f4efe5;
+  --ui-muted-text: #b2ab9f;
+  --ui-placeholder: #8e887e;
+  --ui-separator: #2b2d29;
+  --ui-highlight: #34221c;
+  --ui-shadow: 0 22px 54px rgb(0 0 0 / 52%);
+  --ui-selection: #ff6536;
+  --ui-selection-muted: #45261d;
+  --ui-selection-text: #160a06;
+  --ui-accent: #ff6536;
+  --ui-accent-strong: #ff936f;
+  --ui-accent-text: #1a0903;
   --ui-destructive: #ff7a7a;
   --ui-destructive-soft: #412325;
   --ui-destructive-border: #8f4a4d;
@@ -120,6 +122,34 @@ body {
 .mk-combos-ui-root :focus-visible {
   outline: none;
   box-shadow: var(--ui-focus-ring);
+}
+
+.mk-combos-ui-root [data-controller-focused="true"] {
+  position: relative;
+  z-index: 1;
+  box-shadow: var(--ui-focus-ring);
+}
+
+.mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-button],
+.mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-button],
+.mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-dialog-trigger],
+.mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-dialog-trigger],
+.mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-segmented-control-option],
+.mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-segmented-control-option],
+.mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-menu-trigger],
+.mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-menu-trigger],
+.mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-menu-item],
+.mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-menu-item],
+.mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-disclosure-trigger],
+.mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-disclosure-trigger],
+.mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-popover-trigger],
+.mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-popover-trigger] {
+  min-height: 2.75rem;
+  min-width: 2.75rem;
+}
+
+.mk-combos-ui-root[data-ui-responsive="mobile"] {
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .mk-combos-ui-portal-root,

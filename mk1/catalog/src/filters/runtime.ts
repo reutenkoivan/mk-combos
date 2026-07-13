@@ -1,13 +1,19 @@
 import type { ValidationMessage } from "@mk-combos/contracts/result/type";
+import { validationSeverities } from "@mk-combos/contracts/result/value";
 import type { Mk1SeededCombo } from "@mk-combos/mk1-data/combos/type";
 
 import { Mk1CatalogFiltersSchema } from "./schema";
-import type { Mk1CatalogFilterFacet, Mk1CatalogFilters } from "./type";
+import type {
+  Mk1CatalogFilterFacet,
+  Mk1CatalogFilters,
+  Mk1CatalogMultiSelectFilterId,
+} from "./type";
+import { mk1CatalogMultiSelectFilterIds, mk1CatalogRangeFilterIds } from "./value";
 
 export const emptyMk1CatalogFilters = {} as const satisfies Mk1CatalogFilters;
 
 const toMessage = (code: string, message: string, path: readonly string[]): ValidationMessage => ({
-  severity: "warning",
+  severity: validationSeverities.warning,
   code,
   message,
   path,
@@ -237,21 +243,21 @@ export const comboMatchesMk1CatalogFilters = (
 const multiSelectFacet = (
   combos: readonly Mk1SeededCombo[],
   filters: Mk1CatalogFilters,
-  id: "starter" | "position" | "meter" | "difficulty" | "routeType" | "tag",
+  id: Mk1CatalogMultiSelectFilterId,
 ): Mk1CatalogFilterFacet => {
   const counts = new Map<string, number>();
   const selectedValues =
-    id === "tag"
+    id === mk1CatalogMultiSelectFilterIds.tag
       ? (filters.tags ?? [])
-      : id === "meter"
+      : id === mk1CatalogMultiSelectFilterIds.meter
         ? (filters.meter ?? []).map((value) => String(value))
         : (filters[id] ?? []).map((value) => String(value));
 
   for (const combo of combos) {
     const values =
-      id === "tag"
+      id === mk1CatalogMultiSelectFilterIds.tag
         ? combo.metadata.tags
-        : id === "meter"
+        : id === mk1CatalogMultiSelectFilterIds.meter
           ? [String(combo.metadata.meter)]
           : [String(combo.metadata[id])];
 
@@ -282,17 +288,17 @@ export const createMk1CatalogFilterFacets = (
   const maxDamage = damageValues.length > 0 ? Math.max(...damageValues) : 0;
 
   return [
-    multiSelectFacet(combos, recovered, "starter"),
-    multiSelectFacet(combos, recovered, "position"),
-    multiSelectFacet(combos, recovered, "meter"),
+    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.starter),
+    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.position),
+    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.meter),
     {
       kind: "range",
-      id: "damage",
+      id: mk1CatalogRangeFilterIds.damage,
       min: minDamage,
       max: maxDamage,
     },
-    multiSelectFacet(combos, recovered, "difficulty"),
-    multiSelectFacet(combos, recovered, "routeType"),
-    multiSelectFacet(combos, recovered, "tag"),
+    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.difficulty),
+    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.routeType),
+    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.tag),
   ];
 };

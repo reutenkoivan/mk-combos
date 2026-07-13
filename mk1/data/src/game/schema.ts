@@ -1,12 +1,15 @@
 import { z } from "zod/v4";
 
 import { Mk1IdSchema, Mk1SourceIdListSchema } from "../shared/schema";
+import { mk1DataSourceKinds } from "./constants";
+
+export const Mk1DataSourceKindSchema = z.enum(mk1DataSourceKinds);
 
 export const Mk1DataSourceSchema = z
   .object({
     id: z.string().min(1),
     label: z.string().min(1),
-    kind: z.enum(["official", "reference", "manual", "curated"]),
+    kind: Mk1DataSourceKindSchema,
   })
   .strict();
 

@@ -1,6 +1,7 @@
 import { detectControllerProfile } from "../profile/runtime";
 import { ControllerGamepadSnapshotSchema, ControllerInputConfigSchema } from "./schema";
 import type {
+  ControllerAxisDirection,
   ControllerControlId,
   ControllerControlState,
   ControllerGamepadButtonSnapshot,
@@ -9,6 +10,8 @@ import type {
   NormalizedControllerInputSnapshot,
 } from "./type";
 import {
+  controllerAxisDirections,
+  controllerControlSources,
   defaultControllerInputConfig,
   standardGamepadAxisControls,
   standardGamepadButtonControls,
@@ -35,10 +38,10 @@ const clampButtonValue = (button?: ControllerGamepadButtonSnapshot) => {
 
 const getAxisDirectionValue = (
   axisValue: number | undefined,
-  direction: "negative" | "positive",
+  direction: ControllerAxisDirection,
 ) => {
   const value = axisValue ?? 0;
-  return direction === "negative" ? Math.max(0, -value) : Math.max(0, value);
+  return direction === controllerAxisDirections.negative ? Math.max(0, -value) : Math.max(0, value);
 };
 
 const appendControlState = (
@@ -93,7 +96,7 @@ export function normalizeGamepadSnapshot(
     const value = clampButtonValue(snapshot.buttons[control.buttonIndex]);
     const controlState = {
       id: control.id,
-      source: "button",
+      source: controllerControlSources.button,
       pressed: value >= config.buttonPressThreshold,
       value,
       rawIndex: control.buttonIndex,
@@ -109,7 +112,7 @@ export function normalizeGamepadSnapshot(
       : config.axisPressThreshold;
     const controlState = {
       id: control.id,
-      source: "axis",
+      source: controllerControlSources.axis,
       pressed: value >= threshold,
       value,
       rawIndex: control.axisIndex,

@@ -1,4 +1,4 @@
-export const mkxlXlFinalFgcNotation = {
+export const mkxlXlFinalInputNotationValues = {
   one: "1",
   two: "2",
   three: "3",
@@ -13,20 +13,17 @@ export const mkxlXlFinalFgcNotation = {
   forward: "F",
 } as const;
 
-type MkxlXlFinalFgcNotationValue =
-  (typeof mkxlXlFinalFgcNotation)[keyof typeof mkxlXlFinalFgcNotation];
-
-export const mkxlXlFinalInputNotationValues = [
-  "1",
-  "2",
-  "3",
-  "4",
-  "BLK",
-  "SS",
-  "INT",
-  "AMP",
-  "U",
-  "D",
-  "B",
-  "F",
-] as const satisfies readonly [MkxlXlFinalFgcNotationValue, ...MkxlXlFinalFgcNotationValue[]];
+export const mkxlXlFinalInputNotationOrder = [
+  mkxlXlFinalInputNotationValues.one,
+  mkxlXlFinalInputNotationValues.two,
+  mkxlXlFinalInputNotationValues.three,
+  mkxlXlFinalInputNotationValues.four,
+  mkxlXlFinalInputNotationValues.block,
+  mkxlXlFinalInputNotationValues.stanceSwitch,
+  mkxlXlFinalInputNotationValues.interactable,
+  mkxlXlFinalInputNotationValues.amplify,
+  mkxlXlFinalInputNotationValues.up,
+  mkxlXlFinalInputNotationValues.down,
+  mkxlXlFinalInputNotationValues.back,
+  mkxlXlFinalInputNotationValues.forward,
+] as const;

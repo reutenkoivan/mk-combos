@@ -485,3 +485,20 @@ Automated accessibility checks мають перевірити:
 - Exact visual primitive може бути project-owned segmented control або Base UI radio/toggle-group wrapper у `packages/ui`.
 - Exact icon/current indicator module залежить від icon facade, який реалізує `packages/ui`.
 - Exact browser-locale fallback policy лишається app-level settings decision.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+
+## Flat Workspace Visual Contract
+
+- Компонент входить в один page canvas і не створює card wrapper для звичайного content flow.
+- Повна border, radius і shadow дозволені тільки owning overlay surface; peer content regions використовують spacing та один separator.
+- Standalone icon-only actions використовують transparent `icon` presentation без background, visible border або inset shadow у всіх states; focus лишається зовнішнім ring.
+- Text controls, `icon + text` actions, notation keycaps, validation і focus indicators зберігають необхідні interaction boundaries.

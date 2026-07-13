@@ -1,76 +1,76 @@
 import type { NotationDisplayMode } from "@mk-combos/contracts/settings/type";
-import { notationDisplayModes } from "@mk-combos/contracts/settings/type";
+import { notationDisplayModes } from "@mk-combos/contracts/settings/value";
 
 export { notationDisplayModes };
 
-const uiNotationControllerControlTokens = [
-  "faceSouth",
-  "faceEast",
-  "faceWest",
-  "faceNorth",
-  "leftShoulder",
-  "rightShoulder",
-  "leftTrigger",
-  "rightTrigger",
-  "select",
-  "start",
-  "leftStickPress",
-  "rightStickPress",
-  "dpadUp",
-  "dpadDown",
-  "dpadLeft",
-  "dpadRight",
-  "home",
-  "leftStickLeft",
-  "leftStickRight",
-  "leftStickUp",
-  "leftStickDown",
-  "rightStickLeft",
-  "rightStickRight",
-  "rightStickUp",
-  "rightStickDown",
-] as const;
+const uiNotationControllerControlTokens = {
+  dpadDown: "dpadDown",
+  dpadLeft: "dpadLeft",
+  dpadRight: "dpadRight",
+  dpadUp: "dpadUp",
+  faceEast: "faceEast",
+  faceNorth: "faceNorth",
+  faceSouth: "faceSouth",
+  faceWest: "faceWest",
+  home: "home",
+  leftShoulder: "leftShoulder",
+  leftStickDown: "leftStickDown",
+  leftStickLeft: "leftStickLeft",
+  leftStickPress: "leftStickPress",
+  leftStickRight: "leftStickRight",
+  leftStickUp: "leftStickUp",
+  leftTrigger: "leftTrigger",
+  rightShoulder: "rightShoulder",
+  rightStickDown: "rightStickDown",
+  rightStickLeft: "rightStickLeft",
+  rightStickPress: "rightStickPress",
+  rightStickRight: "rightStickRight",
+  rightStickUp: "rightStickUp",
+  rightTrigger: "rightTrigger",
+  select: "select",
+  start: "start",
+} as const;
 
-export const uiNotationIconKinds = [
-  "displayMode",
-  "attack",
-  "control",
-  "direction",
-  "modifier",
-  "separator",
-  "state",
-  "frameWindow",
-] as const;
+export const uiNotationIconKinds = {
+  attack: "attack",
+  control: "control",
+  direction: "direction",
+  displayMode: "displayMode",
+  frameWindow: "frameWindow",
+  modifier: "modifier",
+  separator: "separator",
+  state: "state",
+} as const;
 
-export const uiNotationTokens = [
-  "1",
-  "2",
-  "3",
-  "4",
-  "K",
-  "BLK",
-  "SS",
-  "INT",
-  "AMP",
-  "U",
-  "D",
-  "B",
-  "F",
+export const uiNotationTokens = {
+  "1": "1",
+  "2": "2",
+  "3": "3",
+  "4": "4",
+  AMP: "AMP",
+  B: "B",
+  BLK: "BLK",
+  D: "D",
+  F: "F",
+  INT: "INT",
+  K: "K",
+  SS: "SS",
+  U: "U",
   ...uiNotationControllerControlTokens,
-] as const;
+} as const;
 
-type UiNotationTokenValue = (typeof uiNotationTokens)[number];
-type UiNotationIconKindValue = (typeof uiNotationIconKinds)[number];
+type UiNotationTokenValue = (typeof uiNotationTokens)[keyof typeof uiNotationTokens];
+type UiNotationIconKindValue = (typeof uiNotationIconKinds)[keyof typeof uiNotationIconKinds];
 
-export const uiNotationTokenStates = [
-  "ready",
-  "disabled",
-  "invalid",
-  "unavailable",
-  "stale",
-  "focused",
-  "highlighted",
-] as const;
+export const uiNotationTokenStates = {
+  disabled: "disabled",
+  focused: "focused",
+  highlighted: "highlighted",
+  invalid: "invalid",
+  ready: "ready",
+  stale: "stale",
+  unavailable: "unavailable",
+} as const;
 
 export const uiNotationDisplayModeIconNames = {
   FGC: "notation-display-fgc",

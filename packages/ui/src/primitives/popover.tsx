@@ -1,10 +1,12 @@
 import { Popover as BasePopover } from "@base-ui/react/popover";
 import type { ReactNode } from "react";
 
+import { useBaseUiOpenChangeHandler } from "../internal/base-ui/use-open-change-handler";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { popupRecipe } from "../recipes/popup";
 import type {
+  UiControlPresentationMode,
   UiDensityMode,
   UiEmphasisMode,
   UiMaterialMode,
@@ -12,13 +14,20 @@ import type {
   UiToneMode,
 } from "../tokens/type";
 import {
-  mapBaseUiReason,
-  type UiPrimitiveOpenChangePayload,
-  type UiPrimitiveProps,
-} from "./internal";
-
-type FloatingSide = "bottom" | "left" | "right" | "top";
-type FloatingAlign = "center" | "end" | "start";
+  uiControlPresentationModes,
+  uiDensityModes,
+  uiEmphasisModes,
+  uiMaterialModes,
+  uiShapeModes,
+  uiToneModes,
+} from "../tokens/value";
+import type { UiPrimitiveOpenChangePayload, UiPrimitiveProps } from "./internal";
+import {
+  type UiFloatingAlignment,
+  type UiFloatingSide,
+  uiFloatingAlignments,
+  uiFloatingSides,
+} from "./positioning";
 
 export type PopoverRootProps = {
   children?: ReactNode;
@@ -31,18 +40,13 @@ export type PopoverRootProps = {
 
 export function PopoverRoot(props: PopoverRootProps) {
   const { children, defaultOpen, modal = false, onOpenChange, open, sourceFocusTarget } = props;
+  const handleOpenChange = useBaseUiOpenChangeHandler({ onOpenChange, sourceFocusTarget });
 
   return (
     <BasePopover.Root
       defaultOpen={defaultOpen}
       modal={modal}
-      onOpenChange={(nextOpen, eventDetails) => {
-        onOpenChange?.({
-          open: nextOpen,
-          reason: mapBaseUiReason(eventDetails.reason),
-          sourceFocusTarget,
-        });
-      }}
+      onOpenChange={handleOpenChange}
       open={open}
     >
       {children}
@@ -53,6 +57,7 @@ export function PopoverRoot(props: PopoverRootProps) {
 PopoverRoot.displayName = "PopoverRoot";
 
 export type PopoverTriggerProps = UiPrimitiveProps<HTMLButtonElement> & {
+  appearance?: UiControlPresentationMode;
   density?: UiDensityMode;
   disabled?: boolean;
   emphasis?: UiEmphasisMode;
@@ -63,14 +68,15 @@ export type PopoverTriggerProps = UiPrimitiveProps<HTMLButtonElement> & {
 
 export function PopoverTrigger(props: PopoverTriggerProps) {
   const {
+    appearance = uiControlPresentationModes.filled,
     children,
     className,
-    density = "small",
+    density = uiDensityModes.small,
     disabled = false,
-    emphasis = "normal",
+    emphasis = uiEmphasisModes.normal,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     type = "button",
     ...triggerProps
   } = props;
@@ -78,7 +84,7 @@ export function PopoverTrigger(props: PopoverTriggerProps) {
   return (
     <BasePopover.Trigger
       {...triggerProps}
-      className={cx(controlRecipe({ density, emphasis, shape, tone }), className)}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
       data-disabled={disabled ? "true" : undefined}
       data-ui-popover-trigger
       disabled={disabled}
@@ -95,18 +101,18 @@ PopoverTrigger.displayName = "PopoverTrigger";
 export const PopoverPortal = BasePopover.Portal;
 
 export type PopoverPositionerProps = UiPrimitiveProps<HTMLDivElement> & {
-  align?: FloatingAlign;
-  side?: FloatingSide;
+  align?: UiFloatingAlignment;
+  side?: UiFloatingSide;
   sideOffset?: number;
 };
 
 export function PopoverPositioner(props: PopoverPositionerProps) {
   const {
-    align = "start",
+    align = uiFloatingAlignments.start,
     children,
     className,
     ref,
-    side = "bottom",
+    side = uiFloatingSides.bottom,
     sideOffset = 8,
     ...positionerProps
   } = props;
@@ -138,10 +144,10 @@ export function PopoverPopup(props: PopoverPopupProps) {
   const {
     children,
     className,
-    density = "small",
-    material = "elevated",
+    density = uiDensityModes.small,
+    material = uiMaterialModes.elevated,
     ref,
-    shape = "fixed",
+    shape = uiShapeModes.fixed,
     ...popupProps
   } = props;
 
@@ -199,6 +205,7 @@ export function PopoverDescription(props: PopoverDescriptionProps) {
 PopoverDescription.displayName = "PopoverDescription";
 
 export type PopoverCloseProps = UiPrimitiveProps<HTMLButtonElement> & {
+  appearance?: UiControlPresentationMode;
   density?: UiDensityMode;
   disabled?: boolean;
   emphasis?: UiEmphasisMode;
@@ -209,14 +216,15 @@ export type PopoverCloseProps = UiPrimitiveProps<HTMLButtonElement> & {
 
 export function PopoverClose(props: PopoverCloseProps) {
   const {
+    appearance = uiControlPresentationModes.filled,
     children,
     className,
-    density = "small",
+    density = uiDensityModes.small,
     disabled = false,
-    emphasis = "normal",
+    emphasis = uiEmphasisModes.normal,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     type = "button",
     ...closeProps
   } = props;
@@ -224,7 +232,7 @@ export function PopoverClose(props: PopoverCloseProps) {
   return (
     <BasePopover.Close
       {...closeProps}
-      className={cx(controlRecipe({ density, emphasis, shape, tone }), className)}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
       data-disabled={disabled ? "true" : undefined}
       data-ui-popover-close
       disabled={disabled}

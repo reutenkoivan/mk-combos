@@ -4,6 +4,7 @@ import { ToggleGroup } from "@base-ui/react/toggle-group";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import type { UiDensityMode, UiShapeMode, UiToneMode } from "../tokens/type";
+import { uiDensityModes, uiInteractionStates, uiShapeModes, uiToneModes } from "../tokens/value";
 import {
   mapBaseUiReason,
   type UiPrimitiveProps,
@@ -34,13 +35,13 @@ export function SegmentedControl<Value extends string>(props: SegmentedControlPr
   const {
     "aria-label": ariaLabel,
     className,
-    density = "small",
+    density = uiDensityModes.small,
     disabled = false,
     onValueChange,
     options,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     value,
     ...controlProps
   } = props;
@@ -50,7 +51,7 @@ export function SegmentedControl<Value extends string>(props: SegmentedControlPr
       {...controlProps}
       aria-label={ariaLabel}
       className={cx(
-        "inline-flex min-w-0 items-center gap-1 rounded-[var(--ui-radius-control)] bg-[var(--ui-control)] p-1",
+        "inline-flex min-w-0 flex-wrap items-center gap-1 rounded-[var(--ui-radius-control)] bg-[var(--ui-control)] p-1",
         className,
       )}
       data-disabled={disabled ? "true" : undefined}
@@ -79,9 +80,10 @@ export function SegmentedControl<Value extends string>(props: SegmentedControlPr
             className={controlRecipe({
               density,
               shape,
-              state: selected ? "selected" : "idle",
+              state: selected ? uiInteractionStates.selected : uiInteractionStates.idle,
               tone,
             })}
+            data-disabled={disabled || option.disabled ? "true" : undefined}
             data-selected={selected ? "true" : undefined}
             data-ui-segmented-control-option={option.value}
             disabled={disabled || option.disabled}

@@ -103,7 +103,7 @@ Card не імпортує game data напряму і не має game-specific
 Правила розміщення:
 
 - Primary summary лишається першою content region, щоб notation не губилася після metadata.
-- На `wide13_6Plus` actions можуть стояти праворуч від summary; на `compact` вони переходять нижче або в contextual menu.
+- На `desktop` actions можуть стояти праворуч від summary; на `mobile` і `tablet` вони переходять нижче або в contextual menu.
 - Membership hint стоїть біля actions/metadata, але не стає list persistence owner.
 
 ### `CardSurface`
@@ -169,7 +169,7 @@ Actions можуть бути hidden, disabled або moved into contextual menu
 - `activeLanguage`: `EN` або `UA`.
 - `notationDisplayMode`: `FGC`, `PlayStation` або `Xbox`.
 - `presentationContext`: `catalogList`, `namedList`, `detailRelated`, `builderComplete` або equivalent parent context.
-- `density`: compact/list/detail density, якщо parent surface це підтримує.
+- `density`: mobile і tablet/list/detail density, якщо parent surface це підтримує.
 - `focused` або `selected` state.
 - `availableActions`: open detail, add to list, duplicate або contextual actions.
 - `namedListAvailability`: optional add-to-list availability hint.
@@ -251,7 +251,7 @@ Rules:
 Contextual actions можуть бути:
 
 - inline action buttons;
-- compact action menu;
+- mobile і tablet action menu;
 - parent-owned actions panel.
 
 Card має підтримувати keyboard/controller activation для actions. Hover-only actions не допускаються.
@@ -351,3 +351,13 @@ Guard rails:
 - Pixel-level card layout буде визначено під час UI реалізації.
 - Card може використовувати різні density presets, але behavioral contract лишається однаковим.
 - Named-list membership hints є presentation hints; source of truth лишається у page/app-level user data.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

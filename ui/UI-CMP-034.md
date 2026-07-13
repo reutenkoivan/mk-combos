@@ -97,7 +97,7 @@ Game business entry points відповідають за:
 
 ## Анатомія
 
-Розміщення є disclosure-блоком усередині Settings content: header завжди зверху, expanded panel відкривається під ним; export/import dialogs є page-owned sibling overlays у `UI-PAGE-008`, а не вкладені children block-а.
+Розміщення є пласким disclosure-section усередині Settings content: header завжди зверху, expanded content відкривається під одним separator без card wrapper; export/import dialogs є page-owned sibling overlays у `UI-PAGE-008`, а не вкладені children block-а.
 
 ```jsx
 <BackupCollapsibleBlock ui="UI-CMP-034">
@@ -528,7 +528,7 @@ Export або import тимчасово unavailable.
 
 Rules:
 
-- використовувати disclosure/accordion pattern із restrained border/separator;
+- використовувати disclosure/accordion pattern з одним section separator без повної rectangular border;
 - не використовувати decorative glass або large card chrome;
 - expanded panel має читатися як Settings-owned content region;
 - action rows мають бути compact, aligned і stable across busy/disabled/error states;
@@ -719,3 +719,20 @@ Automated accessibility checks мають перевірити:
 - Exact `UI-CMP-028 Import Preview Dialog` contract може бути деталізований окремим component spec.
 - Exact Base UI disclosure/dialog primitive APIs will be chosen during implementation in shared UI primitives.
 - Forward-compatibility policy for unknown future game slices is an app-level backup versioning decision.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+
+## Flat Workspace Visual Contract
+
+- Компонент входить в один page canvas і не створює card wrapper для звичайного content flow.
+- Повна border, radius і shadow дозволені тільки owning overlay surface; peer content regions використовують spacing та один separator.
+- Standalone icon-only actions використовують transparent `icon` presentation без background, visible border або inset shadow у всіх states; focus лишається зовнішнім ring.
+- Text controls, `icon + text` actions, notation keycaps, validation і focus indicators зберігають необхідні interaction boundaries.

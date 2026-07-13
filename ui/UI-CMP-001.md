@@ -18,11 +18,13 @@
 Компонент дає користувачу:
 
 - game switcher як перший interactive item у breadcrumbs;
-- `ControllerStatusSlot` поруч із navigation block у `wide13_6Plus` або outside burger menu у `compact`;
+- `ControllerStatusSlot` поруч із navigation block у `desktop` або outside burger menu у `mobile` і `tablet`;
 - contextual breadcrumbs для active surface;
 - праворуч закріплене burger menu для global navigation і utility actions;
-- compact burger menu для top-bar navigation, коли viewport менший за desktop layout;
-- compact controller indicator і hint panel через вкладений `UI-CMP-005 Controller Hint Strip`.
+- mobile і tablet burger menu для top-bar navigation, коли viewport менший за desktop layout;
+- mobile і tablet controller indicator і hint panel через вкладений `UI-CMP-005 Controller Hint Strip`.
+
+Канонічні modes: `mobile` і `tablet` показують current-location identity без inline breadcrumbs/game switcher, `desktop` показує повний breadcrumb trail. Start/Menu викликає `openGlobalMenu` з будь-якого active page focus.
 
 Top Bar не є сторінкою налаштувань. Він може відкрити `UI-PAGE-008 Settings`, але language і notation display mode лишаються page-owned settings controls. Game switching після first launch відбувається через [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md) усередині [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md).
 
@@ -34,10 +36,10 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 
 `UI-CMP-001 Global Top Bar` отримує цей стан через inputs і відповідає тільки за верхню навігаційну панель:
 
-- рендерить [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md), де першим item є [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md), тільки у `wide13_6Plus` layout;
-- рендерить `UI-CMP-005 Controller Hint Strip` у `ControllerStatusSlot` поруч із navigation block у `wide13_6Plus` або outside burger menu у `compact`;
+- рендерить [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md), де першим item є [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md), тільки у `desktop` layout;
+- рендерить `UI-CMP-005 Controller Hint Strip` у `ControllerStatusSlot` поруч із navigation block у `desktop` або outside burger menu у `mobile` і `tablet`;
 - рендерить [`UI-CMP-033 Top Bar Dropdown Menu`](./UI-CMP-033.md) як right-pinned burger menu;
-- керує responsive composition через conditional JSX на основі `topBarLayoutMode`;
+- керує responsive composition через conditional JSX на основі `responsiveMode`;
 - передає breadcrumb game-switch intent в App Shell;
 - рендерить місце і видимість `UI-CMP-005` за controlled inputs від App Shell;
 - передає controlled `hintPanelState` і `topBarMenuState` у відповідні child components.
@@ -53,7 +55,7 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
   <Group name="TopBarLayout">
     <NavigationRegion>
       <Group name="NavigationItems">
-        <Show when={isWide13_6Plus}>
+        <Show when={responsiveMode === "desktop"}>
           <BreadcrumbsSlot>
             <Breadcrumbs ui="UI-CMP-032">
               <GameSwitcher ui="UI-CMP-002" />
@@ -74,10 +76,10 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 </GlobalTopBar>
 ```
 
-На `wide13_6Plus` горизонтальний порядок зон є стабільним:
+На `desktop` горизонтальний порядок зон є стабільним:
 
 ```jsx
-<Show when={isWide13_6Plus}>
+<Show when={responsiveMode === "desktop"}>
   <Group name="TopBarWideOrder">
     <NavigationRegion>
       <Group name="NavigationItems">
@@ -91,12 +93,13 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 </Show>
 ```
 
-На `compact` inline breadcrumbs і inline game switcher не монтуються:
+На `mobile` і `tablet` inline breadcrumbs і inline game switcher не монтуються:
 
 ```jsx
-<Show when={isCompact}>
+<Show when={responsiveMode !== "desktop"}>
   <Group name="TopBarCompactOrder">
     <NavigationRegion>
+      <CurrentLocationIdentity />
       <ControllerStatusSlot />
     </NavigationRegion>
 
@@ -105,14 +108,14 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 </Show>
 ```
 
-У `compact` menu surface `UI-CMP-033` монтує equivalents для прихованих navigation affordances: game switcher, Catalog/current trail navigation, Named Lists, Builder і Settings.
+У `mobile` і `tablet` правий drawer `UI-CMP-033` монтує equivalents для прихованих navigation affordances: game switcher, Catalog/current trail navigation, Named Lists, Builder і Settings.
 
 Правила розміщення:
 
 - `NavigationRegion`, `ActionRegion`, `BreadcrumbsSlot` і `ControllerStatusSlot` є anatomy/JSX layout names, не новими `UI-CMP-*` специфікаціями.
-- На `wide13_6Plus` порядок завжди: `BreadcrumbsSlot` із game switcher зліва, `ControllerStatusSlot` після нього, `ActionRegion` праворуч.
-- На `compact` inline breadcrumbs і inline `UI-CMP-002` не монтуються; їхні equivalents живуть усередині `UI-CMP-033`.
-- Visible controller indicator лишається в `ControllerStatusSlot` outside dropdown menu в обох layout modes.
+- На `desktop` порядок завжди: `BreadcrumbsSlot` із game switcher зліва, `ControllerStatusSlot` після нього, `ActionRegion` праворуч.
+- На `mobile` і `tablet` inline breadcrumbs і inline `UI-CMP-002` не монтуються; їхні equivalents живуть усередині `UI-CMP-033`.
+- Visible controller indicator лишається в `ControllerStatusSlot` outside dropdown на `desktop` і outside drawer на `mobile`/`tablet`.
 
 ### NavigationRegion
 
@@ -120,9 +123,9 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 
 - лишатися видимим у shell layout;
 - не перекривати active surface content;
-- у `wide13_6Plus` тримати `BreadcrumbsSlot` як головний navigation block;
-- у `wide13_6Plus` давати `BreadcrumbsSlot` весь доступний простір між left/start navigation block і `ActionRegion`;
-- у `compact` не монтувати inline breadcrumbs і inline game switcher;
+- у `desktop` тримати `BreadcrumbsSlot` як головний navigation block;
+- у `desktop` давати `BreadcrumbsSlot` весь доступний простір між left/start navigation block і `ActionRegion`;
+- у `mobile` і `tablet` не монтувати inline breadcrumbs і inline game switcher;
 - тримати visible controller indicator поза menu;
 - підтримувати mouse, touch і keyboard input;
 - давати помітний `focus-visible` для всіх interactive controls.
@@ -131,13 +134,13 @@ Backup доступний усередині `UI-PAGE-008 Settings` через `
 
 `BreadcrumbsSlot` є left/start slot у `NavigationRegion` для inline [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md).
 
-Slot монтується тільки у `wide13_6Plus`; у `compact` його navigation equivalents передаються в `UI-CMP-033`.
+Slot монтується тільки у `desktop`; у `mobile` і `tablet` його navigation equivalents передаються в `UI-CMP-033`.
 
 ### ControllerStatusSlot
 
 `ControllerStatusSlot` є slot у `NavigationRegion` для `UI-CMP-005 Controller Hint Strip`.
 
-Slot лишається outside `UI-CMP-033` в обох layout modes і не переноситься в dropdown menu або responsive overflow.
+Slot лишається outside `UI-CMP-033` в усіх modes і не переноситься в desktop dropdown або responsive drawer.
 
 ### ActionRegion
 
@@ -149,13 +152,13 @@ Slot лишається outside `UI-CMP-033` в обох layout modes і не п
 
 Game switcher показує active game із route prefix або app-level state і дає вибрати іншу installed game. Вибір іншої game емітить game-switch intent у App Shell; Top Bar не виконує route change або persistence самостійно.
 
-У `wide13_6Plus` game switcher монтується inline через breadcrumbs. У `compact` inline breadcrumbs не монтуються, а `UI-CMP-033` монтує `UI-CMP-002` у menu content як breadcrumbs-equivalent game switcher із тим самим App Shell intent.
+У `desktop` game switcher монтується inline через breadcrumbs. У `mobile` і `tablet` inline breadcrumbs не монтуються, а `UI-CMP-033` монтує `UI-CMP-002` у drawer content як breadcrumbs-equivalent game switcher із тим самим App Shell intent.
 
 Game switcher не дублюється в `UI-PAGE-008 Settings`. Settings лишається місцем для `language`, `notation display mode` і backup.
 
 ### Controller status behavior
 
-`ControllerStatusSlot` розташований поруч із breadcrumbs/navigation block у `wide13_6Plus` або outside `UI-CMP-033` у `compact`.
+`ControllerStatusSlot` розташований поруч із breadcrumbs/navigation block у `desktop` або outside `UI-CMP-033` у `mobile` і `tablet`.
 
 Top Bar контролює:
 
@@ -164,34 +167,36 @@ Top Bar контролює:
 - де відкривається hint panel;
 - чи hint panel закритий під час navigation або menu actions.
 
-Visible connection indicator із `UI-CMP-005` не переноситься в dropdown menu або responsive overflow. Якщо controller indicator видимий, він лишається в `ControllerStatusSlot` outside `UI-CMP-033`. Hint panel і далі відкривається тільки через indicator.
+Visible connection indicator із `UI-CMP-005` не переноситься в dropdown або responsive drawer. Якщо controller indicator видимий, він лишається в `ControllerStatusSlot` outside `UI-CMP-033`. Hint panel і далі відкривається тільки через indicator.
 
 `UI-CMP-005` визначає власний display state: `hiddenNoController`, `connectedIndicator`, `disconnectGraceIndicator`, `hintPanelClosed`, `hintPanelOpen`.
 
 ### Responsive JSX composition
 
-Top Bar responsive behavior керується через `topBarLayoutMode`, а не через CSS-only hiding.
+Top Bar responsive behavior керується через `responsiveMode`, а не через CSS-only hiding.
 
-`topBarLayoutMode` має значення:
+`responsiveMode` має значення:
 
-- `wide13_6Plus`: desktop layout для MacBook Air-class і ширших viewport/device class;
-- `compact`: усі екрани менші за `wide13_6Plus`.
+- `mobile`: current-location identity, controller state і global-menu trigger;
+- `tablet`: current-location identity, controller state і global-menu trigger;
+- `desktop`: full breadcrumbs із game switcher, controller state і global-menu trigger.
 
-CSS може стилізувати змонтовані гілки, але не визначає presence, focusability або accessibility tree. Якщо компонент прихований у compact layout, він не має бути змонтований як inline focus target.
+CSS може стилізувати змонтовані гілки, але не визначає presence, focusability або accessibility tree. Якщо компонент прихований у mobile і tablet layout, він не має бути змонтований як inline focus target.
 
-У `wide13_6Plus` JSX монтує:
+У `desktop` JSX монтує:
 
 - inline `UI-CMP-032 Breadcrumbs`;
 - inline [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md) як перший breadcrumb item;
 - visible `UI-CMP-005 Controller Hint Strip`, якщо controller indicator state не hidden;
 - [`UI-CMP-033 Top Bar Dropdown Menu`](./UI-CMP-033.md) із global actions.
 
-У `compact` JSX монтує:
+У `mobile` і `tablet` JSX монтує:
 
+- current-location identity без інтерактивного breadcrumb trail;
 - visible `UI-CMP-005 Controller Hint Strip`, якщо controller indicator state не hidden;
-- [`UI-CMP-033 Top Bar Dropdown Menu`](./UI-CMP-033.md) із compact equivalents для `UI-CMP-002`, Catalog/current trail navigation, Named Lists, Builder, Settings і allowed utilities.
+- [`UI-CMP-033 Top Bar Dropdown Menu`](./UI-CMP-033.md) як правий full-height drawer із `UI-CMP-002`, full trail, secondary navigation і global actions.
 
-У `compact` JSX не монтує inline `UI-CMP-032 Breadcrumbs` або inline `UI-CMP-002`; вони не мають бути hidden-but-focusable.
+`mobile` і `tablet` не монтують inline `UI-CMP-032 Breadcrumbs` або inline `UI-CMP-002`; вони не мають бути hidden-but-focusable.
 
 ### UI-CMP-032 Breadcrumbs
 
@@ -199,7 +204,7 @@ CSS може стилізувати змонтовані гілки, але не
 
 `UI-CMP-032 Breadcrumbs` показує contextual navigation trail для active surface.
 
-Breadcrumbs монтуються inline тільки у `wide13_6Plus`. У `compact` їхні navigable equivalents передаються в `UI-CMP-033` menu content.
+Full breadcrumbs монтуються inline тільки у `desktop`. `mobile` і `tablet` рендерять лише current-location identity, а game switcher і full trail передають у drawer content `UI-CMP-033`.
 
 Breadcrumbs можуть містити:
 
@@ -224,7 +229,7 @@ Game switcher crumb емітить окремий `requestSwitchGameFromBreadcru
 
 Детальна специфікація: [UI-CMP-033 Top Bar Dropdown Menu](./UI-CMP-033.md).
 
-`UI-CMP-033 Top Bar Dropdown Menu` є окремим праворуч закріпленим burger opener і anchored menu surface.
+`UI-CMP-033 Top Bar Dropdown Menu` є окремим праворуч закріпленим burger opener: на `desktop` він відкриває anchored menu surface, на `mobile` і `tablet` — правий full-height drawer.
 
 Menu містить global navigation і utility actions:
 
@@ -233,24 +238,24 @@ Menu містить global navigation і utility actions:
 - перейти до `UI-PAGE-008 Settings`;
 - optional глобальні actions, якщо App Shell їх дозволяє.
 
-На `wide13_6Plus` menu не дублює breadcrumbs або `UI-CMP-002`.
+На `desktop` menu не дублює breadcrumbs або `UI-CMP-002`.
 
-На `compact` menu є responsive navigation surface для всіх top-bar navigation affordances, які не монтуються inline:
+На `mobile` і `tablet` drawer є responsive navigation surface для всіх top-bar navigation affordances, які не монтуються inline:
 
 - `UI-CMP-002 Game Switcher` як breadcrumbs-equivalent game switcher;
 - `Catalog` або current trail navigation item;
 - navigable breadcrumb equivalents, якщо вони доступні;
 - Named Lists, Builder, Settings і allowed utility actions.
 
-Visible controller connection indicator не переноситься в `UI-CMP-033` і не дублюється в menu.
+Visible controller connection indicator не переноситься в `UI-CMP-033` і не дублюється в drawer.
 
-Menu не містить inline controls для `language` або `notation display mode`. Game switching належить `UI-CMP-002`: у `wide13_6Plus` він монтується в breadcrumbs, а в `compact` - у `UI-CMP-033` menu content як breadcrumbs-equivalent control.
+Menu/drawer не містить inline controls для `language` або `notation display mode`. Game switching належить `UI-CMP-002`: у `desktop` він монтується в breadcrumbs, а в `mobile` і `tablet` — у `UI-CMP-033` drawer content як breadcrumbs-equivalent control.
 
 ## Вхідні дані
 
 - `activeSurfaceCode`: code активної UI-поверхні.
 - `activeRouteLabel`: localized label активного route або surface.
-- `topBarLayoutMode`: `wide13_6Plus` або `compact`; керує conditional JSX composition.
+- `responsiveMode`: `mobile`, `tablet` або `desktop`; керує conditional JSX composition.
 - `activeGameId`: installed game id із route prefix або app-level state.
 - `activeGameLabel`: label active business entry point, наприклад `MKXL` або `MK1`.
 - `availableGames`: installed game descriptors для `UI-CMP-002`.
@@ -271,10 +276,10 @@ Menu не містить inline controls для `language` або `notation disp
 - `requestNavigateNamedLists`: перейти до `UI-PAGE-005 Named Lists`.
 - `requestNavigateBuilder`: перейти до `UI-PAGE-006 Custom Combo Builder`.
 - `requestNavigateSettings`: перейти до `UI-PAGE-008 Settings`.
-- `requestNavigateCatalog`: перейти до `UI-PAGE-003 Catalog`, якщо Catalog доступний через compact menu.
+- `requestNavigateCatalog`: перейти до `UI-PAGE-003 Catalog`, якщо Catalog доступний через mobile і tablet menu.
 - `requestNavigateBreadcrumb`: перейти за navigable breadcrumb item, зокрема до `UI-PAGE-003 Catalog`.
 - `requestSwitchGameFromBreadcrumb`: змінити active/default або last active game через App Shell і виконати analogous navigation.
-- `requestSwitchGameFromMenu`: compact menu equivalent для `requestSwitchGameFromBreadcrumb`.
+- `requestSwitchGameFromMenu`: mobile і tablet menu equivalent для `requestSwitchGameFromBreadcrumb`.
 - `requestOpenHints`: відкрити hint panel у `UI-CMP-005`.
 - `requestCloseHints`: закрити hint panel у `UI-CMP-005`.
 - `requestToggleHints`: перемкнути hint panel у `UI-CMP-005`.
@@ -287,10 +292,10 @@ Menu не містить inline controls для `language` або `notation disp
 
 Компонент відповідає за:
 
-- conditional JSX composition на основі `topBarLayoutMode`;
-- показ `UI-CMP-032 Breadcrumbs` у `wide13_6Plus`;
-- рендер [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md) як першого breadcrumb item у `wide13_6Plus`;
-- передавання `UI-CMP-002` у `UI-CMP-033` compact menu content у `compact`;
+- conditional JSX composition на основі `responsiveMode`;
+- показ `UI-CMP-032 Breadcrumbs` у `desktop`;
+- рендер [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md) як першого breadcrumb item у `desktop`;
+- передавання `UI-CMP-002` у `UI-CMP-033` mobile і tablet menu content у `mobile` і `tablet`;
 - передачу game-switch intent в App Shell;
 - розміщення `UI-CMP-005` поруч із navigation block;
 - показ right-pinned `UI-CMP-033 Top Bar Dropdown Menu`;
@@ -317,19 +322,19 @@ Menu не містить inline controls для `language` або `notation disp
 
 ### `ready`
 
-Top Bar має всі потрібні inputs і може рендерити layout, який відповідає `topBarLayoutMode`.
+Top Bar має всі потрібні inputs і може рендерити layout, який відповідає `responsiveMode`.
 
 Очікуваний UI:
 
-- у `wide13_6Plus` first breadcrumb item показує active game через `UI-CMP-002`;
-- у `compact` active game доступний через `UI-CMP-002` у `UI-CMP-033` menu content;
+- у `desktop` first breadcrumb item показує active game через `UI-CMP-002`;
+- у `mobile` і `tablet` active game доступний через `UI-CMP-002` у `UI-CMP-033` menu content;
 - `UI-CMP-005` рендериться відповідно до controller state;
 - burger menu trigger прибитий до правого краю;
 - inline controls, які не відповідають active layout mode, не монтуються.
 
 ### `wideTopBarReady`
 
-`topBarLayoutMode = wide13_6Plus`.
+`responsiveMode = desktop`.
 
 Очікуваний UI:
 
@@ -339,17 +344,17 @@ Top Bar має всі потрібні inputs і може рендерити lay
 - Catalog доступний через breadcrumb item;
 - visible controller indicator лишається поруч із navigation block.
 
-### `compactTopBarReady`
+### `mobileOrTabletTopBarReady`
 
-`topBarLayoutMode = compact`.
+`responsiveMode = mobile` або `responsiveMode = tablet`.
 
 Очікуваний UI:
 
 - inline breadcrumbs не змонтовані;
 - inline `UI-CMP-002 Game Switcher` не змонтований;
 - visible controller indicator лишається outside `UI-CMP-033`;
-- `UI-CMP-033` є burger opener і compact menu surface;
-- compact menu content містить `UI-CMP-002`, Catalog/current trail navigation, Named Lists, Builder і Settings;
+- `UI-CMP-033` є burger opener і mobile і tablet menu surface;
+- mobile і tablet menu content містить `UI-CMP-002`, Catalog/current trail navigation, Named Lists, Builder і Settings;
 - hidden inline controls не присутні в tab order або accessibility tree.
 
 ### `firstLaunchLimited`
@@ -381,8 +386,8 @@ App Shell передав breadcrumbs для active surface.
 
 Очікуваний UI:
 
-- у `wide13_6Plus` breadcrumb items показані в navigation block;
-- у `compact` navigable breadcrumb equivalents доступні через `UI-CMP-033`;
+- у `desktop` breadcrumb items показані в navigation block;
+- у `mobile` і `tablet` navigable breadcrumb equivalents доступні через `UI-CMP-033`;
 - first breadcrumb item є `UI-CMP-002 Game Switcher`;
 - navigable items мають action;
 - current item позначений як current і не веде в той самий route;
@@ -415,8 +420,8 @@ Controller не підключено і немає active disconnect grace windo
 Очікуваний UI:
 
 - `UI-CMP-005` не відображається;
-- у `wide13_6Plus` breadcrumbs лишаються на місці;
-- у `compact` inline breadcrumbs лишаються unmounted;
+- у `desktop` breadcrumbs лишаються на місці;
+- у `mobile` і `tablet` inline breadcrumbs лишаються unmounted;
 - focus order не містить controller indicator.
 
 ### `controllerIndicatorConnected`
@@ -425,7 +430,7 @@ Controller підключено.
 
 Очікуваний UI:
 
-- `UI-CMP-005` показує green connected indicator поруч із breadcrumbs/navigation block у `wide13_6Plus` або outside `UI-CMP-033` у `compact`;
+- `UI-CMP-005` показує green connected indicator поруч із breadcrumbs/navigation block у `desktop` або outside `UI-CMP-033` у `mobile` і `tablet`;
 - indicator доступний як button;
 - hint panel лишається закритим до взаємодії з indicator.
 
@@ -435,7 +440,7 @@ Controller від'єднано після active connection, і 1-minute disconn
 
 Очікуваний UI:
 
-- `UI-CMP-005` показує yellow disconnect indicator поруч із breadcrumbs/navigation block у `wide13_6Plus` або outside `UI-CMP-033` у `compact`;
+- `UI-CMP-005` показує yellow disconnect indicator поруч із breadcrumbs/navigation block у `desktop` або outside `UI-CMP-033` у `mobile` і `tablet`;
 - після завершення grace window indicator зникає, якщо reconnect не стався;
 - disconnect не забирає focus із active surface або Top Bar control.
 
@@ -445,21 +450,21 @@ Controller від'єднано після active connection, і 1-minute disconn
 
 Очікуваний UI:
 
-- panel прив'язаний до `ControllerStatusSlot` поруч із navigation block у `wide13_6Plus` або до visible indicator outside menu у `compact`;
+- panel прив'язаний до `ControllerStatusSlot` поруч із navigation block у `desktop` або до visible indicator outside menu у `mobile` і `tablet`;
 - `Escape` закриває panel;
 - focus повертається на indicator після закриття;
 - navigation або route change закриває panel без втрати active surface state.
 
 ### `topBarMenuClosed`
 
-Right-pinned dropdown menu закритий.
+Right-pinned navigation surface закрита.
 
 Очікуваний UI:
 
 - trigger видимий праворуч;
-- menu items не рендеряться як active focus targets;
-- у `wide13_6Plus` breadcrumbs отримують доступний простір до trigger;
-- у `compact` hidden inline breadcrumbs не змонтовані.
+- menu/drawer items не рендеряться як active focus targets;
+- у `desktop` breadcrumbs отримують доступний простір до trigger;
+- у `mobile` і `tablet` hidden inline breadcrumbs не змонтовані.
 
 ### `topBarMenuOpen`
 
@@ -467,10 +472,10 @@ Right-pinned dropdown menu закритий.
 
 Очікуваний UI:
 
-- menu surface вирівняний відносно правого краю Top Bar;
-- у `wide13_6Plus` menu містить global navigation і utility actions;
-- у `compact` menu містить compact game switcher, Catalog/current trail navigation і global actions;
-- `Escape` закриває menu;
+- на `desktop` menu surface вирівняний відносно trigger, а на `mobile` і `tablet` drawer займає правий край на всю висоту viewport;
+- у `desktop` menu містить global navigation і utility actions;
+- у `mobile` і `tablet` drawer містить game switcher, Catalog/current trail navigation і global actions;
+- `Escape`, outside interaction або swipe праворуч закриває responsive drawer;
 - focus повертається до menu trigger після закриття.
 
 ## Доступність і поведінка вводу
@@ -480,34 +485,34 @@ Right-pinned dropdown menu закритий.
 - Game switcher має button/listbox/menu semantics відповідно до implementation pattern.
 - Breadcrumbs мають navigation semantics і current item.
 - Dropdown trigger має accessible name.
-- Dropdown menu має menu або navigation semantics відповідно до implementation pattern.
+- Desktop dropdown має menu semantics; mobile/tablet drawer має modal dialog/navigation semantics.
 - Burger opener має `aria-expanded` і relationship із menu surface.
 - `focus-visible` має бути помітним для breadcrumb links, menu trigger, menu items і controller indicator.
-- У `compact` inline breadcrumbs/game switcher не мають лишатися hidden-but-focusable.
-- У `compact` game switcher у menu має той самий keyboard behavior і selection intent, що й breadcrumb game switcher.
+- У `mobile` і `tablet` inline breadcrumbs/game switcher не мають лишатися hidden-but-focusable.
+- У `mobile` і `tablet` game switcher у drawer має той самий keyboard behavior і selection intent, що й breadcrumb game switcher.
 - Controller connect/disconnect не перехоплює focus.
 - Indicator `UI-CMP-005` є button, коли він видимий.
 - `Enter` і `Space` на indicator відкривають або toggle hint panel.
-- `Escape` закриває hint panel або dropdown menu і повертає focus до відповідного trigger.
+- `Escape` закриває hint panel, desktop dropdown або responsive drawer і повертає focus до відповідного trigger.
 - Hover сам по собі не відкриває hint panel.
 
 ## Критерії приймання
 
 - `UI-CMP-001` рендериться як прямий компонент `UI-PAGE-001 App Shell`.
-- Top Bar отримує `topBarLayoutMode` і використовує його для conditional JSX composition.
-- У `wide13_6Plus` Top Bar показує active game через `UI-CMP-002` як перший breadcrumb item.
-- У `compact` Top Bar не монтує inline breadcrumbs або inline `UI-CMP-002`.
-- `UI-CMP-005` не переноситься в dropdown menu; visible connection indicator лишається outside `UI-CMP-033`.
-- У `wide13_6Plus` `UI-CMP-032 Breadcrumbs` показує contextual trail для active surface.
-- У `wide13_6Plus` `UI-CMP-032 Breadcrumbs` рендерить `UI-CMP-002 Game Switcher` першим item.
-- У `wide13_6Plus` Catalog відкривається з Top Bar через navigable breadcrumb item, а не через dropdown menu.
-- У `compact` Catalog доступний через `UI-CMP-033`, бо breadcrumb item не змонтований inline.
+- Top Bar отримує `responsiveMode` і використовує його для conditional JSX composition.
+- У `desktop` Top Bar показує active game через `UI-CMP-002` як перший breadcrumb item.
+- У `mobile` і `tablet` Top Bar не монтує inline breadcrumbs або inline `UI-CMP-002`.
+- `UI-CMP-005` не переноситься в dropdown/drawer; visible connection indicator лишається outside `UI-CMP-033`.
+- У `desktop` `UI-CMP-032 Breadcrumbs` показує contextual trail для active surface.
+- У `desktop` `UI-CMP-032 Breadcrumbs` рендерить `UI-CMP-002 Game Switcher` першим item.
+- У `desktop` Catalog відкривається з Top Bar через navigable breadcrumb item, а не через dropdown menu.
+- У `mobile` і `tablet` Catalog доступний через `UI-CMP-033`, бо breadcrumb item не змонтований inline.
 - `UI-CMP-033 Top Bar Dropdown Menu` прибитий до правої сторони Top Bar.
-- У `wide13_6Plus` dropdown menu має actions до Named Lists, Custom Combo Builder і Settings, але не до Catalog і не до окремого Backup.
-- У `compact` dropdown menu має `UI-CMP-002`, Catalog/current trail navigation, Named Lists, Builder і Settings.
+- У `desktop` dropdown menu має actions до Named Lists, Custom Combo Builder і Settings, але не до Catalog і не до окремого Backup.
+- У `mobile` і `tablet` drawer має `UI-CMP-002`, Catalog/current trail navigation, Named Lists, Builder і Settings без duplicate `Catalog` action.
 - Top Bar не містить `UI-CMP-003`, `UI-CMP-004` або `UI-CMP-037`.
 - Breadcrumb game switch емітить intent в App Shell і не змінює route або persistence напряму.
-- Compact menu game switch емітить equivalent intent в App Shell і не змінює route або persistence напряму.
+- Responsive drawer game switch емітить equivalent intent в App Shell і не змінює route або persistence напряму.
 - Top Bar не змінює `language` або `notation display mode` напряму.
 - Connected controller показує green indicator у `UI-CMP-005`.
 - Disconnect після active connection показує yellow indicator протягом 1 хв через `UI-CMP-005`.
@@ -516,22 +521,22 @@ Right-pinned dropdown menu закритий.
 
 ## Тестові сценарії
 
-- Route `/mkxl/...` на `wide13_6Plus` показує `MKXL` як selected game у першому breadcrumb item.
-- Route `/mk1/...` на `wide13_6Plus` показує `MK1` як selected game у першому breadcrumb item.
+- Route `/mkxl/...` на `desktop` показує `MKXL` як selected game у першому breadcrumb item.
+- Route `/mk1/...` на `desktop` показує `MK1` як selected game у першому breadcrumb item.
 - Top Bar не показує окрему назву застосунку замість breadcrumbs game switcher.
-- Controller connected показує `UI-CMP-005` поруч із navigation block у `wide13_6Plus` або outside menu у `compact`.
+- Controller connected показує `UI-CMP-005` поруч із navigation block у `desktop` або outside menu у `mobile` і `tablet`.
 - Controller disconnected після active connection показує yellow indicator протягом 1 хв.
 - Breadcrumbs для combo detail показують trail до Catalog, character і combo detail.
 - Game switcher у breadcrumbs на `/mkxl/catalog` може вибрати `MK1` і емітить `requestSwitchGameFromBreadcrumb`.
 - Catalog breadcrumb емітить `requestNavigateBreadcrumb` з target `UI-PAGE-003 Catalog`.
 - Current breadcrumb item позначений як current і не виконує navigation у той самий route.
-- Dropdown trigger лишається прибитим до правого краю на `wide13_6Plus` і `compact`.
+- Burger trigger лишається прибитим до правого краю на `mobile`, `tablet` і `desktop`.
 - Wide dropdown menu відкривається з trigger і містить Named Lists, Builder і Settings без Catalog або окремого Backup.
 - Compact Top Bar не має inline breadcrumbs або inline game switcher у tab order.
-- Compact dropdown menu відкривається з trigger і містить `UI-CMP-002`, Catalog, Named Lists, Builder і Settings.
-- Compact game switcher у menu на `/mkxl/catalog` може вибрати `MK1` і емітить `requestSwitchGameFromMenu`.
-- Compact controller connected indicator лишається visible outside dropdown menu.
-- `Escape` закриває dropdown menu і повертає focus до trigger.
+- Responsive drawer відкривається з trigger справа на всю висоту та містить `UI-CMP-002`, один Catalog item, Named Lists, Builder і Settings.
+- Game switcher у drawer на `/mkxl/catalog` може вибрати `MK1` і емітить `requestSwitchGameFromMenu`.
+- Compact controller connected indicator лишається visible outside drawer.
+- `Escape`, outside interaction і swipe праворуч закривають drawer та повертають focus до trigger.
 - Click, tap, `Enter` або `Space` на controller indicator відкриває hint panel.
 - Top Bar не рендерить Language Switcher, Display Mode Switcher або Notation Legend Table.
 
@@ -540,3 +545,20 @@ Right-pinned dropdown menu закритий.
 - Точний вигляд breadcrumb separators буде визначено під час UI реалізації.
 - Точний icon facade module для burger opener буде визначено під час UI реалізації в `packages/ui`.
 - Якщо буде додано controller help surface, Top Bar має передавати request із `UI-CMP-005` до App Shell.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+
+## Flat Workspace Visual Contract
+
+- Компонент входить в один page canvas і не створює card wrapper для звичайного content flow.
+- Повна border, radius і shadow дозволені тільки owning overlay surface; peer content regions використовують spacing та один separator.
+- Standalone icon-only actions використовують transparent `icon` presentation без background, visible border або inset shadow у всіх states; focus лишається зовнішнім ring.
+- Text controls, `icon + text` actions, notation keycaps, validation і focus indicators зберігають необхідні interaction boundaries.

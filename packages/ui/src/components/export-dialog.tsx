@@ -1,0 +1,105 @@
+import { useComponentActionEmitter, useComponentOpenChangeEmitter } from "../hooks/intents";
+import { DownloadIcon } from "../icons/download";
+import { Button } from "../primitives/button";
+import {
+  DialogBackdrop,
+  DialogDescription,
+  DialogPopup,
+  DialogPortal,
+  DialogRoot,
+  DialogTitle,
+} from "../primitives/dialog";
+import { StatusMessage } from "../primitives/state";
+import { uiToneModes } from "../tokens/value";
+import type { BackupAvailability, BackupLocalStateSummary, ComponentActionIntent } from "./type";
+
+export const exportDialogActions = {
+  cancelExport: "cancelExport",
+  close: "close",
+  confirmExport: "confirmExport",
+} as const;
+
+export type ExportDialogAction = (typeof exportDialogActions)[keyof typeof exportDialogActions];
+
+export type ExportDialogProps = {
+  cancelLabel: string;
+  confirmLabel: string;
+  description: string;
+  exportAvailability: BackupAvailability;
+  localStateSummary: BackupLocalStateSummary;
+  onRequestAction?: (intent: ComponentActionIntent<ExportDialogAction>) => void;
+  open: boolean;
+  sourceFocusTarget?: string;
+  sourceSurface: string;
+  title: string;
+  busy?: boolean;
+  warningMessage?: string;
+};
+
+export function ExportDialog(props: ExportDialogProps) {
+  const actionEmitter = useComponentActionEmitter<ExportDialogAction>({
+    onRequest: props.onRequestAction,
+    sourceFocusTarget: props.sourceFocusTarget,
+    sourceSurface: props.sourceSurface,
+  });
+  const closeEmitter = useComponentOpenChangeEmitter<ExportDialogAction>({
+    closeAction: exportDialogActions.close,
+    onRequest: props.onRequestAction,
+    sourceFocusTarget: props.sourceFocusTarget,
+    sourceSurface: props.sourceSurface,
+  });
+
+  return (
+    <DialogRoot
+      onOpenChange={closeEmitter.methods.handleOpenChange}
+      open={props.open}
+      sourceFocusTarget={props.sourceFocusTarget}
+    >
+      <DialogPortal>
+        <DialogBackdrop />
+        <DialogPopup data-ui-component="UI-CMP-027">
+          <div className="grid gap-4">
+            <div className="grid gap-1">
+              <DialogTitle>{props.title}</DialogTitle>
+              <DialogDescription>{props.description}</DialogDescription>
+            </div>
+            <div className="grid gap-2 text-sm">
+              <p>{props.localStateSummary.settingsSummary}</p>
+              <p>{props.localStateSummary.gameSlices.map((slice) => slice.label).join(", ")}</p>
+            </div>
+            {props.warningMessage && (
+              <StatusMessage tone={uiToneModes.warning}>{props.warningMessage}</StatusMessage>
+            )}
+            {props.exportAvailability.disabledReason && !props.exportAvailability.available && (
+              <StatusMessage tone={uiToneModes.warning}>
+                {props.exportAvailability.disabledReason}
+              </StatusMessage>
+            )}
+            <div className="sticky bottom-0 flex flex-col-reverse gap-2 border-t border-[var(--ui-separator)] bg-[var(--ui-dialog)] pt-3 sm:flex-row sm:flex-wrap sm:justify-end">
+              <Button
+                onRequestPress={() =>
+                  actionEmitter.methods.emitAction(exportDialogActions.cancelExport)
+                }
+              >
+                {props.cancelLabel}
+              </Button>
+              <Button
+                disabled={!props.exportAvailability.available || props.busy}
+                loading={props.busy}
+                onRequestPress={() =>
+                  actionEmitter.methods.emitAction(exportDialogActions.confirmExport)
+                }
+                tone={uiToneModes.accent}
+              >
+                <DownloadIcon aria-hidden="true" size="small" />
+                {props.confirmLabel}
+              </Button>
+            </div>
+          </div>
+        </DialogPopup>
+      </DialogPortal>
+    </DialogRoot>
+  );
+}
+
+ExportDialog.displayName = "ExportDialog";

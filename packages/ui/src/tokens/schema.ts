@@ -2,6 +2,7 @@ import { z } from "zod/v4";
 
 import {
   uiContrastModes,
+  uiControlPresentationModes,
   uiDensityModes,
   uiEmphasisModes,
   uiInteractionStates,
@@ -16,6 +17,7 @@ import {
 
 export {
   uiContrastModes,
+  uiControlPresentationModes,
   uiDensityModes,
   uiEmphasisModes,
   uiInteractionStates,
@@ -50,6 +52,8 @@ export const UiMaterialModeSchema = z.enum(uiMaterialModes);
 export const UiToneModeSchema = z.enum(uiToneModes);
 
 export const UiEmphasisModeSchema = z.enum(uiEmphasisModes);
+
+export const UiControlPresentationModeSchema = z.enum(uiControlPresentationModes);
 
 export const UiInteractionStateSchema = z.enum(uiInteractionStates);
 

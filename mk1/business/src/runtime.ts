@@ -1,6 +1,8 @@
 import { BuilderRuntimeSnapshotSchema } from "@mk-combos/builder-core/runtime/schema";
 import type { BuilderRuntimeSnapshot } from "@mk-combos/builder-core/runtime/type";
+import { builderComboStateStatuses } from "@mk-combos/builder-core/stale/value";
 import type { ComboId } from "@mk-combos/contracts/identity/type";
+import { comboSources } from "@mk-combos/contracts/identity/value";
 import { err, ok } from "@mk-combos/contracts/result/runtime";
 import type { AppError, AppResult, ValidationMessage } from "@mk-combos/contracts/result/type";
 import type { LocalizedText } from "@mk-combos/contracts/settings/type";
@@ -195,11 +197,11 @@ const summarizeMk1CustomCombo = (combo: Mk1BusinessCustomCombo): Mk1BusinessCust
   return Mk1BusinessCustomComboSummarySchema.parse({
     ref: {
       gameId: "mk1",
-      source: "custom",
+      source: comboSources.custom,
       comboId: combo.id,
     },
     gameId: "mk1",
-    source: "custom",
+    source: comboSources.custom,
     title: customTitle(combo),
     character: entityLabel(
       character?.id ?? combo.characterId,
@@ -233,17 +235,17 @@ const foundSeededDetail = (summary: Mk1CatalogComboSummary): Mk1BusinessComboLoo
     movePath: summary.movePath,
   });
   const detail = {
-    source: "seeded",
+    source: comboSources.seeded,
     ref: {
       gameId: "mk1",
-      source: "seeded",
+      source: comboSources.seeded,
       comboId: summary.ref.comboId,
     },
     summary,
     comboState,
   };
   const messages =
-    comboState.status === "fresh"
+    comboState.status === builderComboStateStatuses.fresh
       ? []
       : [
           message(
@@ -264,7 +266,7 @@ const foundSeededDetail = (summary: Mk1CatalogComboSummary): Mk1BusinessComboLoo
 const foundCustomDetail = (combo: Mk1BusinessCustomCombo): Mk1BusinessComboLookup => {
   const summary = summarizeMk1CustomCombo(combo);
   const messages =
-    summary.comboState.status === "fresh"
+    summary.comboState.status === builderComboStateStatuses.fresh
       ? []
       : [
           message(
@@ -278,7 +280,7 @@ const foundCustomDetail = (combo: Mk1BusinessCustomCombo): Mk1BusinessComboLooku
   return Mk1BusinessComboLookupSchema.parse({
     status: "found",
     detail: {
-      source: "custom",
+      source: comboSources.custom,
       ref: summary.ref,
       combo,
       summary,
@@ -313,7 +315,7 @@ const lookupMk1BusinessCombo = (input: {
     return ref;
   }
 
-  if (ref.value.source === "seeded") {
+  if (ref.value.source === comboSources.seeded) {
     const summary = getMk1CatalogComboSummary(ref.value.comboId);
 
     return ok(summary ? foundSeededDetail(summary) : notFoundLookup(ref.value));

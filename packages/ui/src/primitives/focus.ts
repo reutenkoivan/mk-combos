@@ -6,7 +6,7 @@ export type UiFocusTarget = {
 export type UiFocusTargetInput = string | UiFocusTarget;
 
 export type UiFocusRestoreResult = {
-  reason: "documentUnavailable" | "restored" | "targetDisabled" | "targetMissing";
+  reason: UiFocusRestoreReason;
   restored: boolean;
   targetId: string;
 };
@@ -61,7 +61,7 @@ export const restoreFocusTarget = (
 
   if (!root) {
     return {
-      reason: "documentUnavailable",
+      reason: uiFocusRestoreReasons.documentUnavailable,
       restored: false,
       targetId: normalizedTarget.id,
     };
@@ -71,7 +71,7 @@ export const restoreFocusTarget = (
 
   if (!element) {
     return {
-      reason: "targetMissing",
+      reason: uiFocusRestoreReasons.targetMissing,
       restored: false,
       targetId: normalizedTarget.id,
     };
@@ -79,7 +79,7 @@ export const restoreFocusTarget = (
 
   if (isDisabledFocusTarget(element)) {
     return {
-      reason: "targetDisabled",
+      reason: uiFocusRestoreReasons.targetDisabled,
       restored: false,
       targetId: normalizedTarget.id,
     };
@@ -88,8 +88,17 @@ export const restoreFocusTarget = (
   element.focus();
 
   return {
-    reason: "restored",
+    reason: uiFocusRestoreReasons.restored,
     restored: true,
     targetId: normalizedTarget.id,
   };
 };
+export const uiFocusRestoreReasons = {
+  documentUnavailable: "documentUnavailable",
+  restored: "restored",
+  targetDisabled: "targetDisabled",
+  targetMissing: "targetMissing",
+} as const;
+
+export type UiFocusRestoreReason =
+  (typeof uiFocusRestoreReasons)[keyof typeof uiFocusRestoreReasons];

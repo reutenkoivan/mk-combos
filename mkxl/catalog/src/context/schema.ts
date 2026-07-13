@@ -5,11 +5,13 @@ import {
   MkxlComboPositionSchema,
   MkxlComboRouteTypeSchema,
 } from "@mk-combos/mkxl-data/combos/schema";
+import { MkxlPickerSlotStatusSchema } from "@mk-combos/mkxl-data/shared/schema";
 import { z } from "zod/v4";
 
 import { MkxlCatalogFiltersSchema } from "../filters/schema";
 import {
   mkxlCatalogContextStatuses,
+  mkxlCatalogOptionAvailabilities,
   mkxlCatalogRecoveryCodes,
   mkxlCatalogRouteQueryKeys,
 } from "./value";
@@ -33,7 +35,7 @@ const MkxlCatalogPickerSlotSchema = z
     row: z.number().int().positive(),
     column: z.number().int().positive(),
     compactOrder: z.number().int().positive().optional(),
-    status: z.enum(["selectable", "disabledNoComboData", "placeholder"]),
+    status: MkxlPickerSlotStatusSchema,
   })
   .strict();
 
@@ -42,6 +44,8 @@ export const MkxlCatalogContextStatusSchema = z.enum(mkxlCatalogContextStatuses)
 export const MkxlCatalogRecoveryCodeSchema = z.enum(mkxlCatalogRecoveryCodes);
 
 export const MkxlCatalogRouteQueryKeySchema = z.enum(mkxlCatalogRouteQueryKeys);
+
+export const MkxlCatalogOptionAvailabilitySchema = z.enum(mkxlCatalogOptionAvailabilities);
 
 export const MkxlCatalogRequiredContextSchema = z
   .object({
@@ -64,7 +68,7 @@ export const MkxlCatalogCharacterOptionSchema = z
     shortLabel: LocalizedTextSchema.optional(),
     rosterOrder: z.number().int().positive(),
     comboCount: z.number().int().min(0),
-    availability: z.enum(["available", "disabledNoComboData"]),
+    availability: MkxlCatalogOptionAvailabilitySchema,
   })
   .strict();
 
@@ -76,7 +80,7 @@ export const MkxlCatalogVariationOptionSchema = z
     variationOrder: z.number().int().positive(),
     pickerSlot: MkxlCatalogPickerSlotSchema,
     comboCount: z.number().int().min(0),
-    availability: z.enum(["available", "disabledNoComboData"]),
+    availability: MkxlCatalogOptionAvailabilitySchema,
   })
   .strict();
 

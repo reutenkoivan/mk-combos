@@ -4,6 +4,7 @@ import type { ComponentPropsWithRef } from "react";
 import { cx } from "../../recipes/class-name";
 import { controlRecipe } from "../../recipes/control";
 import type {
+  UiControlPresentationMode,
   UiDensityMode,
   UiEmphasisMode,
   UiPlacementMode,
@@ -12,6 +13,7 @@ import type {
 } from "../../tokens/type";
 
 export type InternalButtonProps = ComponentPropsWithRef<typeof BaseButton> & {
+  appearance?: UiControlPresentationMode;
   density?: UiDensityMode;
   emphasis?: UiEmphasisMode;
   loading?: boolean;
@@ -22,6 +24,7 @@ export type InternalButtonProps = ComponentPropsWithRef<typeof BaseButton> & {
 
 export function InternalButton(props: InternalButtonProps) {
   const {
+    appearance = "filled",
     className,
     density = "small",
     disabled,
@@ -40,11 +43,12 @@ export function InternalButton(props: InternalButtonProps) {
       aria-busy={loading || undefined}
       className={cx(
         controlRecipe({
+          appearance,
           density,
           emphasis,
           placement,
           shape,
-          state: disabled ? "disabled" : loading ? "loading" : "idle",
+          state: loading ? "loading" : disabled ? "disabled" : "idle",
           tone,
         }),
         className,

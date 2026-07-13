@@ -4,7 +4,7 @@ import { cx } from "../recipes/class-name";
 import { indicatorRecipe } from "../recipes/indicator";
 import type { UiNotationIconDescriptor } from "./type";
 
-type NotationIconProps = {
+export type NotationIconProps = {
   descriptor: UiNotationIconDescriptor;
   tone?: "accent" | "neutral";
 };

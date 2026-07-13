@@ -2,12 +2,35 @@ import {
   createControllerBridge,
   defaultControllerBindings,
 } from "@mk-combos/controller-bridge/bridge/runtime";
-import { ControllerBridgePollResultSchema } from "@mk-combos/controller-bridge/bridge/schema";
+import {
+  ControllerBridgePollResultSchema,
+  ControllerCommandEventPhaseSchema,
+} from "@mk-combos/controller-bridge/bridge/schema";
 import type {
   ControllerBridgePollResult,
   ControllerCommandBinding,
   ControllerCommandEventPhase,
 } from "@mk-combos/controller-bridge/bridge/type";
+import { controllerCommandEventPhases } from "@mk-combos/controller-bridge/bridge/value";
+import { readControllerBrowserSource } from "@mk-combos/controller-bridge/capability/runtime";
+import {
+  ControllerBrowserSourceResultSchema,
+  controllerCapabilityReasons as capabilitySchemaReasons,
+  controllerCapabilityStates as capabilitySchemaStates,
+} from "@mk-combos/controller-bridge/capability/schema";
+import type {
+  ControllerBrowserSourceResult,
+  ControllerCapabilityReason,
+  ControllerCapabilityState,
+} from "@mk-combos/controller-bridge/capability/type";
+import {
+  controllerCapabilityReasons as capabilityTypeReasons,
+  controllerCapabilityStates as capabilityTypeStates,
+} from "@mk-combos/controller-bridge/capability/type";
+import {
+  controllerCapabilityReasons,
+  controllerCapabilityStates,
+} from "@mk-combos/controller-bridge/capability/value";
 import {
   ControllerCommandMetadataSchema,
   controllerCommandGroups as commandSchemaGroups,
@@ -58,6 +81,11 @@ import {
   controllerControlSources as inputTypeControlSources,
   defaultControllerInputConfig as inputTypeDefaultConfig,
 } from "@mk-combos/controller-bridge/input/type";
+import {
+  controllerAxisDirections,
+  controllerControlIds,
+  controllerControlSources,
+} from "@mk-combos/controller-bridge/input/value";
 import {
   detectControllerProfile,
   getControllerProfile,
@@ -125,6 +153,9 @@ const acceptsPublicTypes = (_contract: {
   result: ControllerBridgePollResult;
   hint: ControllerHintRow;
   hints: ControllerHintList;
+  capabilityState: ControllerCapabilityState;
+  capabilityReason: ControllerCapabilityReason;
+  browserSource: ControllerBrowserSourceResult;
 }) => true;
 
 describe("@mk-combos/controller-bridge contract", () => {
@@ -140,6 +171,12 @@ describe("@mk-combos/controller-bridge contract", () => {
       type: "@mk-combos/controller-bridge/command/type",
       value: "@mk-combos/controller-bridge/command/value",
     });
+    expect(controllerBridgeContractGroups.capability).toEqual({
+      runtime: "@mk-combos/controller-bridge/capability/runtime",
+      schema: "@mk-combos/controller-bridge/capability/schema",
+      type: "@mk-combos/controller-bridge/capability/type",
+      value: "@mk-combos/controller-bridge/capability/value",
+    });
     expect(controllerBridgeContractGroups.profile).toEqual({
       runtime: "@mk-combos/controller-bridge/profile/runtime",
       schema: "@mk-combos/controller-bridge/profile/schema",
@@ -150,11 +187,13 @@ describe("@mk-combos/controller-bridge contract", () => {
       runtime: "@mk-combos/controller-bridge/input/runtime",
       schema: "@mk-combos/controller-bridge/input/schema",
       type: "@mk-combos/controller-bridge/input/type",
+      value: "@mk-combos/controller-bridge/input/value",
     });
     expect(controllerBridgeContractGroups.bridge).toEqual({
       runtime: "@mk-combos/controller-bridge/bridge/runtime",
       schema: "@mk-combos/controller-bridge/bridge/schema",
       type: "@mk-combos/controller-bridge/bridge/type",
+      value: "@mk-combos/controller-bridge/bridge/value",
     });
     expect(controllerBridgeContractGroups.hint).toEqual({
       runtime: "@mk-combos/controller-bridge/hint/runtime",
@@ -164,15 +203,82 @@ describe("@mk-combos/controller-bridge contract", () => {
   });
 
   it("keeps public value-set re-exports intentional", () => {
-    expect(commandValueIds).toContain("confirm");
-    expect(commandValueIds).toContain("builderNextGroup");
+    expect(commandValueIds).toEqual({
+      addToList: "addToList",
+      back: "back",
+      builderCancel: "builderCancel",
+      builderFinish: "builderFinish",
+      builderNextGroup: "builderNextGroup",
+      builderPreviousGroup: "builderPreviousGroup",
+      builderSelectMove: "builderSelectMove",
+      builderUndoMove: "builderUndoMove",
+      closeDetail: "closeDetail",
+      closePanel: "closePanel",
+      confirm: "confirm",
+      navDown: "navDown",
+      navLeft: "navLeft",
+      navRight: "navRight",
+      navUp: "navUp",
+      nextTab: "nextTab",
+      openActions: "openActions",
+      openControllerHelp: "openControllerHelp",
+      openDetail: "openDetail",
+      openFilters: "openFilters",
+      openGlobalMenu: "openGlobalMenu",
+      previousTab: "previousTab",
+      removeFromList: "removeFromList",
+    });
+    expect(commandValueGroups).toEqual({
+      builder: "builder",
+      catalog: "catalog",
+      detail: "detail",
+      list: "list",
+      navigation: "navigation",
+      panel: "panel",
+    });
+    expect(controllerCapabilityStates).toEqual({
+      awaitingGesture: "awaitingGesture",
+      awaitingNeutral: "awaitingNeutral",
+      blocked: "blocked",
+      checking: "checking",
+      disconnected: "disconnected",
+      ready: "ready",
+      suspended: "suspended",
+      unsupported: "unsupported",
+    });
+    expect(controllerCapabilityReasons).toEqual({
+      apiUnavailable: "apiUnavailable",
+      controllerDisconnected: "controllerDisconnected",
+      documentHidden: "documentHidden",
+      gestureRequired: "gestureRequired",
+      insecureContext: "insecureContext",
+      neutralRequired: "neutralRequired",
+      none: "none",
+      permissionBlocked: "permissionBlocked",
+    });
+    expect(controllerCommandEventPhases).toEqual({ press: "press", repeat: "repeat" });
+    expect(
+      ControllerCommandEventPhaseSchema.safeParse(controllerCommandEventPhases.press).success,
+    ).toBe(true);
+    expect(ControllerCommandEventPhaseSchema.safeParse("release").success).toBe(false);
+    expect(capabilitySchemaStates).toBe(controllerCapabilityStates);
+    expect(capabilityTypeStates).toBe(controllerCapabilityStates);
+    expect(capabilitySchemaReasons).toBe(controllerCapabilityReasons);
+    expect(capabilityTypeReasons).toBe(controllerCapabilityReasons);
+    expect(mkCombosControllerBridge.valueSets.controllerCapabilityStates).toBe(
+      controllerCapabilityStates,
+    );
     expect(commandSchemaIds).toBe(commandValueIds);
     expect(commandTypeIds).toBe(commandValueIds);
     expect(commandSchemaGroups).toBe(commandValueGroups);
     expect(commandTypeGroups).toBe(commandValueGroups);
     expect(commandSchemaMetadata).toBe(controllerCommandMetadata);
     expect(commandTypeMetadata).toBe(controllerCommandMetadata);
-    expect(controllerProfileIds).toEqual(["dualsense", "xbox", "standard"]);
+    expect(controllerProfileIds).toEqual({
+      dualsense: "dualsense",
+      standard: "standard",
+      xbox: "xbox",
+    });
     expect(profileSchemaIds).toBe(controllerProfileIds);
     expect(profileTypeIds).toBe(controllerProfileIds);
     expect(profileSchemaMatchers).toBe(controllerProfileMatchers);
@@ -181,15 +287,49 @@ describe("@mk-combos/controller-bridge contract", () => {
     expect(profileTypeProfiles).toBe(controllerProfiles);
     expect(inputSchemaControlIds).toBe(mkCombosControllerBridge.valueSets.controllerControlIds);
     expect(inputTypeControlIds).toBe(inputSchemaControlIds);
-    expect(inputSchemaAxisDirections).toEqual(["negative", "positive"]);
+    expect(controllerAxisDirections).toEqual({ negative: "negative", positive: "positive" });
+    expect(inputSchemaAxisDirections).toBe(controllerAxisDirections);
     expect(inputTypeAxisDirections).toBe(inputSchemaAxisDirections);
-    expect(inputSchemaControlSources).toEqual(["button", "axis"]);
+    expect(controllerControlSources).toEqual({ axis: "axis", button: "button" });
+    expect(inputSchemaControlSources).toBe(controllerControlSources);
     expect(inputTypeControlSources).toBe(inputSchemaControlSources);
+    expect(controllerControlIds).toEqual({
+      dpadDown: "dpadDown",
+      dpadLeft: "dpadLeft",
+      dpadRight: "dpadRight",
+      dpadUp: "dpadUp",
+      faceEast: "faceEast",
+      faceNorth: "faceNorth",
+      faceSouth: "faceSouth",
+      faceWest: "faceWest",
+      home: "home",
+      leftShoulder: "leftShoulder",
+      leftStickDown: "leftStickDown",
+      leftStickLeft: "leftStickLeft",
+      leftStickPress: "leftStickPress",
+      leftStickRight: "leftStickRight",
+      leftStickUp: "leftStickUp",
+      leftTrigger: "leftTrigger",
+      rightShoulder: "rightShoulder",
+      rightStickDown: "rightStickDown",
+      rightStickLeft: "rightStickLeft",
+      rightStickPress: "rightStickPress",
+      rightStickRight: "rightStickRight",
+      rightStickUp: "rightStickUp",
+      rightTrigger: "rightTrigger",
+      select: "select",
+      start: "start",
+    });
+    expect(inputSchemaControlIds).toBe(controllerControlIds);
     expect(inputTypeDefaultConfig).toBe(inputSchemaDefaultConfig);
     expect(controllerProfileMatchers.xbox).toContain("xbox");
     expect(mkCombosControllerBridge.valueSets.knownControllerCommandIds).toBe(commandValueIds);
+    expect(mkCombosControllerBridge.valueSets.controllerCommandGroups).toBe(commandValueGroups);
+    expect(mkCombosControllerBridge.valueSets.controllerCommandEventPhases).toBe(
+      controllerCommandEventPhases,
+    );
     expect(mkCombosControllerBridge.valueSets.controllerProfileIds).toBe(controllerProfileIds);
-    expect(mkCombosControllerBridge.valueSets.controllerControlIds).toContain("faceSouth");
+    expect(mkCombosControllerBridge.valueSets.controllerControlIds).toBe(controllerControlIds);
   });
 
   it("keeps command ids open while documenting known metadata", () => {
@@ -214,6 +354,7 @@ describe("@mk-combos/controller-bridge contract", () => {
     });
     const hints = buildControllerHints({ profileId: profile.id, commandIds: ["confirm"] });
     const firstHint = requireFirst(hints, "Controller hints");
+    const browserSource = readControllerBrowserSource({ isSecureContext: false });
 
     expect(ControllerProfileSchema.parse(getControllerProfile(profile.id))).toEqual(
       getControllerProfile(profile.id),
@@ -221,6 +362,7 @@ describe("@mk-combos/controller-bridge contract", () => {
     expect(normalized.pressedControls).toContain("faceSouth");
     expect(ControllerBridgePollResultSchema.parse(result)).toEqual(result);
     expect(ControllerHintListSchema.parse(hints)).toEqual(hints);
+    expect(ControllerBrowserSourceResultSchema.parse(browserSource)).toEqual(browserSource);
     expect(defaultControllerBindings).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -248,6 +390,9 @@ describe("@mk-combos/controller-bridge contract", () => {
         result,
         hint: firstHint,
         hints,
+        capabilityState: "awaitingGesture",
+        capabilityReason: "gestureRequired",
+        browserSource,
       }),
     ).toBe(true);
   });

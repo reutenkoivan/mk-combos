@@ -5,7 +5,11 @@ import {
   createInvalidComboStateFromReplay,
   createStaleComboStateFromReplay,
 } from "@mk-combos/builder-core/stale/runtime";
-import type { BuilderComboState } from "@mk-combos/builder-core/stale/type";
+import type {
+  BuilderComboState,
+  BuilderInvalidComboStateStatus,
+} from "@mk-combos/builder-core/stale/type";
+import { builderInvalidComboStateStatuses } from "@mk-combos/builder-core/stale/value";
 
 import type { Mk1BuilderContext } from "../context/type";
 import {
@@ -20,7 +24,7 @@ export const getMk1BuilderComboState = (input: {
   context: Mk1BuilderContext;
   path: BuilderMovePath;
   initialRuntime?: BuilderRuntimeSnapshot;
-  invalidStatus?: "stale" | "invalid";
+  invalidStatus?: BuilderInvalidComboStateStatus;
 }): BuilderComboState => {
   const replay = replayMk1BuilderPath({
     context: input.context,
@@ -38,7 +42,7 @@ export const getMk1BuilderComboState = (input: {
     });
   }
 
-  if (input.invalidStatus === "invalid") {
+  if (input.invalidStatus === builderInvalidComboStateStatuses.invalid) {
     return createInvalidComboStateFromReplay(replay, {
       gameId: "mk1",
     });

@@ -30,7 +30,7 @@ export const surfaceRecipe = tv({
       glass: "border border-[var(--ui-separator)] bg-[var(--ui-glass)]",
       none: "bg-transparent",
       opaque: "bg-[var(--ui-content)]",
-      separated: "border border-[var(--ui-separator)] bg-[var(--ui-content)]",
+      separated: "bg-[var(--ui-inspector)]",
     },
     placement: {
       block: "",

@@ -1,12 +1,25 @@
-import { knownControllerCommandIds } from "./command/value";
-import { controllerControlIds } from "./input/value";
+import { controllerCommandEventPhases } from "./bridge/value";
+import { controllerCapabilityReasons, controllerCapabilityStates } from "./capability/value";
+import { controllerCommandGroups, knownControllerCommandIds } from "./command/value";
+import {
+  controllerAxisDirections,
+  controllerControlIds,
+  controllerControlSources,
+} from "./input/value";
 import { controllerProfileIds } from "./profile/value";
 
 export const controllerBridgeContractGroups = {
+  capability: {
+    runtime: "@mk-combos/controller-bridge/capability/runtime",
+    schema: "@mk-combos/controller-bridge/capability/schema",
+    type: "@mk-combos/controller-bridge/capability/type",
+    value: "@mk-combos/controller-bridge/capability/value",
+  },
   bridge: {
     runtime: "@mk-combos/controller-bridge/bridge/runtime",
     schema: "@mk-combos/controller-bridge/bridge/schema",
     type: "@mk-combos/controller-bridge/bridge/type",
+    value: "@mk-combos/controller-bridge/bridge/value",
   },
   command: {
     schema: "@mk-combos/controller-bridge/command/schema",
@@ -22,6 +35,7 @@ export const controllerBridgeContractGroups = {
     runtime: "@mk-combos/controller-bridge/input/runtime",
     schema: "@mk-combos/controller-bridge/input/schema",
     type: "@mk-combos/controller-bridge/input/type",
+    value: "@mk-combos/controller-bridge/input/value",
   },
   profile: {
     runtime: "@mk-combos/controller-bridge/profile/runtime",
@@ -35,7 +49,13 @@ export const mkCombosControllerBridge = {
   packageName: "@mk-combos/controller-bridge",
   groups: controllerBridgeContractGroups,
   valueSets: {
+    controllerCapabilityStates,
+    controllerCapabilityReasons,
+    controllerCommandEventPhases,
+    controllerCommandGroups,
+    controllerAxisDirections,
     controllerControlIds,
+    controllerControlSources,
     controllerProfileIds,
     knownControllerCommandIds,
   },

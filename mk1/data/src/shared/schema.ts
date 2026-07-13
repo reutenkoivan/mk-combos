@@ -1,6 +1,10 @@
 import { LocalizedTextSchema } from "@mk-combos/contracts/settings/schema";
 import { z } from "zod/v4";
 
+import { mk1PickerSlotStatuses } from "./value";
+
+export const Mk1PickerSlotStatusSchema = z.enum(mk1PickerSlotStatuses);
+
 export const Mk1IdSchema = z
   .string()
   .min(1)
@@ -24,6 +28,6 @@ export const Mk1PickerSlotSchema = z
     row: z.number().int().positive(),
     column: z.number().int().positive(),
     compactOrder: z.number().int().positive().optional(),
-    status: z.enum(["selectable", "disabledNoComboData", "placeholder"]),
+    status: Mk1PickerSlotStatusSchema,
   })
   .strict();

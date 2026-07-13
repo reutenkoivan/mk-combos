@@ -2,7 +2,12 @@ import { mk1SeededCombos } from "../combos/value";
 import { mk1DataSourceIds, mk1DataSources, mk1Game } from "../game/value";
 import { mk1CharacterGraphs, mk1KameoGraphOverlays } from "../graph/value";
 import { mk1Kameos } from "../kameos/value";
-import { mk1Movelists, mk1MoveNotationValues, mk1Moves } from "../movelists/value";
+import {
+  mk1Movelists,
+  mk1MoveNotationValues,
+  mk1MoveOwnerKinds,
+  mk1Moves,
+} from "../movelists/value";
 import { mk1Characters } from "../roster/value";
 import type { Mk1Label, Mk1SourceIdList } from "../shared/type";
 import type { Mk1DataValidationIssue, Mk1DataValidationResult } from "./type";
@@ -121,7 +126,7 @@ const createReferenceLookups = () => ({
   moveIds: new Set(mk1Moves.map((move) => move.id)),
   comboIds: mk1SeededCombos.map((combo) => combo.id),
   movesById: new Map(mk1Moves.map((move) => [move.id, move])),
-  notationValues: new Set<string>(mk1MoveNotationValues),
+  notationValues: new Set<string>(Object.values(mk1MoveNotationValues)),
 });
 
 const validateMoves = (
@@ -129,7 +134,7 @@ const validateMoves = (
   lookups: ReturnType<typeof createReferenceLookups>,
 ) => {
   for (const move of mk1Moves) {
-    if (move.ownerKind === "character" && !lookups.characterIds.has(move.ownerId)) {
+    if (move.ownerKind === mk1MoveOwnerKinds.character && !lookups.characterIds.has(move.ownerId)) {
       issues.push(
         createIssue("mk1.data.move_character_missing", `${move.id} owner is missing.`, [
           "moves",
@@ -137,7 +142,7 @@ const validateMoves = (
         ]),
       );
     }
-    if (move.ownerKind === "kameo" && !lookups.kameoIds.has(move.ownerId)) {
+    if (move.ownerKind === mk1MoveOwnerKinds.kameo && !lookups.kameoIds.has(move.ownerId)) {
       issues.push(
         createIssue("mk1.data.move_kameo_missing", `${move.id} owner is missing.`, [
           "moves",

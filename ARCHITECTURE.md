@@ -25,6 +25,39 @@ This document is the canonical source for package ownership, import direction, r
 Контейнер володіє розміщенням свого контенту через `flex` або `grid`, `gap-*`,
 `p-*`, `justify-*`, `items-*`, `content-*` і `self-*`.
 
+Інтерактивний UI зобовʼязаний візуально й семантично відображати кожен стан,
+який підтримує його контракт. Для відповідних controls та items це охоплює
+`hover`, `focus-visible`, `active`/`pressed`, `open`, `selected`/`current`,
+`disabled` і `loading`/`busy`; fields додатково відображають `read-only` та
+validation tones на кштал `invalid`, `success` і `warning`. Accessibility
+semantics не замінюють visible feedback, а visible feedback не замінює
+ARIA/native semantics.
+
+Оголошення semantic variant, `data-*` або ARIA attribute без реального style
+wiring не вважається реалізацією стану. `packages/ui` централізує це wiring у
+shared recipes через справжні CSS pseudo-states і Base UI state attributes;
+component-specific recipe може розширити mapping, але app і game scopes не
+відтворюють його локальними consumer classes. Interaction affordance має такі
+інваріанти:
+
+- доступна action surface на пристроях із hover показує hover feedback і
+  використовує `cursor: pointer`;
+- `disabled` і `loading`/`busy` не показують enabled hover, не активуються та
+  використовують відповідно `cursor: not-allowed` і `cursor: wait`;
+- editable і selectable text surfaces використовують `cursor: text`;
+- static або current-only presentation elements не отримують action hover чи
+  pointer cursor;
+- specialized cursors на кштал `grab`, `grabbing` або resize додаються тільки
+  разом із реальною mouse/pointer gesture або handle, а не для декоративних чи
+  backdrop surfaces.
+
+Перехід між states не змінює геометрію компонента, не приховує наявний semantic
+tone і зберігає контраст у light, dark, standard та increased-contrast themes.
+Color не є єдиним сигналом критичних selected, focused, disabled, loading або
+validation states. Новий або змінений інтерактивний component має recipe tests
+на підтримані states і їхні суттєві combinations, component tests на wiring та
+inert disabled behavior, а public states фіксуються у Storybook.
+
 Зовнішній ввід системи завжди нормалізується на boundary через Zod `parse` або
 `transform` перед використанням як typed value. Це стосується зокрема
 `process.env`, browser/native APIs, persisted payloads, route/query input і
@@ -36,14 +69,60 @@ algorithm stages. Алгоритми проєктуються з фокусом 
 Неминучий assertion допускається тільки у вузькому named boundary helper з
 поясненням, якщо альтернатива погіршує O(n) або суттєво ускладнює код.
 
-Останній refactor `cc9d61d` задає патерн для контрактів і публічних subpaths:
+Публічний закритий semantic set постачається як runtime dictionary, schema і похідний тип:
 
-- value sets живуть у `value.ts`;
-- Zod runtime validation живе в `schema.ts`;
-- TypeScript types виводяться зі схем у `type.ts`;
-- runtime helpers живуть у `runtime.ts`;
-- public subpaths додаються свідомо через package exports, build entries,
-  contract metadata і тести, які фіксують ці інваріанти.
+- dictionary оголошується в `value.ts` як exported object з `as const`;
+- schema у `schema.ts` використовує `z.enum(dictionary)`;
+- TypeScript type у `type.ts` виводиться через `z.output<typeof Schema>`;
+- runtime consumers імпортують dictionary з `value.ts`, а не schema з `schema.ts`;
+- ключ dictionary збігається з wire value; значення, які не є JavaScript identifiers,
+  мають quoted keys. Наявні канонічні semantic keys не перейменовуються лише заради
+  механічної міграції;
+- composed sets будуються через object spread, а iteration виконується через
+  `Object.values(dictionary)`;
+- якщо порядок є окремим контрактом, власник оголошує явно названий
+  `...Order` або `...Sequence` array, побудований зі значень dictionary;
+- у cycle-sensitive game-data scopes internal `constants.ts` може володіти dictionary,
+  але public `value.ts` re-export-ить той самий object by identity. Authored packs не
+  імпортують compiled dataset modules;
+- raw semantic literals дозволені тільки всередині dictionary, exact-value contract
+  assertions і typed або schema-validated authored data packs. Runtime branching,
+  comparisons, dispatch, defaults і consumer props використовують dictionary values;
+- відкриті string/number spaces, DOM/ARIA/native prop unions, суто internal rendering
+  types і справжні ordered authored collections не закриваються штучним dictionary.
+
+Було:
+
+```ts
+export const operationStates = ["idle", "running"] as const;
+export const OperationStateSchema = z.enum(operationStates);
+export type OperationState = (typeof operationStates)[number];
+
+if (state === "idle") {
+  // ...
+}
+```
+
+Стало:
+
+```ts
+export const operationStates = {
+  idle: "idle",
+  running: "running",
+} as const;
+
+export const OperationStateSchema = z.enum(operationStates);
+export type OperationState = z.output<typeof OperationStateSchema>;
+
+if (state === operationStates.idle) {
+  // ...
+}
+```
+
+Runtime helpers живуть у `runtime.ts`. Public subpaths додаються свідомо через package
+exports, publish exports, build entries, contract metadata і тести, які фіксують exact
+wire values, schema acceptance/rejection, derived type usage та dictionary identity у
+`mkCombos*.valueSets`.
 
 Код видаляється тільки після того, як його ownership перенесено, поведінку замінено
 або Knip/Biome підтверджують, що він не використовується. Разом із видаленням треба
@@ -119,6 +198,35 @@ Shared UI components є controlled/pure поверхнями:
 - public component handlers не приймають `MouseEvent`, `KeyboardEvent`, `PointerEvent`, `ChangeEvent`, `FormEvent`, raw DOM nodes, `event.target` або `event.currentTarget`;
 - browser, DOM, form-library, controller і native file-picker events нормалізуються всередині page, page-level hook або primitive wrapper до того, як потраплять у feature UI contracts;
 - component може використовувати internal DOM або Base UI mechanics для accessibility і focus implementation, але ця internal mechanics не може стати source of truth для route, business, persistence, selection, open/closed або validation state.
+- responsive composition використовує prepared `UiResponsiveMode` (`mobile`, `tablet`, `desktop`); page/page-hook володіє active focus scope та focused target, а `@mk-combos/ui/focus-navigation/*` надає strict game-agnostic graph contracts і deterministic runtime helpers без DOM geometry;
+- controller commands викликають semantic methods напряму; synthetic `KeyboardEvent`, synthetic click або передавання raw Gamepad/DOM events у public handlers не допускаються.
+- ordinary page UI використовує один flat canvas; cards, full rectangular borders і shadows не застосовуються як default grouping mechanism, а elevation належить dialogs, menus, popovers і floating controller surfaces;
+- standalone icon-only controls використовують typed `icon` presentation: transparent background/border у всіх states, зовнішній focus ring і stable accessible hit area; DOM-shape selectors не визначають presentation contract.
+
+Component-local закритий semantic set без schema, зокрема набір semantic actions, є частиною
+публічного контракту компонента. Файл-власник компонента оголошує цей набір на module scope і
+постачає runtime dictionary та похідний `typeof`-тип через власний public subpath:
+
+```ts
+export const exampleComponentActions = {
+  close: "close",
+  open: "open",
+} as const;
+
+export type ExampleComponentAction =
+  (typeof exampleComponentActions)[keyof typeof exampleComponentActions];
+```
+
+Props, intent aliases, `emit` helpers і component implementation використовують похідний тип,
+а dispatch та comparison використовують значення dictionary. Action-літерали залишаються
+тільки всередині dictionary та в contract assertions, які фіксують точні wire values. Якщо
+компонент має кілька action-каналів або відкритий action-канал, назва dictionary уточнює
+ціль через suffix на кштал `MenuActions`, `PanelActions` або `ChangeActions`. Consumer-provided
+ids та інші відкриті action spaces не закриваються штучним dictionary.
+
+Component-local dictionary є свідомим винятком із загального поділу contract modules:
+shared або schema-backed value sets живуть у `value.ts`, runtime validation — у `schema.ts`,
+а schema-derived types — у `type.ts`.
 
 Якщо механіку винесено в module, module експортує pure UI component і custom hook. Hook готує state, derived models і semantic handlers. Pages викликають hook і передають результат hook-а в pure UI component. UI component ніколи не імпортує game data, browser persistence, route mutation або controller bridge APIs напряму.
 
@@ -129,6 +237,51 @@ Shared UI components є controlled/pure поверхнями:
 `Observable domain state` не змінює source. Він виводить із source стабільну read-facing форму для споживання: flags, availability, validation, labels, status projections, selection/open/focused стани та інші derived значення для page flow, UI components і accessibility.
 
 У React layer `domain source` і `observable domain state` поставляються як окремі domain-specific custom hooks. React components читають view data тільки з `observable domain state`, але взаємодіють із `domain source` через його semantic methods. Компоненти не читають raw domain source як view data, не реконструюють доменні правила самостійно і не виконують mutations поза source methods.
+
+### Стратегія Побудови І Розвитку Бізнес-Логіки
+
+Бізнес-логіка проєктується навколо класу проблеми, її source of truth, інваріантів,
+lifecycle і semantic operations, а не навколо конкретної сторінки, компонента або
+поточного способу реалізації. Module, domain source, runtime helper, state machine або
+custom hook є лише формою постачання цієї логіки й не визначає її ownership.
+
+Для кожної нової задачі використовується такий порядок рішень:
+
+1. Визначити клас проблеми, інваріанти та найвужчого owner-а відповідно до import
+   direction.
+2. Знайти наявну бізнес-логіку з відповідним контрактом і використати її без
+   дублювання правил у consumer-і.
+3. Якщо поточний use case є загальним продовженням того самого класу проблем і
+   розширення допомагає вирішити поточну задачу, розширити наявну реалізацію для
+   загального випадку. Розширення не повинно додавати caller-specific branching,
+   послаблювати інваріанти або переносити game-specific знання у `packages/*`.
+4. Якщо частина нової логіки має окрему відповідальність, source of truth, lifecycle,
+   набір інваріантів або semantic operations, винести її в нову abstraction у
+   найвужчому owner scope. Другий готовий consumer не є обовʼязковою умовою, але нова
+   abstraction повинна представляти самостійну категорію проблеми, а не лише
+   механічно приховувати кілька рядків коду.
+5. Якщо новий use case точніше класифікує проблему й показує, що поточний контракт
+   змушує consumers будувати adapters, дублювати derived rules або використовувати
+   незручний API, змінити наявну реалізацію та одночасно мігрувати її consumers.
+6. Залишити логіку локальною лише тоді, коли узагальнення не створює самостійного
+   контракту або порушує ownership та import boundaries.
+
+Якісна reusable business abstraction називає проблему та її інваріанти, володіє
+правилами зміни й не знає конкретного consumer-а. Consumers не реконструюють
+lifecycle, validation, availability або інші derived domain rules. Generic wrappers
+без власного problem contract не створюються лише заради скорочення коду.
+
+Зміни public contracts мають бути additive і backward-compatible за замовчуванням.
+Якщо reclassification потребує breaking change, у тій самій зміні оновлюються всі
+consumers, tests, exports і documentation; попередня та нова реалізації не залишаються
+паралельно без явної migration або compatibility потреби.
+
+План кожної зміни бізнес-логіки фіксує owner scope, клас проблеми, перевірені наявні
+реалізації, обране рішення (`reuse`, `extend`, `extract`, `reclassify` або `local`),
+контракт, інваріанти, affected consumers і verification. Конкретна форма реалізації
+обирається після цього: pure runtime logic залишається в domain owner, React custom
+hook використовується лише для React orchestration або observable integration, а
+presentation logic не стає власником game-specific business rules.
 
 ## Root Scopes
 
@@ -198,7 +351,7 @@ It does not compose MKXL or MK1 graphs by itself. Game-specific graph compositio
 
 Package name: `@mk-combos/controller-bridge`.
 
-Owns Browser Gamepad API access, controller profiles, normalized input, semantic commands, repeat/dead-zone behavior, and controller hint metadata.
+Owns Browser Gamepad API capability/permission/visibility normalization, controller lifecycle, single-controller session ownership, profiles, normalized input, semantic commands, repeat/dead-zone behavior, neutral arming after first gesture/reconnect/resume, and controller hint metadata.
 
 It does not know routes, combo data, game-specific builder rules, local storage, or installed games.
 
@@ -211,6 +364,10 @@ Owns all active numbered UI components and generic React primitives:
 - buttons, dialogs, controls, segmented controls, list primitives, picker primitives, filter primitives;
 - all active `UI-CMP-*` implementations;
 - `NotationRenderer` and the UI-owned notation icon registry;
+- game-agnostic responsive/focus-navigation contracts and deterministic helpers;
+- game-agnostic React hooks for page-owned presentation open state, semantic intent adapters,
+  field accessibility bindings, responsive mode and deterministic focus navigation;
+- `UI-CMP-038 Controller Access Gate` as the pure shell-facing presentation for prepared controller capability state;
 - `ComboWhiteboard`, `useComboWhiteboardModel`, internal `movePicker`, `ComboFrameMeter`, and `useComboFrameMeterModel`;
 - builder layout components and read-only detail rendering support;
 - generic cards and layout primitives when they do not encode game rules;

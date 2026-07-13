@@ -18,7 +18,7 @@
 
 ## Анатомія
 
-Розміщення header читається як compact identity block: title/source зверху, context chips нижче, primary actions праворуч або під title, critical marker і return slot займають окремі predictable positions.
+Розміщення header читається як mobile і tablet identity block: title/source зверху, context chips нижче, primary actions праворуч або під title, critical marker і return slot займають окремі predictable positions.
 
 ```jsx
 <ComboDetailHeader ui="UI-CMP-014">
@@ -54,7 +54,7 @@
 Правила розміщення:
 
 - Title/source region є першим readable block, навіть якщо return action візуально стоїть перед ним.
-- На `wide13_6Plus` action group може бути праворуч від title/chips; на `compact` він переходить нижче chips.
+- На `desktop` action group може бути праворуч від title/chips; на `mobile` і `tablet` він переходить нижче chips.
 - Marker slot не приховується всередині actions і не виконує repair самостійно; ці дії лишаються page-level intents.
 
 ## Вхідні дані
@@ -83,3 +83,13 @@ Payload містить combo id, source type, source surface і source focus tar
 - Header action availability повністю controlled сторінкою.
 - Stale/invalid marker не приховує critical state.
 - Keyboard і controller activation емітять semantic payload.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

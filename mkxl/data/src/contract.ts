@@ -1,15 +1,20 @@
 import { mkxlComboDifficulties, mkxlComboPositions, mkxlComboRouteTypes } from "./combos/value";
 import { mkxlCoverageTargets } from "./coverage/value";
-import { mkxlDataSourceIds, mkxlGame } from "./game/value";
-import { mkxlStageGraphFragmentIds, mkxlVariationGraphIds } from "./graph/value";
+import { mkxlDataSourceIds, mkxlDataSourceKinds, mkxlGame } from "./game/value";
+import {
+  mkxlGraphNodeKinds,
+  mkxlStageGraphFragmentIds,
+  mkxlVariationGraphIds,
+} from "./graph/value";
 import {
   mkxlInputNotationValues,
   mkxlMoveCategories,
   mkxlMoveIds,
   mkxlMoveNotationValues,
 } from "./movelists/value";
-import { mkxlCharacterIds } from "./roster/value";
-import { mkxlInteractableIds, mkxlStageIds } from "./stages/value";
+import { mkxlCharacterIds, mkxlCharacterReleaseKinds } from "./roster/value";
+import { mkxlPickerSlotStatuses } from "./shared/value";
+import { mkxlInteractableIds, mkxlInteractableUsagePolicies, mkxlStageIds } from "./stages/value";
 import { mkxlVariationIds } from "./variations/value";
 
 export const mkxlDataContractGroups = {
@@ -44,6 +49,11 @@ export const mkxlDataContractGroups = {
     type: "@mk-combos/mkxl-data/roster/type",
     value: "@mk-combos/mkxl-data/roster/value",
   },
+  shared: {
+    schema: "@mk-combos/mkxl-data/shared/schema",
+    type: "@mk-combos/mkxl-data/shared/type",
+    value: "@mk-combos/mkxl-data/shared/value",
+  },
   stages: {
     schema: "@mk-combos/mkxl-data/stages/schema",
     type: "@mk-combos/mkxl-data/stages/type",
@@ -67,11 +77,16 @@ export const mkCombosMkxlData = {
     mkxlComboPositions,
     mkxlComboRouteTypes,
     mkxlDataSourceIds,
+    mkxlDataSourceKinds,
+    mkxlGraphNodeKinds,
     mkxlInputNotationValues,
     mkxlInteractableIds,
+    mkxlInteractableUsagePolicies,
     mkxlMoveCategories,
     mkxlMoveIds,
     mkxlMoveNotationValues,
+    mkxlCharacterReleaseKinds,
+    mkxlPickerSlotStatuses,
     mkxlStageGraphFragmentIds,
     mkxlStageIds,
     mkxlVariationGraphIds,

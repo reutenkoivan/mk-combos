@@ -38,14 +38,14 @@ export const SettingsRouteParamsSchema = z.record(z.string(), z.never());
 
 export const CatalogRouteSchema = z
   .object({
-    kind: z.literal("catalog"),
+    kind: z.literal(gameRouteKinds.catalog),
     gameId: GameIdSchema,
   })
   .strict();
 
 export const ComboDetailRouteSchema = z
   .object({
-    kind: z.literal("comboDetail"),
+    kind: z.literal(gameRouteKinds.comboDetail),
     gameId: GameIdSchema,
     source: RouteComboSourceSchema,
     comboId: ComboIdSchema,
@@ -54,21 +54,21 @@ export const ComboDetailRouteSchema = z
 
 export const ListsRouteSchema = z
   .object({
-    kind: z.literal("lists"),
+    kind: z.literal(gameRouteKinds.lists),
     gameId: GameIdSchema,
   })
   .strict();
 
 export const BuilderRouteSchema = z
   .object({
-    kind: z.literal("builder"),
+    kind: z.literal(gameRouteKinds.builder),
     gameId: GameIdSchema,
   })
   .strict();
 
 export const SettingsRouteSchema = z
   .object({
-    kind: z.literal("settings"),
+    kind: z.literal(appRouteKinds.settings),
   })
   .strict();
 

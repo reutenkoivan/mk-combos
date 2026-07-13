@@ -26,8 +26,8 @@ Rules:
 - installed games приходять із `apps/web/src/game-business/installed-games.ts`;
 - route prefix `/:gameId/...` є source of truth для active game на deep links;
 - App Shell вибирає active business entry point і передає page-level flows підготовлені game capabilities;
-- App Shell обробляє game-switch intent із `UI-CMP-002` у breadcrumbs або compact menu і виконує analogous navigation;
-- App Shell передає `topBarLayoutMode` у `UI-CMP-001`, щоб Top Bar виконував conditional JSX composition;
+- App Shell обробляє game-switch intent із `UI-CMP-002` у breadcrumbs або mobile і tablet menu і виконує analogous navigation;
+- App Shell передає `responsiveMode` у `UI-CMP-001`, щоб Top Bar виконував conditional JSX composition;
 - App Shell не імпортує game data/rules напряму і не реалізує MKXL або MK1 бізнес-логіку.
 
 App Shell відповідає за:
@@ -35,7 +35,7 @@ App Shell відповідає за:
 - глобальну розмітку застосунку;
 - резолв `gameId` із route prefix;
 - вибір active game business entry point;
-- game switch navigation із breadcrumbs або compact menu;
+- game switch navigation із breadcrumbs або mobile і tablet menu;
 - показ активної сторінки або обов'язкового first-launch gate;
 - читання вже застосованих settings з app-level state;
 - передавання active settings до активної сторінки;
@@ -166,19 +166,19 @@ App Shell не відповідає за:
 
 Детальна специфікація: [UI-CMP-001.md](./UI-CMP-001.md).
 
-`UI-CMP-001 Global Top Bar` є постійною верхньою панеллю. У `wide13_6Plus` вона показує breadcrumbs із current game switcher; у `compact` переносить navigation equivalents у right-pinned burger menu, лишаючи visible controller indicator outside menu.
+`UI-CMP-001 Global Top Bar` є постійною верхньою панеллю. У `desktop` вона показує breadcrumbs із current game switcher; у `mobile` і `tablet` переносить navigation equivalents у right-pinned burger menu, лишаючи visible controller indicator outside menu.
 
 Top Bar має:
 
-- використовувати `topBarLayoutMode` для conditional JSX composition, а не CSS-only hiding;
-- у `wide13_6Plus` рендерити [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md), де першим item є [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md);
-- у `compact` не монтувати inline breadcrumbs або inline game switcher;
-- передавати game-switch intent із breadcrumbs або compact menu до App Shell;
-- рендерити `UI-CMP-005 Controller Hint Strip` поруч із navigation block у `wide13_6Plus` або outside dropdown menu у `compact`;
-- у `wide13_6Plus` рендерити breadcrumbs для active surface і відкривати `UI-PAGE-003 Catalog` через breadcrumb navigation;
+- використовувати `responsiveMode` для conditional JSX composition, а не CSS-only hiding;
+- у `desktop` рендерити [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md), де першим item є [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md);
+- у `mobile` і `tablet` не монтувати inline breadcrumbs або inline game switcher;
+- передавати game-switch intent із breadcrumbs або mobile і tablet menu до App Shell;
+- рендерити `UI-CMP-005 Controller Hint Strip` поруч із navigation block у `desktop` або outside dropdown menu у `mobile` і `tablet`;
+- у `desktop` рендерити breadcrumbs для active surface і відкривати `UI-PAGE-003 Catalog` через breadcrumb navigation;
 - тримати [`UI-CMP-033 Top Bar Dropdown Menu`](./UI-CMP-033.md) прибитим до правої сторони;
 - давати доступ до lists, builder і settings через dropdown menu;
-- у `compact` давати доступ до game switcher, Catalog/current trail navigation і global actions через dropdown menu;
+- у `mobile` і `tablet` давати доступ до game switcher, Catalog/current trail navigation і global actions через dropdown menu;
 - давати доступ до backup через `UI-PAGE-008 Settings -> UI-CMP-034 Backup Collapsible Block`;
 - керувати місцем, видимістю і open/closed state controller hint panel;
 - лишатися keyboard reachable;
@@ -242,7 +242,7 @@ App Shell має забезпечити, що накладний елемент:
 Вхідні дані:
 
 - active route або active surface code;
-- top bar layout mode: `wide13_6Plus` або `compact`;
+- top bar layout mode: `mobile`, `tablet` або `desktop`;
 - active game id і label із active business entry point;
 - available games для `UI-CMP-002 Game Switcher`;
 - game switcher selected/disabled/busy state;
@@ -260,8 +260,8 @@ App Shell має забезпечити, що накладний елемент:
 
 - запит перейти за navigable breadcrumb item, зокрема до `UI-PAGE-003 Catalog`;
 - запит змінити game із `UI-CMP-002` у breadcrumbs;
-- запит змінити game із `UI-CMP-002` у compact menu;
-- compact menu запит перейти до Catalog, якщо inline breadcrumb не змонтований;
+- запит змінити game із `UI-CMP-002` у mobile і tablet menu;
+- mobile і tablet menu запит перейти до Catalog, якщо inline breadcrumb не змонтований;
 - dropdown action для lists, builder або settings;
 - запит відкрити, закрити або toggle hint panel;
 - запит відкрити або закрити right-pinned dropdown menu;
@@ -272,7 +272,7 @@ App Shell має забезпечити, що накладний елемент:
 - не зберігає settings напряму;
 - не змінює `language` або `notation display mode`;
 - не виконує route rewrite після game switch самостійно;
-- не залишає compact-hidden breadcrumbs або game switcher як hidden-but-focusable inline controls;
+- не залишає mobile і tablet-hidden breadcrumbs або game switcher як hidden-but-focusable inline controls;
 - не читає seeded combo data;
 - не вирішує, які combo показувати;
 - не читає Browser Gamepad API напряму;
@@ -322,29 +322,41 @@ App Shell має доступ до вже застосованих settings, act
 
 - `UI-CMP-001 Global Top Bar` видимий;
 - слот активної сторінки показує поточну сторінку;
-- App Shell передає `topBarLayoutMode` у Top Bar;
+- App Shell передає `responsiveMode` у Top Bar;
 - `UI-CMP-001 Global Top Bar` рендерить `UI-CMP-005 Controller Hint Strip` тільки за наявності controller або active disconnect grace window;
 - system messages приховані, якщо немає активних повідомлень.
 
-### `compactTopBar`
+### `mobileTopBar`
 
-Viewport/device class менший за `wide13_6Plus`.
+Owning width менша за `40rem`.
 
 Очікуваний інтерфейс:
 
-- App Shell передає `topBarLayoutMode = compact`;
+- App Shell передає `responsiveMode = mobile`;
 - Top Bar не монтує inline breadcrumbs або inline game switcher;
-- `UI-CMP-033` menu містить compact equivalents для game switcher, Catalog/current trail navigation, lists, builder і settings;
+- `UI-CMP-033` menu містить game switcher, full trail, lists, builder і settings;
 - visible controller indicator лишається outside `UI-CMP-033`;
 - keyboard focus не потрапляє в приховані inline controls.
 
-### `wideTopBar`
+### `tabletTopBar`
 
-Viewport/device class відповідає `wide13_6Plus` або ширший.
+Owning width від `40rem` до `<70rem`.
 
 Очікуваний інтерфейс:
 
-- App Shell передає `topBarLayoutMode = wide13_6Plus`;
+- App Shell передає `responsiveMode = tablet`;
+- Top Bar монтує hybrid game switcher і короткий current location;
+- `UI-CMP-033` menu містить full trail, secondary navigation і global actions без duplicate game switcher;
+- prepared focus graph враховує portrait/landscape composition;
+- visible controller indicator лишається outside `UI-CMP-033`.
+
+### `desktopTopBar`
+
+Viewport/device class відповідає `desktop` або ширший.
+
+Очікуваний інтерфейс:
+
+- App Shell передає `responsiveMode = desktop`;
 - Top Bar монтує inline breadcrumbs із `UI-CMP-002`;
 - `UI-CMP-033` menu містить global actions без duplicate breadcrumbs або duplicate game switcher;
 - visible controller indicator розташований поруч із navigation block.
@@ -463,7 +475,7 @@ App Shell може перемикати active surface через:
 - не скидати local user data;
 - не виконувати domain action без явного user command.
 
-### Перемикання game через breadcrumbs або compact menu
+### Перемикання game через breadcrumbs або mobile і tablet menu
 
 1. Користувач вибирає target game у `UI-CMP-002 Game Switcher`.
 2. `UI-CMP-001 Global Top Bar` передає `requestSwitchGameFromBreadcrumb` або `requestSwitchGameFromMenu` в App Shell.
@@ -489,7 +501,7 @@ App-level settings state
   -> Display-only components, які потребують settings
 ```
 
-App Shell змінює active/default або last active game тільки як відповідь на `UI-CMP-002` breadcrumb/compact-menu switch або first-launch/deep-link flow. Ручна зміна `language` і `notation display mode` відбувається на `UI-PAGE-008 Settings`.
+App Shell змінює active/default або last active game тільки як відповідь на `UI-CMP-002` breadcrumb/mobile і tablet-menu switch або first-launch/deep-link flow. Ручна зміна `language` і `notation display mode` відбувається на `UI-PAGE-008 Settings`.
 
 Initial settings можуть з'явитися двома шляхами:
 
@@ -511,7 +523,7 @@ Settings не мають змінювати source of truth seeded або custom
 - Усі navigation controls мають бути доступні з keyboard.
 - Focus order починається з App Shell controls і переходить до active surface.
 - `focus-visible` має бути помітним на top bar controls, dialogs, panels і controller indicator.
-- У compact Top Bar inline breadcrumbs і inline game switcher не мають бути hidden-but-focusable.
+- У mobile і tablet Top Bar inline breadcrumbs і inline game switcher не мають бути hidden-but-focusable.
 - Controller hints не є єдиним способом зрозуміти доступні actions.
 - Top Bar не має перекривати content навіть коли відкритий nested hint panel.
 - Disconnect controller не має забирати focus із keyboard/mouse flow.
@@ -525,10 +537,10 @@ Settings не мають змінювати source of truth seeded або custom
 - Без завершеного first-launch setup App Shell не дозволяє перейти до catalog, detail, lists або builder, крім valid deep link auto-config.
 - App Shell дає navigation action для відкриття `UI-PAGE-008 Settings`.
 - Застосовані settings поширюються на активну сторінку через App Shell.
-- App Shell передає `topBarLayoutMode` у `UI-CMP-001`.
+- App Shell передає `responsiveMode` у `UI-CMP-001`.
 - Compact Top Bar використовує conditional JSX composition і не залишає hidden-but-focusable inline breadcrumbs/game switcher.
 - App Shell обробляє `UI-CMP-002` breadcrumb game switch і виконує analogous navigation.
-- App Shell обробляє `UI-CMP-002` compact menu game switch як equivalent game switch intent.
+- App Shell обробляє `UI-CMP-002` mobile і tablet menu game switch як equivalent game switch intent.
 - App Shell не мутує `language` або `notation display mode` напряму.
 - Breadcrumb game switch не видаляє named lists, custom combos або local game slices іншої гри.
 - Session-only persistence state показує попередження, але не блокує основний flow.
@@ -546,11 +558,11 @@ Settings не мають змінювати source of truth seeded або custom
 - Fresh browser state відкриває root URL і бачить `UI-PAGE-002 First-Launch Setup` у Shell Outlet.
 - Після підтвердження first-launch setup App Shell відкриває `UI-PAGE-003 Catalog`.
 - Navigation action з Top Bar відкриває `UI-PAGE-008 Settings`.
-- `wide13_6Plus` Top Bar монтує inline breadcrumbs із `UI-CMP-002`.
+- `desktop` Top Bar монтує inline breadcrumbs із `UI-CMP-002`.
 - Compact Top Bar не монтує inline breadcrumbs або inline `UI-CMP-002`.
 - Compact burger menu містить `UI-CMP-002`, Catalog, Named Lists, Builder і Settings.
 - Game switcher у breadcrumbs на `/mkxl/catalog` із вибором `MK1` відкриває `/mk1/catalog`.
-- Game switcher у compact menu на `/mkxl/catalog` із вибором `MK1` відкриває `/mk1/catalog`.
+- Game switcher у mobile і tablet menu на `/mkxl/catalog` із вибором `MK1` відкриває `/mk1/catalog`.
 - Game switcher у breadcrumbs на `/mkxl/lists` із вибором `MK1` відкриває `/mk1/lists`.
 - Game switcher у breadcrumbs на combo detail fallback-ить до target game Catalog.
 - Game switcher у breadcrumbs на `/settings` лишає route `/settings` і оновлює active/default game state.
@@ -570,5 +582,15 @@ Settings не мають змінювати source of truth seeded або custom
 ## Відкриті уточнення
 
 - Route paths для робочих surfaces використовують generic `/:gameId/...` форму, описану в [ARCHITECTURE.md](../ARCHITECTURE.md).
-- Візуальна щільність Top Bar із вкладеним Controller Hint Strip і `UI-CMP-033` має бути перевірена на `wide13_6Plus` і compact layouts.
+- Візуальна щільність Top Bar із вкладеним Controller Hint Strip і `UI-CMP-033` має бути перевірена на `desktop` і mobile і tablet layouts.
 - Custom controller button remapping не входить у перший реліз, якщо це не буде додано окремим UX сценарієм.
+
+## Канонічний Responsive і Controller-only Contract
+
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+
+- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
+- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

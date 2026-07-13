@@ -1,6 +1,9 @@
 import { z } from "zod/v4";
 
 import { MkxlLabelSchema, MkxlSourceIdSchema } from "../shared/schema";
+import { mkxlDataSourceKinds } from "./constants";
+
+export const MkxlDataSourceKindSchema = z.enum(mkxlDataSourceKinds);
 
 export const MkxlGameSchema = z
   .object({
@@ -16,6 +19,6 @@ export const MkxlDataSourceSchema = z
     id: MkxlSourceIdSchema,
     label: z.string().min(1),
     url: z.string().url().optional(),
-    kind: z.enum(["reference", "crossCheck", "manualVerification", "communityComboSource"]),
+    kind: MkxlDataSourceKindSchema,
   })
   .strict();

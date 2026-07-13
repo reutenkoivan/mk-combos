@@ -18,6 +18,12 @@ import {
   mk1CatalogRouteQueryKeys as contextTypeRouteQueryKeys,
   mk1CatalogContextStatuses as contextTypeStatuses,
 } from "@mk-combos/mk1-catalog/context/type";
+import {
+  mk1CatalogContextStatuses,
+  mk1CatalogOptionAvailabilities,
+  mk1CatalogRecoveryCodes,
+  mk1CatalogRouteQueryKeys,
+} from "@mk-combos/mk1-catalog/context/value";
 import * as contractEntry from "@mk-combos/mk1-catalog/contract";
 import { mk1CatalogContractGroups, mkCombosMk1Catalog } from "@mk-combos/mk1-catalog/contract";
 import * as filterRuntime from "@mk-combos/mk1-catalog/filters/runtime";
@@ -42,6 +48,11 @@ import {
   mk1CatalogMultiSelectFilterIds as filterTypeMultiSelectIds,
   mk1CatalogRangeFilterIds as filterTypeRangeIds,
 } from "@mk-combos/mk1-catalog/filters/type";
+import {
+  mk1CatalogFilterIds,
+  mk1CatalogMultiSelectFilterIds,
+  mk1CatalogRangeFilterIds,
+} from "@mk-combos/mk1-catalog/filters/value";
 import * as selectorRuntime from "@mk-combos/mk1-catalog/selectors/runtime";
 import { Mk1CatalogComboSummarySchema } from "@mk-combos/mk1-catalog/summary/schema";
 import type { Mk1CatalogComboSummary } from "@mk-combos/mk1-catalog/summary/type";
@@ -166,46 +177,66 @@ describe("@mk-combos/mk1-catalog contract", () => {
   });
 
   it("keeps value-set re-exports intentional", () => {
-    expect(contextSchemaStatuses).toEqual(["empty", "characterSelected", "ready"]);
-    expect(contextSchemaRecoveryCodes).toEqual(["invalidCharacter", "invalidKameo"]);
-    expect(contextSchemaRouteQueryKeys).toEqual([
-      "character",
-      "kameo",
-      "starter",
-      "position",
-      "meter",
-      "damageMin",
-      "damageMax",
-      "difficulty",
-      "routeType",
-      "tag",
-    ]);
-    expect(contextTypeStatuses).toEqual(contextSchemaStatuses);
-    expect(contextTypeRecoveryCodes).toEqual(contextSchemaRecoveryCodes);
-    expect(contextTypeRouteQueryKeys).toEqual(contextSchemaRouteQueryKeys);
-    expect(filterSchemaIds).toEqual([
-      "starter",
-      "position",
-      "meter",
-      "difficulty",
-      "routeType",
-      "tag",
-      "damage",
-    ]);
-    expect(filterSchemaMultiSelectIds).toEqual([
-      "starter",
-      "position",
-      "meter",
-      "difficulty",
-      "routeType",
-      "tag",
-    ]);
-    expect(filterSchemaRangeIds).toEqual(["damage"]);
-    expect(filterTypeIds).toEqual(filterSchemaIds);
-    expect(filterTypeMultiSelectIds).toEqual(filterSchemaMultiSelectIds);
-    expect(filterTypeRangeIds).toEqual(filterSchemaRangeIds);
-    expect(contextSchemaRouteQueryKeys).not.toContain("variation");
-    expect(contextSchemaRouteQueryKeys).not.toContain("stage");
-    expect(contextSchemaRouteQueryKeys).not.toContain("interactable");
+    expect(mk1CatalogContextStatuses).toEqual({
+      characterSelected: "characterSelected",
+      empty: "empty",
+      ready: "ready",
+    });
+    expect(mk1CatalogRecoveryCodes).toEqual({
+      invalidCharacter: "invalidCharacter",
+      invalidKameo: "invalidKameo",
+    });
+    expect(mk1CatalogRouteQueryKeys).toEqual({
+      character: "character",
+      damageMax: "damageMax",
+      damageMin: "damageMin",
+      difficulty: "difficulty",
+      kameo: "kameo",
+      meter: "meter",
+      position: "position",
+      routeType: "routeType",
+      starter: "starter",
+      tag: "tag",
+    });
+    expect(mk1CatalogOptionAvailabilities).toEqual({
+      available: "available",
+      disabledNoComboData: "disabledNoComboData",
+    });
+    expect(contextSchemaStatuses).toBe(mk1CatalogContextStatuses);
+    expect(contextSchemaRecoveryCodes).toBe(mk1CatalogRecoveryCodes);
+    expect(contextSchemaRouteQueryKeys).toBe(mk1CatalogRouteQueryKeys);
+    expect(contextTypeStatuses).toBe(contextSchemaStatuses);
+    expect(contextTypeRecoveryCodes).toBe(contextSchemaRecoveryCodes);
+    expect(contextTypeRouteQueryKeys).toBe(contextSchemaRouteQueryKeys);
+    expect(mk1CatalogMultiSelectFilterIds).toEqual({
+      difficulty: "difficulty",
+      meter: "meter",
+      position: "position",
+      routeType: "routeType",
+      starter: "starter",
+      tag: "tag",
+    });
+    expect(mk1CatalogRangeFilterIds).toEqual({ damage: "damage" });
+    expect(mk1CatalogFilterIds).toEqual({
+      damage: "damage",
+      difficulty: "difficulty",
+      meter: "meter",
+      position: "position",
+      routeType: "routeType",
+      starter: "starter",
+      tag: "tag",
+    });
+    expect(filterSchemaIds).toBe(mk1CatalogFilterIds);
+    expect(filterSchemaMultiSelectIds).toBe(mk1CatalogMultiSelectFilterIds);
+    expect(filterSchemaRangeIds).toBe(mk1CatalogRangeFilterIds);
+    expect(filterTypeIds).toBe(filterSchemaIds);
+    expect(filterTypeMultiSelectIds).toBe(filterSchemaMultiSelectIds);
+    expect(filterTypeRangeIds).toBe(filterSchemaRangeIds);
+    expect(mkCombosMk1Catalog.valueSets.mk1CatalogOptionAvailabilities).toBe(
+      mk1CatalogOptionAvailabilities,
+    );
+    expect(Object.values(mk1CatalogRouteQueryKeys)).not.toContain("variation");
+    expect(Object.values(mk1CatalogRouteQueryKeys)).not.toContain("stage");
+    expect(Object.values(mk1CatalogRouteQueryKeys)).not.toContain("interactable");
   });
 });

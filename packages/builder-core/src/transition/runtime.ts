@@ -4,6 +4,7 @@ import type {
   BuilderTransitionEffect,
   BuilderTransitionRejected,
 } from "./type";
+import { builderTransitionStatuses } from "./value";
 
 export function acceptTransition(input: {
   candidate: BuilderTransitionCandidate;
@@ -15,7 +16,7 @@ export function acceptTransition(input: {
 }): BuilderTransitionAccepted {
   const result: BuilderTransitionAccepted = {
     ok: true,
-    status: "accepted",
+    status: builderTransitionStatuses.accepted,
     candidate: input.candidate,
     step: input.step,
     toRuntime: input.toRuntime,
@@ -43,7 +44,7 @@ export function rejectTransition(input: {
 }): BuilderTransitionRejected {
   const result: BuilderTransitionRejected = {
     ok: false,
-    status: "rejected",
+    status: builderTransitionStatuses.rejected,
     attemptedMoveId: input.attemptedMoveId,
     reason: input.reason,
   };

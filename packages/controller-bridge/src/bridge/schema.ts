@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
 
+import { ControllerCapabilityStateSchema } from "../capability/schema";
 import { ControllerCommandIdSchema } from "../command/schema";
 import {
   ControllerControlIdSchema,
@@ -8,6 +9,7 @@ import {
   PartialControllerInputConfigSchema,
 } from "../input/schema";
 import { ControllerProfileIdSchema } from "../profile/schema";
+import { controllerCommandEventPhases } from "./value";
 
 export const ControllerCommandBindingSchema = z
   .object({
@@ -34,7 +36,7 @@ export const ControllerBridgeConfigSchema = z
   })
   .strict();
 
-export const ControllerCommandEventPhaseSchema = z.enum(["press", "repeat"]);
+export const ControllerCommandEventPhaseSchema = z.enum(controllerCommandEventPhases);
 
 export const ControllerCommandEventSchema = z
   .object({
@@ -54,6 +56,7 @@ export const ControllerCommandEventSchema = z
 export const ControllerBridgeStateSchema = z
   .object({
     connected: z.boolean(),
+    lifecycleState: ControllerCapabilityStateSchema,
     activeGamepadIndex: z.number().int().nonnegative().optional(),
     profileId: ControllerProfileIdSchema.optional(),
     lastConnectedAt: z.number().nonnegative().optional(),
@@ -67,6 +70,7 @@ export const ControllerBridgePollInputSchema = z
     gamepads: z.array(ControllerGamepadSnapshotSchema).readonly(),
     activeGamepadIndex: z.number().int().nonnegative().optional(),
     bindings: z.array(ControllerCommandBindingSchema).readonly().optional(),
+    sourceState: ControllerCapabilityStateSchema.optional(),
   })
   .strict();
 

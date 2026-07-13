@@ -20,6 +20,11 @@ import type {
   Mk1CatalogRecovery,
   Mk1CatalogRouteQuery,
 } from "./type";
+import {
+  mk1CatalogContextStatuses,
+  mk1CatalogOptionAvailabilities,
+  mk1CatalogRouteQueryKeys,
+} from "./value";
 
 const charactersById = new Map(mk1Characters.map((character) => [character.id, character]));
 const kameosById = new Map(mk1Kameos.map((kameo) => [kameo.id, kameo]));
@@ -97,14 +102,14 @@ const canonicalRouteQueryFromInput = (
 
   addString("character", firstValue(query.character));
   addString("kameo", firstValue(query.kameo));
-  addArray("starter", nonEmptyValues(query.starter));
-  addArray("position", nonEmptyValues(query.position));
-  addArray("meter", nonEmptyValues(query.meter));
+  addArray(mk1CatalogRouteQueryKeys.starter, nonEmptyValues(query.starter));
+  addArray(mk1CatalogRouteQueryKeys.position, nonEmptyValues(query.position));
+  addArray(mk1CatalogRouteQueryKeys.meter, nonEmptyValues(query.meter));
   addString("damageMin", firstValue(query.damageMin));
   addString("damageMax", firstValue(query.damageMax));
-  addArray("difficulty", nonEmptyValues(query.difficulty));
-  addArray("routeType", nonEmptyValues(query.routeType));
-  addArray("tag", nonEmptyValues(query.tag));
+  addArray(mk1CatalogRouteQueryKeys.difficulty, nonEmptyValues(query.difficulty));
+  addArray(mk1CatalogRouteQueryKeys.routeType, nonEmptyValues(query.routeType));
+  addArray(mk1CatalogRouteQueryKeys.tag, nonEmptyValues(query.tag));
 
   return canonicalQuery;
 };
@@ -119,7 +124,10 @@ const getCharacterOptions = (): readonly Mk1CatalogCharacterOption[] =>
       shortLabel: character.shortLabel,
       rosterOrder: character.rosterOrder,
       comboCount,
-      availability: comboCount > 0 ? "available" : "disabledNoComboData",
+      availability:
+        comboCount > 0
+          ? mk1CatalogOptionAvailabilities.available
+          : mk1CatalogOptionAvailabilities.disabledNoComboData,
     };
   });
 
@@ -137,20 +145,23 @@ const getKameoOptions = (characterId: string | undefined): readonly Mk1CatalogKa
       shortLabel: kameo.shortLabel,
       kameoOrder: kameo.kameoOrder,
       comboCount,
-      availability: comboCount > 0 ? "available" : "disabledNoComboData",
+      availability:
+        comboCount > 0
+          ? mk1CatalogOptionAvailabilities.available
+          : mk1CatalogOptionAvailabilities.disabledNoComboData,
     };
   });
 };
 
 export const getMk1CatalogContextStatus = (context: Mk1CatalogContext): Mk1CatalogContextStatus => {
   if (context.characterId && context.kameoId) {
-    return "ready";
+    return mk1CatalogContextStatuses.ready;
   }
   if (context.characterId) {
-    return "characterSelected";
+    return mk1CatalogContextStatuses.characterSelected;
   }
 
-  return "empty";
+  return mk1CatalogContextStatuses.empty;
 };
 
 export const getMk1CatalogContextOptions = (

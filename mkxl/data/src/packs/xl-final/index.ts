@@ -2,7 +2,7 @@ import type { MkxlDataPack } from "../type";
 import { mkxlXlFinalCombos } from "./combos";
 import { mkxlXlFinalDataSources, mkxlXlFinalGame } from "./game";
 import { mkxlXlFinalMoves } from "./moves";
-import { mkxlXlFinalInputNotationValues } from "./notation";
+import { mkxlXlFinalInputNotationOrder } from "./notation";
 import { mkxlXlFinalRoster } from "./roster";
 import { mkxlXlFinalStages } from "./stages";
 import { mkxlXlFinalVariations } from "./variations";
@@ -15,7 +15,7 @@ export const mkxlXlFinalPack = {
   roster: mkxlXlFinalRoster,
   variations: mkxlXlFinalVariations,
   stages: mkxlXlFinalStages,
-  inputNotationValues: mkxlXlFinalInputNotationValues,
+  inputNotationValues: mkxlXlFinalInputNotationOrder,
   moves: mkxlXlFinalMoves,
   combos: mkxlXlFinalCombos,
 } as const satisfies MkxlDataPack;

@@ -1,3 +1,5 @@
+import type { UiResponsiveMode } from "../components/type";
+import { uiResponsiveModes } from "../components/value";
 import { cx } from "../recipes/class-name";
 import { separatorRecipe } from "../recipes/separator";
 import { surfaceRecipe } from "../recipes/surface";
@@ -10,25 +12,68 @@ import type {
   UiThemeMode,
   UiToneMode,
 } from "../tokens/type";
+import {
+  uiContrastModes,
+  uiDensityModes,
+  uiMaterialModes,
+  uiPlacementModes,
+  uiShapeModes,
+  uiThemeModes,
+  uiToneModes,
+} from "../tokens/value";
 import { alignClasses, densityGapClasses, justifyClasses, type UiPrimitiveProps } from "./internal";
 
-type UiAlign = keyof typeof alignClasses;
-type UiJustify = keyof typeof justifyClasses;
+export const uiAlignments = {
+  center: "center",
+  end: "end",
+  start: "start",
+  stretch: "stretch",
+} as const;
+
+export type UiAlign = (typeof uiAlignments)[keyof typeof uiAlignments];
+
+export const uiJustifications = {
+  between: "between",
+  center: "center",
+  end: "end",
+  start: "start",
+} as const;
+
+export type UiJustify = (typeof uiJustifications)[keyof typeof uiJustifications];
+
+export const gridColumnModes = {
+  auto: "auto",
+  one: "one",
+  three: "three",
+  two: "two",
+} as const;
+
+export type GridColumnMode = (typeof gridColumnModes)[keyof typeof gridColumnModes];
+
+export const separatorOrientations = {
+  horizontal: "horizontal",
+  vertical: "vertical",
+} as const;
+
+export type SeparatorOrientation =
+  (typeof separatorOrientations)[keyof typeof separatorOrientations];
 
 export type UiRootProps = UiPrimitiveProps<HTMLDivElement> & {
   contrast?: UiContrastMode;
   density?: UiDensityMode;
   theme?: UiThemeMode;
+  responsiveMode?: UiResponsiveMode;
 };
 
 export function UiRoot(props: UiRootProps) {
   const {
     children,
     className,
-    contrast = "standard",
-    density = "small",
+    contrast = uiContrastModes.standard,
+    density = uiDensityModes.small,
     ref,
-    theme = "light",
+    responsiveMode = uiResponsiveModes.desktop,
+    theme = uiThemeModes.dark,
     ...rootProps
   } = props;
 
@@ -38,6 +83,7 @@ export function UiRoot(props: UiRootProps) {
       className={cx("mk-combos-ui-root min-h-full text-[var(--ui-text)]", className)}
       data-ui-contrast={contrast}
       data-ui-density={density}
+      data-ui-responsive={responsiveMode}
       data-ui-theme={theme}
       ref={ref}
     >
@@ -56,11 +102,11 @@ export type StackProps = UiPrimitiveProps<HTMLDivElement> & {
 
 export function Stack(props: StackProps) {
   const {
-    align = "stretch",
+    align = uiAlignments.stretch,
     children,
     className,
-    density = "small",
-    justify = "start",
+    density = uiDensityModes.small,
+    justify = uiJustifications.start,
     ref,
     ...stackProps
   } = props;
@@ -94,11 +140,11 @@ export type GroupProps = UiPrimitiveProps<HTMLDivElement> & {
 
 export function Group(props: GroupProps) {
   const {
-    align = "center",
+    align = uiAlignments.center,
     children,
     className,
-    density = "small",
-    justify = "start",
+    density = uiDensityModes.small,
+    justify = uiJustifications.start,
     ref,
     wrap = true,
     ...groupProps
@@ -127,7 +173,7 @@ Group.displayName = "Group";
 
 export type GridProps = UiPrimitiveProps<HTMLDivElement> & {
   align?: UiAlign;
-  columns?: "auto" | "one" | "three" | "two";
+  columns?: GridColumnMode;
   density?: UiDensityMode;
 };
 
@@ -136,15 +182,15 @@ const gridColumnClasses = {
   one: "grid-cols-1",
   three: "grid-cols-1 md:grid-cols-3",
   two: "grid-cols-1 md:grid-cols-2",
-} as const;
+} as const satisfies Record<GridColumnMode, string>;
 
 export function Grid(props: GridProps) {
   const {
-    align = "stretch",
+    align = uiAlignments.stretch,
     children,
     className,
-    columns = "auto",
-    density = "small",
+    columns = gridColumnModes.auto,
+    density = uiDensityModes.small,
     ref,
     ...gridProps
   } = props;
@@ -181,12 +227,12 @@ export function Surface(props: SurfaceProps) {
   const {
     children,
     className,
-    density = "small",
-    material = "opaque",
-    placement = "block",
+    density = uiDensityModes.small,
+    material = uiMaterialModes.opaque,
+    placement = uiPlacementModes.block,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     ...surfaceProps
   } = props;
 
@@ -212,13 +258,13 @@ export function Panel(props: PanelProps) {
   const {
     children,
     className,
-    density = "small",
-    gap = "small",
-    material = "separated",
-    placement = "block",
+    density = uiDensityModes.small,
+    gap = uiDensityModes.small,
+    material = uiMaterialModes.opaque,
+    placement = uiPlacementModes.block,
     ref,
-    shape = "fixed",
-    tone = "neutral",
+    shape = uiShapeModes.fixed,
+    tone = uiToneModes.neutral,
     ...panelProps
   } = props;
 
@@ -241,19 +287,71 @@ export function Panel(props: PanelProps) {
 
 Panel.displayName = "Panel";
 
+export type WorkstationSectionProps = UiPrimitiveProps<HTMLElement> & {
+  description?: string;
+  eyebrow?: string;
+  title: string;
+  tone?: UiToneMode;
+};
+
+export function WorkstationSection(props: WorkstationSectionProps) {
+  const {
+    children,
+    className,
+    description,
+    eyebrow,
+    ref,
+    title,
+    tone = uiToneModes.neutral,
+    ...sectionProps
+  } = props;
+
+  return (
+    <section
+      {...sectionProps}
+      className={cx(
+        surfaceRecipe({
+          density: uiDensityModes.medium,
+          material: uiMaterialModes.none,
+          tone,
+        }),
+        "grid min-w-0 gap-4 border-t border-[var(--ui-separator)] p-0 pt-5 first:border-t-0 first:pt-0",
+        className,
+      )}
+      data-ui-workstation-section
+      ref={ref}
+    >
+      <header className="grid gap-1">
+        {eyebrow && (
+          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--ui-accent-strong)]">
+            {eyebrow}
+          </span>
+        )}
+        <h2 className="font-[var(--ui-font-display)] text-base font-bold uppercase tracking-[0.04em]">
+          {title}
+        </h2>
+        {description && <p className="text-sm text-[var(--ui-muted-text)]">{description}</p>}
+      </header>
+      <div className="grid min-w-0 gap-4">{children}</div>
+    </section>
+  );
+}
+
+WorkstationSection.displayName = "WorkstationSection";
+
 export type SeparatorProps = Omit<UiPrimitiveProps<HTMLHRElement>, "children" | "role"> & {
   density?: UiDensityMode;
-  orientation?: "horizontal" | "vertical";
+  orientation?: SeparatorOrientation;
   tone?: UiToneMode;
 };
 
 export function Separator(props: SeparatorProps) {
   const {
     className,
-    density = "small",
-    orientation = "horizontal",
+    density = uiDensityModes.small,
+    orientation = separatorOrientations.horizontal,
     ref,
-    tone = "neutral",
+    tone = uiToneModes.neutral,
     ...separatorProps
   } = props;
 
