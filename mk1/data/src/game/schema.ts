@@ -9,6 +9,7 @@ export const Mk1DataSourceSchema = z
   .object({
     id: z.string().min(1),
     label: z.string().min(1),
+    url: z.string().url().optional(),
     kind: Mk1DataSourceKindSchema,
   })
   .strict();

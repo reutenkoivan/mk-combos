@@ -1,13 +1,26 @@
 import { mkxlComboFileRegistry } from "../combos/registry";
 import { mkxlSeededCombos } from "../combos/value";
-import { mkxlDataSourceIds, mkxlDataSources, mkxlGame } from "../game/value";
+import {
+  mkxlDataSourceIds,
+  mkxlDataSourceKinds,
+  mkxlDataSources,
+  mkxlExactGameplayEvidenceSourceIds,
+  mkxlGame,
+} from "../game/value";
 import { mkxlStageGraphFragments, mkxlVariationGraphs } from "../graph/value";
 import { mkxlMovelistFileRegistry, mkxlMoveTreeRegistry } from "../movelists/registry";
 import { mkxlMovelists, mkxlMoveNotationValues, mkxlMoves } from "../movelists/value";
+import { activeMkxlDataset } from "../packs/value";
 import { mkxlCharacters } from "../roster/value";
 import type { MkxlLabel, MkxlSourceIdList } from "../shared/type";
 import { mkxlInteractableIds, mkxlStages } from "../stages/value";
 import { mkxlVariations, mkxlVariationsByCharacterId } from "../variations/value";
+import {
+  createMkxlExactGameplayIdentity,
+  createMkxlExactGameplayValidationContext,
+  type MkxlExactGameplayIdentity,
+  validateMkxlExactGameplayClaim,
+} from "./exact-gameplay-runtime";
 import type { MkxlDataValidationIssue, MkxlDataValidationResult } from "./type";
 import { mkxlCoverageTargets, mkxlDataCounts } from "./value";
 
@@ -32,8 +45,32 @@ const genericMoveLabels = new Set([
 ]);
 
 const knownSourceIds = new Set<string>(mkxlDataSourceIds);
+const dataSourcesById = new Map(mkxlDataSources.map((source) => [source.id, source]));
 const knownMoveNotationValues = new Set<string>(Object.values(mkxlMoveNotationValues));
 const generalMoveOwnerId = "general";
+const exactGameplayContextIdsByFighterId = new Map<string, string[]>();
+const exactGameplayMovesById = new Map<string, (typeof mkxlMoves)[number]>();
+
+for (const variation of mkxlVariations) {
+  const contextIds = exactGameplayContextIdsByFighterId.get(variation.characterId) ?? [];
+
+  contextIds.push(variation.id);
+  exactGameplayContextIdsByFighterId.set(variation.characterId, contextIds);
+}
+
+for (const move of mkxlMoves) {
+  exactGameplayMovesById.set(move.id, move);
+}
+
+const exactGameplayValidationContext = createMkxlExactGameplayValidationContext({
+  expectedGameVersion: activeMkxlDataset.gameVersion,
+  dataSources: mkxlDataSources,
+  exactEvidenceSourceIds: mkxlExactGameplayEvidenceSourceIds,
+  authoritativeSourceKinds: [mkxlDataSourceKinds.manualVerification, mkxlDataSourceKinds.official],
+  fighterIds: mkxlCharacters.map((character) => character.id),
+  contextIdsByFighterId: exactGameplayContextIdsByFighterId,
+  moves: mkxlMoves,
+});
 
 const toCamelKey = (value: string) =>
   value.replace(/-([a-z0-9])/gu, (_match, char: string) => char.toUpperCase());
@@ -104,6 +141,24 @@ const assertKnownSources = (
   }
 };
 
+const assertExactGameplayClaim = (
+  sourceIds: MkxlSourceIdList,
+  identity: MkxlExactGameplayIdentity,
+  path: readonly string[],
+  issues: MkxlDataValidationIssue[],
+) => {
+  issues.push(
+    ...validateMkxlExactGameplayClaim(
+      {
+        sourceIds,
+        identity,
+        path,
+      },
+      exactGameplayValidationContext,
+    ),
+  );
+};
+
 const assertLabel = (
   label: MkxlLabel,
   path: readonly string[],
@@ -115,6 +170,30 @@ const assertLabel = (
 };
 
 const validateProvenance = (issues: MkxlDataValidationIssue[]) => {
+  for (const sourceId of mkxlExactGameplayEvidenceSourceIds) {
+    const source = dataSourcesById.get(sourceId);
+
+    if (!source) {
+      issues.push(
+        createIssue(
+          "mkxl.data.exact_source_missing",
+          `Exact-evidence source ${sourceId} has no source record.`,
+          ["sources", sourceId],
+        ),
+      );
+      continue;
+    }
+    if (source.kind !== mkxlDataSourceKinds.manualVerification && !source.url) {
+      issues.push(
+        createIssue(
+          "mkxl.data.exact_source_url_missing",
+          `Exact-evidence web source ${sourceId} must provide a URL.`,
+          ["sources", sourceId],
+        ),
+      );
+    }
+  }
+
   for (const source of mkxlDataSources) {
     assertLabel({ EN: source.label, fallback: source.label }, ["sources", source.id], issues);
   }
@@ -131,11 +210,83 @@ const validateProvenance = (issues: MkxlDataValidationIssue[]) => {
     assertLabel(variation.label, ["variations", variation.id], issues);
   }
 
+  const tacticalFactIds: string[] = [];
   for (const movelist of mkxlMovelists) {
     assertKnownSources(movelist.sourceIds, ["movelists", movelist.characterId], issues);
     for (const move of movelist.movelist) {
       assertKnownSources(move.sourceIds, ["moves", move.id], issues);
       assertLabel(move.label, ["moves", move.id], issues);
+      if (move.frameData) {
+        assertExactGameplayClaim(
+          move.frameData.sourceIds,
+          createMkxlExactGameplayIdentity(move, mkxlGame.gameVersion),
+          ["moves", move.id, "frameData"],
+          issues,
+        );
+      }
+      for (const fact of move.tacticalFacts ?? []) {
+        tacticalFactIds.push(fact.id);
+        assertExactGameplayClaim(
+          fact.sourceIds,
+          createMkxlExactGameplayIdentity(move, mkxlGame.gameVersion),
+          ["moves", move.id, "tacticalFacts", fact.id],
+          issues,
+        );
+      }
+    }
+  }
+  assertUnique(tacticalFactIds, "Tactical fact", issues);
+
+  for (const graph of mkxlVariationGraphs) {
+    assertKnownSources(graph.sourceIds, ["graphs", graph.id], issues);
+    for (const edge of graph.edges) {
+      assertKnownSources(edge.sourceIds, ["graphs", graph.id, "edges", edge.id], issues);
+      if (edge.timing) {
+        const move = edge.moveId ? exactGameplayMovesById.get(edge.moveId) : undefined;
+        const identity = move
+          ? createMkxlExactGameplayIdentity(move, mkxlGame.gameVersion, graph.variationId)
+          : {
+              moveId: edge.moveId,
+              gameVersion: mkxlGame.gameVersion,
+              fighterId: graph.characterId,
+              contextId: graph.variationId,
+              officialLabel: undefined,
+              notation: undefined,
+            };
+
+        assertExactGameplayClaim(
+          edge.timing.sourceIds,
+          identity,
+          ["graphs", graph.id, "edges", edge.id, "timing"],
+          issues,
+        );
+      }
+    }
+  }
+  for (const fragment of mkxlStageGraphFragments) {
+    assertKnownSources(fragment.sourceIds, ["stageGraphs", fragment.id], issues);
+    for (const edge of fragment.edges) {
+      assertKnownSources(edge.sourceIds, ["stageGraphs", fragment.id, "edges", edge.id], issues);
+      if (edge.timing) {
+        const move = edge.moveId ? exactGameplayMovesById.get(edge.moveId) : undefined;
+        const identity = move
+          ? createMkxlExactGameplayIdentity(move, mkxlGame.gameVersion, fragment.stageId)
+          : {
+              moveId: edge.moveId,
+              gameVersion: mkxlGame.gameVersion,
+              fighterId: undefined,
+              contextId: fragment.stageId,
+              officialLabel: undefined,
+              notation: undefined,
+            };
+
+        assertExactGameplayClaim(
+          edge.timing.sourceIds,
+          identity,
+          ["stageGraphs", fragment.id, "edges", edge.id, "timing"],
+          issues,
+        );
+      }
     }
   }
 

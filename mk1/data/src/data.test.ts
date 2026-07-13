@@ -1,6 +1,12 @@
 import { mk1SeededCombos } from "@mk-combos/mk1-data/combos/value";
 import { validateMk1Data } from "@mk-combos/mk1-data/coverage/runtime";
 import { mk1CoverageTargets } from "@mk-combos/mk1-data/coverage/value";
+import type { Mk1DataSource } from "@mk-combos/mk1-data/game/type";
+import {
+  mk1DataSourceKinds,
+  mk1DataSources,
+  mk1ExactGameplayEvidenceSourceIds,
+} from "@mk-combos/mk1-data/game/value";
 import { mk1CharacterGraphs, mk1KameoGraphOverlays } from "@mk-combos/mk1-data/graph/value";
 import { mk1Kameos } from "@mk-combos/mk1-data/kameos/value";
 import { mk1Movelists, mk1MoveNotationValues, mk1Moves } from "@mk-combos/mk1-data/movelists/value";
@@ -91,6 +97,34 @@ describe("MK1 seeded data", () => {
     }
     for (const kameo of mk1Kameos) {
       expect(ownerIds.has(kameo.id)).toBe(true);
+    }
+  });
+
+  it("keeps exact gameplay fields unavailable on synthetic seed identities", () => {
+    expect(mk1Moves.every((move) => move.frameData === undefined)).toBe(true);
+    expect(mk1Moves.every((move) => move.tacticalFacts === undefined)).toBe(true);
+    expect(
+      mk1CharacterGraphs.every((graph) => graph.edges.every((edge) => edge.timing === undefined)),
+    ).toBe(true);
+    expect(
+      mk1KameoGraphOverlays.every((overlay) =>
+        overlay.edges.every((edge) => edge.timing === undefined),
+      ),
+    ).toBe(true);
+  });
+
+  it("keeps exact-evidence sources explicit and URL-backed outside manual verification", () => {
+    const sourcesById = new Map<string, Mk1DataSource>(
+      mk1DataSources.map((source) => [source.id, source]),
+    );
+
+    for (const sourceId of mk1ExactGameplayEvidenceSourceIds) {
+      const source = sourcesById.get(sourceId);
+
+      expect(source).toBeDefined();
+      if (source?.kind !== mk1DataSourceKinds.manual) {
+        expect(source?.url).toMatch(/^https:\/\//u);
+      }
     }
   });
 });

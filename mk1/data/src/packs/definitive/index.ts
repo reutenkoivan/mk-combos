@@ -368,12 +368,14 @@ const sourceIds = [
   "netherrealm-definitive-edition",
   "in-game-practice-mode",
   "curated-route-seed",
+  "netherrealm-patch-notes",
 ] as const;
 
 const sources = [
   {
     id: "wikipedia-mk1",
     label: "English Wikipedia Mortal Kombat 1 page",
+    url: "https://en.wikipedia.org/wiki/Mortal_Kombat_1",
     kind: "reference",
   },
   {
@@ -390,6 +392,12 @@ const sources = [
     id: "curated-route-seed",
     label: "Project curated route coverage seed",
     kind: "curated",
+  },
+  {
+    id: "netherrealm-patch-notes",
+    label: "NetherRealm Studios Mortal Kombat patch notes",
+    url: "https://www.mortalkombat.com/index.php/en-gb/patch-notes",
+    kind: "official",
   },
 ] as const satisfies readonly Mk1DataSource[];
 

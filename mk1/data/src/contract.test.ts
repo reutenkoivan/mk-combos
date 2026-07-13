@@ -16,14 +16,26 @@ import * as contractEntry from "@mk-combos/mk1-data/contract";
 import { mk1DataContractGroups, mkCombosMk1Data } from "@mk-combos/mk1-data/contract";
 import { validateMk1Data } from "@mk-combos/mk1-data/coverage/runtime";
 import { mk1CoverageTargets } from "@mk-combos/mk1-data/coverage/value";
-import { Mk1DataSourceKindSchema } from "@mk-combos/mk1-data/game/schema";
+import { Mk1DataSourceKindSchema, Mk1DataSourceSchema } from "@mk-combos/mk1-data/game/schema";
 import type { Mk1DataSourceKind } from "@mk-combos/mk1-data/game/type";
-import { mk1DataSourceKinds, mk1Game } from "@mk-combos/mk1-data/game/value";
-import { Mk1GraphNodeKindSchema } from "@mk-combos/mk1-data/graph/schema";
-import type { Mk1GraphEdge, Mk1GraphNode, Mk1GraphNodeKind } from "@mk-combos/mk1-data/graph/type";
+import {
+  mk1DataSourceKinds,
+  mk1DataSources,
+  mk1ExactGameplayEvidenceSourceIds,
+  mk1Game,
+} from "@mk-combos/mk1-data/game/value";
+import { Mk1GraphNodeKindSchema, Mk1GraphTimingSchema } from "@mk-combos/mk1-data/graph/schema";
+import type {
+  Mk1GraphEdge,
+  Mk1GraphNode,
+  Mk1GraphNodeKind,
+  Mk1GraphTiming,
+  Mk1GraphTimingKind,
+} from "@mk-combos/mk1-data/graph/type";
 import {
   mk1CharacterGraphs,
   mk1GraphNodeKinds,
+  mk1GraphTimingKinds,
   mk1KameoGraphOverlays,
 } from "@mk-combos/mk1-data/graph/value";
 import { Mk1KameoReleaseKindSchema } from "@mk-combos/mk1-data/kameos/schema";
@@ -31,9 +43,12 @@ import type { Mk1KameoReleaseKind } from "@mk-combos/mk1-data/kameos/type";
 import { mk1KameoReleaseKinds, mk1Kameos } from "@mk-combos/mk1-data/kameos/value";
 import {
   Mk1InputNotationValueSchema,
+  Mk1MoveFrameDataSchema,
   Mk1MoveNotationValueSchema,
+  Mk1MoveTacticalFactSchema,
 } from "@mk-combos/mk1-data/movelists/schema";
 import type {
+  Mk1AttackLevel,
   Mk1InputNotationValue,
   Mk1Move,
   Mk1MoveAvailability,
@@ -42,9 +57,12 @@ import type {
   Mk1Movelist,
   Mk1MoveNotationValue,
   Mk1MoveOwnerKind,
+  Mk1MoveTacticalFact,
+  Mk1MoveTacticalFactKind,
   Mk1MoveTree,
 } from "@mk-combos/mk1-data/movelists/type";
 import {
+  mk1AttackLevels,
   mk1CharacterMovelists,
   mk1InputNotationValues,
   mk1KameoMovelists,
@@ -53,6 +71,7 @@ import {
   mk1MoveNotationValues,
   mk1MoveOwnerKinds,
   mk1Moves,
+  mk1MoveTacticalFactKinds,
   mk1MoveTreeRegistry,
 } from "@mk-combos/mk1-data/movelists/value";
 import { Mk1CharacterReleaseKindSchema } from "@mk-combos/mk1-data/roster/schema";
@@ -80,13 +99,18 @@ const acceptsPublicTypes = (_contract: {
   comboRouteType: Mk1ComboRouteType;
   dataSourceKind: Mk1DataSourceKind;
   edge: Mk1GraphEdge;
+  graphTiming: Mk1GraphTiming;
+  graphTimingKind: Mk1GraphTimingKind;
   graphNode: Mk1GraphNode;
   graphNodeKind: Mk1GraphNodeKind;
   inputNotationValue: Mk1InputNotationValue;
   move: Mk1Move;
+  attackLevel: Mk1AttackLevel;
   moveAvailability: Mk1MoveAvailability;
   moveCategory: Mk1MoveCategory;
   moveFrameData: Mk1MoveFrameData;
+  moveTacticalFact: Mk1MoveTacticalFact;
+  moveTacticalFactKind: Mk1MoveTacticalFactKind;
   moveNotationValue: Mk1MoveNotationValue;
   moveOwnerKind: Mk1MoveOwnerKind;
   kameoReleaseKind: Mk1KameoReleaseKind;
@@ -144,7 +168,36 @@ describe("@mk-combos/mk1-data contract", () => {
       official: "official",
       reference: "reference",
     });
+    expect(mk1ExactGameplayEvidenceSourceIds).toEqual([
+      "in-game-practice-mode",
+      "netherrealm-patch-notes",
+    ]);
+    expect(mk1DataSources).toContainEqual({
+      id: "netherrealm-patch-notes",
+      label: "NetherRealm Studios Mortal Kombat patch notes",
+      url: "https://www.mortalkombat.com/index.php/en-gb/patch-notes",
+      kind: "official",
+    });
     expect(mk1GraphNodeKinds).toEqual({ end: "end", kameo: "kameo", move: "move", start: "start" });
+    expect(mk1GraphTimingKinds).toEqual({
+      cancel: "cancel",
+      gap: "gap",
+      juggle: "juggle",
+      link: "link",
+    });
+    expect(mk1AttackLevels).toEqual({
+      high: "high",
+      low: "low",
+      mid: "mid",
+      overhead: "overhead",
+      throw: "throw",
+      unblockable: "unblockable",
+    });
+    expect(mk1MoveTacticalFactKinds).toEqual({
+      attackLevel: "attackLevel",
+      duckable: "duckable",
+      internalGap: "internalGap",
+    });
     expect(mk1KameoReleaseKinds).toEqual({
       base: "base",
       khaosReigns: "khaosReigns",
@@ -202,7 +255,13 @@ describe("@mk-combos/mk1-data contract", () => {
     );
 
     expect(mkCombosMk1Data.valueSets.mk1DataSourceKinds).toBe(mk1DataSourceKinds);
+    expect(mkCombosMk1Data.valueSets.mk1ExactGameplayEvidenceSourceIds).toBe(
+      mk1ExactGameplayEvidenceSourceIds,
+    );
     expect(mkCombosMk1Data.valueSets.mk1GraphNodeKinds).toBe(mk1GraphNodeKinds);
+    expect(mkCombosMk1Data.valueSets.mk1GraphTimingKinds).toBe(mk1GraphTimingKinds);
+    expect(mkCombosMk1Data.valueSets.mk1AttackLevels).toBe(mk1AttackLevels);
+    expect(mkCombosMk1Data.valueSets.mk1MoveTacticalFactKinds).toBe(mk1MoveTacticalFactKinds);
     expect(mkCombosMk1Data.valueSets.mk1KameoReleaseKinds).toBe(mk1KameoReleaseKinds);
     expect(mkCombosMk1Data.valueSets.mk1MoveOwnerKinds).toBe(mk1MoveOwnerKinds);
     expect(mkCombosMk1Data.valueSets.mk1CharacterReleaseKinds).toBe(mk1CharacterReleaseKinds);
@@ -221,6 +280,23 @@ describe("@mk-combos/mk1-data contract", () => {
       expectPresent(firstMove.notation[0], "first move notation"),
     );
     const firstRouteStep = expectPresent(firstCombo.route[0], "first combo route step");
+    const graphTiming = Mk1GraphTimingSchema.parse({
+      kind: mk1GraphTimingKinds.link,
+      frameCount: 2,
+      sourceIds: ["in-game-practice-mode"],
+    });
+    const moveFrameData = Mk1MoveFrameDataSchema.parse({
+      startup: 7,
+      blockAdvantage: -2,
+      sourceIds: ["in-game-practice-mode"],
+    });
+    const moveTacticalFact = Mk1MoveTacticalFactSchema.parse({
+      id: "fact:test:attack-level",
+      kind: mk1MoveTacticalFactKinds.attackLevel,
+      value: mk1AttackLevels.high,
+      hitIndex: 1,
+      sourceIds: ["in-game-practice-mode"],
+    });
 
     expect(
       acceptsPublicTypes({
@@ -231,13 +307,18 @@ describe("@mk-combos/mk1-data contract", () => {
         comboRouteType: firstCombo.metadata.routeType,
         dataSourceKind: mk1DataSourceKinds.official,
         edge: firstGraphEdge,
+        graphTiming,
+        graphTimingKind: mk1GraphTimingKinds.link,
         graphNode: firstGraphNode,
         graphNodeKind: mk1GraphNodeKinds.move,
         inputNotationValue: firstInputNotationValue,
+        attackLevel: mk1AttackLevels.high,
         move: firstMove,
         moveAvailability: firstMove.availability,
         moveCategory: firstMove.category,
-        moveFrameData: firstMove.frameData ?? {},
+        moveFrameData,
+        moveTacticalFact,
+        moveTacticalFactKind: mk1MoveTacticalFactKinds.attackLevel,
         moveNotationValue: firstInputNotationValue,
         moveOwnerKind: firstMove.ownerKind,
         kameoReleaseKind: mk1KameoReleaseKinds.base,
@@ -247,6 +328,51 @@ describe("@mk-combos/mk1-data contract", () => {
         movelist: firstMovelist,
       }),
     ).toBe(true);
+  });
+
+  it("keeps exact tactical, frame, timing, and URL schemas strict", () => {
+    expect(
+      Mk1MoveTacticalFactSchema.safeParse({
+        id: "fact:test:gap",
+        kind: mk1MoveTacticalFactKinds.internalGap,
+        value: 2,
+        afterHitIndex: 1,
+        sourceIds: ["in-game-practice-mode"],
+      }).success,
+    ).toBe(true);
+    expect(
+      Mk1MoveTacticalFactSchema.safeParse({
+        id: "fact:test:gap",
+        kind: mk1MoveTacticalFactKinds.internalGap,
+        value: 0,
+        sourceIds: ["in-game-practice-mode"],
+      }).success,
+    ).toBe(false);
+    expect(Mk1MoveFrameDataSchema.safeParse({ startup: 7 }).success).toBe(false);
+    expect(Mk1MoveFrameDataSchema.safeParse({ sourceIds: ["in-game-practice-mode"] }).success).toBe(
+      false,
+    );
+    expect(
+      Mk1MoveFrameDataSchema.safeParse({
+        startup: 0,
+        sourceIds: ["in-game-practice-mode"],
+      }).success,
+    ).toBe(false);
+    expect(
+      Mk1GraphTimingSchema.safeParse({
+        kind: mk1GraphTimingKinds.cancel,
+        frameCount: 0,
+        sourceIds: ["in-game-practice-mode"],
+      }).success,
+    ).toBe(false);
+    expect(
+      Mk1DataSourceSchema.safeParse({
+        id: "invalid-url",
+        label: "Invalid URL",
+        url: "not-a-url",
+        kind: mk1DataSourceKinds.reference,
+      }).success,
+    ).toBe(false);
   });
 
   it("keeps validation importable from the public runtime subpath", () => {

@@ -1,9 +1,44 @@
 import { z } from "zod/v4";
 
 import { Mk1IdSchema, Mk1LabelSchema, Mk1SourceIdListSchema } from "../shared/schema";
-import { mk1GraphNodeKinds } from "./constants";
+import { mk1GraphNodeKinds, mk1GraphTimingKinds } from "./constants";
 
 export const Mk1GraphNodeKindSchema = z.enum(mk1GraphNodeKinds);
+
+export const Mk1GraphTimingKindSchema = z.enum(mk1GraphTimingKinds);
+
+const mk1GraphTimingBaseShape = {
+  frameCount: z.number().int().positive(),
+  afterHitIndex: z.number().int().positive().optional(),
+  sourceIds: Mk1SourceIdListSchema,
+} as const;
+
+export const Mk1GraphTimingSchema = z.discriminatedUnion("kind", [
+  z
+    .object({
+      ...mk1GraphTimingBaseShape,
+      kind: z.literal(mk1GraphTimingKinds.link),
+    })
+    .strict(),
+  z
+    .object({
+      ...mk1GraphTimingBaseShape,
+      kind: z.literal(mk1GraphTimingKinds.cancel),
+    })
+    .strict(),
+  z
+    .object({
+      ...mk1GraphTimingBaseShape,
+      kind: z.literal(mk1GraphTimingKinds.juggle),
+    })
+    .strict(),
+  z
+    .object({
+      ...mk1GraphTimingBaseShape,
+      kind: z.literal(mk1GraphTimingKinds.gap),
+    })
+    .strict(),
+]);
 
 export const Mk1GraphNodeSchema = z
   .object({
@@ -27,6 +62,7 @@ export const Mk1GraphEdgeSchema = z
       })
       .strict()
       .optional(),
+    timing: Mk1GraphTimingSchema.optional(),
     kameoCost: z.number().int().min(0).optional(),
     tags: z.array(z.string().min(1)).readonly(),
     sourceIds: Mk1SourceIdListSchema,

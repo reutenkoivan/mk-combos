@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode, Ref } from "react";
 
 import { cx } from "../../recipes/class-name";
 import { itemRecipe } from "../../recipes/item";
@@ -14,6 +14,7 @@ export type SelectableItemProps = {
   disabled?: boolean;
   onRequestFocus?: () => void;
   onRequestPress?: () => void;
+  ref?: Ref<HTMLButtonElement>;
   selected?: boolean;
   style?: CSSProperties;
   tone?: UiToneMode;
@@ -55,6 +56,7 @@ export function SelectableItem(props: SelectableItemProps) {
       disabled={disabled}
       onClick={() => props.onRequestPress?.()}
       onFocus={() => props.onRequestFocus?.()}
+      ref={props.ref}
       style={props.style}
       type="button"
     >

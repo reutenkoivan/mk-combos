@@ -10,60 +10,60 @@
 
 ## Призначення
 
-`UI-CMP-026` показує finish, undo, cancel і optional add saved combo actions для builder flow.
+`UI-CMP-026` показує finish, undo, cancel і optional add saved combo actions як компактний command dock builder flow.
 
 ## Володіння
 
 `UI-PAGE-006` володіє dirty state, save state, undo availability, finish availability, cancel confirmation і saved combo context. `UI-CMP-026` рендерить controlled action model.
 
+Public module: `@mk-combos/ui/components/builder-action-bar`.
+
 ## Анатомія
 
-Розміщення action bar є нижнім command row builder flow: primary actions стоять поруч, status region прив'язана до цих actions, optional add-to-list action з'являється після save.
+Action bar є нижнім command dock builder flow. Він має стабільну surface із border/elevation, але не володіє viewport positioning.
 
 ```jsx
 <BuilderActionBar ui="UI-CMP-026">
-  <BuilderActionBarRegion slot="UI-CMP-035/UI-CMP-036 workspace">
-    <Stack name="BuilderActionBarLayout">
-      <Group name="BuilderPrimaryActions">
-        <UndoAction />
-        <FinishSaveAction />
-        <CancelAction />
-      </Group>
-
-      <Show when={hasSaveBusyErrorStatus}>
-        <SaveBusyErrorStatusRegion />
-      </Show>
-
-      <Show when={hasSavedCombo}>
+  <BuilderActionBarDock>
+    <UndoRegion align="start" />
+    <SaveStatusLiveRegion align="center" />
+    <PrimaryRegion align="end">
+      <CancelAction />
+      <FinishSaveAction />
+      <Show when={hasSavedCombo} replace="FinishSaveAction">
         <AddSavedComboToListAction />
       </Show>
-    </Stack>
-  </BuilderActionBarRegion>
+    </PrimaryRegion>
+  </BuilderActionBarDock>
 </BuilderActionBar>
 ```
 
 Правила розміщення:
 
-- На `desktop` actions можуть бути в одному horizontal row; на `mobile` і `tablet` вони stack-яться з primary action перед destructive/cancel.
-- Status region стоїть під affected actions і не змінює availability самостійно.
+- На `desktop` Undo стоїть зліва, status live region — по центру, Cancel/Confirm Cancel і primary Finish — справа.
+- На `mobile` і `tablet` primary Finish займає повну ширину; status іде наступним, а Undo та Cancel/Confirm Cancel формують secondary row нижче.
+- Після успішного save `openSavedComboAddToList` замінює Finish у primary slot; дві primary CTA одночасно не показуються.
+- Status slot резервує мінімальну висоту навіть без повідомлення, щоб `idle`, `saving`, `saveError` і `saved` не змінювали геометрію dock.
+- Status є live region: звичайні та saving/saved повідомлення оголошуються ввічливо, save error — assertive alert.
 - Анатомія не вирішує, чи combo валідний; availability приходить із page-level builder flow.
+- У canonical builder composition `UI-PAGE-006` завжди володіє `sticky` wrapper, viewport offset і `safe-area-inset-bottom`. Сам `BuilderActionBar` не використовує `position: sticky/fixed`.
 
 ## Вхідні дані
 
-- `canUndo`, `canFinish`, `canCancel`, `dirtyState`, `saveState`.
-- finish/cancel/undo disabled reasons.
-- optional saved custom combo id and add-to-list availability.
-- focus target і active language.
+- один ordered набір discriminated action descriptors для `undoMove`, `finishBuilder`, `cancelBuilder`, `confirmCancelBuilder` і `openSavedComboAddToList` з `id`, localized label, availability та optional readable reason;
+- `dirty`, responsive mode і state: `idle`, `saving`, `saveError` або `saved`;
+- optional localized status, saved custom combo id і source surface/focus target.
+
+`saving` робить усі actions inert незалежно від descriptor availability; Finish зберігає primary slot і показує loading feedback. `openSavedComboAddToList` показується тільки для `saved` зі stable saved combo id.
 
 ## Вихідні події
 
-- `requestUndoMove(payload)`.
-- `requestFinishBuilder(payload)`.
-- `requestCancelBuilder(payload)`.
-- `requestConfirmCancelBuilder(payload)`.
-- `requestOpenSavedComboAddToList(payload)`.
+- discriminated `undoMove` intent;
+- discriminated `finishBuilder` intent;
+- discriminated `cancelBuilder` або `confirmCancelBuilder` intent;
+- discriminated `openSavedComboAddToList` intent.
 
-Payload містить action id, builder mode, reason і source focus target.
+Payload містить action descriptor id, `dirty`, optional saved combo id, reason, source surface і source focus target. Компонент не відкриває cancel confirmation самостійно: page передає descriptor потрібної cancel action.
 
 ## Межі відповідальності
 
@@ -71,9 +71,12 @@ Payload містить action id, builder mode, reason і source focus target.
 
 ## Критерії приймання
 
-- Busy/disabled states controlled сторінкою.
+- Busy/disabled states controlled сторінкою; `saving` блокує весь action set.
 - Cancel confirmation не запускається без page intent.
 - Actions емітять semantic payload.
+- Desktop і compact layouts зберігають одну action hierarchy: Undo secondary, Finish/saved CTA primary, Cancel destructive secondary.
+- Dock має видимі border/elevation і стабільний status slot, але не захоплює page-owned sticky/safe-area behavior.
+- Primary та compact controls мають visible hover/focus/loading/disabled feedback; mobile/tablet targets не менші за `44×44px`.
 
 ## Канонічний Responsive і Controller-only Contract
 

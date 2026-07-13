@@ -1,6 +1,6 @@
 import { definitiveMk1Dataset } from "../packs/definitive";
 
-export { mk1DataSourceKinds } from "./constants";
+export { mk1DataSourceKinds, mk1ExactGameplayEvidenceSourceIds } from "./constants";
 
 export const mk1DataSources = definitiveMk1Dataset.sources;
 

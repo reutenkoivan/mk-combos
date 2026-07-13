@@ -1,7 +1,15 @@
 import { mk1SeededCombos } from "../combos/value";
-import { mk1DataSourceIds, mk1DataSources, mk1Game } from "../game/value";
+import type { Mk1DataSource } from "../game/type";
+import {
+  mk1DataSourceIds,
+  mk1DataSourceKinds,
+  mk1DataSources,
+  mk1ExactGameplayEvidenceSourceIds,
+  mk1Game,
+} from "../game/value";
 import { mk1CharacterGraphs, mk1KameoGraphOverlays } from "../graph/value";
 import { mk1Kameos } from "../kameos/value";
+import type { Mk1Move } from "../movelists/type";
 import {
   mk1Movelists,
   mk1MoveNotationValues,
@@ -10,6 +18,11 @@ import {
 } from "../movelists/value";
 import { mk1Characters } from "../roster/value";
 import type { Mk1Label, Mk1SourceIdList } from "../shared/type";
+import {
+  createMk1ExactGameplayValidator,
+  type Mk1ExactMoveIdentityCandidate,
+  mk1VerifiedExactMoveIdentities,
+} from "./exact-gameplay";
 import type { Mk1DataValidationIssue, Mk1DataValidationResult } from "./type";
 import { mk1CoverageTargets, mk1DataCounts } from "./value";
 
@@ -65,6 +78,55 @@ const assertUnique = (
   }
 };
 
+const dataSourcesById = new Map<string, Mk1DataSource>(
+  mk1DataSources.map((source) => [source.id, source]),
+);
+const exactGameplayValidator = createMk1ExactGameplayValidator({
+  dataSources: mk1DataSources,
+  exactEvidenceSourceIds: mk1ExactGameplayEvidenceSourceIds,
+  verifiedMoveIdentities: mk1VerifiedExactMoveIdentities,
+});
+const movesById = new Map<string, Mk1Move>(mk1Moves.map((move) => [move.id, move]));
+
+const createExactMoveIdentity = (
+  move: Mk1Move,
+  context: Pick<Mk1ExactMoveIdentityCandidate, "characterId" | "kameoId"> = {},
+): Mk1ExactMoveIdentityCandidate => ({
+  moveId: move.id,
+  gameVersion: mk1Game.gameVersion,
+  ownerKind: move.ownerKind,
+  ownerId: move.ownerId,
+  characterId:
+    context.characterId ??
+    (move.ownerKind === mk1MoveOwnerKinds.character ? move.ownerId : undefined),
+  kameoId:
+    context.kameoId ?? (move.ownerKind === mk1MoveOwnerKinds.kameo ? move.ownerId : undefined),
+  officialLabel: move.label.EN,
+  notation: move.notation,
+});
+
+const assertExactGameplayEvidence = (
+  sourceIds: Mk1SourceIdList,
+  identity: Mk1ExactMoveIdentityCandidate | undefined,
+  path: readonly string[],
+  issues: Mk1DataValidationIssue[],
+) => {
+  assertKnownSources(sourceIds, path, issues);
+
+  if (!identity) {
+    issues.push(
+      createIssue(
+        "mk1.data.exact_identity_move_missing",
+        "Exact gameplay fact references a missing move identity.",
+        path,
+      ),
+    );
+    return;
+  }
+
+  issues.push(...exactGameplayValidator.validateCandidate({ identity, sourceIds, path }));
+};
+
 const validateCoverage = (issues: Mk1DataValidationIssue[]) => {
   if (mk1Characters.length !== mk1CoverageTargets.expectedCharacterCount) {
     issues.push(
@@ -93,6 +155,30 @@ const validateCoverage = (issues: Mk1DataValidationIssue[]) => {
 };
 
 const validateProvenance = (issues: Mk1DataValidationIssue[]) => {
+  for (const sourceId of mk1ExactGameplayEvidenceSourceIds) {
+    const source = dataSourcesById.get(sourceId);
+
+    if (!source) {
+      issues.push(
+        createIssue(
+          "mk1.data.exact_source_missing",
+          `Exact-evidence source ${sourceId} has no source record.`,
+          ["sources", sourceId],
+        ),
+      );
+      continue;
+    }
+    if (source.kind !== mk1DataSourceKinds.manual && !source.url) {
+      issues.push(
+        createIssue(
+          "mk1.data.exact_source_url_missing",
+          `Exact-evidence web source ${sourceId} must provide a URL.`,
+          ["sources", sourceId],
+        ),
+      );
+    }
+  }
+
   for (const source of mk1DataSources) {
     assertLabel({ EN: source.label, fallback: source.label }, ["sources", source.id], issues);
   }
@@ -106,11 +192,69 @@ const validateProvenance = (issues: Mk1DataValidationIssue[]) => {
     assertKnownSources(kameo.sourceIds, ["kameos", kameo.id], issues);
     assertLabel(kameo.label, ["kameos", kameo.id], issues);
   }
+  const tacticalFactIds: string[] = [];
   for (const movelist of mk1Movelists) {
     assertKnownSources(movelist.sourceIds, ["movelists", movelist.ownerId], issues);
     for (const move of movelist.movelist) {
       assertKnownSources(move.sourceIds, ["moves", move.id], issues);
       assertLabel(move.label, ["moves", move.id], issues);
+      if (move.frameData) {
+        assertExactGameplayEvidence(
+          move.frameData.sourceIds,
+          createExactMoveIdentity(move),
+          ["moves", move.id, "frameData"],
+          issues,
+        );
+      }
+      for (const fact of move.tacticalFacts ?? []) {
+        tacticalFactIds.push(fact.id);
+        assertExactGameplayEvidence(
+          fact.sourceIds,
+          createExactMoveIdentity(move),
+          ["moves", move.id, "tacticalFacts", fact.id],
+          issues,
+        );
+      }
+    }
+  }
+  assertUnique(tacticalFactIds, "Tactical fact", issues);
+  for (const graph of mk1CharacterGraphs) {
+    assertKnownSources(graph.sourceIds, ["graphs", graph.id], issues);
+    for (const edge of graph.edges) {
+      assertKnownSources(edge.sourceIds, ["graphs", graph.id, "edges", edge.id], issues);
+      if (edge.timing) {
+        const move = movesById.get(edge.moveId);
+        assertExactGameplayEvidence(
+          edge.timing.sourceIds,
+          move
+            ? createExactMoveIdentity(move, {
+                characterId: graph.characterId,
+              })
+            : undefined,
+          ["graphs", graph.id, "edges", edge.id, "timing"],
+          issues,
+        );
+      }
+    }
+  }
+  for (const overlay of mk1KameoGraphOverlays) {
+    assertKnownSources(overlay.sourceIds, ["graphOverlays", overlay.id], issues);
+    for (const edge of overlay.edges) {
+      assertKnownSources(edge.sourceIds, ["graphOverlays", overlay.id, "edges", edge.id], issues);
+      if (edge.timing) {
+        const move = movesById.get(edge.moveId);
+        assertExactGameplayEvidence(
+          edge.timing.sourceIds,
+          move
+            ? createExactMoveIdentity(move, {
+                characterId: overlay.characterId,
+                kameoId: overlay.kameoId,
+              })
+            : undefined,
+          ["graphOverlays", overlay.id, "edges", edge.id, "timing"],
+          issues,
+        );
+      }
     }
   }
   for (const combo of mk1SeededCombos) {

@@ -17,12 +17,34 @@ records do not reference known source ids.
 - `community-combo-source`: Aggregated community combo source. Used for community-authored
   notation routes and combo metadata only; it is not proof of in-game legality, frame data, or
   move availability.
+- `netherrealm-patch-notes`: [NetherRealm Studios Mortal Kombat patch
+  notes](https://www.mortalkombat.com/index.php/en-gb/patch-notes). An official candidate for
+  version-matched gameplay evidence.
+- `testyourmight-mkx-frame-data`: [Test Your Might MKX Frame Data
+  Project](https://testyourmight.com/threads/mkx-frame-data-project.55865/post-1889472). A
+  community reference candidate that requires an independent agreeing web source.
+
+## Exact gameplay evidence
+
+- The exact-evidence allowlist is exported as `mkxlExactGameplayEvidenceSourceIds`. A tactical
+  fact, frame-data record, or verified graph timing must carry its own source ids from that list.
+- One official or manually verified source is sufficient. Web-only evidence requires two
+  independent allowlisted sources that agree on the value.
+- External facts must match `XL-final`, character and variation context, official move label, and
+  notation. A conflict or incomplete identity match leaves the fact absent.
+- Absence means unknown. It never means `false`, zero frames, safe, unsafe, or gapless.
 
 ## Policy
 
 - Community combo source rows may seed route notation and high-level combo metadata, but they do
   not replace manual verification for gameplay facts.
-- Frame fields stay absent unless they are checked against in-game/practice data.
+- Frame fields stay absent unless they are checked against allowlisted exact evidence. Present
+  frame data owns its provenance and uses positive startup/active/recovery counts; advantages
+  remain signed.
+- Tactical facts (`attackLevel`, `duckable`, `internalGap`) and verified graph timing
+  (`link`, `cancel`, `juggle`, `gap`) remain absent for ambiguous route-source identities.
+- Generated graph `frameWindow: 0..12` values are layout scaffolding only. They are not exact
+  gameplay data and must not be displayed or promoted into the separate `timing` field.
 - The seeded combo catalog is curated coverage data: at least one valid route per selectable
   character and variation, not every possible community route.
 - Versioned authored data packs live under `src/packs/<pack-id>`. `xl-final` is the active base

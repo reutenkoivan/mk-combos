@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@xyflow/react/dist/style.css";
 
 body {
   position: relative;
@@ -43,6 +44,25 @@ body {
   --ui-warning: #946000;
   --ui-warning-soft: #fff2cf;
   --ui-warning-border: #d8b660;
+  --ui-frame-surface: #171b20;
+  --ui-frame-surface-text: #f5f7f9;
+  --ui-frame-muted-text: #b6bec8;
+  --ui-frame-panel-border: #3b444e;
+  --ui-frame-track: #20262c;
+  --ui-frame-cell-divider: rgb(255 255 255 / 18%);
+  --ui-frame-boundary: #d9e0e7;
+  --ui-frame-startup: #37a56b;
+  --ui-frame-startup-soft: #dff4e8;
+  --ui-frame-startup-border: #2b8757;
+  --ui-frame-active: #d7544f;
+  --ui-frame-active-soft: #f8e2e1;
+  --ui-frame-active-border: #ad3d39;
+  --ui-frame-recovery: #497fc4;
+  --ui-frame-recovery-soft: #e0eafb;
+  --ui-frame-recovery-border: #3566a5;
+  --ui-frame-transition: #d39a3d;
+  --ui-frame-transition-soft: #faedcf;
+  --ui-frame-transition-border: #a87525;
   --ui-radius-control: 6px;
   --ui-radius-surface: 12px;
   --ui-focus-ring: 0 0 0 2px var(--ui-window), 0 0 0 4px var(--ui-accent);
@@ -106,6 +126,25 @@ body {
   --ui-warning: #f4c76a;
   --ui-warning-soft: #3d3019;
   --ui-warning-border: #806733;
+  --ui-frame-surface: #11151a;
+  --ui-frame-surface-text: #f5f7f9;
+  --ui-frame-muted-text: #aeb8c3;
+  --ui-frame-panel-border: #39434d;
+  --ui-frame-track: #1c2228;
+  --ui-frame-cell-divider: rgb(255 255 255 / 20%);
+  --ui-frame-boundary: #cbd4dd;
+  --ui-frame-startup: #3fb875;
+  --ui-frame-startup-soft: #1f3a2b;
+  --ui-frame-startup-border: #57cd8b;
+  --ui-frame-active: #e35c56;
+  --ui-frame-active-soft: #412527;
+  --ui-frame-active-border: #ff827c;
+  --ui-frame-recovery: #568bd0;
+  --ui-frame-recovery-soft: #223247;
+  --ui-frame-recovery-border: #79a9e5;
+  --ui-frame-transition: #dca54b;
+  --ui-frame-transition-soft: #3d311d;
+  --ui-frame-transition-border: #f2c36c;
 }
 
 .mk-combos-ui-root[data-ui-contrast="increased"],
@@ -129,6 +168,27 @@ body {
   position: relative;
   z-index: 1;
   box-shadow: var(--ui-focus-ring);
+}
+
+.mk-combos-ui-root [data-ui-combo-whiteboard-step][data-controller-focused="true"],
+.mk-combos-ui-root [data-ui-combo-whiteboard-connector][data-controller-focused="true"] {
+  box-shadow:
+    inset 0 0 0 2px var(--ui-window),
+    inset 0 0 0 4px var(--ui-accent);
+}
+
+.mk-combos-ui-root [data-frame-cell-run]::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(1.05rem - 1px),
+    var(--ui-frame-cell-divider) calc(1.05rem - 1px),
+    var(--ui-frame-cell-divider) 1.05rem
+  );
 }
 
 .mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-button],

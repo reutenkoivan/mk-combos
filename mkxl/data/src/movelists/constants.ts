@@ -12,6 +12,21 @@ export const mkxlMoveCategories = {
   xray: "xray",
 } as const;
 
+export const mkxlAttackLevels = {
+  high: "high",
+  low: "low",
+  mid: "mid",
+  overhead: "overhead",
+  throw: "throw",
+  unblockable: "unblockable",
+} as const;
+
+export const mkxlMoveTacticalFactKinds = {
+  attackLevel: "attackLevel",
+  duckable: "duckable",
+  internalGap: "internalGap",
+} as const;
+
 export const mkxlInputNotationValues = mkxlXlFinalInputNotationValues;
 
 export const mkxlMoveNotationValues = mkxlInputNotationValues;

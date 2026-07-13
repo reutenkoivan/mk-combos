@@ -26,3 +26,18 @@ export const mk1MoveOwnerKinds = {
   general: "general",
   kameo: "kameo",
 } as const;
+
+export const mk1AttackLevels = {
+  high: "high",
+  low: "low",
+  mid: "mid",
+  overhead: "overhead",
+  throw: "throw",
+  unblockable: "unblockable",
+} as const;
+
+export const mk1MoveTacticalFactKinds = {
+  attackLevel: "attackLevel",
+  duckable: "duckable",
+  internalGap: "internalGap",
+} as const;

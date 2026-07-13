@@ -26,7 +26,9 @@
 
 Процес конструктора є строгим: користувач може обирати тільки `valid next moves`, які повертає active game builder entry point. `free text fallback` не входить у MVP.
 
-`UI-PAGE-006` описує координацію на рівні сторінки. `@mk-combos/ui` рендерить Whiteboard і Frame Meter, а active game business builder adapter володіє frame-aware логікою валідних переходів, replay, `movePath`, `cachedNotation`, runtime state і перевіркою stale state.
+`UI-PAGE-006` описує координацію на рівні сторінки. `@mk-combos/ui` рендерить Whiteboard з internal centered Move Picker composer layer, Frame Meter і Action Bar, а active game business builder adapter володіє frame-aware логікою валідних переходів, replay, `movePath`, `cachedNotation`, runtime state і перевіркою stale state.
+
+Канонічна builder composition є однаковою для всіх responsive modes: повноширинний dense Whiteboard, повноширинний Frame Meter і Action Bar у page-owned sticky/safe-area wrapper. Internal Move Picker належить Whiteboard та portal-иться у viewport-safe centered composer layer із prepared insertion context; page як і раніше володіє sticky/safe-area positioning Action Bar.
 
 Архітектурний ownership описано в [ARCHITECTURE.md](../ARCHITECTURE.md): shared builder presentation не вирішує game-specific rules.
 
@@ -41,7 +43,8 @@
 - передачу character, variation або kameo в процес конструктора;
 - передачу optional `MKXL` stage context: stage, zone і segment;
 - запит prepared builder state у active game builder adapter;
-- рендер `UI-CMP-035` і `UI-CMP-036` із `@mk-combos/ui`;
+- рендер `UI-CMP-035`, `UI-CMP-036` і `UI-CMP-026` із `@mk-combos/ui` у канонічній повноширинній composition;
+- page-owned sticky/safe-area wrapper навколо `UI-CMP-026`;
 - отримання `movePath`, `cachedNotation`, `stageContext` і runtime summary після завершення процесу конструктора;
 - запис custom combo у local state через app-level persistence;
 - показ saved combo summary/card після збереження і відкриття page-level singleton `UI-CMP-021 Add-To-List Dialog`, якщо користувач хоче додати combo у named list;
@@ -97,7 +100,7 @@
 
 ## Анатомія
 
-Розміщення веде користувача від context setup до builder workspace: спершу summary і setup, потім whiteboard/frame meter, нижче action bar і saved summary. Builder module hooks викликаються на сторінці, а overlays лишаються page-owned singleton surfaces.
+Розміщення веде користувача від context setup до builder workspace: спершу summary і setup, далі повноширинні builder surfaces у стабільному порядку, потім saved summary. Builder module hooks викликаються на сторінці, sticky/safe-area wrapper належить сторінці, а overlays лишаються page-owned singleton surfaces.
 
 ```jsx
 <CustomComboBuilderPage ui="UI-PAGE-006">
@@ -113,31 +116,23 @@
         <BuilderContextSetup ui="UI-CMP-023" />
       </Show>
 
-      <Show when={isWide13_6Plus}>
-        <Group name="BuilderWorkspace">
-          <ComboWhiteboard ui="UI-CMP-035">
-            <PathBoardRegion />
-            <InternalMovePickerRegion />
-            <NotationRenderer ui="UI-CMP-015" />
-          </ComboWhiteboard>
+      <Stack name="BuilderWorkspace">
+        <ComboWhiteboard ui="UI-CMP-035" width="full">
+          <DensePathBoardRegion />
+          <NotationRenderer ui="UI-CMP-015" />
+          <Show when={hasMovePickerComposer}>
+            <BodyPortal>
+              <CenteredMovePickerComposer context="before-target-after" />
+            </BodyPortal>
+          </Show>
+        </ComboWhiteboard>
 
-          <ComboFrameMeter ui="UI-CMP-036" />
-        </Group>
-      </Show>
+        <ComboFrameMeter ui="UI-CMP-036" width="full" />
 
-      <Show when={isCompact}>
-        <Stack name="BuilderWorkspace">
-          <ComboWhiteboard ui="UI-CMP-035">
-            <PathBoardRegion />
-            <InternalMovePickerRegion />
-            <NotationRenderer ui="UI-CMP-015" />
-          </ComboWhiteboard>
-
-          <ComboFrameMeter ui="UI-CMP-036" />
-        </Stack>
-      </Show>
-
-      <BuilderActionBar ui="UI-CMP-026" />
+        <PageOwnedStickySafeAreaDock>
+          <BuilderActionBar ui="UI-CMP-026" />
+        </PageOwnedStickySafeAreaDock>
+      </Stack>
 
       <Show when={hasSavedComboSummary}>
         <SavedComboSummary>
@@ -162,8 +157,9 @@
 Правила розміщення:
 
 - `UI-CMP-023` стоїть перед editable workspace і зникає або стискається до summary після підтвердження context.
-- На `desktop` whiteboard є лівою primary region, frame meter - правою inspection region; на `mobile` і `tablet` вони йдуть вертикально.
-- `UI-CMP-026` стоїть нижче workspace або закріплюється внизу viewport, але отримує availability із page-level builder flow.
+- Whiteboard і Frame Meter утворюють повноширинну вертикальну послідовність на `mobile`, `tablet` і `desktop`; side-by-side split не є канонічною composition.
+- Internal Move Picker є частиною `UI-CMP-035` і не займає layout slot: після вибору append/insert/replace target він рендериться у body portal як великий centered composer layer, з horizontal candidates на `desktop`/`tablet` і vertical list на `mobile`.
+- Сторінка обгортає `UI-CMP-026` у sticky bottom dock із safe-area inset. Сам `UI-CMP-026` рендерить dock surface і stable action geometry, але не задає `position: sticky`, viewport offsets або safe-area spacing.
 - `UI-CMP-021` відкривається тільки після saved combo context як singleton overlay, не всередині `UI-CMP-035` або `UI-CMP-036` builder presentation flow.
 
 ### BuilderSurface
@@ -173,7 +169,7 @@ BuilderSurface є page-level container, який рендериться в slot 
 BuilderSurface має:
 
 - показувати режим конструктора: `create`, `duplicate`, `edit` або `repair`;
-- тримати стабільну розмітку для context setup, combo whiteboard із internal `movePicker`, combo frame meter і action bar;
+- тримати стабільну повноширинну вертикальну розмітку для context setup, dense combo whiteboard, frame meter і page-owned sticky/safe-area wrapper навколо action bar; internal Move Picker portal не змінює висоту цієї розмітки;
 - не рендерити catalog, filters, Settings або backup controls;
 - не дозволяти довільне текстове введення move;
 - зберігати поточний стан конструктора під час безпечних route interactions, якщо navigation не підтверджена як cancel.
@@ -244,7 +240,7 @@ Builder request включає:
 | `meter` | Фільтрує meter-cost edges і оновлюється через `effects`. |
 | `stance` | Фільтрує stance-specific moves і stance-changing transitions. |
 | `playerState/opponentState` | Фільтрують grounded, airborne, juggle, knockdown і stun transitions. |
-| `frameContext` | Фільтрує links, cancels і juggles через explicit edge `frameWindow`. |
+| `frameContext` | Фільтрує links, cancels і juggles через explicit edge `frameWindow`; цей legality contract не є UI frame metadata. |
 | `usedInteractables` | Застосовує usage policy `oncePerCombo`, `reusable` або `disabled`. |
 | `initialPath` | Replay-иться через composed graph і повертає invalid reason + valid prefix, якщо став stale. |
 
@@ -273,8 +269,12 @@ Internal `movePicker` region має:
 
 - показувати тільки valid next moves або явно disabled candidates зі зрозумілою причиною, якщо такий UX потрібний;
 - групувати candidates, якщо builder graph має move groups;
+- бути viewport-safe centered composer layer із context strip для move до/після active Whiteboard target: horizontal candidate row на `desktop`/`tablet` і vertical candidate list на `mobile`;
+- бути закритим за замовчуванням, закриватися через explicit close, `Escape`, backdrop або successful candidate proposal та повертати focus до source target;
+- не змінювати document height та не прокручувати сторінку під час відкриття, target switching або focus recovery;
+- не звужувати Whiteboard і не створювати side panel поруч із combo path;
 - підтримувати mouse, touch, keyboard і controller navigation всередині Whiteboard focus;
-- не дозволяти вибрати move, який не проходить `requires`, spacing constraints або `frameWindow`;
+- не дозволяти вибрати move, який не проходить `requires`, spacing constraints або `frameWindow`; synthetic `frameWindow` не виводиться як tactical/frame metadata;
 - не показувати `MKXL` interactable moves без selected stage;
 - показувати тільки interactables поточної stage, zone, segment і distance band;
 - застосовувати active Whiteboard target: append, insert у focused gap або replace focused step;
@@ -289,9 +289,13 @@ Whiteboard має:
 - показувати `movePath`;
 - показувати `cachedNotation`;
 - використовувати [`UI-CMP-015 Notation Renderer`](./UI-CMP-015.md) для поточного `notation display mode`;
+- використовувати повну доступну ширину й dense multi-row path layout, у якому кожен move стоїть близько до попереднього та наступного, а кожен рядок читається зліва направо;
+- показувати на кожній move card ordinal, localized move name, notation і від одного до трьох завжди видимих prepared tactical/meta badges;
+- показувати між сусідніми moves prepared transition metadata з одним або двома badges, наприклад `Gap 2f`, `Cancel`, `Link` або `Juggle`;
+- відрізняти gameplay transition metadata від технічного Whiteboard gap, який є лише insert/drop target;
 - показувати steps і gaps як окремі focus targets;
 - позначати останній доданий move;
-- показувати runtime summary: meter, damage estimate, position і used interactables, якщо builder state це надає;
+- показувати generic prepared runtime/context summary, якщо builder state це надає; damage не є частиною default move-card composition;
 - показувати active empty board, якщо create flow ще не має moves;
 - показувати locked source preview у duplicate/edit/repair flow до підтвердження context;
 - показувати original path, valid prefix і invalid boundary для stale або invalid path;
@@ -305,20 +309,24 @@ Finish action має бути disabled, якщо whiteboard має pending trunc
 
 ### UI-CMP-036 Combo Frame Meter
 
-`UI-CMP-036 Combo Frame Meter` показує interactive frame inspection поруч із whiteboard.
+`UI-CMP-036 Combo Frame Meter` показує повноширинний interactive frame inspection після Whiteboard; internal Move Picker portal не додає окремого блоку між ними.
 
 Frame Meter має:
 
 - показувати `selectedMove`, якщо сфокусований whiteboard step або internal Whiteboard candidate;
 - показувати `wholeCombo`, якщо move focus відсутній;
-- показувати startup, active, recovery, hit/block advantage, cancel window, link/juggle window і meter cost/gain, якщо ці дані доступні;
-- показувати per-step timeline, transition gaps, cumulative frame context і invalid boundaries для whole combo;
+- використовувати інформаційну модель SF6 Frame Meter без копіювання branding: одна видима клітинка на кадр, aligned tracks, compact headline metrics, phase legend і чіткі step boundaries;
+- показувати headline Startup, Total і Advantage та primary grid track для `selectedMove`, а також optional aligned comparison track, якщо prepared snapshot його надає;
+- показувати один continuous cell grid із move sections/boundaries і transition spans для `wholeCombo`;
+- показувати startup, active, recovery, hit/block advantage, cancel window, link/juggle window і meter cost/gain тільки тоді, коли ці дані підтверджені та підготовлені owner-ом;
+- використовувати prepared zero-based `startCell` і positive `cellCount`; component не виводить geometry із raw frame formulas або metadata;
+- рендерити unavailable grid як localized label і readable reason без вигаданих frame cells або synthetic fallback values;
 - відкривати readable segment details через keyboard/controller `confirm` або `openActions`;
 - закривати segment details через `back` і повертати focus на source segment;
 - preview-ити focused Whiteboard candidate без додавання move у path;
 - не емітити edit proposals, graph validation або persistence events.
 
-Frame meter snapshot є derived state з move frame data, edge `frameWindow`, transition `effects`, runtime `frameContext` і replay result. Active game builder adapter лишається source of truth для frame-aware validity.
+Frame meter snapshot є derived state з підтверджених move frame data, verified edge timing, transition `effects`, runtime `frameContext` і replay result. Active game builder adapter лишається source of truth для frame-aware validity. Якщо source coverage, provenance або identity match недостатні, page adapter готує unavailable state; він не підміняє відсутні дані synthetic чи estimated values.
 
 ### UI-CMP-026 Builder Action Bar
 
@@ -330,7 +338,11 @@ Action Bar має:
 - finish combo, якщо path можна завершити;
 - cancel flow;
 - відкрити add-to-list flow через saved combo summary/card після збереження, якщо combo вже створене або оновлене;
-- показувати disabled або busy states під час `saving`.
+- на `desktop` тримати Undo зліва, status у центрі, Cancel і primary Finish справа;
+- на `mobile` віддавати Finish повну ширину, а Undo/Cancel переносити в secondary row;
+- після успішного save використовувати saved CTA у primary slot замість Finish;
+- показувати disabled або busy states під час `saving` і робити весь dock inert;
+- не задавати sticky/safe-area positioning самостійно.
 
 ### UI-CMP-031 Stale/Invalid Combo Marker
 
@@ -384,33 +396,25 @@ Dialog не належить builder presentation components із `@mk-combos/ui
 
 Вхідні дані:
 
-- mode: `emptyActive`, `builderEditable`, `lockedPreview`, `repairReview`, `pendingTruncate` або `savingFrozen`;
-- `movePath`;
-- `cachedNotation`;
-- notation display mode;
-- selected/focused step або gap;
-- valid next moves для internal `movePicker`;
-- selected або focused move candidate;
-- move groups і selected group;
-- invalid або disabled candidate reasons;
-- frame, spacing, stage або interactable usage reasons для unavailable candidates, якщо вони показані disabled;
-- active target mode: append, insert, replace або reorder;
-- current damage/meter/position/frame summary, якщо builder state це надає;
-- stage context і used interactables, якщо path stage-specific;
-- valid prefix, invalid tail, invalid boundary і pending truncate state, якщо builder replay це повертає;
-- invalid marker для path або окремого move.
+- mode: `emptyActive`, `builderEditable`, `detailReadOnly`, `lockedPreview`, `repairReview`, `pendingTruncate` або `savingFrozen`;
+- prepared Whiteboard source зі stable step/gap/candidate/group ids, notation на кожному step/candidate, localized labels, availability/reasons і runtime/context summaries;
+- обов'язкові `step.metaItems` і `candidate.metaItems` з одного-трьох prepared badges; unavailable badge має localized readable reason;
+- prepared transitions між stable `fromStepId`/`toStepId` з одним-двома meta items; технічні Whiteboard gaps лишаються окремими insert/drop targets;
+- boundary index та prepared truncate confirmation, якщо builder replay це повертає;
+- notation display mode і responsive focus data;
+- presentation model із одним discriminated focus target, selected group, local menu, edit target і pick-up/drop state.
 
 Вихідні події:
 
 - request focus step;
 - request focus gap;
 - request focus move candidate;
-- request select valid move candidate;
+- request select valid move candidate як єдиний candidate proposal із discriminated append/insert/replace target;
 - request next або previous move group;
 - request candidate details для move, якщо page-level UI це підтримує;
 - request open move details, якщо це підтримано page-level flow;
 - request open local step/gap menu;
-- request append, insert, replace, remove, undo-to-step або pick up/drop reorder як edit proposal;
+- request remove, undo-to-step або pick up/drop reorder як окремий path proposal;
 - request confirm або cancel truncate;
 - request repair from valid prefix.
 
@@ -429,14 +433,13 @@ Dialog не належить builder presentation components із `@mk-combos/ui
 
 Вхідні дані:
 
-- mode: `selectedMove`, `wholeCombo`, `segmentDetailsOpen`, `pendingTruncate`, `repairReview` або `savingFrozen`;
-- frame meter snapshot для selected move або whole combo;
-- focused whiteboard step або focused Whiteboard candidate, якщо є;
-- selected timeline segment;
-- startup/active/recovery, advantage, cancel/link/juggle windows і meter deltas, якщо доступні;
-- transition gaps, cumulative frame context і runtime meter after segment;
-- valid prefix, invalid transition, invalid tail і readable invalid reason, якщо replay повернув stale або pending truncate state;
-- controller navigation focus state.
+- lifecycle: `ready`, `pendingTruncate`, `repairReview` або `savingFrozen`;
+- scope: `selectedMove` або `wholeCombo`;
+- details: discriminated `closed` або `open` state;
+- prepared snapshot із discriminated grid state `available` або `unavailable`, labels, summaries, optional numeric frame values, validity/reasons і matching Whiteboard step ids;
+- available grid зі спільним total `cellCount`, primary track, optional aligned comparison track, zero-based segment `startCell`, positive segment `cellCount`, move sections/boundaries і prepared legend;
+- unavailable grid із localized label і readable reason без cell geometry;
+- discriminated Whiteboard inspection target, selected timeline segment і responsive/controller focus data.
 
 Вихідні події:
 
@@ -452,6 +455,7 @@ Dialog не належить builder presentation components із `@mk-combos/ui
 - не мутує `movePath`;
 - не емітить whiteboard edit proposals;
 - не валідує graph самостійно;
+- не обчислює cell positions із raw metadata/formulas і не створює frame values за відсутності підтверджених data;
 - не зберігає custom combo;
 - не змінює seeded data.
 
@@ -459,11 +463,11 @@ Dialog не належить builder presentation components із `@mk-combos/ui
 
 Вхідні дані:
 
-- can undo;
-- can finish;
-- can cancel;
-- save state;
+- prepared action descriptors з availability і readable reason;
+- save state: `idle`, `saving`, `saveError` або `saved`;
 - dirty state;
+- responsive mode;
+- optional status;
 - optional saved custom combo id для add-to-list action.
 
 Вихідні події:
@@ -479,6 +483,7 @@ Dialog не належить builder presentation components із `@mk-combos/ui
 - не зберігає custom combo самостійно;
 - не виконує localStorage write;
 - не вирішує, чи path валідний;
+- не володіє sticky viewport positioning або safe-area inset; їх задає wrapper `UI-PAGE-006`;
 - не читає controller input напряму.
 
 ### UI-CMP-015 Notation Renderer
@@ -587,7 +592,7 @@ Dialog не належить builder presentation components із `@mk-combos/ui
 - `UI-CMP-023 Builder Context Setup` активний;
 - `MKXL` context може показати optional stage, zone і segment controls;
 - `UI-CMP-035 Combo Whiteboard` показує empty active board для create flow;
-- `UI-CMP-036 Combo Frame Meter` показує empty runtime frame summary або locked source timeline, якщо source path передано;
+- `UI-CMP-036 Combo Frame Meter` показує empty/unavailable prepared frame state або locked source grid, якщо source path передано і exact data підтверджені;
 - якщо flow почався через duplicate, edit або repair, whiteboard показує locked source preview до підтвердження context;
 - internal `movePicker` у Whiteboard ще не показує next moves або показує disabled/loading state;
 - finish action недоступний.
@@ -615,7 +620,7 @@ Builder має graph input, а Whiteboard може показати старто
 - `MKXL` interactables показуються тільки якщо selected stage і spatial context дають до них доступ;
 - whiteboard показує empty path або replayed initial path;
 - whiteboard має append target, якщо focused step або gap не вибрані;
-- frame meter показує whole combo timeline або empty runtime frame summary;
+- frame meter показує continuous whole-combo grid або truthful unavailable state без synthetic cells;
 - action bar показує доступні actions.
 
 ### `selectingMove`
@@ -641,6 +646,7 @@ Builder має graph input, а Whiteboard може показати старто
 - поточний `movePath` і `cachedNotation` видимі;
 - internal `movePicker` candidates доступні як focus targets, якщо mode підтримує builder interaction;
 - steps і gaps доступні як окремі focus targets;
+- move cards показують один-три tactical/meta badges, а gameplay transitions між ними — один-два transition badges;
 - останній move позначений;
 - notation renderer відповідає active notation display mode;
 - `confirm` або `openActions` на step/gap відкриває local context menu;
@@ -657,13 +663,13 @@ Builder має graph input, а Whiteboard може показати старто
 Очікуваний UI:
 
 - active scope є `selectedMove` або `wholeCombo`;
-- timeline segments доступні як focus targets;
+- один roving segment navigation model надає focus targets для prepared segments; окремі frame cells є presentation-only і не потрапляють у tab order;
 - `navLeft` і `navRight` рухають focus між segments;
 - `navUp` і `navDown` переводять focus між Whiteboard, Frame Meter і Action Bar відповідно до layout;
 - `confirm` або `openActions` на segment відкриває readable segment details;
 - Frame Meter не виконує append, insert, replace, remove, reorder або save.
 
-### `segmentDetailsOpen`
+### Frame Meter details `open`
 
 Frame Meter показує readable details для active timeline segment.
 
@@ -671,6 +677,7 @@ Frame Meter показує readable details для active timeline segment.
 
 - details panel є локальним disclosure у Frame Meter, не route і не modal;
 - panel показує segment name, frame range, startup/active/recovery або transition gap, advantage/cancel/link window і invalid/unavailable reason, якщо він є;
+- details, annotations і summary стоять поза horizontal grid scroller та не обрізаються його overflow;
 - `back` закриває details і повертає focus на source segment;
 - довгий текст details доступний для keyboard/controller читання без pointer-only scroll.
 
@@ -732,7 +739,7 @@ Custom combo стало stale після оновлення move graph.
 - finish і cancel можуть бути disabled або busy;
 - повторне save недоступне до завершення operation;
 - whiteboard переходить у `savingFrozen` і не губить path.
-- frame meter переходить у `savingFrozen`, лишає timeline/details видимими і не мутує path.
+- frame meter lifecycle переходить у `savingFrozen`; active scope і details state зберігаються, timeline/details лишаються видимими й не мутують path.
 
 ### `saveError`
 
@@ -781,7 +788,7 @@ Combo створене або оновлене.
 3. Сторінка формує builder request для active game/character/context.
 4. Active game builder adapter формує builder state.
 5. `UI-CMP-035 Combo Whiteboard` показує empty active board, append target і internal valid стартові candidates.
-6. Focus/selection candidate відбувається всередині Whiteboard.
+6. Focus/selection candidate відбувається в internal centered Move Picker composer із видимим контекстом до/після active edit target і без viewport jump.
 7. Користувач складає path через valid frame-aware transitions.
 8. Якщо whiteboard edit proposal повертає valid prefix і invalid tail, finish блокується до confirmation або repair.
 9. Finish action зберігає custom combo у local state.
@@ -882,6 +889,8 @@ Controller commands не мають:
 - Internal `movePicker` region не є окремою page-level focus zone.
 - Focus у combo whiteboard має бути помітним для candidates, steps і gaps.
 - Focus у combo frame meter має бути помітним для timeline segments.
+- Individual frame cells не є focus targets; segment navigation використовує один roving focus model.
+- Frame grid прокручується тільки горизонтально, а summary, annotations, invalid/unavailable reasons і details лишаються поза scroller та не обрізаються.
 - Local whiteboard menu має закриватися через `Escape`/`back` і повертати focus на source step або gap.
 - Frame meter segment details мають відкриватися через `confirm`/`openActions`, закриватися через `Escape`/`back` і повертати focus на source segment.
 - Segment details не мають бути hover-only tooltip.
@@ -889,10 +898,12 @@ Controller commands не мають:
 - `UI-CMP-031 Stale/Invalid Combo Marker` не має покладатися тільки на колір.
 - Invalid boundary і pending truncate у whiteboard не мають покладатися тільки на колір.
 - Invalid boundary і unavailable segment у frame meter не мають покладатися тільки на колір.
+- Unavailable exact frame data має visible localized reason; UI не показує порожню клітинкову geometry як нібито відомі frames.
 - Busy state під час `loadingGraph` і `saving` має бути оголошений assistive technologies.
 - Cancel confirmation має повертати focus до safe builder control після закриття.
 - Page-level add-to-list dialog має керувати focus і повертати його до source saved combo summary/card після закриття.
 - Controller hints не є єдиним способом зрозуміти доступні дії.
+- Interactive controller/touch targets на `mobile` і `tablet` мають бути не менші за `44×44px`.
 
 ## Критерії приймання
 
@@ -904,14 +915,19 @@ Controller commands не мають:
 - Builder request включає `gameId`, character, variation або kameo, optional stage context, start runtime state, optional initial path і gameVersion.
 - Builder без selected `MKXL` stage не показує interactable moves.
 - Builder із selected `MKXL` stage показує тільки interactables поточної карти, zone, segment і distance band.
-- Frame-aware transitions проходять тільки через explicit edge `frameWindow`.
+- Frame-aware transitions проходять тільки через verified timing contract active game builder adapter-а; synthetic timing не використовується як presentation fact.
+- Канонічна document-flow composition є повноширинною вертикальною послідовністю: dense Whiteboard, Frame Meter, page-owned sticky/safe-area wrapper із Action Bar.
+- Internal Move Picker є centered composer layer: horizontal candidate row на `desktop`/`tablet` і vertical list на `mobile`; context strip показує місце майбутньої вставки.
 - `UI-CMP-035 Combo Whiteboard` показує selected path у create, duplicate, edit і repair flows.
+- Whiteboard move cards показують один-три prepared tactical/meta badges, а transitions — один-два prepared transition badges.
 - `UI-CMP-036 Combo Frame Meter` показує selected move або whole combo timeline у create, duplicate, edit і repair flows.
+- Available Frame Meter використовує спільний cell grid із zero-based `startCell`, positive `cellCount`, primary track, optional comparison track, move boundaries і prepared legend.
+- Unavailable Frame Meter показує localized label/reason і не створює synthetic cells.
 - Create flow показує empty active whiteboard до першого move.
 - Duplicate/edit/repair flow показує locked source preview до підтвердження context.
 - Internal `movePicker` region у Whiteboard показує header, group selector, candidate list, empty state і footer hints.
 - Whiteboard step focus і gap focus мають різну семантику.
-- Focus на Whiteboard candidate preview-ить frame values без додавання move.
+- Focus на Whiteboard candidate preview-ить prepared frame snapshot без додавання move; за відсутності підтверджених exact values snapshot є unavailable з readable reason.
 - Whiteboard candidate selection застосовує active whiteboard target для append, insert або replace.
 - Disabled candidate не створює proposal.
 - Group switching у Whiteboard не змінює `movePath`.
@@ -921,6 +937,7 @@ Controller commands не мають:
 - Controller може сфокусувати Frame Meter segment і відкрити readable segment details.
 - `back` із segment details повертає focus на source segment.
 - Frame Meter не емітить edit proposals або persistence events.
+- Action Bar не володіє sticky positioning або safe-area inset.
 - Після finish сторінка отримує `movePath`, `cachedNotation`, `stageContext` і runtime summary.
 - Сторінка зберігає custom combo у local state через app-level persistence.
 - Seeded combo лишається read-only під час duplicate flow.
@@ -935,10 +952,13 @@ Controller commands не мають:
 - Top Bar dropdown action відкриває `UI-PAGE-006 Custom Combo Builder`.
 - Builder із нуля показує `contextSetup`, а після підтвердження context переходить у `ready`.
 - Internal `movePicker` у Whiteboard показує valid стартові candidates.
+- На `desktop`/`tablet` internal Move Picker portal містить horizontal candidate row; на `mobile` — vertical list. В обох випадках великий centered layer clamped до viewport, а target показаний у prepared before/target/after context strip.
 - Вибір Whiteboard candidate оновлює `movePath`, `cachedNotation`, runtime state і valid next moves.
-- Focus на Whiteboard candidate preview-ить frame values у `UI-CMP-036 Combo Frame Meter` без додавання move.
+- Focus на Whiteboard candidate preview-ить prepared frame snapshot у `UI-CMP-036 Combo Frame Meter` без додавання move; unavailable data не підміняються synthetic values.
 - Create flow показує empty active whiteboard із append target.
-- Create flow показує empty runtime frame summary у `UI-CMP-036 Combo Frame Meter`.
+- Create flow без підтверджених exact frame data показує unavailable state із readable reason у `UI-CMP-036 Combo Frame Meter`.
+- Dense Whiteboard із 8–12 moves переносить cards на наступні рядки без overlap/clipping і зберігає left-to-right reading order.
+- Whiteboard показує один-три badges на кожній move/candidate card та один-два meta items на prepared transition.
 - Duplicate або edit flow показує locked source preview до context confirmation.
 - Invalid або disabled move не додається в path.
 - Step focus + replace через Whiteboard candidate selection replay-ить full path.
@@ -950,10 +970,15 @@ Controller commands не мають:
 - Cancel truncate повертає path до стану перед proposal.
 - Builder без selected `MKXL` stage не показує interactable moves.
 - Builder із selected `MKXL` stage показує тільки interactables поточної карти, zone, segment і distance band.
-- Edge, який не проходить `frameWindow`, не доступний у valid next moves.
+- Edge, який не проходить verified timing contract active game builder adapter-а, не доступний у valid next moves.
 - `builderUndoMove` відкочує останній move.
 - `builderNextGroup` і `builderPreviousGroup` перемикають internal Whiteboard move groups.
 - Controller focus переходить у Frame Meter і між timeline segments.
+- Individual frame cells не створюють сотні tab stops.
+- Selected-move grid вирівнює primary та optional comparison tracks за спільними cells.
+- Whole-combo grid показує один continuous timeline зі step boundaries і transition spans.
+- Довгий grid прокручується горизонтально без vertical clipping summary, annotations або details.
+- Unavailable grid не рендерить synthetic frame cells.
 - `confirm` відкриває segment details.
 - `back` закриває segment details і повертає focus на source segment.
 - `noValidNextMoves` показує empty state і дозволяє finish, якщо path валідний.
@@ -970,18 +995,12 @@ Controller commands не мають:
 - Після complete користувач може відкрити page-level singleton `UI-CMP-021 Add-To-List Dialog` через saved combo summary або [`UI-CMP-011`](./UI-CMP-011.md) context.
 - `free text fallback` недоступний.
 
-## Відкриті уточнення
-
-- Точний вигляд move groups буде визначено під час UI реалізації.
-- Точний copy для invalid reasons має відповідати shared system message стилю.
-- Builder deep links використовують generic route `/:gameId/builder`; game-specific query або state serialization належить active game business entry point.
-
 ## Канонічний Responsive і Controller-only Contract
 
 Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
 
-- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `mobile` використовує vertical-first navigation, vertical candidate list у centered Move Picker layer, edge-safe overlays і controller targets не менші за `44×44px`;
+- `tablet` використовує повноширинну vertical builder composition, horizontal candidates у centered Move Picker layer і explicit directional neighbors для portrait/landscape;
+- `desktop` використовує повноширинну vertical builder composition, dense wrapped Whiteboard, horizontal candidates у centered Move Picker layer і spatial row/column navigation;
 - `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
 - native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

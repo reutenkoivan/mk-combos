@@ -1,6 +1,6 @@
 import { definitiveMk1Dataset } from "../packs/definitive";
 
-export { mk1GraphNodeKinds } from "./constants";
+export { mk1GraphNodeKinds, mk1GraphTimingKinds } from "./constants";
 
 export const mk1CharacterGraphs = definitiveMk1Dataset.characterGraphs;
 

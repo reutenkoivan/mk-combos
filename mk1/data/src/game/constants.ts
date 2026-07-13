@@ -4,3 +4,8 @@ export const mk1DataSourceKinds = {
   official: "official",
   reference: "reference",
 } as const;
+
+export const mk1ExactGameplayEvidenceSourceIds = [
+  "in-game-practice-mode",
+  "netherrealm-patch-notes",
+] as const;

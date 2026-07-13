@@ -1,12 +1,21 @@
 import { definitiveMk1Dataset } from "../packs/definitive";
 import {
+  mk1AttackLevels,
   mk1InputNotationValues,
   mk1MoveCategories,
   mk1MoveNotationValues,
   mk1MoveOwnerKinds,
+  mk1MoveTacticalFactKinds,
 } from "./constants";
 
-export { mk1InputNotationValues, mk1MoveCategories, mk1MoveNotationValues, mk1MoveOwnerKinds };
+export {
+  mk1AttackLevels,
+  mk1InputNotationValues,
+  mk1MoveCategories,
+  mk1MoveNotationValues,
+  mk1MoveOwnerKinds,
+  mk1MoveTacticalFactKinds,
+};
 
 export const mk1Movelists = definitiveMk1Dataset.movelists;
 

@@ -1,9 +1,44 @@
 import { z } from "zod/v4";
 
 import { MkxlIdSchema, MkxlLabelSchema, MkxlSourceIdListSchema } from "../shared/schema";
-import { mkxlGraphNodeKinds } from "./constants";
+import { mkxlGraphNodeKinds, mkxlGraphTimingKinds } from "./constants";
 
 export const MkxlGraphNodeKindSchema = z.enum(mkxlGraphNodeKinds);
+
+export const MkxlGraphTimingKindSchema = z.enum(mkxlGraphTimingKinds);
+
+const mkxlGraphTimingBaseShape = {
+  frameCount: z.number().int().positive(),
+  afterHitIndex: z.number().int().positive().optional(),
+  sourceIds: MkxlSourceIdListSchema,
+} as const;
+
+export const MkxlGraphTimingSchema = z.discriminatedUnion("kind", [
+  z
+    .object({
+      ...mkxlGraphTimingBaseShape,
+      kind: z.literal(mkxlGraphTimingKinds.link),
+    })
+    .strict(),
+  z
+    .object({
+      ...mkxlGraphTimingBaseShape,
+      kind: z.literal(mkxlGraphTimingKinds.cancel),
+    })
+    .strict(),
+  z
+    .object({
+      ...mkxlGraphTimingBaseShape,
+      kind: z.literal(mkxlGraphTimingKinds.juggle),
+    })
+    .strict(),
+  z
+    .object({
+      ...mkxlGraphTimingBaseShape,
+      kind: z.literal(mkxlGraphTimingKinds.gap),
+    })
+    .strict(),
+]);
 
 export const MkxlGraphNodeSchema = z
   .object({
@@ -28,6 +63,7 @@ export const MkxlGraphEdgeSchema = z
       })
       .strict()
       .optional(),
+    timing: MkxlGraphTimingSchema.optional(),
     tags: z.array(z.string().min(1)).readonly(),
     sourceIds: MkxlSourceIdListSchema,
   })

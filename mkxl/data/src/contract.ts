@@ -1,16 +1,24 @@
 import { mkxlComboDifficulties, mkxlComboPositions, mkxlComboRouteTypes } from "./combos/value";
 import { mkxlCoverageTargets } from "./coverage/value";
-import { mkxlDataSourceIds, mkxlDataSourceKinds, mkxlGame } from "./game/value";
+import {
+  mkxlDataSourceIds,
+  mkxlDataSourceKinds,
+  mkxlExactGameplayEvidenceSourceIds,
+  mkxlGame,
+} from "./game/value";
 import {
   mkxlGraphNodeKinds,
+  mkxlGraphTimingKinds,
   mkxlStageGraphFragmentIds,
   mkxlVariationGraphIds,
 } from "./graph/value";
 import {
+  mkxlAttackLevels,
   mkxlInputNotationValues,
   mkxlMoveCategories,
   mkxlMoveIds,
   mkxlMoveNotationValues,
+  mkxlMoveTacticalFactKinds,
 } from "./movelists/value";
 import { mkxlCharacterIds, mkxlCharacterReleaseKinds } from "./roster/value";
 import { mkxlPickerSlotStatuses } from "./shared/value";
@@ -72,19 +80,23 @@ export const mkCombosMkxlData = {
   groups: mkxlDataContractGroups,
   coverage: mkxlCoverageTargets,
   valueSets: {
+    mkxlAttackLevels,
     mkxlCharacterIds,
     mkxlComboDifficulties,
     mkxlComboPositions,
     mkxlComboRouteTypes,
     mkxlDataSourceIds,
     mkxlDataSourceKinds,
+    mkxlExactGameplayEvidenceSourceIds,
     mkxlGraphNodeKinds,
+    mkxlGraphTimingKinds,
     mkxlInputNotationValues,
     mkxlInteractableIds,
     mkxlInteractableUsagePolicies,
     mkxlMoveCategories,
     mkxlMoveIds,
     mkxlMoveNotationValues,
+    mkxlMoveTacticalFactKinds,
     mkxlCharacterReleaseKinds,
     mkxlPickerSlotStatuses,
     mkxlStageGraphFragmentIds,

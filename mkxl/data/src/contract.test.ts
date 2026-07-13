@@ -17,36 +17,54 @@ import * as contractEntry from "@mk-combos/mkxl-data/contract";
 import { mkCombosMkxlData, mkxlDataContractGroups } from "@mk-combos/mkxl-data/contract";
 import { validateMkxlData } from "@mk-combos/mkxl-data/coverage/runtime";
 import { mkxlCoverageTargets } from "@mk-combos/mkxl-data/coverage/value";
-import { MkxlDataSourceKindSchema } from "@mk-combos/mkxl-data/game/schema";
+import { MkxlDataSourceKindSchema, MkxlDataSourceSchema } from "@mk-combos/mkxl-data/game/schema";
 import type { MkxlDataSourceKind } from "@mk-combos/mkxl-data/game/type";
-import { mkxlDataSourceKinds, mkxlDataSources, mkxlGame } from "@mk-combos/mkxl-data/game/value";
-import { MkxlGraphNodeKindSchema } from "@mk-combos/mkxl-data/graph/schema";
-import type { MkxlGraphNode, MkxlGraphNodeKind } from "@mk-combos/mkxl-data/graph/type";
+import {
+  mkxlDataSourceKinds,
+  mkxlDataSources,
+  mkxlExactGameplayEvidenceSourceIds,
+  mkxlGame,
+} from "@mk-combos/mkxl-data/game/value";
+import { MkxlGraphNodeKindSchema, MkxlGraphTimingSchema } from "@mk-combos/mkxl-data/graph/schema";
+import type {
+  MkxlGraphNode,
+  MkxlGraphNodeKind,
+  MkxlGraphTiming,
+  MkxlGraphTimingKind,
+} from "@mk-combos/mkxl-data/graph/type";
 import {
   mkxlGraphNodeKinds,
+  mkxlGraphTimingKinds,
   mkxlStageGraphFragments,
   mkxlVariationGraphs,
 } from "@mk-combos/mkxl-data/graph/value";
 import {
   MkxlInputNotationValueSchema,
+  MkxlMoveFrameDataSchema,
   MkxlMoveNotationValueSchema,
+  MkxlMoveTacticalFactSchema,
 } from "@mk-combos/mkxl-data/movelists/schema";
 import type {
+  MkxlAttackLevel,
   MkxlInputNotationValue,
   MkxlMove,
   MkxlMoveAvailability,
   MkxlMoveCategory,
   MkxlMoveFrameData,
   MkxlMoveNotationValue,
+  MkxlMoveTacticalFact,
+  MkxlMoveTacticalFactKind,
   MkxlMoveTree,
 } from "@mk-combos/mkxl-data/movelists/type";
 import {
+  mkxlAttackLevels,
   mkxlInputNotationValues,
   mkxlInputsRegistry,
   mkxlMoveCategories,
   mkxlMovelists,
   mkxlMoveNotationValues,
   mkxlMoves,
+  mkxlMoveTacticalFactKinds,
 } from "@mk-combos/mkxl-data/movelists/value";
 import { MkxlCharacterReleaseKindSchema } from "@mk-combos/mkxl-data/roster/schema";
 import type { MkxlCharacterReleaseKind } from "@mk-combos/mkxl-data/roster/type";
@@ -90,13 +108,18 @@ const acceptsPublicTypes = (_contract: {
   comboRouteType: MkxlComboRouteType;
   comboStageContext: MkxlComboStageContext;
   dataSourceKind: MkxlDataSourceKind;
+  graphTiming: MkxlGraphTiming;
+  graphTimingKind: MkxlGraphTimingKind;
   graphNode: MkxlGraphNode;
   graphNodeKind: MkxlGraphNodeKind;
   inputNotationValue: MkxlInputNotationValue;
+  attackLevel: MkxlAttackLevel;
   move: MkxlMove;
   moveAvailability: MkxlMoveAvailability;
   moveCategory: MkxlMoveCategory;
   moveFrameData: MkxlMoveFrameData;
+  moveTacticalFact: MkxlMoveTacticalFact;
+  moveTacticalFactKind: MkxlMoveTacticalFactKind;
   moveNotationValue: MkxlMoveNotationValue;
   moveTree: MkxlMoveTree;
   id: MkxlId;
@@ -171,13 +194,44 @@ describe("@mk-combos/mkxl-data contract", () => {
       communityComboSource: "communityComboSource",
       crossCheck: "crossCheck",
       manualVerification: "manualVerification",
+      official: "official",
       reference: "reference",
+    });
+    expect(mkxlExactGameplayEvidenceSourceIds).toEqual([
+      "in-game-practice-mode",
+      "netherrealm-patch-notes",
+      "testyourmight-mkx-frame-data",
+    ]);
+    expect(mkxlDataSources).toContainEqual({
+      id: "testyourmight-mkx-frame-data",
+      label: "Test Your Might MKX Frame Data Project",
+      url: "https://testyourmight.com/threads/mkx-frame-data-project.55865/post-1889472",
+      kind: "reference",
     });
     expect(mkxlGraphNodeKinds).toEqual({
       end: "end",
       move: "move",
       stageInteraction: "stageInteraction",
       start: "start",
+    });
+    expect(mkxlGraphTimingKinds).toEqual({
+      cancel: "cancel",
+      gap: "gap",
+      juggle: "juggle",
+      link: "link",
+    });
+    expect(mkxlAttackLevels).toEqual({
+      high: "high",
+      low: "low",
+      mid: "mid",
+      overhead: "overhead",
+      throw: "throw",
+      unblockable: "unblockable",
+    });
+    expect(mkxlMoveTacticalFactKinds).toEqual({
+      attackLevel: "attackLevel",
+      duckable: "duckable",
+      internalGap: "internalGap",
     });
     expect(mkxlInputNotationValues).toEqual({
       amplify: "AMP",
@@ -239,7 +293,13 @@ describe("@mk-combos/mkxl-data contract", () => {
       true,
     );
     expect(mkCombosMkxlData.valueSets.mkxlDataSourceKinds).toBe(mkxlDataSourceKinds);
+    expect(mkCombosMkxlData.valueSets.mkxlExactGameplayEvidenceSourceIds).toBe(
+      mkxlExactGameplayEvidenceSourceIds,
+    );
     expect(mkCombosMkxlData.valueSets.mkxlGraphNodeKinds).toBe(mkxlGraphNodeKinds);
+    expect(mkCombosMkxlData.valueSets.mkxlGraphTimingKinds).toBe(mkxlGraphTimingKinds);
+    expect(mkCombosMkxlData.valueSets.mkxlAttackLevels).toBe(mkxlAttackLevels);
+    expect(mkCombosMkxlData.valueSets.mkxlMoveTacticalFactKinds).toBe(mkxlMoveTacticalFactKinds);
     expect(mkCombosMkxlData.valueSets.mkxlCharacterReleaseKinds).toBe(mkxlCharacterReleaseKinds);
     expect(mkCombosMkxlData.valueSets.mkxlInteractableUsagePolicies).toBe(
       mkxlInteractableUsagePolicies,
@@ -275,6 +335,22 @@ describe("@mk-combos/mkxl-data contract", () => {
       "general run notation",
     );
     const moveIds = new Set(mkxlMoves.map((move) => move.id));
+    const graphTiming = MkxlGraphTimingSchema.parse({
+      kind: mkxlGraphTimingKinds.link,
+      frameCount: 2,
+      sourceIds: ["in-game-practice-mode"],
+    });
+    const moveFrameData = MkxlMoveFrameDataSchema.parse({
+      startup: 7,
+      blockAdvantage: -2,
+      sourceIds: ["in-game-practice-mode"],
+    });
+    const moveTacticalFact = MkxlMoveTacticalFactSchema.parse({
+      id: "fact:test:duckable",
+      kind: mkxlMoveTacticalFactKinds.duckable,
+      value: true,
+      sourceIds: ["in-game-practice-mode"],
+    });
 
     expect(Array.isArray(firstMovelist.moves)).toBe(false);
     expect(firstMove.notation).toEqual(["1", "1", "2"]);
@@ -299,13 +375,18 @@ describe("@mk-combos/mkxl-data contract", () => {
         comboRouteType: firstCombo.metadata.routeType,
         comboStageContext: firstCombo.stageContext,
         dataSourceKind: mkxlDataSourceKinds.reference,
+        graphTiming,
+        graphTimingKind: mkxlGraphTimingKinds.link,
         graphNode: firstGraphNode,
         graphNodeKind: mkxlGraphNodeKinds.move,
         inputNotationValue: firstInputNotationValue,
+        attackLevel: mkxlAttackLevels.high,
         move: firstMove,
         moveAvailability: firstMove.availability,
         moveCategory: firstMove.category,
-        moveFrameData: { startup: 1 },
+        moveFrameData,
+        moveTacticalFact,
+        moveTacticalFactKind: mkxlMoveTacticalFactKinds.duckable,
         moveNotationValue: generalRunMoveNotationValue,
         moveTree: firstMovelist.moves,
         id: firstCharacter.id,
@@ -322,6 +403,51 @@ describe("@mk-combos/mkxl-data contract", () => {
         variation: firstVariation,
       }),
     ).toBe(true);
+  });
+
+  it("keeps exact tactical, frame, timing, and URL schemas strict", () => {
+    expect(
+      MkxlMoveTacticalFactSchema.safeParse({
+        id: "fact:test:gap",
+        kind: mkxlMoveTacticalFactKinds.internalGap,
+        value: 2,
+        afterHitIndex: 1,
+        sourceIds: ["in-game-practice-mode"],
+      }).success,
+    ).toBe(true);
+    expect(
+      MkxlMoveTacticalFactSchema.safeParse({
+        id: "fact:test:gap",
+        kind: mkxlMoveTacticalFactKinds.internalGap,
+        value: 0,
+        sourceIds: ["in-game-practice-mode"],
+      }).success,
+    ).toBe(false);
+    expect(MkxlMoveFrameDataSchema.safeParse({ startup: 7 }).success).toBe(false);
+    expect(
+      MkxlMoveFrameDataSchema.safeParse({ sourceIds: ["in-game-practice-mode"] }).success,
+    ).toBe(false);
+    expect(
+      MkxlMoveFrameDataSchema.safeParse({
+        active: 0,
+        sourceIds: ["in-game-practice-mode"],
+      }).success,
+    ).toBe(false);
+    expect(
+      MkxlGraphTimingSchema.safeParse({
+        kind: mkxlGraphTimingKinds.gap,
+        frameCount: 0,
+        sourceIds: ["in-game-practice-mode"],
+      }).success,
+    ).toBe(false);
+    expect(
+      MkxlDataSourceSchema.safeParse({
+        id: "invalid-url",
+        label: "Invalid URL",
+        url: "not-a-url",
+        kind: mkxlDataSourceKinds.reference,
+      }).success,
+    ).toBe(false);
   });
 
   it("keeps validation importable from the public runtime subpath", () => {

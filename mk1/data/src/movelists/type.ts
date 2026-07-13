@@ -1,6 +1,7 @@
 import type { z } from "zod/v4";
 
 import type {
+  Mk1AttackLevelSchema,
   Mk1InputNotationValueSchema,
   Mk1MoveAvailabilitySchema,
   Mk1MoveCategorySchema,
@@ -9,8 +10,12 @@ import type {
   Mk1MoveNotationValueSchema,
   Mk1MoveOwnerKindSchema,
   Mk1MoveSchema,
+  Mk1MoveTacticalFactKindSchema,
+  Mk1MoveTacticalFactSchema,
   Mk1MoveTreeSchema,
 } from "./schema";
+
+export type Mk1AttackLevel = z.output<typeof Mk1AttackLevelSchema>;
 
 export type Mk1InputNotationValue = z.output<typeof Mk1InputNotationValueSchema>;
 
@@ -21,6 +26,10 @@ export type Mk1MoveCategory = z.output<typeof Mk1MoveCategorySchema>;
 export type Mk1MoveOwnerKind = z.output<typeof Mk1MoveOwnerKindSchema>;
 
 export type Mk1MoveAvailability = z.output<typeof Mk1MoveAvailabilitySchema>;
+
+export type Mk1MoveTacticalFactKind = z.output<typeof Mk1MoveTacticalFactKindSchema>;
+
+export type Mk1MoveTacticalFact = z.output<typeof Mk1MoveTacticalFactSchema>;
 
 export type Mk1MoveFrameData = z.output<typeof Mk1MoveFrameDataSchema>;
 

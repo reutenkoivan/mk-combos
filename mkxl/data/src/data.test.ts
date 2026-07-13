@@ -3,6 +3,13 @@ import { join, relative, sep } from "node:path";
 import { mkxlSeededCombos } from "@mk-combos/mkxl-data/combos/value";
 import { validateMkxlData } from "@mk-combos/mkxl-data/coverage/runtime";
 import { mkxlCoverageTargets } from "@mk-combos/mkxl-data/coverage/value";
+import type { MkxlDataSource } from "@mk-combos/mkxl-data/game/type";
+import {
+  mkxlDataSourceKinds,
+  mkxlDataSources,
+  mkxlExactGameplayEvidenceSourceIds,
+} from "@mk-combos/mkxl-data/game/value";
+import { mkxlStageGraphFragments, mkxlVariationGraphs } from "@mk-combos/mkxl-data/graph/value";
 import {
   mkxlInputNotationValues,
   mkxlMoveCategories,
@@ -766,6 +773,41 @@ describe("MKXL seeded data", () => {
         for (const notationValue of notationValues) {
           expect(moveNotationValues.has(notationValue)).toBe(true);
         }
+      }
+    }
+  });
+
+  it("keeps exact gameplay fields unavailable on ambiguous route-source data", () => {
+    expect(mkxlMoves.every((move) => move.frameData === undefined)).toBe(true);
+    expect(mkxlMoves.every((move) => move.tacticalFacts === undefined)).toBe(true);
+    expect(
+      mkxlVariationGraphs.every((graph) => graph.edges.every((edge) => edge.timing === undefined)),
+    ).toBe(true);
+    expect(
+      mkxlStageGraphFragments.every((fragment) =>
+        fragment.edges.every((edge) => edge.timing === undefined),
+      ),
+    ).toBe(true);
+
+    const syntheticWindowEdges = mkxlVariationGraphs.flatMap((graph) =>
+      graph.edges.filter((edge) => edge.frameWindow !== undefined),
+    );
+
+    expect(syntheticWindowEdges.length).toBeGreaterThan(0);
+    expect(syntheticWindowEdges.every((edge) => edge.timing === undefined)).toBe(true);
+  });
+
+  it("keeps exact-evidence sources explicit and URL-backed outside manual verification", () => {
+    const sourcesById = new Map<string, MkxlDataSource>(
+      mkxlDataSources.map((source) => [source.id, source]),
+    );
+
+    for (const sourceId of mkxlExactGameplayEvidenceSourceIds) {
+      const source = sourcesById.get(sourceId);
+
+      expect(source).toBeDefined();
+      if (source?.kind !== mkxlDataSourceKinds.manualVerification) {
+        expect(source?.url).toMatch(/^https:\/\//u);
       }
     }
   });

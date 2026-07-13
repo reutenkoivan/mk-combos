@@ -29,6 +29,18 @@ export const mkxlXlFinalDataSources = [
     label: "Community combo source",
     kind: "communityComboSource",
   },
+  {
+    id: "netherrealm-patch-notes",
+    label: "NetherRealm Studios Mortal Kombat patch notes",
+    url: "https://www.mortalkombat.com/index.php/en-gb/patch-notes",
+    kind: "official",
+  },
+  {
+    id: "testyourmight-mkx-frame-data",
+    label: "Test Your Might MKX Frame Data Project",
+    url: "https://testyourmight.com/threads/mkx-frame-data-project.55865/post-1889472",
+    kind: "reference",
+  },
 ] as const satisfies readonly MkxlDataSource[];
 
 export const mkxlXlFinalGame = {

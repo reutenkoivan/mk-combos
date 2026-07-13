@@ -8,255 +8,192 @@
 - Статус деталізації: `Описано`
 - Батьківська мапа: [UI.md](../UI.md)
 - Батьківські поверхні: `UI-PAGE-004 Combo Detail`, `UI-PAGE-006 Custom Combo Builder`
-- Пов'язані компоненти: `UI-CMP-035 Combo Whiteboard`, `UI-CMP-005 Controller Hint Strip`
+- Пов'язані компоненти: `UI-CMP-035 Combo Whiteboard`, `UI-CMP-026 Builder Action Bar`, `UI-CMP-005 Controller Hint Strip`
 - Пов'язані UX сценарії: `US-007`, `US-013`, `US-014`, `US-015`, `US-016`, `US-020`, `US-025`
 
 ## Призначення
 
-`UI-CMP-036 Combo Frame Meter` є interactive inspection component для frame data вибраного move або всієї combo.
+`Combo Frame Meter` є game-agnostic inspection component для prepared frame data вибраного move або всієї combo. Інформаційна модель наслідує сильні сторони training meter у Street Fighter 6: одна видима клітинка на кадр, вирівняні треки, компактні headline metrics і чітко відділені startup, active, recovery та transition phases. Компонент використовує власні theme-aware кольори й не копіює брендинг Capcom.
 
-Компонент рендериться поруч із `UI-CMP-035 Combo Whiteboard` у тих самих поверхнях:
+Компонент:
 
-- `UI-PAGE-004 Combo Detail`: read-only frame inspection для seeded або custom combo;
-- `UI-PAGE-006 Custom Combo Builder`: live frame inspection для current path, focused whiteboard step або focused internal Whiteboard candidate.
+- показує prepared `Startup`, `Total`, `Advantage` та інші headline values;
+- рендерить точну клітинкову шкалу, тільки якщо adapter має перевірені phase counts;
+- показує continuous whole-combo grid із межами moves та transition spans;
+- підтримує optional comparison track на тій самій часовій осі;
+- пояснює invalid і unavailable стани текстом, іконкою та pattern feedback;
+- не обчислює frame values із raw metadata, formulas або synthetic windows.
 
-Frame Meter показує SF6-style frame timeline і числові значення: startup, active, recovery, hit/block advantage, cancel window, juggle/link window, transition gaps, meter cost/gain і invalid або unavailable reasons.
+## Володіння і public contract
 
-## Володіння
+Owner — `packages/ui`. Публічний subpath лишається один:
 
-`UI-CMP-036` є доменним компонентом `@mk-combos/ui`, який може рендеритися builder і detail поверхнями.
-
-Власники стану:
-
-- active game builder adapter володіє replay state, runtime state, valid next moves, invalid reasons і frame-aware transition results;
-- `useComboWhiteboardModel` готує path focus, candidate focus, selected group, selected gap і edit target;
-- `useComboFrameMeterModel` викликається на рівні page flow і готує inspection focus: selected timeline segment, open segment details і local scope selection;
-- `UI-PAGE-004` і `UI-PAGE-006` координують, який frame snapshot передано компоненту.
-
-Пара module exports:
-
-- hook: `useComboFrameMeterModel`;
-- pure UI component: `ComboFrameMeter` / `UI-CMP-036`.
-
-Виклик hook-а належить `UI-PAGE-006` або `UI-PAGE-004`; pure UI component не імпортує builder adapter, route state, persistence або game packages напряму.
-
-Компонент не має:
-
-- мутувати `movePath`;
-- емітити whiteboard edit proposals;
-- застосовувати move transition;
-- виконувати graph validation;
-- писати `cachedNotation`;
-- зберігати custom combo;
-- змінювати seeded combo data.
-
-## Анатомія
-
-Розміщення frame meter є inspection panel: scope switch стоїть зверху, timeline під ним, selected segment details і frame summary розміщені нижче або поруч залежно від viewport, invalid/repair annotations лишаються біля відповідної timeline/detail area.
-
-```jsx
-<ComboFrameMeter ui="UI-CMP-036">
-  <FrameMeterPanel slot="builder/detail workspace">
-    <Stack name="FrameMeterLayout">
-      <ScopeSwitchRegion>
-        <Group name="ScopeSwitchControls">
-          <SelectedMoveScope />
-          <WholeComboScope />
-        </Group>
-      </ScopeSwitchRegion>
-
-      <TimelineRegion>
-        <TimelineSegment />
-      </TimelineRegion>
-
-      <Show when={hasSelectedSegmentDetails}>
-        <SelectedSegmentDetails />
-      </Show>
-
-      <FrameValueSummaryRegion />
-
-      <Show when={hasTransitionGapFrameWindowAnnotation}>
-        <TransitionGapFrameWindowAnnotationRegion />
-      </Show>
-
-      <Show when={hasInvalidRepairAnnotation}>
-        <InvalidRepairAnnotationRegion />
-      </Show>
-
-      <Show when={hasFocusSyncAction}>
-        <FocusSyncActionSlot />
-      </Show>
-    </Stack>
-  </FrameMeterPanel>
-</ComboFrameMeter>
+```ts
+@mk-combos/ui/components/combo-frame-meter
 ```
 
-Правила розміщення:
+Він експортує `ComboFrameMeter`, `useComboFrameMeterModel`, runtime dictionaries і prepared types. Окремого hook subpath немає.
 
-- Scope switch завжди передує timeline і визначає, який prepared inspection model показується.
-- На `desktop` selected segment details можуть стояти праворуч від timeline; на `mobile` і `tablet` вони йдуть нижче timeline.
-- Frame summary стоїть після selected details/timeline і не замінює invalid/repair annotations.
-- Selected segment, details open state і active scope готує `useComboFrameMeterModel`, який page component викликає на page рівні.
+Page-level owner:
 
-## Вхідні дані
+- адаптує game/business output у prepared snapshot;
+- вибирає snapshot для active scope;
+- передає Whiteboard inspection target у hook;
+- обробляє `focusMatchingWhiteboardStep` через `whiteboard.methods.focusStep`.
 
-- `mode`: `selectedMove`, `wholeCombo`, `segmentDetailsOpen`, `pendingTruncate`, `repairReview` або `savingFrozen`;
-- `scope`: `selectedMove` або `wholeCombo`;
-- focused whiteboard step id/index, якщо є;
-- focused Whiteboard candidate id, якщо є;
-- selected timeline segment id/index, якщо є;
-- frame meter snapshot для selected move або whole combo;
-- startup, active, recovery, hit advantage, block advantage і recovery totals, якщо вони доступні для move;
-- cancel window, link window, juggle window і transition gap metadata;
-- meter cost/gain і runtime meter after segment;
-- cumulative frame context для whole combo;
-- valid prefix, invalid transition, invalid tail і invalid reason для stale, repair або pending truncate станів;
-- disabled або readonly reasons;
-- controller navigation focus state.
+Component/hook не імпортують `builder-core`, game packages, routing або persistence і не мутують Whiteboard напряму.
 
-Frame meter snapshot є derived state з explicit move frame data, edge `frameWindow`, transition `effects`, runtime `frameContext` і replay result. Компонент не виводить frame validity евристично з raw formulas.
+## Незалежні осі стану
 
-## Вихідні події
+Lifecycle, scope і details — незалежні осі:
 
-У всіх modes:
+- lifecycle: `ready`, `pendingTruncate`, `repairReview`, `savingFrozen`;
+- scope: `selectedMove`, `wholeCombo`;
+- details: `closed` або `open` зі stable segment id.
 
-- `requestFocusTimelineSegment(payload)`;
-- `requestOpenSegmentDetails(payload)`;
-- `requestCloseSegmentDetails(payload)`;
-- `requestSwitchFrameScope(payload)` між `selectedMove` і `wholeCombo`;
-- `requestFocusMatchingWhiteboardStep(payload)`, якщо segment відповідає step у `movePath`.
+Наприклад, `savingFrozen + wholeCombo + open` і `pendingTruncate + selectedMove + closed` є валідними комбінаціями, а не окремими modes.
 
-Компонент не емітить mutation events, persistence events або graph validation events.
-Output payloads містять segment id, scope, reason і source focus target. Component не передає browser event objects у page-level handlers.
+`useComboFrameMeterModel` володіє тільки scope, focus одного segment і details lifecycle. Новий Whiteboard step/candidate автоматично активує `selectedMove`. Ручний `wholeCombo` зберігається до наступної зміни inspection target. За відсутності target використовується `wholeCombo`.
 
-## Режими
+## Prepared snapshot
 
-### `selectedMove`
+Snapshot містить localized `label`, `timelineLabel`, `summaryLabel`, prepared headline values і discriminated grid.
 
-Frame Meter показує frame data для focused whiteboard step або focused Whiteboard candidate.
+### Available grid
 
-Правила:
+`available` grid містить:
 
-- whiteboard step focus має пріоритет над whole combo scope;
-- Whiteboard candidate focus може preview-ити frame data без додавання move у path;
-- timeline segments включають startup, active, recovery і optional cancel/link/juggle windows;
-- unavailable candidate має показати readable reason без можливості застосувати move.
+- спільний positive `cellCount`;
+- primary track, optional aligned `meta` track і optional aligned comparison track;
+- tracks із stable ids, localized labels і kind `primary | meta | comparison`;
+- segments зі stable id, zero-based `startCell`, positive `cellCount`, kind, validity, range label, summary, details, optional numeric frames і optional prepared `frameCountLabel`; без label UI показує `${cellCount}f`;
+- move sections/boundaries зі stable step mapping;
+- prepared legend із localized labels та optional category descriptor `{ id, label }`;
+- optional `matchingWhiteboardStepId` для focus sync.
 
-### `wholeCombo`
+Вхід не містить CSS-oriented `offsetPercent`, `spanPercent` або `laneOffsetRem`.
 
-Frame Meter показує всю combo як послідовність frame segments.
+Segment kinds:
 
-Правила:
+- `startup`, `active`, `recovery`;
+- `cancel`, `link`, `juggle`, `transition`;
+- `other`.
 
-- кожен step має readable segment label і може синхронізувати focus назад у Whiteboard;
-- transition gaps, links і cancel windows показуються між steps;
-- cumulative frame context показує, як replay оновлює advantage, cancel window або juggle window;
-- якщо path порожній, компонент показує empty frame summary для start runtime state.
+Validity:
 
-### `segmentDetailsOpen`
+- `valid`;
+- `invalid` із readable reason;
+- `unavailable` із readable reason.
 
-Користувач відкрив readable details для active timeline segment.
+### Unavailable grid
 
-Правила:
+`unavailable` grid містить localized label і reason. Компонент не створює placeholder cells або approximate ranges. Headline summary може лишатися видимим, якщо ці prepared values перевірені незалежно від phase grid.
 
-- details є локальним disclosure або panel усередині Frame Meter, не route і не modal;
-- details не мають бути hover-only tooltip;
-- `back` або close action закриває details і повертає focus на source segment;
-- panel показує назву segment, frame range, startup/active/recovery або transition gap, advantage/cancel/link window і invalid/unavailable reason, якщо він є;
-- довгий текст має бути доступний keyboard/controller navigation без pointer-only scroll.
+## Анатомія і layout
 
-### `pendingTruncate`
+Порядок regions:
 
-Replay edit proposal або context change повернув valid prefix і invalid tail.
+1. scope switch;
+2. lifecycle status;
+3. compact headline metrics;
+4. available grid або unavailable explanation;
+5. один roving segment navigation toolbar;
+6. prepared grouped legend у нижній частині available state;
+7. invalid/unavailable annotations;
+8. inline details.
 
-Правила:
+Grid має фіксовану читабельну ширину клітинки. Довга timeline прокручується тільки горизонтально; details, legend, summary та annotations стоять поза scroller. Легенда йде після segment navigation, щоб не відволікати від шкали та її controls. Компонент не використовує fixed height або `overflow-y-hidden`, тому контент не обрізається у вузькому чи низькому контейнері.
 
-- Frame Meter дзеркалить Whiteboard invalid boundary;
-- invalid transition segment має readable reason;
-- finish залишається заблокованим через builder state;
-- segment details для invalid transition пояснюють, який frameWindow, state або spacing constraint не пройшов.
+`selectedMove` показує headline Startup/Total/Advantage і точну шкалу move. Section header над шкалою показує назву move, а окремий frame-aligned row одразу під кольоровим primary track показує counts кожного phase span, наприклад `4f`, `2f`, `5f` під Startup, Active і Recovery; Meta track іде після цього row. `wholeCombo` показує одну continuous шкалу з step boundaries і окремою тонкою `Meta`-доріжкою для transition spans, а не набір непов'язаних карток.
 
-### `repairReview`
+## Візуальна семантика
 
-Initial або stale path не проходить актуальну validation.
+- startup, active, recovery і transition мають власні theme-aware кольори;
+- `Link`, `Cancel`, `Juggle`, `Transition` і `Other` використовують transition tone на тонкій frame-aligned `Meta`-доріжці;
+- легенда стоїть поза scroller після segment navigation та називає категорії й значення текстом;
+- кожна frame cell має видиму межу;
+- invalid segment має destructive outline, pattern та readable annotation;
+- unavailable segment має dashed/pattern treatment, `?` marker і reason;
+- selected/focused states лишаються помітними у light/dark та standard/increased contrast;
+- comparison track вирівняний із primary, але не конкурує з ним за emphasis.
 
-Правила:
+Колір ніколи не є єдиним носієм validity або phase meaning.
 
-- показати original path frame timeline, valid prefix і invalid tail;
-- invalid boundary не має покладатися тільки на колір;
-- repair starts from valid prefix тільки через page/builder action, не через Frame Meter.
+## Інтеракції та intents
 
-### `savingFrozen`
+Semantic intents:
 
-Save in progress.
+- `focusTimelineSegment`;
+- `openSegmentDetails`;
+- `closeSegmentDetails`;
+- `switchFrameScope`;
+- `focusMatchingWhiteboardStep`.
 
-Правила:
+Payload містить stable ids, lifecycle, scope, reason і source focus data; DOM events не виходять із component boundary. Frame Meter не емітить edit, graph-validation або persistence events.
 
-- timeline і active segment details лишаються видимими;
-- navigation може лишатися read-only, якщо це не заважає saving state;
-- open/close details не має запускати save, cancel або path mutation.
+Visual frame cells не є tab stops. Один roving focus model належить segment navigation controls:
 
-## Controller і keyboard navigation
+- `ArrowLeft`/`ArrowRight` переходять між segments;
+- `Enter`/`confirm` відкриває inline details;
+- `Escape`/`back` закриває details і повертає focus на source segment;
+- `focusMatchingWhiteboardStep` передається parent-у;
+- у `savingFrozen` timeline та відкриті details видимі, а всі component actions inert.
 
-Frame Meter є окремою focus zone після `UI-CMP-035 Combo Whiteboard`.
+Touch/controller targets не менші за `44×44px` у mobile/tablet.
 
-Правила:
+## Lifecycle semantics
 
-- `navLeft`/`navRight` рухають focus між timeline segments;
-- `navUp`/`navDown` рухають focus між Whiteboard, Frame Meter і Action Bar відповідно до layout;
-- `confirm` на segment відкриває `segmentDetailsOpen`;
-- `openActions`, якщо доступний, відкриває ті самі segment details або розширений details panel;
-- `back` закриває details і повертає focus на source segment;
-- якщо details закриті, `back` повертає focus до safe parent zone відповідно до active page flow;
-- controller support використовує існуючі semantic commands і не потребує нового `ControllerCommand`;
-- `UI-CMP-005 Controller Hint Strip` має показувати Frame Meter hints, коли focus перебуває у Frame Meter.
+- `ready`: prepared inspection інтерактивний.
+- `pendingTruncate`: зберігає весь prepared grid, invalid boundary і readable reason до підтвердження parent-ом.
+- `repairReview`: показує original path, valid prefix та invalid tail без автоматичного repair.
+- `savingFrozen`: зберігає видиму timeline/details, оголошує busy state й не емітить intents.
 
 ## Доступність
 
-- Frame Meter має accessible name, який називає scope: selected move або whole combo.
-- Timeline segments мають keyboard/controller focus і readable labels.
-- Segment labels мають містити move або transition name, frame range і segment type.
-- Segment details мають бути доступні через `confirm`, `Enter` або equivalent action, не тільки hover.
-- Invalid boundary, unavailable segment і active segment не покладаються тільки на колір.
-- Details panel має оголошувати відкриття assistive technologies і повертати focus на source segment після закриття.
-- Довгий details text має бути читабельний без pointer-only interaction.
+- Root accessible name включає active scope.
+- Headline metrics і legend мають explicit accessible labels.
+- Segment control label містить segment name, range, validity та reason.
+- Invalid/unavailable feedback має текст і символ, не тільки колір.
+- Details оголошуються через live region і не є hover-only tooltip.
+- Horizontal timeline scroll не приховує vertical content.
+- Focus recovery після close детерміновано повертається на той самий segment.
 
 ## Критерії приймання
 
-- Frame Meter рендериться поруч із Whiteboard у Combo Detail і Custom Combo Builder.
-- Focus на Whiteboard step оновлює Frame Meter до `selectedMove`.
-- Focus на Whiteboard candidate preview-ить frame values без додавання move у path.
-- Відсутність focused step або candidate показує `wholeCombo`.
-- Controller може сфокусувати timeline segment.
-- `confirm` або `openActions` відкриває readable segment details.
-- `back` закриває details і повертає focus на той самий segment.
-- Pending truncate показує invalid transition segment і readable reason.
-- Frame Meter не емітить edit proposals, graph validation або persistence events.
+- Runtime dictionaries і types точно відповідають lifecycle, scope, details, track, grid, kind та validity contracts.
+- Public input використовує `startCell/cellCount`, а не CSS geometry.
+- Available grid рендерить одну видиму клітинку на кадр через CSS-grid spans і repeated separators.
+- Frame count row під primary track показує prepared `frameCountLabel` або `${cellCount}f` fallback для кожного phase segment, вирівняний із відповідним кольоровим span без зміни grid geometry.
+- Meta track вирівняний із primary, має компактну висоту й не перекриває phase cells.
+- Optional comparison track вирівняний із primary.
+- Whole-combo grid має prepared step boundaries, total frames над кожним кроком і transition spans у Meta track.
+- Категоризована легенда показує `Phases` і `Meta` після segment navigation; uncategorized legacy items лишаються підтриманими.
+- Довгі grids мають тільки horizontal overflow; summary/details/annotations не обрізаються.
+- Unavailable grid не вигадує frame cells.
+- Invalid/unavailable states мають non-color feedback.
+- Scope override, details lifecycle і двосторонній parent-mediated focus sync працюють детерміновано.
+- Frozen state лишає inspection видимим і робить actions inert.
 
 ## Тестові сценарії
 
-- Detail seeded combo показує read-only Frame Meter і segment details через controller.
-- Detail custom combo показує read-only Frame Meter і не мутує combo data.
-- Builder create flow показує whole combo або empty runtime frame summary до першого move.
-- Whiteboard step focus перемикає Frame Meter у `selectedMove`.
-- Whiteboard candidate focus preview-ить startup/active/recovery і unavailable reason, якщо candidate disabled.
-- `navLeft`/`navRight` переходять між timeline segments.
-- `confirm` відкриває details для active segment.
-- `back` закриває details і повертає focus на source segment.
-- Pending truncate показує invalid transition details.
-- Saving frozen не приховує timeline і не дозволяє path mutation.
-
-## Відкриті уточнення
-
-- Точний visual design SF6-style timeline, segment colors і mobile і tablet/expanded layout буде визначено під час UI реалізації.
-- Точний набір numeric frame fields залежить від доступної seeded frame data для конкретної гри та персонажа.
+- Exact `startCell/cellCount` перетворюються на правильні CSS grid columns.
+- Prepared phase frame label і `${cellCount}f` fallback відображаються під кожним primary segment та над Meta track у відповідному span.
+- Selected move показує Startup/Total/Advantage та phase grid.
+- Whole combo показує continuous grid із двома або більше step boundaries та frame-aligned Meta track.
+- Легенда йде після segment navigation і містить доступно названі `Phases` та `Meta` groups.
+- Optional comparison track має ту саму cell axis.
+- Довга timeline горизонтально прокручується без vertical clipping.
+- Unavailable grid показує reason і не рендерить cells.
+- Invalid segment має pattern, icon/text і readable reason.
+- Segment roving focus, details open/close і focus recovery працюють з keyboard/controller.
+- Новий Whiteboard target скидає scope до `selectedMove`; manual `wholeCombo` живе до наступної зміни target.
+- `savingFrozen` зберігає open details і не емітить action intents.
 
 ## Канонічний Responsive і Controller-only Contract
 
-Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+Surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md).
 
-- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повну workstation composition і spatial row/column navigation;
-- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
-- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+- `mobile` використовує vertical-first composition і targets не менші за `44×44px`;
+- `tablet` використовує hybrid composition;
+- `desktop` використовує повноширинний meter із compact aligned rows;
+- controller support використовує наявні semantic commands без synthetic DOM events.

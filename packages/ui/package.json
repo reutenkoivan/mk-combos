@@ -17,14 +17,17 @@
     "./components/add-to-list-dialog": "./src/components/add-to-list-dialog.tsx",
     "./components/backup-collapsible-block": "./src/components/backup-collapsible-block.tsx",
     "./components/breadcrumbs": "./src/components/breadcrumbs.tsx",
+    "./components/builder-action-bar": "./src/components/builder-action-bar.tsx",
     "./components/builder-context-setup": "./src/components/builder-context-setup.tsx",
     "./components/character-picker": "./src/components/character-picker.tsx",
     "./components/combo-actions-menu": "./src/components/combo-actions-menu.tsx",
     "./components/combo-card": "./src/components/combo-card.tsx",
     "./components/combo-detail-header": "./src/components/combo-detail-header.tsx",
+    "./components/combo-frame-meter": "./src/components/combo-frame-meter.tsx",
     "./components/combo-list": "./src/components/combo-list.tsx",
     "./components/combo-list-config-module": "./src/components/combo-list-config-module.tsx",
     "./components/combo-metadata-grid": "./src/components/combo-metadata-grid.tsx",
+    "./components/combo-whiteboard": "./src/components/combo-whiteboard.tsx",
     "./components/controller-access-gate": "./src/components/controller-access-gate.tsx",
     "./components/controller-hint-strip": "./src/components/controller-hint-strip.tsx",
     "./components/display-mode-switcher": "./src/components/display-mode-switcher.tsx",
@@ -106,7 +109,8 @@
     "./tokens/schema": "./src/tokens/schema.ts",
     "./tokens/type": "./src/tokens/type.ts",
     "./tokens/value": "./src/tokens/value.ts",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./styles.css": "./src/styles.css"
   },
   "files": [
     "dist",
@@ -117,14 +121,17 @@
       "./components/add-to-list-dialog": "./dist/components/add-to-list-dialog.mjs",
       "./components/backup-collapsible-block": "./dist/components/backup-collapsible-block.mjs",
       "./components/breadcrumbs": "./dist/components/breadcrumbs.mjs",
+      "./components/builder-action-bar": "./dist/components/builder-action-bar.mjs",
       "./components/builder-context-setup": "./dist/components/builder-context-setup.mjs",
       "./components/character-picker": "./dist/components/character-picker.mjs",
       "./components/combo-actions-menu": "./dist/components/combo-actions-menu.mjs",
       "./components/combo-card": "./dist/components/combo-card.mjs",
       "./components/combo-detail-header": "./dist/components/combo-detail-header.mjs",
+      "./components/combo-frame-meter": "./dist/components/combo-frame-meter.mjs",
       "./components/combo-list": "./dist/components/combo-list.mjs",
       "./components/combo-list-config-module": "./dist/components/combo-list-config-module.mjs",
       "./components/combo-metadata-grid": "./dist/components/combo-metadata-grid.mjs",
+      "./components/combo-whiteboard": "./dist/components/combo-whiteboard.mjs",
       "./components/controller-access-gate": "./dist/components/controller-access-gate.mjs",
       "./components/controller-hint-strip": "./dist/components/controller-hint-strip.mjs",
       "./components/display-mode-switcher": "./dist/components/display-mode-switcher.mjs",
@@ -206,7 +213,8 @@
       "./tokens/schema": "./dist/tokens/schema.mjs",
       "./tokens/type": "./dist/tokens/type.mjs",
       "./tokens/value": "./dist/tokens/value.mjs",
-      "./package.json": "./package.json"
+      "./package.json": "./package.json",
+      "./styles.css": "./src/styles.css"
     }
   },
   "peerDependencies": {
@@ -216,6 +224,7 @@
   "dependencies": {
     "@base-ui/react": "1.6.0",
     "@mk-combos/contracts": "workspace:*",
+    "@xyflow/react": "12.11.2",
     "clsx": "2.1.1",
     "lucide-react": "1.24.0",
     "tailwind-merge": "3.6.0",
