@@ -9,5 +9,13 @@
     "@storybook/addon-vitest",
     "@storybook/react-vite",
     "storybook"
-  ]
+  ],
+  "workspaces": {
+    "apps/web": {
+      "entry": ["src/router.tsx"],
+      "ignoreIssues": {
+        "src/router.tsx": ["exports"]
+      }
+    }
+  }
 }

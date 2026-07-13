@@ -100,7 +100,7 @@ const collectFiles = (directory: string): string[] => {
   return files;
 };
 
-const isReactLibrarySourceFile = (sourceFilePath: string) => {
+const isReactSourceFile = (sourceFilePath: string) => {
   const normalizedPath = sourceFilePath.split(path.sep).join("/");
 
   return (
@@ -159,27 +159,31 @@ describe("React Compiler build configuration", () => {
     expect(pluginNames).toContain(reactCompilerBabelPluginName);
   });
 
-  it("requires React library packages to use the React tsdown helper", () => {
+  it("requires React workspaces to use their shared build helper", () => {
     const workspaceRoot = findWorkspaceRoot();
     const violations = collectWorkspacePackageRoots(workspaceRoot).flatMap((packageRoot) => {
       const sourceFiles = collectFiles(path.join(packageRoot, "src"));
-      const hasReactLibrarySource = sourceFiles.some(isReactLibrarySourceFile);
+      const hasReactSource = sourceFiles.some(isReactSourceFile);
 
-      if (!hasReactLibrarySource) {
+      if (!hasReactSource) {
         return [];
       }
 
-      const tsdownConfigPath = path.join(packageRoot, "tsdown.config.ts");
       const packageName = path.relative(workspaceRoot, packageRoot);
+      const isViteApplication = packageName.startsWith(`apps${path.sep}`);
+      const configFileName = isViteApplication ? "vite.config.ts" : "tsdown.config.ts";
+      const configPath = path.join(packageRoot, configFileName);
+      const helperName = isViteApplication ? "createViteConfig" : "createReactTsdownConfig";
 
-      if (!existsSync(tsdownConfigPath)) {
-        return [`${packageName} has React source but no tsdown.config.ts`];
+      if (!existsSync(configPath)) {
+        return [`${packageName} has React source but no ${configFileName}`];
       }
 
-      const tsdownConfigSource = readFileSync(tsdownConfigPath, "utf8");
+      const configSource = readFileSync(configPath, "utf8");
+      const sharedHelperPattern = new RegExp(`\\b${helperName}\\s*\\(`, "u");
 
-      if (!/\bcreateReactTsdownConfig\s*\(/u.test(tsdownConfigSource)) {
-        return [`${packageName} has React source but does not use createReactTsdownConfig`];
+      if (!sharedHelperPattern.test(configSource)) {
+        return [`${packageName} has React source but does not use ${helperName}`];
       }
 
       return [];

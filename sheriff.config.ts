@@ -1,7 +1,10 @@
 import { anyTag, type SheriffConfig } from "@softarc/sheriff-core";
 
 export const config: SheriffConfig = {
-  entryFile: "./tools/sheriff-entry.ts",
+  entryPoints: {
+    contracts: "./tools/sheriff-entry.ts",
+    web: "./apps/web/src/router.tsx",
+  },
   enableBarrelLess: true,
   modules: {
     "apps/web": "app:web",
