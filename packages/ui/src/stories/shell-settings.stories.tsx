@@ -41,10 +41,11 @@ import {
 } from "../components/value";
 import { useUiOpenState } from "../hooks/open-state";
 import { createNotationLegendRows } from "../notation/runtime";
-import { UiRoot } from "../primitives/layout";
 import { StatusMessage } from "../primitives/state";
 import type { UiContrastMode, UiThemeMode } from "../tokens/type";
 import { uiContrastModes, uiThemeModes } from "../tokens/value";
+import { StoryFrame } from "./story-frame";
+import { storyViewportGlobals } from "./story-viewports";
 
 const games = [
   {
@@ -197,6 +198,7 @@ const meta = {
     theme: { control: "select", options: [uiThemeModes.dark, uiThemeModes.light] },
   },
   component: ShellSettingsStorySurfaceWithArgs,
+  globals: storyViewportGlobals.desktop,
   parameters: { layout: "fullscreen" },
   tags: ["autodocs"],
   title: "Components/Shell and Settings",
@@ -211,14 +213,13 @@ const Frame = (props: {
   layoutMode: UiResponsiveMode;
   theme?: UiThemeMode;
 }) => (
-  <UiRoot
-    className="grid min-h-screen content-start justify-items-center bg-[var(--ui-window)] p-4 sm:p-6"
+  <StoryFrame
     contrast={props.contrast}
     responsiveMode={props.layoutMode}
     theme={props.theme ?? uiThemeModes.dark}
   >
     {props.children}
-  </UiRoot>
+  </StoryFrame>
 );
 
 function ShellStoryHarness(props: {
@@ -374,10 +375,10 @@ function SettingsStoryHarness(props: {
     <Frame contrast={props.contrast} layoutMode={props.layoutMode} theme={props.theme}>
       <main className="grid w-full max-w-3xl gap-1">
         <header className="grid gap-1 border-l-4 border-[var(--ui-accent)] py-1 pl-3">
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--ui-accent-strong)]">
+          <span className="text-xs font-medium text-[var(--ui-accent-strong)]">
             System configuration
           </span>
-          <h1 className="font-[var(--ui-font-display)] text-2xl font-bold uppercase tracking-[0.04em]">
+          <h1 className="font-[var(--ui-font-display)] text-2xl font-semibold tracking-[-0.01em]">
             Settings
           </h1>
           <p className="text-sm text-[var(--ui-muted-text)]">
@@ -666,24 +667,28 @@ const renderFirstLaunchStory = (args: ShellSettingsStoryArgs) => (
 
 export const WideShell: Story = {
   args: { layoutMode: uiResponsiveModes.desktop },
+  globals: storyViewportGlobals.desktop,
   parameters: { controls: { include: shellControlNames } },
   render: renderShellStory,
 };
 
 export const TabletShell: Story = {
   args: { layoutMode: uiResponsiveModes.tablet },
+  globals: storyViewportGlobals.tablet,
   parameters: { controls: { include: shellControlNames } },
   render: renderShellStory,
 };
 
 export const MobileShell: Story = {
   args: { layoutMode: uiResponsiveModes.mobile },
+  globals: storyViewportGlobals.mobile,
   parameters: { controls: { include: shellControlNames } },
   render: renderShellStory,
 };
 
 export const ControllerHintsOpen: Story = {
   args: { initialHintPanelOpen: true, layoutMode: uiResponsiveModes.desktop },
+  globals: storyViewportGlobals.desktop,
   parameters: { controls: { include: shellControlNames } },
   render: renderShellStory,
 };
@@ -693,6 +698,7 @@ export const SettingsControls: Story = {
     initialStatus: "Settings are ready for interaction",
     layoutMode: uiResponsiveModes.desktop,
   },
+  globals: storyViewportGlobals.desktop,
   parameters: { controls: { include: settingsControlNames } },
   render: renderSettingsStory,
 };
@@ -702,6 +708,7 @@ export const MobileSettings: Story = {
     initialStatus: "Settings are ready for interaction",
     layoutMode: uiResponsiveModes.mobile,
   },
+  globals: storyViewportGlobals.mobile,
   parameters: { controls: { include: settingsControlNames } },
   render: renderSettingsStory,
 };
@@ -711,6 +718,7 @@ export const TabletSettings: Story = {
     initialStatus: "Settings are ready for interaction",
     layoutMode: uiResponsiveModes.tablet,
   },
+  globals: storyViewportGlobals.tablet,
   parameters: { controls: { include: settingsControlNames } },
   render: renderSettingsStory,
 };
@@ -721,6 +729,7 @@ export const LightSettings: Story = {
     layoutMode: uiResponsiveModes.desktop,
     theme: uiThemeModes.light,
   },
+  globals: storyViewportGlobals.desktop,
   parameters: { controls: { include: settingsControlNames } },
   render: renderSettingsStory,
 };
@@ -731,24 +740,28 @@ export const IncreasedContrastSettings: Story = {
     initialStatus: "Settings are ready for interaction",
     layoutMode: uiResponsiveModes.desktop,
   },
+  globals: storyViewportGlobals.desktop,
   parameters: { controls: { include: settingsControlNames } },
   render: renderSettingsStory,
 };
 
 export const FirstLaunch: Story = {
   args: { layoutMode: uiResponsiveModes.desktop },
+  globals: storyViewportGlobals.desktop,
   parameters: { controls: { include: firstLaunchControlNames } },
   render: renderFirstLaunchStory,
 };
 
 export const MobileFirstLaunch: Story = {
   args: { layoutMode: uiResponsiveModes.mobile },
+  globals: storyViewportGlobals.mobile,
   parameters: { controls: { include: firstLaunchControlNames } },
   render: renderFirstLaunchStory,
 };
 
 export const ControllerActivation: Story = {
   args: { layoutMode: uiResponsiveModes.mobile },
+  globals: storyViewportGlobals.mobile,
   parameters: { controls: { include: ["layoutMode", "theme", "contrast"] } },
   render: (args) => (
     <Frame contrast={args.contrast} layoutMode={args.layoutMode} theme={args.theme}>
@@ -765,4 +778,26 @@ export const ControllerActivation: Story = {
       />
     </Frame>
   ),
+};
+
+export const TabletExportDialogOpen: Story = {
+  args: {
+    initialDialog: "export",
+    initialStatus: "Export dialog is ready for interaction",
+    layoutMode: uiResponsiveModes.tablet,
+  },
+  globals: storyViewportGlobals.tablet,
+  parameters: { controls: { include: settingsControlNames } },
+  render: renderSettingsStory,
+};
+
+export const MobileImportDialogOpen: Story = {
+  args: {
+    initialDialog: "import",
+    initialStatus: "Import dialog is ready for interaction",
+    layoutMode: uiResponsiveModes.mobile,
+  },
+  globals: storyViewportGlobals.mobile,
+  parameters: { controls: { include: settingsControlNames } },
+  render: renderSettingsStory,
 };

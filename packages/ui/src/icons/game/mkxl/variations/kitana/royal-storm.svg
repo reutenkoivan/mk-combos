@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kitana — Royal Storm wind vortex fan</title>
+  <g data-variation-frame="true" stroke-linecap="round">
+    <path d="M13 17C22 5 43 4 53 16M9 27c9-9 19-10 28-7m18 4c5 14-2 29-15 35M13 47c8 8 20 10 30 5" stroke="#60CFFF" stroke-width="2.3"/>
+    <path d="M7 38c4 2 8 2 12 0m34-25-2 7-7-2" stroke="#E5F7FF" stroke-width="1.8"/>
+    <circle cx="9" cy="27" r="2" fill="#6F72DB"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 49 15 24c10-8 24-8 34 0z" fill="#20284D" stroke="#6F72DB" stroke-width="2.3"/>
+    <path d="m32 49-9-29m9 29V18m0 31 9-29" stroke="#BBDFFF" stroke-width="1.8"/>
+    <path d="M20 31c7-5 17-5 24 0-5 3-9 6-12 12-3-6-7-9-12-12z" fill="#60CFFF" stroke="#E5F7FF" stroke-width="1.6"/>
+    <path d="M25 12c5-3 10-3 15 0" stroke="#60CFFF" stroke-width="2"/>
+  </g>
+</svg>

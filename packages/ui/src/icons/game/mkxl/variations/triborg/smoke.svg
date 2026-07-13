@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Triborg — Smoke: vapor cloud and phase</title>
+  <g data-variation-frame="true">
+    <path d="M12 20C8 11 22 5 29 12c5-10 22-6 22 5 10 2 11 16 3 21 6 8-3 19-12 16-5 8-19 5-20-5-10 2-17-11-9-18-5-2-6-7-1-11Z" fill="#18191E" stroke="#858895" stroke-width="2"/>
+    <path d="M15 17c5 2 7 6 5 11m30-12c-5 2-7 6-5 11M19 50c5-5 10-5 15-1" stroke="#D9DCE4" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M15 40c-4-6 1-13 7-11-2-8 10-13 15-6 6-5 16 2 12 9 8 2 6 14-2 15H19c-3 0-5-3-4-7Z" fill="#747783" stroke="#F0F1F5" stroke-width="2"/>
+    <path d="M21 38c5-3 10-2 13 2 4-5 10-6 15-3M25 48c-1 5-5 6-7 9m18-9c-1 5-4 7-5 10m14-10c1 4 4 5 6 7" stroke="#B9BBC5" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="31" cy="31" r="2" fill="#E5E7EC"/>
+  </g>
+</svg>

@@ -4,7 +4,9 @@ export const itemRecipe = tv({
   base: [
     "grid grid-cols-[auto_1fr_auto] items-center gap-2 text-[var(--ui-text)] outline-none",
     "transition-[background-color,color,box-shadow]",
+    "focus-visible:shadow-[var(--ui-focus-ring)]",
     "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50",
+    "data-[loading=true]:cursor-wait data-[loading=true]:opacity-80",
   ].join(" "),
   compoundVariants: [
     {

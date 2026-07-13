@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Scorpion — Inferno: summoned hellspawn</title>
+  <g data-variation-frame="true">
+    <path d="M8 50V24L18 8l8 7 6-10 6 10 8-7 10 16v26l-12 8-12-5-12 5-12-8Z" fill="#211019" stroke="#D34D3C" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m9 27 10-5 5-8m31 13-10-5-5-8" stroke="#FFAA57" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m20 23-4-10c7 2 11 6 12 11h8c1-5 5-9 12-11l-4 10c5 5 5 18 1 25l-8-4-5 8-5-8-8 4c-4-7-4-20 1-25Z" fill="#8D302B" stroke="#FFD08A" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m22 31 7 3-5 4m18-7-7 3 5 4" fill="#F7B12B" stroke="#FFF0B0" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M28 43h8l-4 6-4-6Z" fill="#1B0A0D" stroke="#FFBE64" stroke-width="1.5"/>
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Quan Chi's Fortress stage — skull arch and Netherrealm portal</title>
+  <g data-game-icon-frame="true">
+    <path d="M16 4h32l11 13-4 16 5 13-13 13H17L4 46l5-13-4-16L16 4Z" fill="#15100F" stroke="#795467" stroke-width="2"/>
+    <path d="M19 9 9 20m36-11 10 11M9 44l11 10m35-10L44 54" stroke="#759B5D" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M12 54V29C12 15 21 8 32 8s20 7 20 21v25h-9V30c0-8-5-13-11-13s-11 5-11 13v24h-9Z" fill="#5B4C48" stroke="#B9A79E" stroke-width="2"/>
+    <path d="M22 35c0-8 4-14 10-14s10 6 10 14-4 17-10 21c-6-4-10-13-10-21Z" fill="#759B5D" stroke="#CDE6B9" stroke-width="2"/>
+    <circle cx="27" cy="15" r="3" fill="#15100F"/><circle cx="37" cy="15" r="3" fill="#15100F"/>
+    <path d="M27 36c3-4 7-4 10 0m-8 8h6" stroke="#15100F" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

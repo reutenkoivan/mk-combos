@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Goro character — four-armed Shokan champion</title>
+  <g data-game-icon-frame="true">
+    <path d="M14 5h36l9 13-4 14 4 14-9 13H14L5 46l4-14-4-14 9-13Z" fill="#1D110E" stroke="#B86548" stroke-width="2"/>
+    <path d="M17 10 9 21m38-11 8 11M10 45l9 9m35-9-9 9" stroke="#C69D59" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="32" cy="20" r="7" fill="#B86548" stroke="#F4C7B2" stroke-width="2"/>
+    <path d="M22 31c4-6 16-6 20 0l3 20H19l3-20Z" fill="#B86548" stroke="#F4C7B2" stroke-width="2"/>
+    <path d="M22 34 11 26m11 15L9 47m33-13 11-8M42 41l13 6" stroke="#B86548" stroke-width="6" stroke-linecap="round"/>
+    <path d="M22 34 11 26m11 15L9 47m33-13 11-8M42 41l13 6" stroke="#F4C7B2" stroke-width="1.7" stroke-linecap="round"/>
+    <path d="m29 13 3-7 3 7M27 21h3m4 0h3" stroke="#C69D59" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

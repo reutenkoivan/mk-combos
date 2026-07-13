@@ -1,7 +1,8 @@
 import { Drawer as BaseDrawer } from "@base-ui/react/drawer";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 
 import { useBaseUiOpenChangeHandler } from "../internal/base-ui/use-open-change-handler";
+import { useUiRootContext } from "../internal/ui-root-context";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { popupRecipe } from "../recipes/popup";
@@ -118,7 +119,31 @@ export function DrawerTrigger(props: DrawerTriggerProps) {
 
 DrawerTrigger.displayName = "DrawerTrigger";
 
-export const DrawerPortal = BaseDrawer.Portal;
+export type DrawerPortalProps = ComponentPropsWithRef<typeof BaseDrawer.Portal>;
+
+export function DrawerPortal(props: DrawerPortalProps) {
+  const { className, ...portalProps } = props;
+  const { contrast, density, responsiveMode, theme } = useUiRootContext();
+
+  return (
+    <BaseDrawer.Portal
+      {...portalProps}
+      className={(state) =>
+        cx(
+          "mk-combos-ui-root mk-combos-ui-portal-root",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
+      data-ui-contrast={contrast}
+      data-ui-density={density}
+      data-ui-portal="drawer"
+      data-ui-responsive={responsiveMode}
+      data-ui-theme={theme}
+    />
+  );
+}
+
+DrawerPortal.displayName = "DrawerPortal";
 
 export type DrawerBackdropProps = Omit<UiPrimitiveProps<HTMLDivElement>, "children">;
 
@@ -186,7 +211,6 @@ export function DrawerPopup(props: DrawerPopupProps) {
         className,
       )}
       data-ui-drawer-popup
-      data-ui-portal
       ref={ref}
     >
       {children}
@@ -223,7 +247,10 @@ export function DrawerTitle(props: DrawerTitleProps) {
   return (
     <BaseDrawer.Title
       {...titleProps}
-      className={cx("font-[var(--ui-font-display)] text-base font-bold uppercase", className)}
+      className={cx(
+        "font-[var(--ui-font-display)] text-base font-semibold tracking-[-0.01em]",
+        className,
+      )}
       data-ui-drawer-title
       ref={ref}
     >

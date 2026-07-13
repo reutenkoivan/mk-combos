@@ -8,6 +8,7 @@ import {
   DialogPortal,
   DialogRoot,
   DialogTitle,
+  DialogViewport,
 } from "../primitives/dialog";
 import { StatusMessage } from "../primitives/state";
 import { uiToneModes } from "../tokens/value";
@@ -57,25 +58,30 @@ export function ExportDialog(props: ExportDialogProps) {
     >
       <DialogPortal>
         <DialogBackdrop />
-        <DialogPopup data-ui-component="UI-CMP-027">
-          <div className="grid gap-4">
-            <div className="grid gap-1">
-              <DialogTitle>{props.title}</DialogTitle>
-              <DialogDescription>{props.description}</DialogDescription>
+        <DialogViewport>
+          <DialogPopup
+            className="grid-rows-[minmax(0,1fr)_auto] overflow-hidden"
+            data-ui-component="UI-CMP-027"
+          >
+            <div className="grid min-h-0 gap-4 overflow-y-auto overscroll-contain pb-3">
+              <div className="grid gap-1">
+                <DialogTitle>{props.title}</DialogTitle>
+                <DialogDescription>{props.description}</DialogDescription>
+              </div>
+              <div className="grid gap-2 text-sm">
+                <p>{props.localStateSummary.settingsSummary}</p>
+                <p>{props.localStateSummary.gameSlices.map((slice) => slice.label).join(", ")}</p>
+              </div>
+              {props.warningMessage && (
+                <StatusMessage tone={uiToneModes.warning}>{props.warningMessage}</StatusMessage>
+              )}
+              {props.exportAvailability.disabledReason && !props.exportAvailability.available && (
+                <StatusMessage tone={uiToneModes.warning}>
+                  {props.exportAvailability.disabledReason}
+                </StatusMessage>
+              )}
             </div>
-            <div className="grid gap-2 text-sm">
-              <p>{props.localStateSummary.settingsSummary}</p>
-              <p>{props.localStateSummary.gameSlices.map((slice) => slice.label).join(", ")}</p>
-            </div>
-            {props.warningMessage && (
-              <StatusMessage tone={uiToneModes.warning}>{props.warningMessage}</StatusMessage>
-            )}
-            {props.exportAvailability.disabledReason && !props.exportAvailability.available && (
-              <StatusMessage tone={uiToneModes.warning}>
-                {props.exportAvailability.disabledReason}
-              </StatusMessage>
-            )}
-            <div className="sticky bottom-0 flex flex-col-reverse gap-2 border-t border-[var(--ui-separator)] bg-[var(--ui-dialog)] pt-3 sm:flex-row sm:flex-wrap sm:justify-end">
+            <div className="sticky bottom-0 z-10 flex flex-col-reverse items-stretch gap-2 border-t border-[var(--ui-separator)] bg-[var(--ui-dialog)] pt-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
               <Button
                 onRequestPress={() =>
                   actionEmitter.methods.emitAction(exportDialogActions.cancelExport)
@@ -95,8 +101,8 @@ export function ExportDialog(props: ExportDialogProps) {
                 {props.confirmLabel}
               </Button>
             </div>
-          </div>
-        </DialogPopup>
+          </DialogPopup>
+        </DialogViewport>
       </DialogPortal>
     </DialogRoot>
   );

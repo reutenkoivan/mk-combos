@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Lin Kuei Temple — wall dive from the frost-covered tree</title>
+  <g data-game-icon-frame="true" stroke="#66D2DF" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 9h15M9 9v15M55 9H40m15 0v15M9 55h15M9 55V40m46 15H40m15 0V40" stroke-width="2.6"/>
+    <circle cx="32" cy="32" r="25" fill="#142126" stroke="#3E6870" stroke-width="1.5" stroke-dasharray="5 4"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 57V8m0 15 10-9m-10 24-6-7" stroke="#66503C" stroke-width="6"/>
+    <path d="M14 15c8-3 13 2 10 9-7 2-12-2-10-9z" fill="#8AA09B" stroke="#CEE6E5" stroke-width="1.7"/>
+    <circle cx="29" cy="25" r="4" fill="#E1E9E7"/>
+    <path d="m30 30 8 6 11-4m-11 4 10 10m-14-13-6 11m-3-25 4-8m22 28 6 1-3 6" stroke="#66D2DF" stroke-width="2.6"/>
+  </g>
+</svg>

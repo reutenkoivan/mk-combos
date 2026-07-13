@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>D'Vorah — Swarm Queen: crowned insect swarm</title>
+  <g data-variation-frame="true">
+    <path d="m16 6 12 6 12-6 12 7v14l7 9-7 15-13 1-7 8-9-8-13-1-5-15 7-9V13l4-7Z" fill="#101A13" stroke="#73BF62" stroke-width="2"/>
+    <path d="m16 16 8 5-8 5m32-10-8 5 8 5M14 41l10-4m26 4-10-4" stroke="#F1C84B" stroke-width="1.5" stroke-linejoin="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m25 24 3-7 4 5 4-5 3 7" fill="#F1C84B" stroke="#FFF1A3" stroke-width="1.8" stroke-linejoin="round"/>
+    <ellipse cx="32" cy="35" rx="7" ry="12" fill="#73BF62" stroke="#DDF8C3" stroke-width="2"/>
+    <path d="M25 31c-8-7-13 0-7 5 3 2 6 2 7 1m14-6c8-7 13 0 7 5-3 2-6 2-7 1M29 33h6m-6 6h6" stroke="#DDF8C3" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="17" cy="20" r="2" fill="#F1C84B"/><circle cx="47" cy="46" r="2" fill="#F1C84B"/><circle cx="13" cy="45" r="1.6" fill="#73BF62"/>
+  </g>
+</svg>

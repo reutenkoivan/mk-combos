@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Refugee Kamp — vault from the camp ladder</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 8h48v48H8V8Z" fill="#171B1C" stroke="#758085" stroke-width="2"/>
+    <path d="M12 12h9m31 0h-9M12 52h9m31 0h-9" stroke="#D7DDDF" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M14 12v42m16-42v42M14 20h16m-16 9h16m-16 9h16m-16 9h16" stroke="#A07755" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="39" cy="24" r="4" fill="#C7CED0" stroke="#F5F7F7" stroke-width="1.5"/>
+    <path d="m37 29 7 7 11 3m-11-3-6 13m-2-17-8 4" stroke="#DDE2E3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M34 18c5-6 11-8 18-7m-4-4 5 4-4 5" stroke="#E07A4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

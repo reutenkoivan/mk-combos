@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>D'Vorah — Venomous: paired poison ovipositor stingers</title>
+  <g data-variation-frame="true">
+    <path d="M32 5 59 52H5L32 5Z" fill="#1C0D1C" stroke="#D861B5" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M32 11 53 48H11L32 11Z" stroke="#8EDB44" stroke-width="1.5" stroke-dasharray="5 4"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m18 23 9 4 5 20-6 6-4-22-8-5 4-3Zm28 0-9 4-5 20 6 6 4-22 8-5-4-3Z" fill="#D861B5" stroke="#F9C7EB" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M25 31c-4 5-7 10-7 14a5 5 0 0 0 10 0m11-14c4 5 7 10 7 14a5 5 0 0 1-10 0" stroke="#8EDB44" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="18" cy="45" r="2" fill="#DFFFA8"/><circle cx="46" cy="45" r="2" fill="#DFFFA8"/>
+  </g>
+</svg>

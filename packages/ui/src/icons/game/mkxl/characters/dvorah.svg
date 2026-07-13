@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>D'Vorah character — insect hood, compound eyes, and ovipositors</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 4 12 7 12-2-1 14 6 9-7 9 2 14-14-2-10 7-10-7-14 2 2-14-7-9 6-9L8 9l12 2 12-7Z" fill="#171806" stroke="#B9A938" stroke-width="2"/>
+    <path d="m12 16 9 5m31-5-9 5M10 44l11-4m33 4-11-4" stroke="#72B94C" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M18 29c1-12 7-19 14-19s13 7 14 19l-4 18-10 7-10-7-4-18Z" fill="#B9A938" stroke="#F2E998" stroke-width="2"/>
+    <path d="M20 27c5-4 9-3 12 2 3-5 7-6 12-2l-3 8-9 3-9-3-3-8Z" fill="#72B94C" stroke="#DBFFB5" stroke-width="1.8"/>
+    <path d="M24 42c5 4 11 4 16 0M19 33l-8 8m34-8 8 8" stroke="#171806" stroke-width="2" stroke-linecap="round"/>
+    <path d="m14 37-4 12m40-12 4 12" stroke="#72B94C" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Predator — Warrior armored gauntlet and wrist blades</title>
+  <g data-variation-frame="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 8h34l7 12-5 8 5 8-5 20H13L8 36l5-8-5-8z" fill="#171D1B" stroke="#77917E" stroke-width="2.5"/>
+    <path d="M15 8v11L8 20m41-12v11l7 1M13 56l6-8m32 8-6-8" stroke="#C77A3A" stroke-width="2"/>
+    <path d="M22 5h20M20 59h24" stroke="#D6E0D7" stroke-width="1.6"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 39c4-8 11-13 20-13l9 8-7 16-15 1z" fill="#344038" stroke="#77917E" stroke-width="2.2"/>
+    <path d="m31 26 9-13 3 2-6 16m1 2 11-15 3 2-8 18m-2 2 12-13 3 3-11 16" fill="#C8D1CC" stroke="#F0F4F1" stroke-width="1.8"/>
+    <path d="M17 38h19m-16 5h14m-11 5h9" stroke="#C77A3A" stroke-width="1.8"/>
+    <circle cx="18" cy="35" r="2" fill="#DAB04F"/>
+  </g>
+</svg>

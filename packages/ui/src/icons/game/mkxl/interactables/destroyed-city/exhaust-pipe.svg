@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Destroyed City — exhaust pipe strike</title>
+  <g data-game-icon-frame="true" stroke="#D9614C" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m32 5 7 8 11-3 1 11 8 7-7 8 3 11-11 2-7 10-8-7-11 3-2-11-10-7 7-8-3-11 11-2z" fill="#1E1C1C" stroke-width="2.4"/>
+    <path d="M13 13 8 8m43 5 5-5M13 51l-5 5m43-5 5 5" stroke="#8D9798" stroke-width="1.7"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 47h19V30h15V17h10" stroke="#A6AEB0" stroke-width="7"/>
+    <path d="M8 39v16m22-17v17" stroke="#525B5E" stroke-width="3"/>
+    <path d="M53 12c5-5 7 2 2 5 7 1 4 8-1 6" stroke="#E0DDD5" stroke-width="2.5"/>
+    <path d="m16 17 2 7 7 2-7 3-1 7-4-6-7 1 4-6-3-6 7 2z" fill="#D9614C"/>
+  </g>
+</svg>

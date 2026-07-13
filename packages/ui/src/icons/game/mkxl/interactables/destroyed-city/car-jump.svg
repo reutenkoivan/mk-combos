@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Destroyed City — jump from the wrecked car</title>
+  <g data-game-icon-frame="true" stroke="#52BFD0" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 17 19 7h26l11 10v30L45 57H19L8 47z" fill="#151E22" stroke-width="2.4"/>
+    <path d="M14 12v10m36-10v10M14 52V42m36 10V42" stroke="#B16A59" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 43h50l-5-13-10-5H23l-9 8-7 2z" fill="#744F4A" stroke="#D0C5B9" stroke-width="2.4"/>
+    <path d="M22 32h22l-6-6H28z" fill="#56838C" stroke="#BBD9DC" stroke-width="1.7"/>
+    <circle cx="18" cy="44" r="5" fill="#25292B" stroke="#A7A5A0" stroke-width="2.5"/>
+    <circle cx="47" cy="44" r="5" fill="#25292B" stroke="#A7A5A0" stroke-width="2.5"/>
+    <path d="M16 21c7-9 17-13 28-11m-6-5 6 5-4 6" stroke="#52BFD0" stroke-width="2.5"/>
+  </g>
+</svg>

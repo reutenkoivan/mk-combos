@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Tremor character — cracked stone mask and earthen armor</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 3 23 10 6 24-16 22H19L3 37l6-24L32 3Z" fill="#1C1712" stroke="#9B6A3E" stroke-width="2"/>
+    <path d="m13 17 8-7m30 7-8-7M9 42l12 13m34-13L43 55" stroke="#C89E62" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M19 16c8-7 19-5 25 3l3 20-15 16-15-16 2-23Z" fill="#9B6A3E" stroke="#E5C59C" stroke-width="2"/>
+    <path d="M20 29c8-5 16-5 24 0l-3 15-9 8-9-8-3-15Z" fill="#5D4432" stroke="#C89E62" stroke-width="2"/>
+    <path d="m29 17-4 10 6 4-4 7 5 4-3 10m10-27-6 6 5 6-6 5M23 27h4m10 0h4" stroke="#1C1712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m13 47-7 7m45-7 7 7" stroke="#C89E62" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

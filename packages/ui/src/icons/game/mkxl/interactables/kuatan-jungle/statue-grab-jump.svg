@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kuatan Jungle — grab and vault from the jungle statue</title>
+  <g data-game-icon-frame="true" stroke="#987CE2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 21 18 7h28l11 14-5 34H12z" fill="#191A20" stroke-width="2.5"/>
+    <path d="m8 21 9 3m39-3-9 3M13 55l8-8m30 8-8-8" stroke="#789161" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 55h28l-2-12-8-7 4-13-9-10-9 7 4 14-7 9z" fill="#686A5C" stroke="#BFC0AA" stroke-width="2.5"/>
+    <path d="m17 35-9-7m22 8 9-8M18 20l5 4 5-4" stroke="#D5CFBC" stroke-width="2.5"/>
+    <circle cx="21" cy="18" r="2" fill="#D76049"/>
+    <circle cx="27" cy="18" r="2" fill="#D76049"/>
+    <path d="M34 43c8-4 13-10 16-18m-6 2 6-2 2 6" stroke="#987CE2" stroke-width="2.5"/>
+  </g>
+</svg>

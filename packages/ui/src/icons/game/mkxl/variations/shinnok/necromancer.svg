@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Shinnok — Necromancer: skeletal hand summon</title>
+  <g data-variation-frame="true">
+    <path d="M14 56V27C14 15 22 7 32 7s18 8 18 20v29H14Z" fill="#171912" stroke="#A5AC79" stroke-width="2"/>
+    <path d="M9 56h46M19 27c0-9 5-15 13-15s13 6 13 15" stroke="#E4E7C1" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="m18 51 5-5 5 5 5-5 5 5 5-5 4 5" stroke="#6D7448" stroke-width="1.5"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M24 47V29c0-3 4-3 4 0v7-18c0-3 4-3 4 0v17-20c0-3 4-3 4 0v20-16c0-3 4-3 4 0v18-10c0-3 4-3 4 0v13c0 8-5 13-12 13-3 0-6-2-8-6Z" fill="#D9D6AF" stroke="#FFFCE7" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M28 36h12m-12 5h12m-9-22h2m3-2h2" stroke="#6E6A4A" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

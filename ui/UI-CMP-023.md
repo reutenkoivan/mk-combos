@@ -60,10 +60,13 @@
 
 ## Вхідні дані
 
-- active game, available characters і game-specific context options.
-- optional MKXL stage/zone/segment options.
+- prepared primary field group, який уже містить available character і game-specific context options.
+- prepared optional field group, який за потреби вже містить stage/zone/segment options.
+- prepared runtime field group.
 - prefilled context, runtime start state, validation state і disabled/busy state.
 - focus target і active language.
+
+Published `packages/ui` contract не отримує game id і не вирішує, які поля є MKXL- або MK1-specific. Page/business orchestration готує всі три field groups до render.
 
 ## Вихідні події
 
@@ -82,7 +85,7 @@ Payload містить field id, value, mode, reason і source focus target.
 ## Критерії приймання
 
 - Context validation controlled сторінкою.
-- MKXL-only fields не з'являються для MK1.
+- Game-specific fields з'являються лише тоді, коли вони присутні у prepared field groups.
 - Confirm event не містить browser events.
 
 ## Канонічний Responsive і Controller-only Contract

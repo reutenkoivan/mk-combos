@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kotal Kahn — Sun God solar command grab</title>
+  <g data-variation-frame="true" stroke="#F6C945" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="32" cy="32" r="24" fill="#221B10" stroke-width="2.5"/>
+    <path d="M32 3v8m0 42v8M3 32h8m42 0h8M11 11l6 6m30 30 6 6M53 11l-6 6M17 47l-6 6" stroke="#FF7B3E" stroke-width="2.5"/>
+    <path d="m24 7 2 5m12 40 2 5M7 40l5-2m40-12 5-2" stroke="#FFE9A8" stroke-width="1.5"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="32" cy="24" r="9" fill="#F6C945" stroke="#FFE9A8" stroke-width="2"/>
+    <path d="M16 43c2-6 5-9 10-10l6 7 6-7c5 1 8 4 10 10l-7 7-9-4-9 4z" fill="#3B2416" stroke="#FF7B3E" stroke-width="2.2"/>
+    <path d="m21 38 7 5m15-5-7 5M27 53l5-7 5 7" stroke="#F6C945" stroke-width="2"/>
+  </g>
+</svg>

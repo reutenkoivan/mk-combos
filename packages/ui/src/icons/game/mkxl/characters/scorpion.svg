@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Scorpion character — Shirai Ryu mask and chained kunai</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 3 24 10 5 25-16 21H19L3 38l5-25L32 3Z" fill="#17140B" stroke="#D4A42B" stroke-width="2"/>
+    <path d="M12 17 8 33m44-16 4 16M13 48l10 8m28-8-10 8" stroke="#8B6333" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M20 17c7-7 18-6 24 2l2 20-14 15-14-15 2-22Z" fill="#8A6240" stroke="#EAC9A1" stroke-width="2"/>
+    <path d="M20 29c8-5 16-5 24 0l-4 15-8 7-8-7-4-15Z" fill="#D4A42B" stroke="#FFE9A3" stroke-width="2"/>
+    <path d="M25 27h4m6 0h4m-12 10 5 4 5-4" stroke="#17140B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m42 43 12 6-7 4m7-4-2-7M12 50c5-4 10-5 15-3" stroke="#8B6333" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

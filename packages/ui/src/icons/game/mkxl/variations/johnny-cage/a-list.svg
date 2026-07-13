@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Johnny Cage — A-List charged specials and star power</title>
+  <g data-variation-frame="true" stroke="#F2C14E" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="8" y="11" width="48" height="42" rx="9" fill="#17151E" stroke-width="2.5"/>
+    <path d="M16 7v8M48 49v8M4 24h8M52 40h8" stroke="#54D6C8" stroke-width="2"/>
+    <path d="M18 55h20" stroke-width="1.5" stroke-dasharray="2 4"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 25h30v22H18z" fill="#252230" stroke="#F2C14E" stroke-width="2"/>
+    <path d="m17 25 4-9h30l-4 9zM23 16l5 9m5-9 5 9m5-9 5 9" stroke="#54D6C8" stroke-width="2"/>
+    <path d="m33 29 2.2 4.5 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7z" fill="#F2C14E"/>
+  </g>
+</svg>

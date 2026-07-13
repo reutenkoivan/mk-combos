@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Overhead-strike interactable — descending hammer blow</title>
+  <g data-game-icon-frame="true">
+    <path d="M11 8h42l4 14-6 10 6 10-4 14H11L7 42l6-10-6-10 4-14Z" fill="#211426" stroke="#9C6AB3" stroke-width="2"/>
+    <path d="M15 12h12m22 0H37M14 52h14m22 0H36" stroke="#DFC5EA" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M18 15h28v12H18V15Z" fill="#8E5BA6" stroke="#F2E2F8" stroke-width="2"/>
+    <path d="M29 27h6v22h-6V27Z" fill="#C1A0CE" stroke="#FAECFF" stroke-width="1.5"/>
+    <path d="M20 54h24M15 46l5 5m29-5-5 5" stroke="#D58D59" stroke-width="3" stroke-linecap="round"/>
+    <path d="m25 38 7 8 7-8" stroke="#F4C1A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

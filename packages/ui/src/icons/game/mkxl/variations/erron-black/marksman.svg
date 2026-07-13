@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Erron Black — Marksman: scoped long rifle</title>
+  <g data-variation-frame="true">
+    <path d="M6 16 20 6h24l14 10v32L44 58H20L6 48V16Z" fill="#10191B" stroke="#6FAFA7" stroke-width="2"/>
+    <path d="M11 21 23 11h18l12 10M11 43l12 10h18l12-10" stroke="#C99757" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m12 37 33-12 3 6-33 12-3-6Z" fill="#6FAFA7" stroke="#D8FFF6" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m42 26 10-4 3 5-9 4m-26 9-1 9 6-2 4-10" fill="#C99757" stroke="#FFE3B5" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="35" cy="30" r="5" fill="#10191B" stroke="#FFE3B5" stroke-width="2"/>
+    <path d="M35 26v8m-4-4h8" stroke="#C99757" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

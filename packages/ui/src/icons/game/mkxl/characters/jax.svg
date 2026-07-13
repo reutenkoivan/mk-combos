@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jax character — bald commander with cybernetic arms</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 6h48v12l5 14-5 14v12H8V46L3 32l5-14V6Z" fill="#111715" stroke="#728779" stroke-width="2"/>
+    <path d="M13 11h13m25 0H38M13 53h13m25 0H38" stroke="#C47A43" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="32" cy="22" r="10" fill="#80543E" stroke="#DDB49A" stroke-width="2"/>
+    <path d="M24 30h16l5 14-5 12H24l-5-12 5-14Z" fill="#80543E" stroke="#DDB49A" stroke-width="2"/>
+    <path d="M19 35 9 39l4 16 11-4m21-16 10 4-4 16-11-4" fill="#728779" stroke="#D5DFD8" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M27 22h3m4 0h3m-9 7c3 2 5 2 8 0M14 42l5 10m31-10-5 10" stroke="#111715" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

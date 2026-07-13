@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Stage Fatality interactable — fall into arena hazard</title>
+  <g data-game-icon-frame="true">
+    <path d="M9 9h46v30L46 56H18L9 39V9Z" fill="#1E1114" stroke="#A83B47" stroke-width="2"/>
+    <path d="M13 13h12m26 0H39M12 38h40" stroke="#E8B8BD" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M32 12c7 0 11 5 10 11-1 5-5 7-8 9v5h-4v-5c-3-2-7-4-8-9-1-6 3-11 10-11Z" fill="#D7C6B8" stroke="#FFF0E8" stroke-width="2"/>
+    <path d="m27 22 3 2m7-2-3 2m-5 5h6" stroke="#5B262A" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="m14 55 6-15 6 15 6-15 6 15 6-15 6 15H14Z" fill="#A52E39" stroke="#FFC5C9" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M32 34v10m-4-4 4 4 4-4" stroke="#F27972" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Tanya — Kobu Jutsu: twin tonfas</title>
+  <g data-variation-frame="true">
+    <path d="M12 9h15l5 6 5-6h15l3 15-6 8 6 8-3 15H37l-5-6-5 6H12L9 40l6-8-6-8 3-15Z" fill="#1D1420" stroke="#B873A7" stroke-width="2"/>
+    <path d="M15 13v10l6 5m28-15v10l-6 5M15 51V41l6-5m28 15V41l-6-5" stroke="#EBC9E1" stroke-width="1.5"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M18 18h7v29h-7V18Zm21-1h7v29h-7V17Z" fill="#9B577E" stroke="#FFE3F5" stroke-width="2"/>
+    <path d="M21 28h13v6H21m22-5H30v6h13" fill="#D18AB8" stroke="#FFE3F5" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m18 43 7-4m14-1 7 4" stroke="#5A2D48" stroke-width="1.5"/>
+  </g>
+</svg>

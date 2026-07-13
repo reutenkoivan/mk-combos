@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Emperor's Courtyard — throwable brazier of molten coals</title>
+  <g data-game-icon-frame="true" stroke="#F08A3E" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 8h28l10 14-5 34H13L8 22z" fill="#241813" stroke-width="2.5"/>
+    <path d="M8 22h11m26 0h11M14 54l7-8m29 8-7-8" stroke="#B95536" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 34h44l-6 20H16z" fill="#4E3930" stroke="#C8AA88" stroke-width="2.5"/>
+    <path d="M16 34c4-9 6-13 9-19 1 8 8 9 7 18 4-7 7-12 10-20 5 9 8 13 6 21" fill="#D85C38" stroke="#F5B94B" stroke-width="2.5"/>
+    <circle cx="22" cy="42" r="4" fill="#EF8C3F"/>
+    <circle cx="33" cy="46" r="5" fill="#C84A32"/>
+    <circle cx="44" cy="42" r="3" fill="#F0AA45"/>
+  </g>
+</svg>

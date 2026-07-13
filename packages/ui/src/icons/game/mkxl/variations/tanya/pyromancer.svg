@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Tanya — Pyromancer: dark fire projectiles</title>
+  <g data-variation-frame="true">
+    <path d="M32 5 37 16l11-6-1 12 12 1-8 9 8 9-12 1 1 12-11-6-5 11-5-11-11 6 1-12-12-1 8-9-8-9 12-1-1-12 11 6 5-11Z" fill="#29110F" stroke="#E05245" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M32 10v7m0 30v7M10 32h7m30 0h7" stroke="#FFC285" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <circle cx="32" cy="32" r="14" fill="#8B2441" stroke="#FFD4A6" stroke-width="2"/>
+    <path d="M32 15c8 9 12 14 12 22 0 7-5 12-12 12s-12-5-12-12c0-5 3-9 7-14-1 6 3 7 5 3 2-3 1-7 0-11Z" fill="#F0673E" stroke="#FFE0B3" stroke-width="1.5"/>
+    <path d="M33 31c4 5 4 10-1 13-4-3-4-7-1-11l2-2Z" fill="#FFD052"/>
+  </g>
+</svg>

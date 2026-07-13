@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jacqui Briggs character — braided soldier with powered gauntlets</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 7h17v4H13v12H8V7Zm31 0h17v16h-5V12H39V7ZM8 41h5v11h12v5H8V41Zm43 0h5v16H39v-5h12V41Z" fill="#54A7C5"/>
+    <rect x="8" y="7" width="48" height="50" rx="7" fill="#101A21" stroke="#54A7C5" stroke-width="2" stroke-dasharray="9 3"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M22 17c6-6 15-4 19 2l1 18-10 9-10-9V17Z" fill="#8B5D42" stroke="#E6B899" stroke-width="2"/>
+    <path d="M22 20c-5 4-5 12-2 18m22-18c5 4 5 12 2 18M25 27h4m6 0h4M27 37c3 2 7 2 10 0" stroke="#101A21" stroke-width="2" stroke-linecap="round"/>
+    <path d="M17 42h10l3 12H15l2-12Zm30 0H37l-3 12h15l-2-12Z" fill="#54A7C5" stroke="#CFF5FF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m20 17-5 18m29-18 5 18" stroke="#C5D058" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

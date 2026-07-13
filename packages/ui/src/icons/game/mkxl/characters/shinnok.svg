@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Shinnok character — fallen elder god with bone crown</title>
+  <g data-game-icon-frame="true">
+    <path d="M32 3c8 7 15 8 24 10-2 9 4 17 5 25-9 5-13 14-18 21-8-4-15-4-23 0-4-8-11-14-17-21 6-8 5-16 5-25 9-1 16-6 24-10Z" fill="#171012" stroke="#8D4D61" stroke-width="2"/>
+    <path d="M14 16 25 8m25 8L39 8M10 43l11 11m33-11L43 54" stroke="#B9A98B" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m17 21 2-14 8 9 5-13 5 13 8-9 2 14" fill="#B9A98B" stroke="#EEE5D5" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M19 20h26l2 21-15 14-15-14 2-21Z" fill="#8D4D61" stroke="#E2B6C3" stroke-width="2"/>
+    <path d="M24 28h5m6 0h5M25 41l7-5 7 5M32 19v17" stroke="#171012" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m15 43-6 9m40-9 6 9" stroke="#B9A98B" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

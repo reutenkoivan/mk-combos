@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jason Voorhees character — scarred hockey mask</title>
+  <g data-game-icon-frame="true">
+    <path d="M7 8h50v10l-5 8 8 8-8 8 5 14H7l5-14-8-8 8-8-5-8V8Z" fill="#14191A" stroke="#687D7E" stroke-width="2"/>
+    <path d="M12 13h40M9 51h46" stroke="#A74444" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M19 14h26l6 12-5 21-14 9-14-9-5-21 6-12Z" fill="#C6BA9F" stroke="#F5ECD9" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="25" cy="28" r="3" fill="#14191A"/><circle cx="39" cy="28" r="3" fill="#14191A"/>
+    <path d="M32 18v5M24 38h4m8 0h4m-8-5v12M26 49h12" stroke="#A74444" stroke-width="2" stroke-linecap="round"/>
+    <path d="m17 19-7-5m37 5 7-5" stroke="#687D7E" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>

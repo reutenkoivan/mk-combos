@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Tremor — Aftershock: ground-quake slam</title>
+  <g data-variation-frame="true">
+    <path d="M8 15 22 7l10 5 10-5 14 8-4 14 7 10-11 8-1 11-15-5-15 5-1-11-11-8 7-10-4-14Z" fill="#241A11" stroke="#A8743D" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m10 17 11 6 4-8m29 2-11 6-4-8M15 48l12-5m22 5-12-5" stroke="#E4C18E" stroke-width="1.5"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M15 45h34l-5 7H20l-5-7Z" fill="#745132" stroke="#EED6AF" stroke-width="2"/>
+    <path d="M32 14c7 0 12 6 10 12l-3 10H25l-3-10c-2-6 3-12 10-12Z" fill="#A66B3A" stroke="#F2D3A7" stroke-width="2"/>
+    <path d="M25 36h14l4 9H21l4-9Zm7 9-3 9m3-9 4 8M21 45l-7 5m29-5 7 5" stroke="#4A301D" stroke-width="2" stroke-linejoin="round"/>
+  </g>
+</svg>

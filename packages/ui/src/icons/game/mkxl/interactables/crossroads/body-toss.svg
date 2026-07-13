@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Crossroads — corpse body toss</title>
+  <g data-game-icon-frame="true" stroke="#C95A4A" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 18 18 8h28l10 10v28L46 56H18L8 46z" fill="#201817" stroke-width="2.5"/>
+    <path d="M13 13l7 7m31-7-7 7M13 51l7-7m31 7-7-7" stroke="#785C4A" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="21" cy="22" r="5" fill="#D8D0C4"/>
+    <path d="m18 28 9 8 11-4m-14 2-8 13m12-10 9 11" stroke="#D8D0C4" stroke-width="3.6"/>
+    <path d="M33 18c8-3 16 0 20 7m-5-10 5 10-10 3" stroke="#E76C53" stroke-width="2.5"/>
+    <path d="M12 52h40" stroke="#806552" stroke-width="2.5"/>
+  </g>
+</svg>

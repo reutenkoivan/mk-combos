@@ -33,14 +33,12 @@ import {
 } from "../primitives/layout";
 import { SegmentedControl } from "../primitives/segmented-control";
 import { Badge, LoadingIndicator, StatusMessage } from "../primitives/state";
-import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { fieldRecipe } from "../recipes/field";
 import { indicatorRecipe } from "../recipes/indicator";
 import { itemRecipe } from "../recipes/item";
 import { separatorRecipe } from "../recipes/separator";
 import { surfaceRecipe } from "../recipes/surface";
-import type { UiContrastMode, UiThemeMode } from "../tokens/type";
 import {
   uiContrastModes,
   uiDensityModes,
@@ -50,13 +48,15 @@ import {
   uiPlacementModes,
   uiSelectionStates,
   uiSemanticTokens,
-  uiShapeModes,
   uiThemeModes,
   uiToneModes,
 } from "../tokens/value";
+import { StoryFrame } from "./story-frame";
+import { storyViewportGlobals } from "./story-viewports";
 
 const meta = {
   component: FoundationStorySurface,
+  globals: storyViewportGlobals.desktop,
   parameters: {
     chromatic: {
       disableSnapshot: false,
@@ -120,36 +120,11 @@ function FoundationStorySurface() {
   return null;
 }
 
-const StoryFrame = (props: {
-  contrast?: UiContrastMode;
-  mode?: UiThemeMode;
-  children: React.ReactNode;
-}) => {
-  const { children, contrast = uiContrastModes.standard, mode = uiThemeModes.dark } = props;
-
-  return (
-    <div
-      className="mk-combos-ui-root grid min-h-screen justify-items-center p-6"
-      data-ui-contrast={contrast}
-      data-ui-theme={mode}
-    >
-      <main className="grid w-full max-w-5xl gap-4">{children}</main>
-    </div>
-  );
-};
-
 const Section = (props: { children: React.ReactNode; title: string }) => (
-  <section
-    className={cx(
-      surfaceRecipe({
-        density: uiDensityModes.medium,
-        material: uiMaterialModes.separated,
-        shape: uiShapeModes.fixed,
-      }),
-      "flex flex-col gap-3",
-    )}
-  >
-    <h2 className="text-sm font-semibold text-[var(--ui-text)]">{props.title}</h2>
+  <section className="flex flex-col gap-3 border-t border-[var(--ui-separator)] pt-5 first:border-t-0 first:pt-0">
+    <h2 className="font-[var(--ui-font-display)] text-base font-semibold text-[var(--ui-text)]">
+      {props.title}
+    </h2>
     {props.children}
   </section>
 );
@@ -459,7 +434,7 @@ const NotationMatrix = () => {
 
 export const Default: Story = {
   render: () => (
-    <StoryFrame>
+    <StoryFrame contentClassName="max-w-5xl">
       <Section title="Tokens">
         <TokenGrid />
       </Section>
@@ -481,7 +456,11 @@ export const Default: Story = {
 
 export const DarkIncreasedContrast: Story = {
   render: () => (
-    <StoryFrame contrast={uiContrastModes.increased} mode={uiThemeModes.dark}>
+    <StoryFrame
+      contentClassName="max-w-5xl"
+      contrast={uiContrastModes.increased}
+      theme={uiThemeModes.dark}
+    >
       <Section title="Dark Increased Contrast Recipes">
         <RecipeMatrix />
       </Section>
@@ -497,7 +476,7 @@ export const DarkIncreasedContrast: Story = {
 
 export const LightThemeReference: Story = {
   render: () => (
-    <StoryFrame mode={uiThemeModes.light}>
+    <StoryFrame contentClassName="max-w-5xl" theme={uiThemeModes.light}>
       <Section title="Light Theme Recipes">
         <RecipeMatrix />
       </Section>
@@ -510,7 +489,7 @@ export const LightThemeReference: Story = {
 
 export const LongLabelsAndStates: Story = {
   render: () => (
-    <StoryFrame contrast={uiContrastModes.increased}>
+    <StoryFrame contentClassName="max-w-5xl" contrast={uiContrastModes.increased}>
       <Section title="Long Labels, Disabled, Invalid">
         <div className="grid gap-2">
           <button

@@ -47,7 +47,7 @@ export function FirstLaunchSetupForm(props: FirstLaunchSetupFormProps) {
       {(props.title || props.description) && (
         <header className="grid gap-1 pb-2">
           {props.title && (
-            <h1 className="font-[var(--ui-font-display)] text-xl font-bold uppercase tracking-[0.04em]">
+            <h1 className="font-[var(--ui-font-display)] text-xl font-semibold tracking-[-0.01em]">
               {props.title}
             </h1>
           )}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Lin Kuei faction — frozen ninja crest</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 5 8 8 11-1 1 11 7 9-7 9-1 11-11-1-8 8-8-8-11 1-1-11-7-9 7-9 1-11 11 1 8-8Z" fill="#0C1925" stroke="#5799CC" stroke-width="2"/>
+    <path d="M32 8v8M8 32h8m40 0h-8M32 56v-8" stroke="#CDEEFF" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M32 14v36M16 23l32 18M16 41l32-18m-16-9-5 7m5-7 5 7m-21 2 9 1m-9-1 4 8m28-8-9 1m9-1-4 8M16 41l9-1m-9 1 4-8m28 8-9-1m9 1-4-8M32 50l-5-7m5 7 5-7" stroke="#A7DEFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m25 28 7-5 7 5-3 10h-8l-3-10Z" fill="#276C9B" stroke="#E7F8FF" stroke-width="1.5"/>
+  </g>
+</svg>

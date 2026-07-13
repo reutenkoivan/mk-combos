@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>The Kove — dive from the ship hull</title>
+  <g data-game-icon-frame="true">
+    <path d="M7 7h50v50H7V7Z" fill="#0F1A1E" stroke="#4C7F90" stroke-width="2"/>
+    <path d="M12 12v40m0-30h10m-10 11h10m-10 11h10M52 12v40" stroke="#BDD7DF" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M8 14h17v39H8V14Zm0 9h17m-17 10h17m-17 10h17" fill="#72503A" stroke="#E6CDBA" stroke-width="2"/>
+    <circle cx="36" cy="19" r="4" fill="#BBC8CA" stroke="#F3F7F7" stroke-width="1.5"/>
+    <path d="m34 24 7 7 12 3-3 7-13-3-9 12-7-5 8-14-7-5 12-2Z" fill="#567982" stroke="#EDF5F6" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M26 27 17 32m13 0-4-5m4 5-4 5M50 16C45 9 37 7 30 9" stroke="#58B4C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

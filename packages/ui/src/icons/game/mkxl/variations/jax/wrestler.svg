@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jax — Wrestler: power grappling clinch</title>
+  <g data-variation-frame="true">
+    <rect x="5" y="5" width="54" height="54" rx="4" fill="#17110C" stroke="#B77A43" stroke-width="2"/>
+    <path d="M5 17h54M5 47h54M13 5v54m38-54v54" stroke="#5FB5A4" stroke-width="1.5" stroke-dasharray="10 8"/>
+  </g>
+  <g data-variation-symbol="true">
+    <circle cx="23" cy="19" r="5" fill="#B77A43" stroke="#F5D3AC" stroke-width="2"/>
+    <circle cx="41" cy="25" r="5" fill="#5FB5A4" stroke="#D8FFF5" stroke-width="2"/>
+    <path d="M23 24c-6 4-8 12-5 22m23-16c5 4 6 11 4 18M24 29l13 5 8-6M20 36l10 5 7-7" stroke="#F5D3AC" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m17 46 7 5m21-3-8 4M29 41l4 10" stroke="#5FB5A4" stroke-width="2.4" stroke-linecap="round"/>
+  </g>
+</svg>

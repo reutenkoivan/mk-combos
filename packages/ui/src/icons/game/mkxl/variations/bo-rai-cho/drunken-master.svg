@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Bo' Rai Cho — Drunken Master: swaying wine gourd</title>
+  <g data-variation-frame="true">
+    <path d="m20 5 24 2 15 17-3 25-18 11-24-5L5 34l6-22 9-7Z" fill="#1B1510" stroke="#C98A52" stroke-width="2"/>
+    <path d="M19 10 9 31l9 21m27-40 10 13-3 22" stroke="#84B9A2" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M28 14h10l-1 7c7 3 10 10 8 18-2 9-10 13-19 10-8-2-11-9-8-17 2-6 6-9 11-11l-1-7Z" fill="#C98A52" stroke="#F5D7A1" stroke-width="2"/>
+    <path d="M21 35c6-3 14 5 22 0M27 15h12" stroke="#1B1510" stroke-width="2" stroke-linecap="round"/>
+    <path d="M13 21c3-3 6-2 8 0m29 22c-3 3-6 2-8 0" stroke="#84B9A2" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="33" cy="30" r="2" fill="#F5D7A1"/>
+  </g>
+</svg>

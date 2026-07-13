@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Escape interactable — exit through arena boundary</title>
+  <g data-game-icon-frame="true">
+    <path d="M10 8h35l9 9v38H10V8Z" fill="#0E1E1C" stroke="#4F9E91" stroke-width="2"/>
+    <path d="M45 8v9h9M15 13h17M15 50h17" stroke="#BEE8DF" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M17 16h22v34H17V16Z" fill="#2D6E66" stroke="#E0F5F0" stroke-width="2"/>
+    <circle cx="34" cy="33" r="2" fill="#F2D577"/>
+    <path d="M28 33h27m-9-9 9 9-9 9" stroke="#8DE0D0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,7 +1,8 @@
 import { Menu as BaseMenu } from "@base-ui/react/menu";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 
 import { useBaseUiOpenChangeHandler } from "../internal/base-ui/use-open-change-handler";
+import { useUiRootContext } from "../internal/ui-root-context";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { itemRecipe } from "../recipes/item";
@@ -115,7 +116,31 @@ export function MenuTrigger(props: MenuTriggerProps) {
 
 MenuTrigger.displayName = "MenuTrigger";
 
-export const MenuPortal = BaseMenu.Portal;
+export type MenuPortalProps = ComponentPropsWithRef<typeof BaseMenu.Portal>;
+
+export function MenuPortal(props: MenuPortalProps) {
+  const { className, ...portalProps } = props;
+  const { contrast, density, responsiveMode, theme } = useUiRootContext();
+
+  return (
+    <BaseMenu.Portal
+      {...portalProps}
+      className={(state) =>
+        cx(
+          "mk-combos-ui-root mk-combos-ui-portal-root",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
+      data-ui-contrast={contrast}
+      data-ui-density={density}
+      data-ui-portal="menu"
+      data-ui-responsive={responsiveMode}
+      data-ui-theme={theme}
+    />
+  );
+}
+
+MenuPortal.displayName = "MenuPortal";
 
 export type MenuPositionerProps = UiPrimitiveProps<HTMLDivElement> & {
   align?: UiFloatingAlignment;
@@ -173,7 +198,6 @@ export function MenuPopup(props: MenuPopupProps) {
       {...popupProps}
       className={cx("min-w-44", popupRecipe({ density, material, shape }), className)}
       data-ui-menu-popup
-      data-ui-portal
       ref={ref}
     >
       {children}

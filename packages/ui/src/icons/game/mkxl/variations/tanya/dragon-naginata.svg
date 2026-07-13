@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Tanya — Dragon Naginata: bladed polearm</title>
+  <g data-variation-frame="true">
+    <path d="M32 4 51 16l7 16-7 16-19 12-19-12-7-16 7-16L32 4Z" fill="#21130D" stroke="#C56D3B" stroke-width="2"/>
+    <path d="M32 8v9m0 30v9M10 32h9m26 0h9" stroke="#F4C09D" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m18 51 24-34" stroke="#E6D6B9" stroke-width="3" stroke-linecap="round"/>
+    <path d="M39 21c2-8 7-10 12-9-4 3-4 7-3 11l-10 8-5-4 6-6Z" fill="#CF623A" stroke="#FFE1C1" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m22 45 5 4m2-12 5 4" stroke="#65351F" stroke-width="1.5"/>
+    <path d="m16 49-4 5 7-1" fill="#D79A3A" stroke="#FFE0A0" stroke-width="1.5"/>
+  </g>
+</svg>

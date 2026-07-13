@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kuatan Jungle — hanging vine traversal</title>
+  <g data-game-icon-frame="true" stroke="#62BD76" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 7h38l7 13-5 37H11L6 20z" fill="#152018" stroke-width="2.4"/>
+    <path d="M8 20h10m28 0h10M13 57l6-8m32 8-6-8" stroke="#6F8F55" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 9h39M35 10c-7 9 6 14-1 22s4 13-2 22" stroke="#5A422E" stroke-width="4.5"/>
+    <path d="M30 18c-8-4-11 3-7 8 8 1 11-3 7-8zm9 13c8-3 11 4 6 9-7 0-10-4-6-9zm-8 14c-8-3-10 5-5 9 7 0 10-5 5-9z" fill="#789A5D" stroke="#C2DA99" stroke-width="1.7"/>
+    <path d="M48 49c5-7 6-15 3-23m-4 5 4-5 5 4" stroke="#62BD76" stroke-width="2.5"/>
+  </g>
+</svg>

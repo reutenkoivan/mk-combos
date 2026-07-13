@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Hidden state — visibility disabled</title>
+  <g data-game-icon-frame="true">
+    <path d="M6 32C13 18 22 11 32 11s19 7 26 21c-7 14-16 21-26 21S13 46 6 32Z" fill="#171822" stroke="#74798E" stroke-width="2"/>
+    <path d="M12 16 52 48" stroke="#CDD0DB" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M12 32c6-10 13-15 20-15s14 5 20 15c-6 10-13 15-20 15S18 42 12 32Z" fill="#393C4B" stroke="#E8E9EF" stroke-width="2"/>
+    <circle cx="32" cy="32" r="8" fill="#777D96" stroke="#F4F5F7" stroke-width="2"/>
+    <path d="M10 10 54 54" stroke="#D55562" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

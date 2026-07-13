@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Triborg character — armored cyber Lin Kuei ninja</title>
+  <g data-game-icon-frame="true">
+    <path d="m8 11 16-6 8 4 8-4 16 6 5 20-6 22-13 7H22L9 53 3 31l5-20Z" fill="#0B1116" stroke="#71838E" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m10 16 8-4m36 4-8-4M8 43l9 8m39-8-9 8M32 9v6" stroke="#C4D0D5" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M11 56c1-8 6-13 14-15h14c8 2 13 7 14 15l-11 4H22l-11-4Z" fill="#303B42" stroke="#AAB8BE" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m12 54 5-9 9-4 6 7 6-7 9 4 5 9-10 3H22l-10-3Z" fill="#151D22" stroke="#71838E" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M21 17c-6 1-9 6-8 12l5 9m25-21c6 1 9 6 8 12l-5 9" stroke="#71838E" stroke-width="3" stroke-linecap="round"/>
+    <path d="m22 12 10-4 10 4 5 10-3 18-12 9-12-9-3-18 5-10Z" fill="#4C5A62" stroke="#D5E0E4" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m22 14 10 3 10-3 3 8-5-2-8 3-8-3-5 2 3-8Z" fill="#202A30" stroke="#71838E" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M21 24h22l-3 8-8 3-8-3-3-8Z" fill="#0A0F13" stroke="#9AAAB1" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="m24 27 6 1m10-1-6 1" stroke="#F05A54" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="m24 34 8 3 8-3-2 9-6 4-6-4-2-9Z" fill="#202A30" stroke="#C4D0D5" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M29 39v5m3-6v7m3-6v5" stroke="#71838E" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="m27 51 5-3 5 3-2 5h-6l-2-5Z" fill="#253139" stroke="#C4D0D5" stroke-width="1.5"/>
+    <circle cx="30" cy="52" r="1.3" fill="#D94E48"/>
+    <circle cx="34" cy="52" r="1.3" fill="#D7B63F"/>
+    <path d="M18 38c-5 1-8 4-9 8m37-8c5 1 8 4 9 8" stroke="#53B8D1" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

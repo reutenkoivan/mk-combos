@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>The Pit — corner dive-kick from the bridge wall</title>
+  <g data-game-icon-frame="true">
+    <path d="M7 7h50v50H7V7Z" fill="#1A1613" stroke="#84705D" stroke-width="2"/>
+    <path d="M12 12v40m0-29h10m-10 10h10m-10 10h10M52 12v40" stroke="#DCCDBD" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="31" cy="19" r="4" fill="#D0CBC3" stroke="#FBF8F1" stroke-width="1.5"/>
+    <path d="m29 24 8 7 15-2 1 7-14 3 14 9-4 6-16-9-8 9-6-5 8-13-7-7 9-5Z" fill="#817D75" stroke="#F3EFE8" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M25 17 19 9m30 32 7 1-3 7" stroke="#D6AA4B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13 54h43" stroke="#B64F3D" stroke-width="2" stroke-dasharray="4 3"/>
+  </g>
+</svg>

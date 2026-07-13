@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jacqui Briggs — Shotgun: close-range scatter blast</title>
+  <g data-variation-frame="true">
+    <path d="M10 6h35l9 9v12l6 5-6 5v12l-9 9H10V44l-6-12 6-12V6Z" fill="#171B14" stroke="#8CAD58" stroke-width="2"/>
+    <path d="M15 11h27l7 7M15 53h27l7-7" stroke="#E18B5A" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m12 39 29-17 5 7-29 17-5-7Z" fill="#8CAD58" stroke="#E8F8C9" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m37 25 11-7 5 3-8 8m-23 12 3 8-7 4-5-10" fill="#E18B5A" stroke="#FFD4B5" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="50" cy="33" r="2" fill="#E18B5A"/><circle cx="56" cy="27" r="1.6" fill="#E8F8C9"/><circle cx="56" cy="39" r="1.6" fill="#E8F8C9"/>
+    <path d="m47 30 8-5m-6 10h10m-12 3 8 5" stroke="#8CAD58" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+</svg>

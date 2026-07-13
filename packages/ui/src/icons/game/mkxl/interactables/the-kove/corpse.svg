@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>The Kove — drowned corpse toss</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 16 20 7h29l8 13-4 12 5 13-13 12H18L6 45l5-13-3-16Z" fill="#131C1D" stroke="#527B7D" stroke-width="2"/>
+    <path d="M12 18h11m30 3-8 4M11 47l9-4m33 4-10-4" stroke="#C1D3D1" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="18" cy="33" r="6" fill="#8A9991" stroke="#ECF1E9" stroke-width="1.5"/>
+    <path d="m24 33 14-5 10-10m-10 10 12 10M31 31l1 15m-1-5-12 8" stroke="#A7B3AA" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M9 24c10-10 23-13 35-8m-6-5 7 5-6 6" stroke="#DC6F55" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13 56c9-4 19-4 28 0m2-5c5-2 9-2 14 0" stroke="#5FB2B6" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Destroyed City — throwable traffic light</title>
+  <g data-game-icon-frame="true" stroke="#E39143" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 9h40l7 11-7 35H12L5 20z" fill="#1B1D1C" stroke-width="2.4"/>
+    <path d="M6 20h10m32 0h10M12 55l7-8m33 8-7-8" stroke="#777D7A" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 55V10h17" stroke="#AAA9A5" stroke-width="3.5"/>
+    <rect x="39" y="7" width="16" height="33" rx="3" fill="#2D3031" stroke="#D6D1C8" stroke-width="2.5"/>
+    <circle cx="47" cy="15" r="3.5" fill="#D75246"/>
+    <circle cx="47" cy="24" r="3.5" fill="#E2AA42"/>
+    <circle cx="47" cy="33" r="3.5" fill="#6DA36B"/>
+    <path d="M10 46c5-7 11-11 18-11m-5-4 5 4-3 6" stroke="#E39143" stroke-width="2.5"/>
+  </g>
+</svg>

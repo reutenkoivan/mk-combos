@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Completed state — verified completion seal</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 5 7 6 9-1 3 9 8 5-4 8 4 8-8 5-3 9-9-1-7 6-7-6-9 1-3-9-8-5 4-8-4-8 8-5 3-9 9 1 7-6Z" fill="#102119" stroke="#57A975" stroke-width="2"/>
+    <circle cx="32" cy="32" r="21" stroke="#C8EBD3" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="32" cy="32" r="15" fill="#3D8F5E" stroke="#E5F8EB" stroke-width="2"/>
+    <path d="m22 32 7 7 14-16" stroke="#F5FFF8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m20 47-2 9 8-4m18-5 2 9-8-4" fill="#276742" stroke="#C9EBD3" stroke-width="1.5" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Lin Kuei Temple — vault from the dragon statue</title>
+  <g data-game-icon-frame="true" stroke="#67CED5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 20 18 7h28l10 13-4 35H12z" fill="#132126" stroke-width="2.5"/>
+    <path d="m8 20 9 3m39-3-9 3M13 55l8-8m30 8-8-8" stroke="#7C9399" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 53h35l-4-12-11-2 7-8-3-12-10-8-8 8 7 8-9 5z" fill="#62747A" stroke="#C9DEE0" stroke-width="2.5"/>
+    <path d="m24 11-5-5m17 14 7-5m-22 9 7 2 5-5" stroke="#A5E0E6" stroke-width="2.5"/>
+    <circle cx="28" cy="18" r="2" fill="#66D4E1"/>
+    <path d="M35 42c9-5 14-12 17-21m-6 2 6-2 1 7" stroke="#67CED5" stroke-width="2.5"/>
+  </g>
+</svg>

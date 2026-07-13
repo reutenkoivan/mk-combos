@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Low-strike interactable — sweeping attack below guard</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 11h48v36l-9 10H17L8 47V11Z" fill="#152013" stroke="#739E59" stroke-width="2"/>
+    <path d="M12 16h10m30 0H42M13 45h38" stroke="#D1E5C5" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M15 42h34" stroke="#8DBE6C" stroke-width="2" stroke-dasharray="4 3"/>
+    <path d="M19 25c8-4 15-2 19 5l-7 7-12-2v-10Z" fill="#62874F" stroke="#E7F2DF" stroke-width="2"/>
+    <path d="M31 37c8-2 14 0 20 6M18 35l-7 7" stroke="#B9DDA5" stroke-width="3" stroke-linecap="round"/>
+    <path d="m49 39 6 5-7 3" fill="#8DBE6C" stroke="#EEF8E8" stroke-width="1.5" stroke-linejoin="round"/>
+  </g>
+</svg>

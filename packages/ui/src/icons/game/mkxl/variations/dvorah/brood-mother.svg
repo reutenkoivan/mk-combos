@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>D'Vorah — Brood Mother: hatching larva pod</title>
+  <g data-variation-frame="true">
+    <path d="M32 3c9 8 18 7 25 14-5 9 0 17 1 26-10 2-16 10-26 17-8-8-15-13-26-17 3-9 5-17 1-26 10-3 17-8 25-14Z" fill="#1B1606" stroke="#D6B83E" stroke-width="2"/>
+    <path d="M13 19 7 17m44 2 6-2M15 47l-6 3m40-3 6 3" stroke="#9CD05A" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M24 39c0-12 3-23 8-23s8 11 8 23c0 7-3 11-8 11s-8-4-8-11Z" fill="#D6B83E" stroke="#FFF0A1" stroke-width="2"/>
+    <path d="M27 24h10m-12 7h14m-15 8h16" stroke="#1B1606" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M25 37c-7-2-9-6-10-11m10 17c-7 1-10 4-12 8m26-14c7-2 9-6 10-11m-10 17c7 1 10 4 12 8" stroke="#9CD05A" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="m28 16 4-5 4 5" stroke="#FFF0A1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

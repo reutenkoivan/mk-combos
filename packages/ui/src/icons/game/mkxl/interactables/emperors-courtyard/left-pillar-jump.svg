@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Emperor's Courtyard — jump from the left stone pillar</title>
+  <g data-game-icon-frame="true" stroke="#63CDBF" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 8h18l4 6 4-6h18v17l-6 7 6 7v17H36l-4-6-4 6H10V39l6-7-6-7z" fill="#151F1E" stroke-width="2.4"/>
+    <path d="M10 18h8m28 0h8M10 46h8m28 0h8" stroke="#94836B" stroke-width="1.7"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 55h19M12 50h13V17H12zm-2-33h17l-3-8H13z" fill="#806B58" stroke="#D8CAB4" stroke-width="2.5"/>
+    <circle cx="36" cy="40" r="4" fill="#E0E9E5"/>
+    <path d="m35 44-7 7m9-7 8 4m-9-4 4 10M23 42c11-3 18-10 23-21m-7 1 7-1 1 7" stroke="#63CDBF" stroke-width="2.5"/>
+  </g>
+</svg>

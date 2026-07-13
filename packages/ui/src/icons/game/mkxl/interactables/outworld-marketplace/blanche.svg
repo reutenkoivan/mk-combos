@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Outworld Marketplace — Blanche throwable elder</title>
+  <g data-game-icon-frame="true" stroke="#C580D3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 5c5 4 9 4 14 1 1 6 4 9 10 10-4 5-4 9 1 14-5 4-6 9-2 14-6 1-9 5-10 11-5-4-9-4-14 1-4-5-9-6-14-2-1-6-4-9-10-10 4-5 4-9-1-14 5-4 6-9 2-14 6-1 9-5 10-11 5 4 9 4 14 0z" fill="#231923" stroke-width="2.4"/>
+    <path d="M15 13c4 3 6 7 5 12m29-12c-4 3-6 7-5 12" stroke="#D8B49A" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="32" cy="18" r="9" fill="#D8B49A" stroke="#EBD7C4" stroke-width="2.2"/>
+    <path d="M23 17c1-10 17-12 19 0-4-3-7-4-10-2-3-2-6-1-9 2z" fill="#D5D0C8" stroke="#6D625A" stroke-width="1.8"/>
+    <path d="M19 54c1-19 5-27 13-27s12 8 13 27z" fill="#6D5674" stroke="#C9A9D0" stroke-width="2.5"/>
+    <path d="m24 36-11 9m27-9 11 9M28 20h1m6 0h1m-6 4h4m-19 16-8 10 10-3m32-7 8 10-10-3" stroke="#D55F49" stroke-width="2.3"/>
+  </g>
+</svg>

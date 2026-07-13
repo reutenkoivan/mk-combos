@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Ermac character — hooded soul construct and glowing mask</title>
+  <g data-game-icon-frame="true">
+    <path d="M32 3 57 31 32 61 7 31 32 3Z" fill="#101A18" stroke="#28B98B" stroke-width="2"/>
+    <path d="M32 8 52 31 32 55 12 31 32 8Z" stroke="#BD4359" stroke-width="1.5" stroke-dasharray="6 4"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M18 31c1-13 6-21 14-21s13 8 14 21l-5 17-9 6-9-6-5-17Z" fill="#BD4359" stroke="#F5BBC4" stroke-width="2"/>
+    <path d="M21 29c7-4 15-4 22 0l-3 11-8 5-8-5-3-11Z" fill="#101A18" stroke="#28B98B" stroke-width="2"/>
+    <path d="M25 31h4m6 0h4m-13 7c4 2 8 2 12 0" stroke="#C8FFE9" stroke-width="2" stroke-linecap="round"/>
+    <path d="M15 23c-5-3-8 3-5 7m39-7c5-3 8 3 5 7M14 45c-4 2-4 7 0 9m36-9c4 2 4 7 0 9" stroke="#28B98B" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

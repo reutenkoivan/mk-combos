@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Emperor's Courtyard — jump from the brick pile</title>
+  <g data-game-icon-frame="true" stroke="#5CC3B5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 17 18 7h28l11 10v30L46 57H18L7 47z" fill="#15201E" stroke-width="2.4"/>
+    <path d="M13 12h10m28 0H41M13 52h10m28 0H41" stroke="#A66550" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 54h38v-9h-9v-9H17v8H7z" fill="#87574B" stroke="#D5A99A" stroke-width="2.4"/>
+    <path d="M17 36h19m-19 8h19m-10-8v8m-8 1v9m18-9v9" stroke="#5C3932" stroke-width="1.8"/>
+    <circle cx="44" cy="30" r="4" fill="#DDE7E2"/>
+    <path d="m43 34-5 8m7-8 8 4m-8-3 4 10M26 29c6-9 14-14 24-15m-6-4 6 4-4 6" stroke="#5CC3B5" stroke-width="2.5"/>
+  </g>
+</svg>

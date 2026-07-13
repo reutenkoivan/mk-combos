@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Leatherface — Pretty Lady mask and berserker chainsaw stance</title>
+  <g data-variation-frame="true" stroke="#E58AA8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 5c5 5 9 5 14 1 1 6 4 9 10 10-4 5-4 9 1 14-5 4-6 9-2 14-6 1-9 5-10 11-5-4-9-4-14 1-4-5-9-6-14-2-1-6-4-9-10-10 4-5 4-9-1-14 5-4 6-9 2-14 6-1 9-5 10-11 5 4 9 4 14 0z" fill="#271A20" stroke-width="2.4"/>
+    <path d="M15 13c4 3 6 7 5 12m29-12c-4 3-6 7-5 12M13 48c4-3 7-4 12-3m26 3c-4-3-7-4-12-3" stroke="#F2D6A4" stroke-width="1.7"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M23 19c5-5 13-5 18 0l4 16-5 14-8 5-8-5-5-14z" fill="#DFC5A5" stroke="#F2D6A4" stroke-width="2"/>
+    <path d="M24 31h5m6 0h5m-12 10c3 2 5 2 8 0M32 22v14" stroke="#7B3E50" stroke-width="1.8"/>
+    <path d="m22 18-8-3 3-5 8 7m17 1 8-3-3-5-8 7" fill="#E58AA8" stroke="#F5B7CB" stroke-width="1.8"/>
+    <path d="M10 51h30l9-4 5 4-5 4H10z" fill="#514742" stroke="#D7D0C7" stroke-width="2"/>
+    <path d="m40 51 3-7 5 3" stroke="#E58AA8" stroke-width="2"/>
+  </g>
+</svg>

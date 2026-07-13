@@ -19,6 +19,38 @@ This document is the canonical source for package ownership, import direction, r
   pure UI components;
 - public contracts мають бути стабільними, game-agnostic і forward-compatible.
 
+React-код максимально використовує stable API React 19.2 або новішої stable
+версії, якщо семантика API відповідає задачі та не порушує ownership. Це є
+архітектурною вимогою, а не вимогою формально використати кожен новий API:
+
+- `useTransition` позначає non-urgent оновлення prepared view або navigation state;
+  controlled input value, focus і негайний open/close state залишаються urgent;
+- `useDeferredValue` зберігає попередній важкий prepared view, коли producer
+  значення не можна перевести в transition; він не замінює debounce, source state
+  або controlled input value;
+- `useActionState` володіє pending/result/error state конкретного action workflow,
+  але не переносить persistence, validation або game-specific rules із domain owner;
+- `<Activity>` зберігає state тимчасово прихованої stateful surface. Якщо UI-контракт
+  вимагає прибрати hidden focus targets, controller scope або дубльовану interactive
+  surface, відповідна гілка повністю unmount-иться;
+- `useEffectEvent` використовується тільки для non-reactive callback, який
+  викликається з Effect або іншого Effect Event. Він не є універсальною заміною
+  event handler-а чи способом приховати Effect dependencies;
+- mutually exclusive UI states рендеряться одним state-driven exhaustive branch;
+  state token є авторитетним і не допускає одночасного показу суперечливих surfaces.
+
+React API викликаються безпосередньо в природному owner-і або всередині
+problem-specific hook із власним контрактом та lifecycle. Generic wrappers, які
+лише перейменовують React API або делегують йому аргументи, не створюються. React
+Compiler не скасовує вимоги до правильного owner-а, state modeling, transition
+priority, stable public contracts і accessibility lifecycle.
+
+Canary React `<ViewTransition>` не використовується, доки він не стане stable у
+підтримуваній версії React. Route-level view transitions належать `apps/web` і
+реалізуються через TanStack Router та browser View Transition API як progressive
+enhancement; відсутність browser support не ламає navigation, а
+`prefers-reduced-motion` вимикає несуттєву анімацію.
+
 У UI-коді layout не будується через margin. Utility-класи й CSS-властивості
 `m-*`, `mx-*`, `my-*`, `mt-*`, `mb-*`, `ml-*`, `mr-*`, `space-x-*`,
 `space-y-*` і `margin*` не використовуються для позиціонування або відступів.
@@ -182,6 +214,7 @@ UI and app import boundaries:
 - `packages/ui` owns every active numbered `UI-CMP-*`, including shared builder presentation components and hooks.
 - `packages/ui` implements shared component styling through `tailwind-variants` recipes.
 - `packages/ui` owns the icon facade. App pages and game scopes import icons only from `@mk-combos/ui/icons/{icon-name}`.
+- Static game-themed artwork may be published through `@mk-combos/ui/icons/game/{game-id}/*` when it contains only visual assets and opaque entity IDs. Game rules, catalog validation, and imports from game scopes remain forbidden in `packages/ui`.
 - Direct `lucide-react` imports are allowed inside `packages/ui` icon modules only.
 - `packages/ui` may use React Flow for the visual combo builder canvas.
 - App-level forms use `@tanstack/react-form` for form state. Zod remains the schema and validation layer.

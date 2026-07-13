@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Quan Chi character — pale sorcerer with crimson skull markings</title>
+  <g data-game-icon-frame="true">
+    <path d="M16 4h32l11 13-4 17 5 12-13 13H17L4 46l5-12-4-17L16 4Z" fill="#15120F" stroke="#8A8C78" stroke-width="2"/>
+    <path d="M19 9 9 20m36-11 10 11M9 44l11 10m35-10L44 54" stroke="#8DBD76" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M21 14c7-7 17-5 22 2l3 22-14 16-14-16 3-24Z" fill="#C6C2A8" stroke="#F3F0D6" stroke-width="2"/>
+    <path d="M32 14v34m-10-21 10 5 10-5M24 38l8-6 8 6" stroke="#9E3444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M25 25h4m6 0h4m-12 18c3 2 7 2 10 0" stroke="#15120F" stroke-width="2" stroke-linecap="round"/>
+    <path d="M15 18 9 10m40 8 6-8" stroke="#8DBD76" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

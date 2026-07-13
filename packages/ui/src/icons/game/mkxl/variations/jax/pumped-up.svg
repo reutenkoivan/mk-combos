@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jax — Pumped Up: overcharged cybernetic arm pistons</title>
+  <g data-variation-frame="true">
+    <path d="m32 4 16 5 11 14-2 19-13 15-12 3-12-3L7 42 5 23 16 9l16-5Z" fill="#16131A" stroke="#CF6A3C" stroke-width="2"/>
+    <path d="M17 13 9 25m38-12 8 12M12 43l10 10m30-10L42 53" stroke="#589FC1" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M15 21h14l5 11-6 18H15L9 36l6-15Zm34 0H35l-5 11 6 18h13l6-14-6-15Z" fill="#589FC1" stroke="#D9F2FF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M18 17v10m7-12v12m21-10v10m-7-12v12M16 34h12m20 0H36" stroke="#CF6A3C" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M20 40v7m24-7v7M28 29h8m-7 7h6" stroke="#FFD3B5" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

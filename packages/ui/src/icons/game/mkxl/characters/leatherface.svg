@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Leatherface character — stitched skin mask and chainsaw</title>
+  <g data-game-icon-frame="true">
+    <path d="M12 6h39l8 14-4 33-15 7-20-5L5 38 8 15l4-9Z" fill="#1C1510" stroke="#9A6D4E" stroke-width="2"/>
+    <path d="M17 10 8 21m45-8 4 12M11 43l10 10m31-7-11 9" stroke="#B4403D" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M19 15h27l2 28-15 11-16-10 2-29Z" fill="#C29A72" stroke="#F1D5B4" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m25 17-2 10 5 5-6 10m14-25 3 9-5 6 7 10M24 27h4m8 0h4M27 43c4-2 7-2 11 0" stroke="#6A3E2E" stroke-width="2" stroke-linecap="round"/>
+    <path d="M6 48h23l6 7H10l-4-7Zm23 0 18-5 8 5-20 7" fill="#B4403D" stroke="#FFD0BD" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M12 46v4m5-5v5m5-5v5" stroke="#F1D5B4" stroke-width="1.7"/>
+  </g>
+</svg>

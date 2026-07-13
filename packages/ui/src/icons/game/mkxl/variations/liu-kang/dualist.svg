@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Liu Kang — Dualist light and dark stance spheres</title>
+  <g data-variation-frame="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 5A27 27 0 0 0 32 59c7-7 7-14 0-20s-7-14 0-20c7-6 7-10 0-14z" fill="#F4EEDC" stroke="#EACB73" stroke-width="2.5"/>
+    <path d="M32 5a27 27 0 0 1 0 54c-7-7-7-14 0-20s7-14 0-20c-7-6-7-10 0-14z" fill="#171B29" stroke="#5367C5" stroke-width="2.5"/>
+    <circle cx="32" cy="27" r="3" fill="#5367C5"/>
+    <circle cx="32" cy="47" r="3" fill="#EACB73"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="20" cy="32" r="7" fill="#FFF7CE" stroke="#EACB73" stroke-width="2"/>
+    <circle cx="44" cy="32" r="7" fill="#26315E" stroke="#758CFF" stroke-width="2"/>
+    <path d="M13 20c5-4 10-5 15-3m23 27c-5 4-10 5-15 3" stroke="#EACB73" stroke-width="1.8"/>
+    <path d="M13 44c5 4 10 5 15 3m23-27c-5-4-10-5-15-3" stroke="#758CFF" stroke-width="1.8"/>
+    <path d="m27 32 5-4 5 4-5 4z" fill="#DFD8CB" stroke="#8F79BC" stroke-width="1.8"/>
+  </g>
+</svg>

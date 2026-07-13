@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Goro — Kuatan Warrior: four crushing Shokan fists</title>
+  <g data-variation-frame="true">
+    <path d="m32 3 11 8h13v14l5 7-5 7v14H43l-11 8-11-8H8V39l-5-7 5-7V11h13l11-8Z" fill="#16130D" stroke="#C4823D" stroke-width="2"/>
+    <path d="M12 16h10m20 0h10M12 48h10m20 0h10" stroke="#8CBF76" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M12 20c0-3 4-4 6-2 0-4 5-4 6-1 1-3 5-2 5 1v10l-5 7H13l-4-7 3-8Zm40 0c0-3-4-4-6-2 0-4-5-4-6-1-1-3-5-2-5 1v10l5 7h11l4-7-3-8ZM12 44c0-3 4-4 6-2 0-4 5-4 6-1 1-3 5-2 5 1v5l-5 6H13l-4-6 3-3Zm40 0c0-3-4-4-6-2 0-4-5-4-6-1-1-3-5-2-5 1v5l5 6h11l4-6-3-3Z" fill="#C4823D" stroke="#FFE0A8" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M27 32h10" stroke="#8CBF76" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jinsei Chamber — corner wall dive from the carved stone</title>
+  <g data-game-icon-frame="true" stroke="#60CAD4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 8h17M8 8v17M56 8H39m17 0v17M8 56h17M8 56V39m48 17H39m17 0V39" stroke-width="2.5"/>
+    <circle cx="32" cy="32" r="25" fill="#142126" stroke="#416D73" stroke-width="1.5" stroke-dasharray="3 5"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 9v47h18M9 20h11M9 34h11M9 48h11" stroke="#807468" stroke-width="3.5"/>
+    <circle cx="27" cy="23" r="4" fill="#E0E9E5"/>
+    <path d="m28 28 8 7 12-2m-12 2 9 11m-13-14-7 10m-3-25 5-8m23 30 6 2-3 6" stroke="#60CAD4" stroke-width="2.6"/>
+    <circle cx="14" cy="14" r="3" fill="#E16B50"/>
+  </g>
+</svg>

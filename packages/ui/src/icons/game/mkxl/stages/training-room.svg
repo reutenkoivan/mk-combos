@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Training Room stage — holographic fighter on a perspective grid</title>
+  <g data-game-icon-frame="true">
+    <rect x="5" y="5" width="54" height="54" rx="5" fill="#081A1C" stroke="#3FA5A8" stroke-width="2"/>
+    <path d="M5 17h54M5 47h54M17 5v54m30-54v54" stroke="#745CA8" stroke-width="1.5" stroke-dasharray="7 5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M7 53 32 35l25 18M13 53l19-13 19 13M21 53l11-8 11 8M32 35v23" stroke="#3FA5A8" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="32" cy="17" r="6" fill="#745CA8" stroke="#D8CAFF" stroke-width="2"/>
+    <path d="M23 29c4-7 14-7 18 0l-2 11-7 5-7-5-2-11Z" fill="#3FA5A8" stroke="#C7F8F7" stroke-width="2"/>
+    <path d="M24 31 14 38m26-7 10 7M27 43l-6 10m16-10 6 10" stroke="#C7F8F7" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>

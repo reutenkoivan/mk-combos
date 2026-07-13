@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Mileena — Ravenous Tarkatan bite and pounce</title>
+  <g data-variation-frame="true" stroke="#C73967" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m9 17 7 4 2-9 8 6 6-12 6 12 8-6 2 9 7-4 2 15-6 15-13 11H26L13 47 7 32z" fill="#28131A" stroke-width="2.5"/>
+    <path d="m13 24 7 3-4 6m35-9-7 3 4 6M22 54l3-7m17 7-3-7" stroke="#F18B7E" stroke-width="1.8"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 28c10-7 26-7 36 0l-5 20-13 7-13-7z" fill="#4A1D28" stroke="#F18B7E" stroke-width="2.2"/>
+    <path d="m17 31 6 7 4-9 5 10 5-10 4 9 6-7M19 45l6-5 3 8 4-8 4 8 3-8 6 5" fill="#F4E6D3" stroke="#FFD9C5" stroke-width="1.6"/>
+    <path d="M20 24c3-5 7-7 12-7s9 2 12 7" stroke="#C73967" stroke-width="2"/>
+    <circle cx="24" cy="25" r="2" fill="#FFE5B8"/>
+    <circle cx="40" cy="25" r="2" fill="#FFE5B8"/>
+  </g>
+</svg>

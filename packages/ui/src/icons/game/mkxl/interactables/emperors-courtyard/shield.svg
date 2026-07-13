@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Emperor's Courtyard — throwable imperial shield</title>
+  <g data-game-icon-frame="true" stroke="#DDA64E" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m32 5 23 10v20c0 12-8 20-23 25C17 55 9 47 9 35V15z" fill="#211A16" stroke-width="2.5"/>
+    <path d="M14 16 8 10m42 6 6-6M13 46l7-2m31 2-7-2" stroke="#9C4336" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 8 50 15v16c0 11-7 19-18 25-11-6-18-14-18-25V15z" fill="#7B3028" stroke="#E5C279" stroke-width="2.5"/>
+    <path d="M32 14v36M18 20h28" stroke="#D9AD58" stroke-width="2.5"/>
+    <circle cx="32" cy="31" r="7" fill="#342520" stroke="#F3D795" stroke-width="2.5"/>
+    <path d="m26 38-7 10m19-10 7 10" stroke="#D9AD58" stroke-width="2"/>
+  </g>
+</svg>

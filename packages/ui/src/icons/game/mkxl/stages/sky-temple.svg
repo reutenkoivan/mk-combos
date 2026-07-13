@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Sky Temple stage — cliffside pagoda struck by lightning</title>
+  <g data-game-icon-frame="true">
+    <path d="M32 3 55 14l6 23-16 22H19L3 37l6-23L32 3Z" fill="#101722" stroke="#657BA5" stroke-width="2"/>
+    <path d="m13 18-5 15m43-15 5 15M12 47l11 9m29-9-11 9" stroke="#B2C8E7" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m15 30 19-13 19 13-5 4H20l-5-4Zm7 4h24v14H22V34Z" fill="#566377" stroke="#C9D4E5" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m32 8-6 13h7l-4 12 11-17h-7l5-8" fill="#D1B94F" stroke="#FFF1A8" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M24 48 7 56h50l-11-8H24ZM27 36v10m14-10v10" stroke="#657BA5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

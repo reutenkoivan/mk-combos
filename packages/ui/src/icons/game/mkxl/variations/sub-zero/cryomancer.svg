@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Sub-Zero — Cryomancer: forged ice weapons</title>
+  <g data-variation-frame="true">
+    <path d="m32 4 7 9 11-2 1 11 9 7-7 8 2 12-12 1-8 10-8-10-12-1 2-12-7-8 9-7 1-11 11 2 1-9Z" fill="#0B1C2B" stroke="#61BCEB" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M17 18 24 24m23-6-7 6M17 46l7-6m23 6-7-6" stroke="#C9F2FF" stroke-width="1.5"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m17 48 6-18 17-17 7 7-17 17-13 11Z" fill="#8CE2FF" stroke="#E8FAFF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M35 21 45 31m-24 9 5 5" stroke="#2D789F" stroke-width="2"/>
+    <path d="M39 42h10v7H35v-3l4-4Zm-4 0-8-9" fill="#65C9F0" stroke="#E8FAFF" stroke-width="2" stroke-linejoin="round"/>
+  </g>
+</svg>

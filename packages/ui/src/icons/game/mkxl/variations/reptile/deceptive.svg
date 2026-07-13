@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Reptile — Deceptive: active camouflage</title>
+  <g data-variation-frame="true">
+    <path d="M20 8H8v14m36-14h12v14M20 56H8V42m36 14h12V42" stroke="#57A99B" stroke-width="3" stroke-linecap="round"/>
+    <path d="M13 28c0-10 8-18 18-19m20 27c-2 10-10 17-20 19" stroke="#B4EFE4" stroke-width="1.5" stroke-dasharray="5 5"/>
+    <path d="M32 5c15 0 27 12 27 27S47 59 32 59 5 47 5 32 17 5 32 5Z" fill="#101D1B" fill-opacity=".72" stroke="#285B53" stroke-width="1.5"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M17 35c9-13 21-16 31-5-8 0-11 4-12 12-5-5-11-7-19-7Z" fill="#2D6A60" fill-opacity=".5" stroke="#93DDCF" stroke-width="2" stroke-dasharray="5 3"/>
+    <path d="m17 35 7-7 6 3 7-8 11 7M23 43l5-5m7 8 6-7" stroke="#D7FFF7" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+    <circle cx="41" cy="29" r="1.8" fill="#E9FF7B"/>
+  </g>
+</svg>

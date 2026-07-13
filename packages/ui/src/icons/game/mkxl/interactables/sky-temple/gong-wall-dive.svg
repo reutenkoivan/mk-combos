@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Sky Temple — wall dive beside the temple gong</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 9h48v46H8V9Z" fill="#15191B" stroke="#607A82" stroke-width="2"/>
+    <path d="M12 13v38m40-38v38M12 19h9m-9 12h9m-9 12h9" stroke="#CADADD" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="42" cy="30" r="13" fill="#9D6F31" stroke="#FFE0A4" stroke-width="2"/><circle cx="42" cy="30" r="5" fill="#C99A4C" stroke="#FFF0C1" stroke-width="1.5"/>
+    <circle cx="25" cy="20" r="4" fill="#B9C5C8" stroke="#F3F7F8" stroke-width="1.5"/>
+    <path d="m23 25 7 6 9 6-4 6-10-5-8 10-6-5 8-13-6-4 10-1Z" fill="#60747A" stroke="#EDF4F5" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M19 17c-4 2-7 6-8 11" stroke="#E27D4E" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

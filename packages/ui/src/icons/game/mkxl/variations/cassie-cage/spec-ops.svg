@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Cassie Cage — Spec Ops: tactical drone air strike</title>
+  <g data-variation-frame="true">
+    <path d="M10 6h16v4H14v12h-4V6Zm28 0h16v16h-4V10H38V6ZM10 42h4v12h12v4H10V42Zm40 0h4v16H38v-4h12V42Z" fill="#78CFE0"/>
+    <rect x="8" y="8" width="48" height="48" rx="4" fill="#0A1C24" stroke="#78CFE0" stroke-width="2" stroke-dasharray="8 3"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m32 17 8 6 10 2-4 5-10-1v7h-8v-7l-10 1-4-5 10-2 8-6Z" fill="#78CFE0" stroke="#D7FAFF" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="32" cy="26" r="3" fill="#FF705D"/>
+    <path d="M32 38v12m-5-6 5 6 5-6M17 37h6m18 0h6" stroke="#FF705D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

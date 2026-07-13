@@ -10,9 +10,11 @@ import {
   componentInteractionReasons,
   componentOptionStatuses,
   controllerAccessStates,
+  pickerSlotStatuses,
   uiResponsiveModes,
 } from "./components/value";
 import { uiFocusDirections } from "./focus-navigation/value";
+import { gameIconKinds } from "./icons/game/value";
 import { uiNotationIconKinds, uiNotationTokenStates, uiNotationTokens } from "./notation/value";
 import { uiPrimitiveInteractionReasons } from "./primitives/interaction";
 import { uiFloatingAlignments, uiFloatingSides } from "./primitives/positioning";
@@ -33,29 +35,61 @@ import {
 
 export const uiContractGroups = {
   components: {
+    addToListDialog: "@mk-combos/ui/components/add-to-list-dialog",
     backupCollapsibleBlock: "@mk-combos/ui/components/backup-collapsible-block",
     breadcrumbs: "@mk-combos/ui/components/breadcrumbs",
+    builderContextSetup: "@mk-combos/ui/components/builder-context-setup",
+    characterPicker: "@mk-combos/ui/components/character-picker",
+    comboActionsMenu: "@mk-combos/ui/components/combo-actions-menu",
+    comboCard: "@mk-combos/ui/components/combo-card",
+    comboDetailHeader: "@mk-combos/ui/components/combo-detail-header",
+    comboList: "@mk-combos/ui/components/combo-list",
+    comboListConfigModule: "@mk-combos/ui/components/combo-list-config-module",
+    comboMetadataGrid: "@mk-combos/ui/components/combo-metadata-grid",
     controllerHintStrip: "@mk-combos/ui/components/controller-hint-strip",
     controllerAccessGate: "@mk-combos/ui/components/controller-access-gate",
     displayModeSwitcher: "@mk-combos/ui/components/display-mode-switcher",
+    emptyState: "@mk-combos/ui/components/empty-state",
+    errorState: "@mk-combos/ui/components/error-state",
     exportDialog: "@mk-combos/ui/components/export-dialog",
+    filterControlGroup: "@mk-combos/ui/components/filter-control-group",
     firstLaunchSetupForm: "@mk-combos/ui/components/first-launch-setup-form",
     gameSwitcher: "@mk-combos/ui/components/game-switcher",
     globalTopBar: "@mk-combos/ui/components/global-top-bar",
     importPreviewDialog: "@mk-combos/ui/components/import-preview-dialog",
+    kameoPicker: "@mk-combos/ui/components/kameo-picker",
     languageSwitcher: "@mk-combos/ui/components/language-switcher",
+    listEditDialog: "@mk-combos/ui/components/list-edit-dialog",
+    namedListDetail: "@mk-combos/ui/components/named-list-detail",
+    namedListIndex: "@mk-combos/ui/components/named-list-index",
     notationLegendTable: "@mk-combos/ui/components/notation-legend-table",
+    notationRenderer: "@mk-combos/ui/components/notation-renderer",
     runtime: "@mk-combos/ui/components/runtime",
     schema: "@mk-combos/ui/components/schema",
+    staleInvalidComboMarker: "@mk-combos/ui/components/stale-invalid-combo-marker",
     topBarDropdownMenu: "@mk-combos/ui/components/top-bar-dropdown-menu",
     type: "@mk-combos/ui/components/type",
     value: "@mk-combos/ui/components/value",
+    variationPicker: "@mk-combos/ui/components/variation-picker",
   },
   focusNavigation: {
     runtime: "@mk-combos/ui/focus-navigation/runtime",
     schema: "@mk-combos/ui/focus-navigation/schema",
     type: "@mk-combos/ui/focus-navigation/type",
     value: "@mk-combos/ui/focus-navigation/value",
+  },
+  gameIcons: {
+    mkxl: {
+      characters: "@mk-combos/ui/icons/game/mkxl/characters",
+      interactables: "@mk-combos/ui/icons/game/mkxl/interactables",
+      shared: "@mk-combos/ui/icons/game/mkxl/shared",
+      stages: "@mk-combos/ui/icons/game/mkxl/stages",
+      variations: "@mk-combos/ui/icons/game/mkxl/variations",
+    },
+    runtime: "@mk-combos/ui/icons/game/runtime",
+    schema: "@mk-combos/ui/icons/game/schema",
+    type: "@mk-combos/ui/icons/game/type",
+    value: "@mk-combos/ui/icons/game/value",
   },
   hooks: {
     fieldMessage: "@mk-combos/ui/hooks/field-message",
@@ -127,6 +161,8 @@ export const mkCombosUi = {
     componentInteractionReasons,
     componentOptionStatuses,
     controllerAccessStates,
+    gameIconKinds,
+    pickerSlotStatuses,
     notationDisplayModes,
     uiContrastModes,
     uiControlPresentationModes,

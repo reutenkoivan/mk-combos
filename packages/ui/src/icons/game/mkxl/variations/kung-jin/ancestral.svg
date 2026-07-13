@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kung Jin — Ancestral elemental spirit arrows</title>
+  <g data-variation-frame="true" stroke="#65D2A2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 5 58 23l-10 31H16L6 23z" fill="#12231F" stroke-width="2.5"/>
+    <path d="m32 5-4 9 4 5 4-5zM6 23l10 2 4-4m38 2-10 2-4-4" stroke="#A5E6D0" stroke-width="1.8"/>
+    <path d="M20 57h24" stroke="#CF8DFF" stroke-width="2" stroke-dasharray="4 3"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 48c12-8 12-24 0-32m0 32c16-2 25-13 29-32M18 16v32" stroke="#D4E7DA" stroke-width="2.4"/>
+    <path d="m18 29 29-8-5-3m5 3-3 5" stroke="#FF845E" stroke-width="2"/>
+    <path d="m18 35 30 1-4-4m4 4-4 4" stroke="#65D2A2" stroke-width="2"/>
+    <path d="m18 41 27 8-2-5m2 5-5 2" stroke="#CF8DFF" stroke-width="2"/>
+    <circle cx="18" cy="35" r="3" fill="#E7F8EF"/>
+  </g>
+</svg>

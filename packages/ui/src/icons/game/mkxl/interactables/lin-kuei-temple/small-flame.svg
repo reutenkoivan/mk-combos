@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Lin Kuei Temple — throwable small fire brazier</title>
+  <g data-game-icon-frame="true" stroke="#F09543" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 8h28l10 14-5 34H13L8 22z" fill="#211916" stroke-width="2.5"/>
+    <path d="M8 22h11m26 0h11M14 55l7-8m29 8-7-8" stroke="#6FA4B0" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 39h30l-4 16H21z" fill="#55636A" stroke="#C0CED2" stroke-width="2.5"/>
+    <path d="M22 39c-3-9 5-13 6-23 6 5 5 11 7 15 2-7 6-10 8-17 7 10 5 19 1 25" fill="#D95C39" stroke="#F2BC4E" stroke-width="2.5"/>
+    <path d="M32 38c-3-5 1-8 4-12 3 6 4 10 0 13" fill="#FAE68A"/>
+    <path d="M13 55h38" stroke="#75B4BF" stroke-width="2.5"/>
+  </g>
+</svg>

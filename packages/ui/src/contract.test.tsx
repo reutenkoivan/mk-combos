@@ -72,6 +72,8 @@ import {
   DialogTitle,
   DialogTrigger,
   type DialogTriggerProps,
+  DialogViewport,
+  type DialogViewportProps,
 } from "@mk-combos/ui/primitives/dialog";
 import {
   DisclosurePanel,
@@ -288,6 +290,7 @@ const acceptsPrimitiveTypes = <
     drawerClosePayload: DrawerClosePressPayload;
     drawerTriggerProps: DrawerTriggerProps;
     dialogTriggerProps: DialogTriggerProps;
+    dialogViewportProps: DialogViewportProps;
     inputPayload: TextInputChangePayload;
     menuItemPayload: MenuItemSelectPayload<"edit">;
     menuTriggerProps: MenuTriggerProps;
@@ -771,6 +774,8 @@ describe("@mk-combos/ui foundation", () => {
     const staticItemClasses = itemRecipe();
 
     expect(filledControlClasses).toContain("cursor-pointer");
+    expect(filledControlClasses).toContain("font-medium");
+    expect(filledControlClasses).not.toContain("uppercase");
     expect(filledControlClasses).toContain("enabled:hover:bg-[var(--ui-control-hover)]");
     expect(prominentAccentClasses).toContain("var(--ui-accent)");
     expect(prominentAccentClasses).toContain("enabled:hover:bg-[color-mix");
@@ -1010,7 +1015,7 @@ describe("@mk-combos/ui foundation", () => {
     const menuPayloads: Array<{ reason: "itemPress"; value: "edit" }> = [];
 
     render(
-      <div>
+      <UiRoot contrast="increased" responsiveMode="tablet" theme="light">
         <DialogRoot modal={false}>
           <DialogTrigger>Open lightweight dialog</DialogTrigger>
         </DialogRoot>
@@ -1052,7 +1057,7 @@ describe("@mk-combos/ui foundation", () => {
             </MenuPositioner>
           </MenuPortal>
         </MenuRoot>
-      </div>,
+      </UiRoot>,
     );
 
     const trigger = screen.getByRole("button", { name: "Backup details" });
@@ -1070,6 +1075,13 @@ describe("@mk-combos/ui foundation", () => {
       "cursor-pointer",
     );
     expect(screen.getByRole("menuitem", { name: "Edit" }).className).toContain("cursor-pointer");
+    for (const portalKind of ["menu", "popover"]) {
+      const portal = document.querySelector(`[data-ui-portal="${portalKind}"]`);
+      expect(portal?.className).toContain("mk-combos-ui-portal-root");
+      expect(portal?.getAttribute("data-ui-contrast")).toBe("increased");
+      expect(portal?.getAttribute("data-ui-responsive")).toBe("tablet");
+      expect(portal?.getAttribute("data-ui-theme")).toBe("light");
+    }
     expect(trigger.className).toContain("cursor-pointer");
     expect(trigger.getAttribute("aria-expanded")).toBe("false");
     expect(screen.queryByText("Collapsed backup content")).toBeNull();
@@ -1092,49 +1104,101 @@ describe("@mk-combos/ui foundation", () => {
   });
 
   it("renders modal dialog primitives with accessible title and close control", () => {
-    render(
-      <DialogRoot open>
-        <DialogPortal>
-          <DialogBackdrop />
-          <DialogPopup>
-            <DialogTitle>Confirm import</DialogTitle>
-            <DialogDescription>Review backup before replacing local data.</DialogDescription>
-            <DialogClose>Close dialog</DialogClose>
-          </DialogPopup>
-        </DialogPortal>
-      </DialogRoot>,
+    const renderDialog = (
+      responsiveMode: "desktop" | "mobile" | "tablet",
+      contrast: "increased" | "standard",
+      theme: "dark" | "light",
+    ) => (
+      <UiRoot contrast={contrast} responsiveMode={responsiveMode} theme={theme}>
+        <DialogRoot open>
+          <DialogPortal className={() => "dialog-portal-custom"}>
+            <DialogBackdrop />
+            <DialogViewport>
+              <DialogPopup>
+                <DialogTitle>Confirm import</DialogTitle>
+                <DialogDescription>Review backup before replacing local data.</DialogDescription>
+                <DialogClose>Close dialog</DialogClose>
+              </DialogPopup>
+            </DialogViewport>
+          </DialogPortal>
+        </DialogRoot>
+      </UiRoot>
     );
+    const view = render(renderDialog("tablet", "standard", "light"));
 
     expect(screen.getByRole("dialog", { name: "Confirm import" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Close dialog" }).className).toContain(
       "cursor-pointer",
     );
+    const portal = document.querySelector('[data-ui-portal="dialog"]');
+    const backdrop = document.querySelector<HTMLElement>("[data-ui-dialog-backdrop]");
+    const popup = document.querySelector<HTMLElement>("[data-ui-dialog-popup]");
+    const viewport = document.querySelector<HTMLElement>("[data-ui-dialog-viewport]");
+    expect(portal?.className).toContain("dialog-portal-custom");
+    expect(portal?.className).toContain("mk-combos-ui-portal-root");
+    expect(portal?.getAttribute("data-ui-contrast")).toBe("standard");
+    expect(portal?.getAttribute("data-ui-responsive")).toBe("tablet");
+    expect(portal?.getAttribute("data-ui-theme")).toBe("light");
+    expect(backdrop?.className).toContain("z-40");
+    expect(viewport?.className).toContain("z-50");
+    expect(backdrop?.parentElement).toBe(portal);
+    expect(viewport?.parentElement).toBe(portal);
+    expect(viewport?.className).toContain("items-end");
+    expect(viewport?.className).toContain("justify-items-center");
+    expect(popup?.className).toContain("max-w-[42rem]");
+    expect(popup?.className).not.toContain("fixed");
+    expect(popup?.parentElement).toBe(viewport);
+
+    view.rerender(renderDialog("mobile", "standard", "dark"));
+    expect(document.querySelector('[data-ui-portal="dialog"]')?.getAttribute("data-ui-theme")).toBe(
+      "dark",
+    );
+    expect(document.querySelector("[data-ui-dialog-viewport]")?.className).toContain(
+      "justify-items-stretch",
+    );
+    expect(document.querySelector("[data-ui-dialog-popup]")?.className).not.toContain(
+      "max-w-[42rem]",
+    );
+
+    view.rerender(renderDialog("desktop", "increased", "dark"));
+    expect(
+      document.querySelector('[data-ui-portal="dialog"]')?.getAttribute("data-ui-contrast"),
+    ).toBe("increased");
+    expect(document.querySelector("[data-ui-dialog-viewport]")?.className).toContain(
+      "place-items-center",
+    );
+    expect(document.querySelector("[data-ui-dialog-popup]")?.className).toContain(
+      "w-[min(34rem,calc(100vw-2rem))]",
+    );
+    expect(document.querySelector("[data-ui-dialog-popup]")?.className).toContain("max-h-[88dvh]");
   });
 
   it("wraps a controlled drawer with semantic close payloads", () => {
     const openPayloads: Array<{ open: boolean; reason: string; sourceFocusTarget?: string }> = [];
 
     render(
-      <DrawerRoot
-        onOpenChange={(payload) => openPayloads.push(payload)}
-        open
-        sourceFocusTarget="navigation-trigger"
-        swipeDirection="right"
-      >
-        <DrawerTrigger>Open navigation</DrawerTrigger>
-        <DrawerPortal>
-          <DrawerBackdrop />
-          <DrawerViewport>
-            <DrawerPopup>
-              <DrawerContent>
-                <DrawerTitle>Navigation</DrawerTitle>
-                <DrawerDescription>Responsive destinations</DrawerDescription>
-                <DrawerClose>Close navigation</DrawerClose>
-              </DrawerContent>
-            </DrawerPopup>
-          </DrawerViewport>
-        </DrawerPortal>
-      </DrawerRoot>,
+      <UiRoot contrast="increased" responsiveMode="mobile" theme="light">
+        <DrawerRoot
+          onOpenChange={(payload) => openPayloads.push(payload)}
+          open
+          sourceFocusTarget="navigation-trigger"
+          swipeDirection="right"
+        >
+          <DrawerTrigger>Open navigation</DrawerTrigger>
+          <DrawerPortal>
+            <DrawerBackdrop />
+            <DrawerViewport>
+              <DrawerPopup>
+                <DrawerContent>
+                  <DrawerTitle>Navigation</DrawerTitle>
+                  <DrawerDescription>Responsive destinations</DrawerDescription>
+                  <DrawerClose>Close navigation</DrawerClose>
+                </DrawerContent>
+              </DrawerPopup>
+            </DrawerViewport>
+          </DrawerPortal>
+        </DrawerRoot>
+      </UiRoot>,
     );
 
     expect(screen.getByRole("dialog", { name: "Navigation" })).toBeTruthy();
@@ -1143,6 +1207,10 @@ describe("@mk-combos/ui foundation", () => {
 
     expect(drawerTrigger?.className).toContain("cursor-pointer");
     expect(closeButton.className).toContain("cursor-pointer");
+    const drawerPortal = document.querySelector('[data-ui-portal="drawer"]');
+    expect(drawerPortal?.getAttribute("data-ui-contrast")).toBe("increased");
+    expect(drawerPortal?.getAttribute("data-ui-responsive")).toBe("mobile");
+    expect(drawerPortal?.getAttribute("data-ui-theme")).toBe("light");
     fireEvent.click(closeButton);
     expect(openPayloads[0]).toEqual({
       open: false,

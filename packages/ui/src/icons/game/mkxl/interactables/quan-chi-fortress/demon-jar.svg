@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Quan Chi's Fortress — throwable demon jar</title>
+  <g data-game-icon-frame="true" stroke="#A86BC1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 5 55 18v28L32 59 9 46V18z" fill="#1E1721" stroke-width="2.5"/>
+    <path d="m12 18 8 4m32-4-8 4M12 46l8-4m32 4-8-4" stroke="#6A4C70" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 18h26l-3 36H22z" fill="#3D333D" stroke="#B9A4BC" stroke-width="2.5"/>
+    <ellipse cx="32" cy="18" rx="14" ry="5" fill="#6E5873" stroke="#D0AFD6" stroke-width="2.5"/>
+    <path d="M25 39c0-8 4-14 9-14 4 0 7 4 7 9 0 3-2 6-5 7m-7-5c3-3 6-2 8 1m-9-6-4-5m16 3 5-5" stroke="#A86BC1" stroke-width="2.5"/>
+    <circle cx="31" cy="31" r="2" fill="#D75D48"/>
+    <circle cx="38" cy="32" r="2" fill="#D75D48"/>
+    <path d="M24 54v4m16-4v4" stroke="#867187" stroke-width="2.5"/>
+  </g>
+</svg>

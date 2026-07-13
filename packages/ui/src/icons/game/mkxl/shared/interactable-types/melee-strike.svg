@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Melee-strike interactable — close-range impact</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 5 6 10 12-4-2 12 11 4-9 8 7 10-12 1-1 12-10-7-9 8-3-12-12 1 5-11-10-6 10-6-3-12 12 3 8-11Z" fill="#251215" stroke="#BC5360" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M13 15 21 22m30-7-8 7M12 47l9-6m31 6-9-6" stroke="#EFC2C7" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M17 35h8V23h7v9h6V20h7v15h6v9l-11 9H25l-8-8V35Z" fill="#B54A58" stroke="#FFE2E5" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M14 21 8 16m9 2-1-8m35 12 5-5m-9 0 1-8" stroke="#F09A53" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M25 40h19" stroke="#6C2530" stroke-width="1.5"/>
+  </g>
+</svg>

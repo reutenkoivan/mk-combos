@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kano character — half-cybernetic face and glowing eye plate</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 4 23 10 5 24-15 21H19L4 38l5-24L32 4Z" fill="#141516" stroke="#7C8588" stroke-width="2"/>
+    <path d="M13 18 9 34m42-16 4 16M15 49l9 7m25-7-9 7" stroke="#C4473F" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M20 18c7-7 19-6 24 2l2 19-14 13-14-13 2-21Z" fill="#A46D50" stroke="#EBC6AD" stroke-width="2"/>
+    <path d="M32 15c8 0 13 6 14 13l-2 15-12 9V15Z" fill="#7C8588" stroke="#DDE4E5" stroke-width="2"/>
+    <circle cx="38" cy="28" r="6" fill="#141516" stroke="#C4473F" stroke-width="2"/>
+    <circle cx="38" cy="28" r="2.5" fill="#FF6658"/>
+    <path d="M23 28h4m-4 12c6 3 12 3 18 0M15 49l9-6m25 6-8-6" stroke="#141516" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

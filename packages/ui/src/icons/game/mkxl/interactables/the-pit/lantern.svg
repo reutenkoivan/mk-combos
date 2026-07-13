@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>The Pit — throwable metal cage lantern</title>
+  <g data-game-icon-frame="true">
+    <path d="M18 6h28l12 16-4 24-13 12H23L10 46 6 22 18 6Z" fill="#1C1710" stroke="#9E783D" stroke-width="2"/>
+    <path d="M13 22c5-7 11-11 19-11s14 4 19 11M14 48l9-4m27 4-9-4" stroke="#E4CEA4" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M26 8h12v8H26V8Zm-6 14 6-6h12l6 6v28l-6 6H26l-6-6V22Z" fill="#4F493B" stroke="#ECE2CB" stroke-width="2"/>
+    <path d="M20 30h24m-24 12h24M27 16l-4 34m14-34 4 34" stroke="#A4834B" stroke-width="1.5"/>
+    <path d="M32 25c6 7 8 12 8 17 0 5-3 8-8 8s-8-3-8-8c0-4 3-8 6-12-1 5 2 5 3 2 1-2 0-5-1-7Z" fill="#EDA33D" stroke="#FFE7A6" stroke-width="1.5"/>
+    <path d="M13 19c4-7 10-11 17-12m-5-4 6 4-5 5" stroke="#C65D3E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

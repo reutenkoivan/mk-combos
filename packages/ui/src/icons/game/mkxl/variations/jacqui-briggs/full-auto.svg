@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jacqui Briggs — Full Auto: twin rapid-fire wrist cannons</title>
+  <g data-variation-frame="true">
+    <path d="M7 12 19 5h26l12 7v40l-12 7H19L7 52V12Z" fill="#0C1920" stroke="#4DA6C7" stroke-width="2"/>
+    <path d="M12 17h8v-7m32 7h-8v-7M12 47h8v7m32-7h-8v7" stroke="#C5D047" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M10 26h18v14H10l4-7-4-7Zm44 0H36v14h18l-4-7 4-7Z" fill="#4DA6C7" stroke="#CEF5FF" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="18" cy="30" r="2" fill="#C5D047"/><circle cx="18" cy="36" r="2" fill="#C5D047"/><circle cx="46" cy="30" r="2" fill="#C5D047"/><circle cx="46" cy="36" r="2" fill="#C5D047"/>
+    <path d="M28 29h8v8h-8zM6 23h5M4 33h6M6 43h5m47-20h-5m7 10h-6m4 10h-5" stroke="#CEF5FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

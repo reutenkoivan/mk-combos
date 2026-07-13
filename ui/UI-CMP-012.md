@@ -25,6 +25,8 @@ Optional filters застосовуються live до visible combo list. Expl
 
 Active game catalog business надає context descriptors, picker layout data, available facets, result count і compatibility messages. `UI-CMP-012` тільки рендерить ці descriptors і емітить config events.
 
+Published `packages/ui` contract не отримує `activeGame` і не обирає variant за game id. Active page передає готовий `characterPicker`, не більше одного prepared `gameContextPicker` (`variation` або `kameo`) та controlled `filterGroup`; вкладені picker/filter handlers залишаються їхніми semantic intents.
+
 ## Роль і межі
 
 `UI-CMP-012` є mobile і tablet work surface у Catalog, не route, не modal, не settings screen і не app-level toolbar.
@@ -181,7 +183,8 @@ Rules:
 
 ### Inputs
 
-- active game;
+- prepared character picker model;
+- не більше одного prepared game-context picker model: `variation` або `kameo`; active page обирає його до render;
 - selected character;
 - selected game-specific context: `variation` або `kameo`;
 - available context options;
@@ -193,6 +196,8 @@ Rules:
 - loading або disabled state;
 - controller focus state;
 - filter group expanded або collapsed state, default `expanded`.
+
+Game id не є presentation discriminator цього public component contract.
 
 ### Outputs
 

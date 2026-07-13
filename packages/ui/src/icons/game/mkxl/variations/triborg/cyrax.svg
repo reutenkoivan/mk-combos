@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Triborg — Cyrax: energy net and bomb</title>
+  <g data-variation-frame="true">
+    <path d="M19 6h26l13 13v26L45 58H19L6 45V19L19 6Z" fill="#24200C" stroke="#D7B629" stroke-width="2"/>
+    <path d="m13 13 9 9m29-9-9 9M13 51l9-9m29 9-9-9" stroke="#FFF1A0" stroke-width="1.5"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M16 17h32v32H16V17Zm0 8 32 16m-32 0 32-16M24 17v32m16-32v32M16 33h32" stroke="#E6CF54" stroke-width="1.5"/>
+    <circle cx="32" cy="33" r="9" fill="#746318" stroke="#FFF6B8" stroke-width="2"/>
+    <path d="M29 24v-5h7l3 4m-10 10h6m-3-3v6" stroke="#FFF6B8" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="40" cy="20" r="2" fill="#F06B39"/>
+  </g>
+</svg>

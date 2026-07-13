@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Dead Woods — jump from the cut tree stump</title>
+  <g data-game-icon-frame="true" stroke="#68B991" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 20C17 9 24 6 32 6s15 3 22 14v25c-7 9-14 13-22 13S17 54 10 45z" fill="#172119" stroke-width="2.4"/>
+    <path d="m11 22 8 2m34-2-8 2M15 49l7-4m27 4-7-4" stroke="#9A7249" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 52h28l-4-22-8-4-11 5z" fill="#67492F" stroke="#C8A36F" stroke-width="2.5"/>
+    <ellipse cx="22" cy="30" rx="10" ry="5" fill="#8C6747" stroke="#E0BC82" stroke-width="2"/>
+    <circle cx="42" cy="28" r="4" fill="#DCE7E1"/>
+    <path d="m41 32-5 8m6-7 8 4m-8-3 5 9M27 23c6-9 14-13 23-11m-5-5 5 5-4 6" stroke="#68B991" stroke-width="2.5"/>
+  </g>
+</svg>

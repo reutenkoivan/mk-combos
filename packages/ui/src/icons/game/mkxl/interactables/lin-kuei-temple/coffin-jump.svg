@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Lin Kuei Temple — jump from the ice coffin</title>
+  <g data-game-icon-frame="true" stroke="#63CFE0" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 5 55 18v28L32 59 9 46V18z" fill="#122026" stroke-width="2.5"/>
+    <path d="M12 18h9m22 0h9M12 46h9m22 0h9" stroke="#859CA4" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m13 53 3-37 10-8 10 8 3 37z" fill="#4E5860" stroke="#C2D4DA" stroke-width="2.5"/>
+    <path d="M26 14v33M19 26h14" stroke="#7FB2BF" stroke-width="2.5"/>
+    <circle cx="44" cy="40" r="4" fill="#E1E9E7"/>
+    <path d="m44 44-6 8m7-8 8 4m-8-3 5 9M34 44c9-4 15-12 18-22m-6 2 6-2 1 7" stroke="#63CFE0" stroke-width="2.5"/>
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Outworld Marketplace — jump from the merchant tarp</title>
+  <g data-game-icon-frame="true" stroke="#61C4AD" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 19 19 7h26l10 12 4 15-5 23H10L5 34z" fill="#15201D" stroke-width="2.4"/>
+    <path d="M9 18h9m28 0h9M10 57l8-8m36 8-8-8" stroke="#9A6558" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 47 17 20h34l6 27z" fill="#78574F" stroke="#D4B7A5" stroke-width="2.5"/>
+    <path d="M17 20 7 47m44-27 6 27M22 25h24l3 15H16z" stroke="#4B3A35" stroke-width="2"/>
+    <circle cx="40" cy="24" r="4" fill="#E0E8E3"/>
+    <path d="m39 28-6 8m8-8 8 4m-8-3 5 9M17 16c8-7 18-10 29-7m-6-4 6 4-4 6" stroke="#61C4AD" stroke-width="2.5"/>
+  </g>
+</svg>

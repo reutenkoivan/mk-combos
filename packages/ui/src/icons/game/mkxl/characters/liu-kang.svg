@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Liu Kang character — flowing hair, red headband, and dragon crest</title>
+  <g data-game-icon-frame="true">
+    <path d="M32 3c7 7 15 8 24 11-2 9 4 16 5 24-9 5-13 14-18 21-8-4-15-4-23 0-4-8-11-14-17-21 6-7 5-16 5-24 9-1 17-6 24-11Z" fill="#1D0F0E" stroke="#C24A3E" stroke-width="2"/>
+    <path d="M15 16 27 8m22 8L37 8M11 43l11 11m31-11L42 54" stroke="#E5A343" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M19 17c5-8 19-10 26-1l3 29-9 10-7-7-8 7-9-11 4-27Z" fill="#35241E" stroke="#D8AD94" stroke-width="2"/>
+    <path d="M21 19h23l-1 23-11 8-11-8V19Z" fill="#A86C50" stroke="#EBC3AB" stroke-width="2"/>
+    <path d="M18 25c9-4 19-4 28 0" stroke="#C24A3E" stroke-width="4" stroke-linecap="round"/>
+    <path d="M25 31h4m6 0h4m-12 9c3 2 7 2 10 0m10-14 9 4-7 5" stroke="#1D0F0E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Goro — Dragon Fangs: four bladed gauntlets</title>
+  <g data-variation-frame="true">
+    <path d="M15 5h34l10 12-4 15 4 15-10 12H15L5 47l4-15-4-15L15 5Z" fill="#1A1011" stroke="#B94E51" stroke-width="2"/>
+    <path d="m16 10 8 4m24-4-8 4M11 46l10-3m32 3-10-3" stroke="#D9B56C" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m14 22 10 5-3 7-11-5 4-7Zm36 0-10 5 3 7 11-5-4-7ZM16 43l11-4 3 7-11 4-3-7Zm32 0-11-4-3 7 11 4 3-7Z" fill="#B94E51" stroke="#FFD3CB" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m23 27 7-13 3 12m8 1-7-13-3 12m-4 13 5-12 3 12m2 0-5-12-3 12" stroke="#D9B56C" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kotal Kahn — Blood God crystal, obsidian, and blood totems</title>
+  <g data-variation-frame="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 10h10l4 7h10l4-7h10l5 12-5 32H13L8 22z" fill="#221416" stroke="#B62945" stroke-width="2.5"/>
+    <path d="m8 22 9 4-4 8 8 4-5 8m40-24-9 4 4 8-8 4 5 8" stroke="#E96C5B" stroke-width="1.8"/>
+    <circle cx="32" cy="8" r="3" fill="#7FD3C4"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 47V30l5-7 5 7v17z" fill="#1B4D52" stroke="#7FD3C4" stroke-width="2"/>
+    <path d="M27 47V25l5-9 5 9v22z" fill="#2B2532" stroke="#8C7C9F" stroke-width="2"/>
+    <path d="M37 47V30l5-7 5 7v17z" fill="#501925" stroke="#E94D64" stroke-width="2"/>
+    <path d="M42 29c4 5 4 8 0 11-4-3-4-6 0-11z" fill="#E94D64"/>
+    <path d="M14 50h36" stroke="#E96C5B" stroke-width="2.5"/>
+  </g>
+</svg>

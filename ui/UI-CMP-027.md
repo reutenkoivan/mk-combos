@@ -81,6 +81,8 @@ Payload містить action id, reason і source focus target. Об'єкти b
 
 Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
 
+- `desktop` dialog центрується відносно viewport, має ширину до `34rem` і `max-height: 88dvh`;
+- `mobile` і `tablet` dialog рендериться як bottom sheet: mobile займає всю ширину, tablet обмежений `42rem`, safe-area лишається всередині surface, а overflow не зміщує backdrop або sticky actions;
 - `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
 - `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
 - `desktop` використовує повну workstation composition і spatial row/column navigation;

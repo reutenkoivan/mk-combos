@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Bo' Rai Cho character — bald master with moustache and wine gourd</title>
+  <g data-game-icon-frame="true">
+    <path d="m17 5 30 2 12 18-5 26-18 9-22-7L5 34l5-21 7-8Z" fill="#1B1510" stroke="#BE8350" stroke-width="2"/>
+    <path d="M15 12 9 28m42-14 5 14M13 46l10 9m29-11-10 11" stroke="#6EA990" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="29" cy="25" r="12" fill="#BE8350" stroke="#F2D2A5" stroke-width="2"/>
+    <path d="M20 30c4-4 7-3 9 1 2-4 5-5 9-1-2 7-16 7-18 0Z" fill="#4D3020" stroke="#F2D2A5" stroke-width="1.7"/>
+    <path d="M25 23h2m5 0h2M25 38c2 3 6 3 8 0" stroke="#1B1510" stroke-width="2" stroke-linecap="round"/>
+    <path d="M40 31h9l-1 7c5 3 6 12 1 16-5 4-13 0-12-7 0-4 2-7 5-9l-2-7Z" fill="#6EA990" stroke="#D7F4E3" stroke-width="2"/>
+  </g>
+</svg>

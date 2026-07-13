@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>No variation state — variations disabled</title>
+  <g data-game-icon-frame="true">
+    <circle cx="32" cy="32" r="27" fill="#211619" stroke="#A36C73" stroke-width="2"/>
+    <path d="M13 13 51 51" stroke="#F4C2C5" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="19" cy="32" r="7" fill="#593B43" stroke="#E2B6BB" stroke-width="2"/><circle cx="32" cy="32" r="7" fill="#593B43" stroke="#E2B6BB" stroke-width="2"/><circle cx="45" cy="32" r="7" fill="#593B43" stroke="#E2B6BB" stroke-width="2"/>
+    <path d="M12 52 52 12" stroke="#E55E63" stroke-width="4" stroke-linecap="round"/>
+  </g>
+</svg>

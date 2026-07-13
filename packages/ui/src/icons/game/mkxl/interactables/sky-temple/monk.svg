@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Sky Temple — resident monk projectile</title>
+  <g data-game-icon-frame="true">
+    <path d="M12 7h40l6 14-5 11 5 11-6 14H12L6 43l5-11-5-11 6-14Z" fill="#21140E" stroke="#A96439" stroke-width="2"/>
+    <path d="M15 11h11m23 0H38M15 53h11m23 0H38" stroke="#E7C2A8" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="31" cy="16" r="7" fill="#D5AD8E" stroke="#F8E3D0" stroke-width="2"/>
+    <path d="M19 52c1-19 5-29 12-29s11 10 12 29H19Z" fill="#A65D34" stroke="#F1C08D" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m24 32-12 11m26-11 13 8M24 42h14" stroke="#F0D5BE" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M13 23c8-7 18-9 28-5m-5-5 6 5-5 5" stroke="#67B2C9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Multi-hit interactable — repeated impact sequence</title>
+  <g data-game-icon-frame="true">
+    <path d="M14 7h18l5 6 9-2 5 8 7 4-3 9 3 9-8 5-2 9-10-2-6 5-7-6-10 2-2-9-8-5 4-8-4-9 9-4V7Z" fill="#231D0E" stroke="#C5A63D" stroke-width="2"/>
+    <path d="M17 11h11m25 15-7 2M14 49l8-4m26 4-8-4" stroke="#F0DEA2" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m18 16 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6Zm27 4 2 5 6 1-4 4 1 6-5-3-5 3 1-6-4-4 6-1 2-5ZM30 36l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6Z" fill="#D4B847" stroke="#FFF2B0" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M25 18 36 25m-12 9 13 7" stroke="#F2834E" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="3 3"/>
+  </g>
+</svg>

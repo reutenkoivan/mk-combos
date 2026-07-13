@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Ermac — Master of Souls: captured soul skulls</title>
+  <g data-variation-frame="true">
+    <path d="M8 10c8 3 15-5 24-6 9 1 16 9 24 6-3 8 4 15 4 23-3 10-12 17-12 26-9-3-23-3-32 0 0-9-9-16-12-26 0-8 7-15 4-23Z" fill="#071C19" stroke="#2CCB9D" stroke-width="2"/>
+    <path d="M14 17c4-4 8-6 13-7m23 7c-4-4-8-6-13-7M13 47c4 4 8 7 13 9m25-9c-4 4-8 7-13 9" stroke="#D94C6B" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M23 42c-6-5-5-14 2-17 2-9 12-10 16-3 8 0 11 9 5 14-3 3-6 3-8 6H23Z" fill="#2CCB9D" stroke="#C5FFE9" stroke-width="2"/>
+    <path d="M19 24c-5-2-8 4-5 8 2 2 5 1 6 4m25-20c4-2 8 2 6 6-1 2-4 3-6 4" stroke="#D94C6B" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="28" cy="30" r="2" fill="#071C19"/><circle cx="39" cy="29" r="2" fill="#071C19"/>
+    <path d="m30 37 3-2 3 2m-10 7c2 5 10 7 14 0" stroke="#071C19" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Predator — Hish-Qu-Ten shoulder plasma caster</title>
+  <g data-variation-frame="true" stroke="#E74C43" stroke-linecap="square" stroke-linejoin="round">
+    <path d="M9 9h18v5H14v13H9zM55 9H37v5h13v13h5zM9 55h18v-5H14V37H9zM55 55H37v-5h13V37h5z" fill="#18201B" stroke-width="2.2"/>
+    <circle cx="32" cy="32" r="24" stroke="#84B55B" stroke-width="1.6" stroke-dasharray="7 4"/>
+    <path d="M32 5v7m0 40v7M5 32h7m40 0h7" stroke="#D8E3CF" stroke-width="1.6"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 45V28l8-7 12 2 7 9-4 13z" fill="#273126" stroke="#84B55B" stroke-width="2.2"/>
+    <path d="M37 23v-8h10l6 6-8 9" fill="#343B36" stroke="#D8E3CF" stroke-width="2"/>
+    <circle cx="46" cy="21" r="4" fill="#581E1B" stroke="#E74C43" stroke-width="2"/>
+    <circle cx="32" cy="32" r="6" stroke="#E74C43" stroke-width="1.8"/>
+    <path d="M32 22v5m0 10v5m-10-10h5m10 0h5m8-8 8 6" stroke="#E74C43" stroke-width="1.8"/>
+  </g>
+</svg>

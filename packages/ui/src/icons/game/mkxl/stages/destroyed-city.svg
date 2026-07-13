@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Destroyed City stage — ruined skyline and overturned car</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 6h48v12l5 14-5 14v12H8V46L3 32l5-14V6Z" fill="#181614" stroke="#766B60" stroke-width="2"/>
+    <path d="M13 11h14m24 0H38M13 53h14m24 0H38" stroke="#B95D3D" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M8 42V22l9-4v24m0 0V10h11v32m0 0V19l10-5v28m0 0V7h12v35m0 0V25l7-3v20" fill="#4C5050" stroke="#A9A7A0" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m13 47 9-6h22l8 6-3 8H15l-2-8Z" fill="#B95D3D" stroke="#E9A27D" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="22" cy="53" r="3" fill="#181614"/><circle cx="43" cy="53" r="3" fill="#181614"/>
+    <path d="M23 16h4m15-3h4M9 29h4m29 0h5" stroke="#D1A166" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+</svg>

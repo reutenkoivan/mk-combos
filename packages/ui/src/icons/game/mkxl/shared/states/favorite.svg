@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Favorite state — cherished fighter</title>
+  <g data-game-icon-frame="true">
+    <path d="M32 6 40 17l13 1-4 12 8 10-11 7-3 12-11-6-11 6-3-12-11-7 8-10-4-12 13-1 8-11Z" fill="#25131B" stroke="#C86689" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M17 19 23 25m24-6-6 6M14 43l8-3m28 3-8-3" stroke="#F5C9D8" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M32 49C16 39 13 30 17 23c4-7 12-6 15 0 3-6 11-7 15 0 4 7 1 16-15 26Z" fill="#D95778" stroke="#FFE6EE" stroke-width="2"/>
+    <path d="m32 25 2.5 5 5.5.8-4 4 1 5.7-5-2.7-5 2.7 1-5.7-4-4 5.5-.8 2.5-5Z" fill="#FFD67A" stroke="#FFF4C7" stroke-width="1.5"/>
+  </g>
+</svg>

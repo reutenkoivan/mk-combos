@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Quan Chi — Summoner: Netherrealm bat</title>
+  <g data-variation-frame="true">
+    <path d="M8 39C5 24 14 10 29 6l3 6 3-6c15 4 24 18 21 33-4-5-8-7-13-8-2 12-7 20-11 27-4-7-9-15-11-27-5 1-9 3-13 8Z" fill="#17111F" stroke="#9A70C9" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M12 21c5-1 8 0 11 3M52 21c-5-1-8 0-11 3" stroke="#E7B6FF" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M32 29c-5-8-13-9-18-3 5 0 7 3 6 8 4-2 8 0 12 10 4-10 8-12 12-10-1-5 1-8 6-8-5-6-13-5-18 3Z" fill="#B987E8" stroke="#F4DFFF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m29 29 3-6 3 6-3 4-3-4Z" fill="#26132F" stroke="#F4DFFF" stroke-width="1.5"/>
+    <circle cx="30" cy="28" r="1.2" fill="#F6D35B"/><circle cx="34" cy="28" r="1.2" fill="#F6D35B"/>
+  </g>
+</svg>

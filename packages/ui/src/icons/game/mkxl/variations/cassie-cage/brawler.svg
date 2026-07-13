@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Cassie Cage — Brawler: reinforced street-fighting fist</title>
+  <g data-variation-frame="true">
+    <path d="m32 4 22 9 6 23-14 21H18L4 36l6-23 22-9Z" fill="#171118" stroke="#E06B9F" stroke-width="2"/>
+    <path d="m12 18 10-7m30 7-10-7M10 42l12 11m32-11L42 53" stroke="#8FE2D0" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M20 30v-8c0-3 5-3 5 0v6-9c0-3 5-3 5 0v9-10c0-3 5-3 5 0v10-7c0-3 5-3 5 0v11l5-4c3-2 6 2 3 5L37 47c-4 5-15 3-17-4l-4-10c-1-4 3-6 5-3Z" fill="#E06B9F" stroke="#FFD9E8" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M24 29h17M22 35l20 1" stroke="#171118" stroke-width="2" stroke-linecap="round"/>
+    <path d="m25 49 2 5h11l2-8" stroke="#8FE2D0" stroke-width="2.2" stroke-linejoin="round"/>
+  </g>
+</svg>

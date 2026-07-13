@@ -1,5 +1,6 @@
 import type { UiResponsiveMode } from "../components/type";
 import { uiResponsiveModes } from "../components/value";
+import { UiRootContext } from "../internal/ui-root-context";
 import { cx } from "../recipes/class-name";
 import { separatorRecipe } from "../recipes/separator";
 import { surfaceRecipe } from "../recipes/surface";
@@ -78,17 +79,19 @@ export function UiRoot(props: UiRootProps) {
   } = props;
 
   return (
-    <div
-      {...rootProps}
-      className={cx("mk-combos-ui-root min-h-full text-[var(--ui-text)]", className)}
-      data-ui-contrast={contrast}
-      data-ui-density={density}
-      data-ui-responsive={responsiveMode}
-      data-ui-theme={theme}
-      ref={ref}
-    >
-      {children}
-    </div>
+    <UiRootContext value={{ contrast, density, responsiveMode, theme }}>
+      <div
+        {...rootProps}
+        className={cx("mk-combos-ui-root min-h-full text-[var(--ui-text)]", className)}
+        data-ui-contrast={contrast}
+        data-ui-density={density}
+        data-ui-responsive={responsiveMode}
+        data-ui-theme={theme}
+        ref={ref}
+      >
+        {children}
+      </div>
+    </UiRootContext>
   );
 }
 
@@ -323,11 +326,9 @@ export function WorkstationSection(props: WorkstationSectionProps) {
     >
       <header className="grid gap-1">
         {eyebrow && (
-          <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--ui-accent-strong)]">
-            {eyebrow}
-          </span>
+          <span className="text-xs font-medium text-[var(--ui-accent-strong)]">{eyebrow}</span>
         )}
-        <h2 className="font-[var(--ui-font-display)] text-base font-bold uppercase tracking-[0.04em]">
+        <h2 className="font-[var(--ui-font-display)] text-base font-semibold tracking-[-0.01em]">
           {title}
         </h2>
         {description && <p className="text-sm text-[var(--ui-muted-text)]">{description}</p>}

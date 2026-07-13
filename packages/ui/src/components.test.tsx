@@ -338,6 +338,7 @@ describe("shell and settings component contracts", () => {
       escapeKey: "escapeKey",
       focusOut: "focusOut",
       imperativeAction: "imperativeAction",
+      inputChange: "inputChange",
       itemPress: "itemPress",
       listNavigation: "listNavigation",
       none: "none",

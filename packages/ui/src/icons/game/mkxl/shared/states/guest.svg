@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Guest fighter state — admission pass</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 20c5 0 8-3 8-8h32c0 5 3 8 8 8v24c-5 0-8 3-8 8H16c0-5-3-8-8-8V20Z" fill="#24170E" stroke="#C28B4A" stroke-width="2"/>
+    <path d="M23 12v40" stroke="#F0CEA0" stroke-width="1.5" stroke-dasharray="3 4"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M39 19c6 0 10 5 10 11 0 4-2 7-5 9 5 2 8 5 9 10H25c1-5 4-8 9-10-3-2-5-5-5-9 0-6 4-11 10-11Z" fill="#A96B39" stroke="#FFE5C0" stroke-width="2"/>
+    <path d="M12 27h7m-7 5h7m-7 5h7" stroke="#E4A95D" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

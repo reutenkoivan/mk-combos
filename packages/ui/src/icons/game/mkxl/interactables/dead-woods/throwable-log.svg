@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Dead Woods — throwable log</title>
+  <g data-game-icon-frame="true" stroke="#E08045" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 5 55 18v28L32 59 9 46V18z" fill="#211A14" stroke-width="2.4"/>
+    <path d="m12 18 8 4m32-4-8 4M12 46l8-4m32 4-8-4" stroke="#7DA067" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m14 45 28-25 11 11-28 25z" fill="#6C4C30" stroke="#CDAA78" stroke-width="2.5"/>
+    <ellipse cx="47" cy="26" rx="8" ry="6" transform="rotate(47 47 26)" fill="#8A6542" stroke="#ECC98B" stroke-width="2"/>
+    <path d="m44 25 5 1-1 4-4-1z" stroke="#D8B37A" stroke-width="1.7"/>
+    <path d="M9 25c4-8 11-13 19-15m-4-4 4 4-2 6" stroke="#E08045" stroke-width="2.5"/>
+  </g>
+</svg>

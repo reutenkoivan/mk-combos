@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Lin Kuei Temple stage — snowbound pagoda and dragon braziers</title>
+  <g data-game-icon-frame="true">
+    <path d="M10 5h44l6 18-7 30-21 8-21-8-7-30 6-18Z" fill="#0B1720" stroke="#548AA7" stroke-width="2"/>
+    <path d="M15 10 8 25m41-15 7 15M10 48l14 9m30-9-14 9" stroke="#B8D7E3" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m8 28 24-15 24 15-5 5H13l-5-5Zm9 5h30v20H17V33Z" fill="#506777" stroke="#C8DCE6" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m14 19 18-11 18 11M22 34v17m20-17v17M11 53h42" stroke="#548AA7" stroke-width="2" stroke-linecap="round"/>
+    <path d="M8 43c5-7 8-7 13 0m22 0c5-7 8-7 13 0" stroke="#8DD9EC" stroke-width="2" stroke-linecap="round"/>
+    <path d="m11 39 2-7 3 7m32 0 3-7 2 7" fill="#8DD9EC" stroke="#D9F9FF" stroke-width="1.7" stroke-linejoin="round"/>
+  </g>
+</svg>

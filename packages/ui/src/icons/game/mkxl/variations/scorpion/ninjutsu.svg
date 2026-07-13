@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Scorpion — Ninjutsu: dual katana</title>
+  <g data-variation-frame="true">
+    <path d="M7 18 18 7l14 6L46 7l11 11-6 14 6 14-11 11-14-6-14 6L7 46l6-14-6-14Z" fill="#211B09" stroke="#D9A825" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m12 13 10 3m30-3-10 3M12 51l10-3m30 3-10-3" stroke="#FFE69A" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m16 48 7-14 19-19 7 7-19 19-14 7Z" fill="#C9D1D0" stroke="#FFF8CF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m48 48-7-14-19-19-7 7 19 19 14 7Z" fill="#7E888A" stroke="#FFF8CF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M17 42h13m4 0h13M21 47l-4-4m26 4 4-4" stroke="#E0A51B" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

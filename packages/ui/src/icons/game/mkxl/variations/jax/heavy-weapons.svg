@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jax — Heavy Weapons: shoulder rocket launcher</title>
+  <g data-variation-frame="true">
+    <path d="M5 14 17 5h30l12 9v36l-12 9H17L5 50V14Z" fill="#111712" stroke="#718767" stroke-width="2"/>
+    <path d="m11 18 10-8h22l10 8M11 46l10 8h22l10-8" stroke="#D49A4A" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M12 25h33l8 7-8 7H12V25Z" fill="#718767" stroke="#DDE8D3" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M12 23H7v18h5m13-2-3 11h8l5-11" fill="#D49A4A" stroke="#FFE0A2" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="45" cy="32" r="4" fill="#111712" stroke="#D49A4A" stroke-width="2"/>
+    <path d="m54 28 5-4m-5 8h7m-7 4 5 4" stroke="#D49A4A" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

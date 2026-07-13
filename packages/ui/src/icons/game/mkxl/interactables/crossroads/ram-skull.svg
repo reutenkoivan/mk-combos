@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Crossroads — throwable ram skull</title>
+  <g data-game-icon-frame="true" stroke="#D8B66B" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 5 54 16l5 22-15 19H20L5 38l5-22z" fill="#211C16" stroke-width="2.5"/>
+    <path d="m10 16 8 4m36-4-8 4M8 41l9-3m39 3-9-3" stroke="#8B6546" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M23 26C10 27 8 13 18 11c7-1 11 6 8 13m15 2c13 1 15-13 5-15-7-1-11 6-8 13" stroke="#E2D4B6" stroke-width="3.4"/>
+    <path d="M23 24c3-5 15-5 18 0l-2 19-7 8-7-8z" fill="#59473C" stroke="#F0E3C9" stroke-width="2.5"/>
+    <circle cx="28" cy="33" r="2" fill="#D55346"/>
+    <circle cx="36" cy="33" r="2" fill="#D55346"/>
+    <path d="m29 43 3-3 3 3" stroke="#E2D4B6" stroke-width="2"/>
+  </g>
+</svg>

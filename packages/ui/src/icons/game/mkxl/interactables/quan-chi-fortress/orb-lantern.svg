@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Quan Chi's Fortress — throwable soul orb lantern</title>
+  <g data-game-icon-frame="true" stroke="#A874D0" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 7h30l10 15-5 34H12L7 22z" fill="#1D1722" stroke-width="2.5"/>
+    <path d="M8 22h10m28 0h10M13 56l7-8m31 8-7-8" stroke="#6A586E" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 7v9M25 8h14" stroke="#B0A0AE" stroke-width="2.5"/>
+    <path d="m20 22 12-8 12 8 5 23-17 12-17-12z" fill="#29242E" stroke="#C1B2C3" stroke-width="2.5"/>
+    <circle cx="32" cy="34" r="10" fill="#7650A0" stroke="#D0A4E9" stroke-width="2.5"/>
+    <path d="M28 35c4-7 8-8 11-3-4 0-5 5-9 6" stroke="#F0DFF7" stroke-width="2"/>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Raiden — Master of Storms: linked lightning traps</title>
+  <g data-variation-frame="true">
+    <path d="m32 6 24 42H8L32 6Z" fill="#111B22" stroke="#56C7D9" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="32" cy="11" r="3" fill="#1C3F49" stroke="#AEF5FF" stroke-width="1.5"/><circle cx="12" cy="46" r="3" fill="#1C3F49" stroke="#AEF5FF" stroke-width="1.5"/><circle cx="52" cy="46" r="3" fill="#1C3F49" stroke="#AEF5FF" stroke-width="1.5"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M18 40c2-7 7-11 14-11s12 4 14 11" stroke="#74DBE8" stroke-width="2" stroke-dasharray="3 3"/>
+    <path d="m18 19 5 8-4 2 7 8m20-18-5 8 4 2-7 8M32 17v8l-4 3 4 5 4-5-4-3" stroke="#E0FBFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="18" cy="19" r="3.5" fill="#4BBACB" stroke="#E0FBFF" stroke-width="1.5"/><circle cx="46" cy="19" r="3.5" fill="#4BBACB" stroke="#E0FBFF" stroke-width="1.5"/>
+  </g>
+</svg>

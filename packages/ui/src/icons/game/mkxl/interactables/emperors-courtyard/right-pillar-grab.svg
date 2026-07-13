@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Emperor's Courtyard — grab and vault from the right pillar</title>
+  <g data-game-icon-frame="true" stroke="#9A83E8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 20V9h14M41 9h14v11M9 44v11h14m18 0h14V44" stroke-width="2.6"/>
+    <path d="M14 32c0-11 7-19 18-24 11 5 18 13 18 24s-7 19-18 24c-11-5-18-13-18-24z" fill="#1B1824" stroke="#5D527E" stroke-width="1.5" stroke-dasharray="4 4"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M39 55h16M42 50h11V16H42zm-3-34h17l-3-8H42z" fill="#806B58" stroke="#D8CAB4" stroke-width="2.5"/>
+    <circle cx="26" cy="25" r="4" fill="#E4DFF5"/>
+    <path d="m28 29 7 8 9-5m-10 5-5 13m5-13 7 12m-14-17-8 5M17 18c8-6 16-6 23-1m-3-6 3 6-6 2" stroke="#9A83E8" stroke-width="2.5"/>
+  </g>
+</svg>

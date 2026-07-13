@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jason Voorhees — Relentless: stalking through lake mist</title>
+  <g data-variation-frame="true">
+    <path d="M7 9h50v9l-4 8 7 8-7 8 4 13H7l4-13-7-8 7-8-4-8V9Z" fill="#0B1720" stroke="#557D92" stroke-width="2"/>
+    <path d="M12 14h40M9 50h46" stroke="#D57B45" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M22 15h20l5 10-3 17-12 8-12-8-3-17 5-10Z" fill="#C8B69A" stroke="#F2E6D2" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="26" cy="27" r="2.2" fill="#0B1720"/><circle cx="38" cy="27" r="2.2" fill="#0B1720"/>
+    <path d="M32 19v4M25 36h3m8 0h3m-7-5v9" stroke="#D57B45" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M9 38c6-5 12-5 18 0 6 5 12 5 18 0 5-4 9-4 13-1M14 45c5-3 9-3 13 0 5 4 10 4 15 0" stroke="#557D92" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

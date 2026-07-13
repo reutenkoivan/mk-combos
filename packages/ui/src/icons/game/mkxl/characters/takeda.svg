@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Takeda character — armored visor and energized whip</title>
+  <g data-game-icon-frame="true">
+    <path d="M14 5h36l10 15-6 28-14 11H24L10 48 4 20 14 5Z" fill="#151116" stroke="#8C5665" stroke-width="2"/>
+    <path d="M18 10 8 23m38-13 10 13M11 45l13 10m29-10L40 55" stroke="#D59846" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M20 16c7-6 18-5 24 3l2 21-14 14-14-14 2-24Z" fill="#705148" stroke="#D9B5A0" stroke-width="2"/>
+    <path d="M20 27c8-6 16-6 24 0l-2 10c-7-3-13-3-20 0l-2-10Z" fill="#8C5665" stroke="#E8C4CE" stroke-width="2"/>
+    <path d="M25 43c5 3 9 3 14 0M16 18l-7-8m39 8 7-8" stroke="#151116" stroke-width="2" stroke-linecap="round"/>
+    <path d="M9 47c8-8 15-4 20 4 5 8 13 7 21-1m0 0-1-7m1 7-7-1" stroke="#D59846" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

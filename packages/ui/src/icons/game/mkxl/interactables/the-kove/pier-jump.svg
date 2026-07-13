@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>The Kove — leap from the timber pier</title>
+  <g data-game-icon-frame="true">
+    <path d="M7 9h50v46H7V9Z" fill="#101B1F" stroke="#4E7F8E" stroke-width="2"/>
+    <path d="M11 13h42M11 51h42" stroke="#C4D9DF" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M8 43h38v9H8v-9Zm7-15h8v24h-8V28Zm24 5h8v19h-8V33Z" fill="#78553B" stroke="#E9D1BC" stroke-width="2"/>
+    <path d="M9 43h37m-30 9-4 8m29-8 4 8" stroke="#442E20" stroke-width="1.5"/>
+    <circle cx="33" cy="18" r="4" fill="#BFCACA" stroke="#F4F8F8" stroke-width="1.5"/>
+    <path d="m31 23 7 6 12 3m-12-3-6 12m-3-15-8 4" stroke="#D9E1E1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M24 17c6-7 14-9 22-7m-5-4 6 4-5 5" stroke="#64B4C6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

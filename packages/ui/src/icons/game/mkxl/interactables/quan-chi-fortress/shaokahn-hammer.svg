@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Quan Chi's Fortress — Shao Kahn's war hammer strike</title>
+  <g data-game-icon-frame="true" stroke="#D06C48" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m32 5 8 8 11-2 2 11 7 8-7 8 2 11-11 2-8 8-8-7-11 2-2-11-7-8 7-8-2-11 11-2z" fill="#211815" stroke-width="2.4"/>
+    <path d="M8 20h8m32 24h8M20 8v8m24 32v8" stroke="#8D5EA2" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m18 55 28-36" stroke="#604330" stroke-width="6"/>
+    <path d="m28 18 15-11 14 11-14 15z" fill="#6C463E" stroke="#D5A06A" stroke-width="2.5"/>
+    <path d="m34 16 9-5 8 7-8 9z" fill="#A53F36"/>
+    <path d="m14 42 10 8m-5-15 10 8" stroke="#B99A76" stroke-width="2.5"/>
+    <path d="m9 18 5 2 3-5 1 6 6 1-5 3 1 6-5-4-5 3 2-6-4-4 6 1z" fill="#8D5EA2"/>
+  </g>
+</svg>

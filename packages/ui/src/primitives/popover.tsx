@@ -1,7 +1,8 @@
 import { Popover as BasePopover } from "@base-ui/react/popover";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 
 import { useBaseUiOpenChangeHandler } from "../internal/base-ui/use-open-change-handler";
+import { useUiRootContext } from "../internal/ui-root-context";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { popupRecipe } from "../recipes/popup";
@@ -98,7 +99,31 @@ export function PopoverTrigger(props: PopoverTriggerProps) {
 
 PopoverTrigger.displayName = "PopoverTrigger";
 
-export const PopoverPortal = BasePopover.Portal;
+export type PopoverPortalProps = ComponentPropsWithRef<typeof BasePopover.Portal>;
+
+export function PopoverPortal(props: PopoverPortalProps) {
+  const { className, ...portalProps } = props;
+  const { contrast, density, responsiveMode, theme } = useUiRootContext();
+
+  return (
+    <BasePopover.Portal
+      {...portalProps}
+      className={(state) =>
+        cx(
+          "mk-combos-ui-root mk-combos-ui-portal-root",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
+      data-ui-contrast={contrast}
+      data-ui-density={density}
+      data-ui-portal="popover"
+      data-ui-responsive={responsiveMode}
+      data-ui-theme={theme}
+    />
+  );
+}
+
+PopoverPortal.displayName = "PopoverPortal";
 
 export type PopoverPositionerProps = UiPrimitiveProps<HTMLDivElement> & {
   align?: UiFloatingAlignment;
@@ -156,7 +181,6 @@ export function PopoverPopup(props: PopoverPopupProps) {
       {...popupProps}
       className={cx(popupRecipe({ density, material, shape }), className)}
       data-ui-popover-popup
-      data-ui-portal
       ref={ref}
     >
       {children}

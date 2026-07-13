@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Leatherface — Killer full-speed chainsaw attacks</title>
+  <g data-variation-frame="true" stroke="#D65D3A" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 16c0-5 6-8 10-5l5 4h14l5-4c4-3 10 0 10 5v32c0 5-6 8-10 5l-5-4H25l-5 4c-4 3-10 0-10-5z" fill="#211916" stroke-width="2.5"/>
+    <path d="M10 23h8m28 0h8M10 41h8m28 0h8" stroke="#E5B56A" stroke-width="2"/>
+    <circle cx="15" cy="32" r="2" fill="#E9DBBA"/>
+    <circle cx="49" cy="32" r="2" fill="#E9DBBA"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 37h28l10-5 5 5-5 5H13z" fill="#4A443B" stroke="#E9DBBA" stroke-width="2.2"/>
+    <path d="M18 31h19l5 6-5 11H18z" fill="#74301F" stroke="#D65D3A" stroke-width="2.2"/>
+    <path d="M17 42h22m5-6 4 6m1-9 4 6" stroke="#E5B56A" stroke-width="1.8"/>
+    <path d="M22 31v-6h10l5 6" stroke="#E9DBBA" stroke-width="2"/>
+  </g>
+</svg>

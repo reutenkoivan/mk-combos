@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Predator — Hunter laser snare trap and net</title>
+  <g data-variation-frame="true" stroke="#D0B35B" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 5 58 53H6z" fill="#1C1D16" stroke-width="2.5"/>
+    <path d="m32 10-5 9h10zM10 48l8-1-4-7m40 8-8-1 4-7" stroke="#6EA47A" stroke-width="1.8"/>
+    <path d="M19 53h26" stroke="#E9DDAD" stroke-width="1.7" stroke-dasharray="3 4"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 41 32 18l16 23z" fill="#283125" stroke="#6EA47A" stroke-width="2.2"/>
+    <path d="m20 36 24-1M23 31l17-1M26 26l11-1M22 40l10-22m10 22L32 18" stroke="#D8E7D0" stroke-width="1.7"/>
+    <path d="M13 45h38l-5 7H18z" fill="#4B4023" stroke="#D0B35B" stroke-width="2"/>
+    <circle cx="20" cy="45" r="2" fill="#E05245"/>
+    <circle cx="44" cy="45" r="2" fill="#E05245"/>
+    <path d="m20 45 12-8 12 8" stroke="#E05245" stroke-width="1.8" stroke-dasharray="3 3"/>
+  </g>
+</svg>

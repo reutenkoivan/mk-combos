@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Right-side position — interactable at arena right</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 8h48v48H8V8Z" fill="#181525" stroke="#7C6FB4" stroke-width="2"/>
+    <path d="M14 14v36h9M50 14v36h-9" stroke="#D8D0F1" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M16 32h31M36 21l11 11-11 11" stroke="#A18BDA" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M51 17v30" stroke="#F0ECFF" stroke-width="3" stroke-linecap="round"/>
+    <path d="m15 27-5 5 5 5 5-5-5-5Z" fill="#4A3B77" stroke="#EEE8FF" stroke-width="1.5"/>
+  </g>
+</svg>

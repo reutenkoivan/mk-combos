@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Sonya Blade character — Special Forces cap and command headset</title>
+  <g data-game-icon-frame="true">
+    <path d="M9 7h46l4 15-6 32-21 6-21-6-6-32L9 7Z" fill="#121A16" stroke="#5F8D63" stroke-width="2"/>
+    <path d="M14 12h36M9 25l8 6m38-6-8 6M13 50l12 6m26-6-12 6" stroke="#B59B55" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M18 20c6-9 21-10 28-1l4 6c-10 3-26 3-36 0l4-5Z" fill="#5F8D63" stroke="#CFE2D0" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M21 26h23l-2 18-10 9-10-9-1-18Z" fill="#AD7761" stroke="#EEC8B5" stroke-width="2"/>
+    <path d="M25 33h4m6 0h4m-12 10c3 2 7 2 10 0" stroke="#121A16" stroke-width="2" stroke-linecap="round"/>
+    <path d="M44 29c7 0 9 8 5 12l-7 4m6-6 6 4M21 20l-8-7" stroke="#B59B55" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Alternative interactable action — branching input choice</title>
+  <g data-game-icon-frame="true">
+    <path d="M18 7h28l11 11v28L46 57H18L7 46V18L18 7Z" fill="#171426" stroke="#8375C2" stroke-width="2"/>
+    <path d="M18 11h8m20 0h-8M11 18v8m42-8v8M11 46v-8m42 8v-8M18 53h8m20 0h-8" stroke="#D8D0F4" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M17 18v12c0 8 5 12 14 12h14M17 42h8c8 0 13-5 13-13V18" stroke="#9A88DB" stroke-width="3" stroke-linecap="round"/>
+    <path d="m40 36 7 6-7 6m-8-36 6 6 6-6" stroke="#F3ECFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="11" y="12" width="12" height="12" rx="3" fill="#4D417A" stroke="#E5DFFF" stroke-width="1.5"/>
+  </g>
+</svg>

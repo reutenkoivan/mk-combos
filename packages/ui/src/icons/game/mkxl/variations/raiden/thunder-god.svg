@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Raiden — Thunder God: body-charged lightning</title>
+  <g data-variation-frame="true">
+    <path d="m32 5 6 7 9-2 2 9 8 4-4 8 4 8-8 5-2 9-9-2-6 8-6-8-9 2-2-9-8-5 4-8-4-8 8-4 2-9 9 2 6-7Z" fill="#0C1728" stroke="#82B7FF" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="32" cy="32" r="22" stroke="#D8EAFF" stroke-width="1.5" stroke-dasharray="1.5 6"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M30 13 18 31h10l-5 20 23-27H35l4-11h-9Z" fill="#69AFFF" stroke="#EAF4FF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m15 41 7-4m27-15-7 4M17 21l7 3m23 17-7-3" stroke="#BEE1FF" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

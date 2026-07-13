@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Stage Brutality interactable — environment-assisted brutal finish</title>
+  <g data-game-icon-frame="true">
+    <path d="M10 7h44v14l5 7-5 7v22H10V35l-5-7 5-7V7Z" fill="#25100F" stroke="#BC493E" stroke-width="2"/>
+    <path d="M14 11h12m24 0H38M14 53h12m24 0H38" stroke="#F0B9B0" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M14 42h36v11H14V42Z" fill="#71362F" stroke="#F6C9BE" stroke-width="2"/>
+    <path d="M23 42V20h18v22" fill="#90443A" stroke="#FFE0D5" stroke-width="2"/>
+    <path d="M32 15c6 0 10 5 9 10-1 4-4 6-7 8v5h-4v-5c-3-2-6-4-7-8-1-5 3-10 9-10Z" fill="#E0C9B5" stroke="#FFF0E5" stroke-width="1.5"/>
+    <path d="m27 24 3 2m7-2-3 2m-5 5h6M8 35l8-4m40 4-8-4" stroke="#67201D" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

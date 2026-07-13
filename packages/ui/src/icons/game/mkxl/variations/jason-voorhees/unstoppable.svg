@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jason Voorhees — Unstoppable: resurrection from the grave</title>
+  <g data-variation-frame="true">
+    <path d="M17 5h30l3 13 9 7-4 12 2 16-14 7-11-5-11 5-14-7 2-16-4-12 9-7 3-13Z" fill="#101811" stroke="#678B55" stroke-width="2"/>
+    <path d="M21 10h22M11 26l8 3m34-3-8 3M13 50l10-3m28 3-10-3" stroke="#B7A46C" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M19 49V25c0-8 6-14 13-14s13 6 13 14v24H19Z" fill="#678B55" stroke="#D7E8C7" stroke-width="2"/>
+    <path d="M25 24h14M32 17v14m-10 18-5 7m25-7 5 7" stroke="#101811" stroke-width="2" stroke-linecap="round"/>
+    <path d="M14 43h36" stroke="#B7A46C" stroke-width="3" stroke-linecap="round"/>
+    <path d="M32 50V34m-6 6 6-6 6 6" stroke="#E1D197" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

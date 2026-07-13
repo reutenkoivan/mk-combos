@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Lin Kuei Temple — fire blast from the dragon statue</title>
+  <g data-game-icon-frame="true" stroke="#E96B43" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m32 5 8 8 11-2 2 11 7 8-7 8 2 11-11 2-8 8-8-7-11 2-2-11-7-8 7-8-2-11 11-2z" fill="#1D1A19" stroke-width="2.4"/>
+    <path d="M13 13 8 8m43 5 5-5M13 51l-5 5m43-5 5 5" stroke="#79AEB8" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 51h27l-3-14-8-4 6-8-4-13-10 5-3 11 5 8-8 4z" fill="#5A676C" stroke="#C4D8DC" stroke-width="2.5"/>
+    <path d="M36 26c8-7 16-4 20 3-8 1-11 8-19 4" fill="#DB5B38" stroke="#F5BD4E" stroke-width="2.5"/>
+    <path d="M42 29h8" stroke="#FBE88E" stroke-width="2"/>
+    <circle cx="23" cy="20" r="2" fill="#6FD4DF"/>
+  </g>
+</svg>

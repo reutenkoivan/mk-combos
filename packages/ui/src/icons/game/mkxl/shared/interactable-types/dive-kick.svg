@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Dive-kick interactable — descending aerial strike</title>
+  <g data-game-icon-frame="true">
+    <path d="M8 14 20 7h32l5 12-6 13 6 13-12 12H13L7 45l6-13-5-18Z" fill="#25150D" stroke="#C16D34" stroke-width="2"/>
+    <path d="M12 17h13m27 3-7 5M11 45l10-5m27 12H35" stroke="#F0C39D" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="22" cy="18" r="5" fill="#E1A16C" stroke="#FFE4CB" stroke-width="1.5"/>
+    <path d="m26 23 10 7 14 16-6 5-16-14-10-6 8-8Z" fill="#A95232" stroke="#FFE0C8" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m34 31 9-12m-15 18-9 11" stroke="#EFC09B" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="m44 51 8-1 2-5-4-3" fill="#59261D" stroke="#FFE0C8" stroke-width="1.5"/>
+    <path d="M12 12 44 44" stroke="#F5A23E" stroke-width="1.5" stroke-dasharray="4 4"/>
+  </g>
+</svg>

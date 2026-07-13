@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Alien — Konjurer: xenomorph egg and facehugger</title>
+  <g data-variation-frame="true">
+    <path d="M32 4c16 0 25 10 25 27S48 60 32 60 7 48 7 31 16 4 32 4Z" fill="#181226" stroke="#C592E8" stroke-width="2"/>
+    <path d="M14 16 8 10m42 6 6-6M12 48l-6 5m46-5 6 5" stroke="#F3B85B" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M21 43c0-13 4-24 11-24s11 11 11 24c-5 4-17 4-22 0Z" fill="#C592E8" stroke="#F4E9FF" stroke-width="2"/>
+    <path d="m23 28 9 7 9-7M32 35v7" stroke="#181226" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 42c-3 0-5 3-5 6m5-6c3 0 5 3 5 6m-8-4-7 5m13-5 7 5m-14-1-4 5m12-5 4 5" stroke="#F3B85B" stroke-width="2.2" stroke-linecap="round"/>
+  </g>
+</svg>

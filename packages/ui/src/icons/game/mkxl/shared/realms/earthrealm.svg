@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Earthrealm — inhabited world</title>
+  <g data-game-icon-frame="true">
+    <circle cx="32" cy="32" r="27" fill="#10221C" stroke="#61A97D" stroke-width="2"/>
+    <path d="M7 32h50M32 5c-8 7-12 16-12 27s4 20 12 27m0-54c8 7 12 16 12 27s-4 20-12 27" stroke="#BDE5C9" stroke-width="1.5" opacity=".75"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m16 19 10-7 9 5-2 8 8 5-4 9-8 1-4 11-8-9-7-5 4-9Z" fill="#4B9868" stroke="#E1F5E7" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m44 15 9 8-5 7 6 6-9 6-5-9 4-7-5-5Z" fill="#2F705A" stroke="#E1F5E7" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M24 51c5-5 10-7 16-7" stroke="#89C99E" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

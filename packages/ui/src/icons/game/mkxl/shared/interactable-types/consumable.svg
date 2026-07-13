@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Consumable interactable — single-use supply bottle</title>
+  <g data-game-icon-frame="true">
+    <path d="M21 6h22l3 12 9 9-3 25-20 7-20-7-3-25 9-9 3-12Z" fill="#102016" stroke="#5AA46C" stroke-width="2"/>
+    <path d="M15 28h7m27 0h-7M18 50l7-4m21 4-7-4" stroke="#C9E7CF" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M26 11h12v9l7 9v19H19V29l7-9v-9Z" fill="#438854" stroke="#E5F7E9" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M19 36h26v12H19V36Z" fill="#9DCE70" stroke="#F3FFDE" stroke-width="1.5"/>
+    <path d="M27 11h10m-8 17h6m-3-3v6" stroke="#E7F8E9" stroke-width="2" stroke-linecap="round"/>
+    <path d="M48 17v16m0 6v3" stroke="#F2B84D" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>

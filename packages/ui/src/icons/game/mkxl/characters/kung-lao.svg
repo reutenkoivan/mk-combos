@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kung Lao character — razor-rimmed wide hat</title>
+  <g data-game-icon-frame="true">
+    <path d="M7 11h50l3 19-8 25H12L4 30l3-19Z" fill="#111820" stroke="#657E98" stroke-width="2"/>
+    <path d="M11 16h42M8 47l12 6m36-6-12 6" stroke="#C3A85C" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M6 23 25 9h14l19 14-7 6H13l-7-6Z" fill="#657E98" stroke="#D7E5F2" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M3 27c17-7 41-7 58 0-15 6-43 6-58 0Z" fill="#C3A85C" stroke="#FFF0B7" stroke-width="2"/>
+    <path d="M20 31h24l-3 16-9 7-9-7-3-16Z" fill="#9B6D53" stroke="#E9C4AA" stroke-width="2"/>
+    <path d="M25 38h4m6 0h4m-12 8c3 2 7 2 10 0" stroke="#111820" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

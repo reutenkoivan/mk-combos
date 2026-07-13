@@ -53,7 +53,6 @@ export function InternalDialogPopup(props: InternalDialogPopupProps) {
         "fixed left-1/2 top-1/2 w-[min(32rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2",
         className,
       )}
-      data-ui-portal
       ref={ref}
     />
   );

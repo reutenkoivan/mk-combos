@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Reptile character — scaled saurian snout and forked tongue</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 3 22 11 7 23-16 22H19L3 37l7-23L32 3Z" fill="#0B190F" stroke="#56A653" stroke-width="2"/>
+    <path d="m14 17 8-7m28 7-8-7M9 40l11 15m35-15L44 55" stroke="#9BBD4F" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M18 18c8-8 21-6 27 3l4 16-8 14-9 5-9-5-8-14 3-19Z" fill="#56A653" stroke="#CFF2BD" stroke-width="2"/>
+    <path d="M21 32c7-5 15-5 22 0l-3 11-8 5-8-5-3-11Z" fill="#264F2A" stroke="#9BBD4F" stroke-width="2"/>
+    <path d="m22 25 7 2m13-2-7 2M27 39h10" stroke="#F0F1B5" stroke-width="2" stroke-linecap="round"/>
+    <path d="M32 47v9m0 0-5 4m5-4 5 4M19 20l-6-5m32 5 6-5" stroke="#9BBD4F" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

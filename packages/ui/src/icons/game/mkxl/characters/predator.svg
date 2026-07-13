@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Predator character — bio-mask, mandibles, and dreadlocks</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 4 20 7 8 21-8 21-20 7-20-7-8-21 8-21 20-7Z" fill="#121917" stroke="#718C70" stroke-width="2"/>
+    <path d="M15 14 8 28m41-14 7 14M11 43l11 12m31-12L42 55" stroke="#B78445" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M18 18c7-8 21-8 28 0l3 17-8 15-9 5-9-5-8-15 3-17Z" fill="#718C70" stroke="#D7E3D4" stroke-width="2"/>
+    <path d="M22 22h20l2 14-6 7-6-3-6 3-6-7 2-14Z" fill="#3E4A43" stroke="#AFC0B1" stroke-width="1.8"/>
+    <path d="M25 28h4m6 0h4M25 43l-5 8m7-7-2 11m14-12 5 8m-7-7 2 11" stroke="#B78445" stroke-width="2" stroke-linecap="round"/>
+    <path d="m23 16-8-6m11 5-4-9m19 10 8-6m-11 5 4-9" stroke="#718C70" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

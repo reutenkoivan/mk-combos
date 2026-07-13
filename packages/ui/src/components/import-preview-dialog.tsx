@@ -8,6 +8,7 @@ import {
   DialogPortal,
   DialogRoot,
   DialogTitle,
+  DialogViewport,
 } from "../primitives/dialog";
 import { StatusMessage } from "../primitives/state";
 import { uiToneModes } from "../tokens/value";
@@ -90,37 +91,40 @@ export function ImportPreviewDialog(props: ImportPreviewDialogProps) {
     >
       <DialogPortal>
         <DialogBackdrop />
-        <DialogPopup
-          data-backup-candidate-id={props.backupCandidateId}
-          data-ui-component="UI-CMP-028"
-        >
-          <div className="grid gap-4">
-            <div className="grid gap-1">
-              <DialogTitle>{props.title}</DialogTitle>
-              <DialogDescription>{props.description}</DialogDescription>
+        <DialogViewport>
+          <DialogPopup
+            className="grid-rows-[minmax(0,1fr)_auto] overflow-hidden"
+            data-backup-candidate-id={props.backupCandidateId}
+            data-ui-component="UI-CMP-028"
+          >
+            <div className="grid min-h-0 gap-4 overflow-y-auto overscroll-contain pb-3">
+              <div className="grid gap-1">
+                <DialogTitle>{props.title}</DialogTitle>
+                <DialogDescription>{props.description}</DialogDescription>
+              </div>
+              <div className="grid gap-2 text-sm">
+                <p>{props.localStateSummary.settingsSummary}</p>
+                <p>{props.replaceImpactSummary}</p>
+              </div>
+              {props.validationResult.message && (
+                <StatusMessage
+                  tone={
+                    props.validationResult.status === backupValidationStatuses.invalid
+                      ? uiToneModes.destructive
+                      : uiToneModes.warning
+                  }
+                >
+                  <AlertTriangleIcon aria-hidden="true" size="small" />
+                  {props.validationResult.message}
+                </StatusMessage>
+              )}
+              {props.validationResult.gameSliceMessages?.map((message) => (
+                <StatusMessage key={`${message.gameId}-${message.message}`} tone={message.tone}>
+                  {message.message}
+                </StatusMessage>
+              ))}
             </div>
-            <div className="grid gap-2 text-sm">
-              <p>{props.localStateSummary.settingsSummary}</p>
-              <p>{props.replaceImpactSummary}</p>
-            </div>
-            {props.validationResult.message && (
-              <StatusMessage
-                tone={
-                  props.validationResult.status === backupValidationStatuses.invalid
-                    ? uiToneModes.destructive
-                    : uiToneModes.warning
-                }
-              >
-                <AlertTriangleIcon aria-hidden="true" size="small" />
-                {props.validationResult.message}
-              </StatusMessage>
-            )}
-            {props.validationResult.gameSliceMessages?.map((message) => (
-              <StatusMessage key={`${message.gameId}-${message.message}`} tone={message.tone}>
-                {message.message}
-              </StatusMessage>
-            ))}
-            <div className="sticky bottom-0 flex flex-col-reverse gap-2 border-t border-[var(--ui-separator)] bg-[var(--ui-dialog)] pt-3 sm:flex-row sm:flex-wrap sm:justify-end">
+            <div className="sticky bottom-0 z-10 flex flex-col-reverse items-stretch gap-2 border-t border-[var(--ui-separator)] bg-[var(--ui-dialog)] pt-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
               <Button
                 disabled={props.busy}
                 onRequestPress={() => emit(importPreviewDialogActions.cancelImport)}
@@ -143,8 +147,8 @@ export function ImportPreviewDialog(props: ImportPreviewDialogProps) {
                 {props.confirmLabel}
               </Button>
             </div>
-          </div>
-        </DialogPopup>
+          </DialogPopup>
+        </DialogViewport>
       </DialogPortal>
     </DialogRoot>
   );

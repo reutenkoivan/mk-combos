@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Dead Woods — swinging branch strike</title>
+  <g data-game-icon-frame="true" stroke="#C76A3E" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m32 5 8 7 11-2 2 11 7 8-7 8 2 11-11 2-8 9-8-7-11 2-2-11-7-8 7-8-2-11 11-2z" fill="#211A14" stroke-width="2.3"/>
+    <path d="M15 15 9 9m40 40 6 6M49 15l6-6M15 49l-6 6" stroke="#75945F" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 44c13-2 25-12 39-28m-18 10-2-11m10 3 10 1m-27 14-9-3m27-12 7-7" stroke="#765036" stroke-width="5"/>
+    <path d="m47 36 3 6 7 1-6 4 1 7-6-4-6 3 2-7-5-5 7-1z" fill="#E1694B" stroke="#F6AD64" stroke-width="1.5"/>
+  </g>
+</svg>

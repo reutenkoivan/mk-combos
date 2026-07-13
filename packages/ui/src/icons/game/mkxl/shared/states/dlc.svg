@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Downloadable content state — content package download</title>
+  <g data-game-icon-frame="true">
+    <path d="M15 7h34l9 9v32l-9 9H15l-9-9V16l9-9Z" fill="#0E1C24" stroke="#4FA2C8" stroke-width="2"/>
+    <path d="M11 19h8v-8m34 8h-8v-8M11 45h8v8m34-8h-8v8" stroke="#BFE9FA" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M17 38h30v13H17V38Z" fill="#2E7897" stroke="#E1F7FF" stroke-width="2"/>
+    <path d="M32 12v27m-10-9 10 10 10-10" stroke="#77D1EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="42" cy="45" r="2" fill="#A8F07A"/>
+  </g>
+</svg>

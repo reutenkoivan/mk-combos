@@ -2,6 +2,7 @@ import { uiPrimitiveInteractionReasons } from "../primitives/interaction";
 
 export const componentInteractionReasons = {
   ...uiPrimitiveInteractionReasons,
+  inputChange: "inputChange",
   press: "press",
 } as const;
 
@@ -14,6 +15,12 @@ export const uiResponsiveModes = {
 export const componentOptionStatuses = {
   available: "available",
   disabledUnavailable: "disabledUnavailable",
+} as const;
+
+export const pickerSlotStatuses = {
+  disabledUnavailable: "disabledUnavailable",
+  placeholder: "placeholder",
+  selectable: "selectable",
 } as const;
 
 export const backupDisclosureStates = {

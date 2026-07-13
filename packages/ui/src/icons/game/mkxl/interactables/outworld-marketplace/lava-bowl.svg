@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Outworld Marketplace — throwable bowl of lava</title>
+  <g data-game-icon-frame="true" stroke="#F0783B" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8h32l9 12-5 36H12L7 20z" fill="#251711" stroke-width="2.5"/>
+    <path d="m8 20 10 3m38-3-10 3M13 56l8-8m30 8-8-8" stroke="#C25737" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="32" cy="27" rx="21" ry="8" fill="#F07A3C" stroke="#EAC77D" stroke-width="2.5"/>
+    <path d="M12 28c2 16 8 25 20 25s18-9 20-25" fill="#624332" stroke="#CDA068" stroke-width="2.5"/>
+    <path d="M22 25c2-5 4-9 5-15 5 5 4 10 6 14 2-7 5-10 8-16 5 8 4 13 1 18" fill="#D4482F" stroke="#F7BC4E" stroke-width="2.2"/>
+    <path d="M24 52v5m16-5v5" stroke="#CDA068" stroke-width="3.2"/>
+  </g>
+</svg>

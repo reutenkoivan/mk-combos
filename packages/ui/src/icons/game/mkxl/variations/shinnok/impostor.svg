@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Shinnok — Impostor: stolen opponent power</title>
+  <g data-variation-frame="true">
+    <path d="M6 32 18 9h28l12 23-12 23H18L6 32Z" fill="#1B1421" stroke="#B887C8" stroke-width="2"/>
+    <path d="M10 32h10M54 32H44M22 12l5 8m15-8-5 8M22 52l5-8m15 8-5-8" stroke="#EAD0F3" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M14 32c6-10 12-15 18-15v30c-6 0-12-5-18-15Z" fill="#8D5BA5" stroke="#F5E5FF" stroke-width="2"/>
+    <path d="M50 32c-6-10-12-15-18-15v30c6 0 12-5 18-15Z" fill="#D2A84E" stroke="#FFF0B9" stroke-width="2"/>
+    <path d="m23 28 4 4-4 4m18-8-4 4 4 4" stroke="#1D1322" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M28 11h8m-4 0v6" stroke="#8CE0FF" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -13,13 +13,21 @@ import type {
   BackupValidationStatusSchema,
   BreadcrumbItemSchema,
   BreadcrumbTargetSchema,
+  ComboPresentationSummarySchema,
+  ComponentActionDescriptorSchema,
+  ComponentAvailabilitySchema,
   ComponentIntentBaseSchema,
   ComponentInteractionReasonSchema,
+  ComponentLabelValueSchema,
   ComponentOptionStatusSchema,
   ControllerAccessStateSchema,
   DisplayModeSwitcherOptionSchema,
   GameSwitcherOptionSchema,
   LanguageSwitcherOptionSchema,
+  NamedListSummarySchema,
+  PickerOptionSchema,
+  PickerSlotSchema,
+  PickerSlotStatusSchema,
   UiResponsiveModeSchema,
 } from "./schema";
 
@@ -27,6 +35,14 @@ export type ComponentInteractionReason = z.output<typeof ComponentInteractionRea
 export type UiResponsiveMode = z.output<typeof UiResponsiveModeSchema>;
 export type ComponentOptionStatus = z.output<typeof ComponentOptionStatusSchema>;
 export type ControllerAccessState = z.output<typeof ControllerAccessStateSchema>;
+export type ComponentAvailability = z.output<typeof ComponentAvailabilitySchema>;
+export type ComponentActionDescriptor = z.output<typeof ComponentActionDescriptorSchema>;
+export type ComponentLabelValue = z.output<typeof ComponentLabelValueSchema>;
+export type PickerSlotStatus = z.output<typeof PickerSlotStatusSchema>;
+export type PickerSlot = z.output<typeof PickerSlotSchema>;
+export type PickerOption = z.output<typeof PickerOptionSchema>;
+export type ComboPresentationSummary = z.output<typeof ComboPresentationSummarySchema>;
+export type NamedListSummary = z.output<typeof NamedListSummarySchema>;
 export type ComponentIntentBase = z.output<typeof ComponentIntentBaseSchema>;
 export type GameSwitcherOption = z.output<typeof GameSwitcherOptionSchema>;
 export type LanguageSwitcherOption = z.output<typeof LanguageSwitcherOptionSchema>;

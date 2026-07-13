@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Grab interactable — gripping hand</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 5 10 8 13 1-1 13 5 10-9 8-3 12-12-4-11 5-7-10-11-5 5-12-2-12 12-2 11-12Z" fill="#241115" stroke="#B95563" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M13 21 21 25m30-5-8 5M15 45l9-4m25 6-9-5" stroke="#EDBEC4" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M21 45V29c0-3 4-3 4 0v6-14c0-3 4-3 4 0v14-17c0-3 4-3 4 0v17-14c0-3 4-3 4 0v16-10c0-3 4-3 4 0v13c0 9-5 14-12 14-4 0-7-3-8-9Z" fill="#BF6872" stroke="#FFE5E7" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M25 35h12m-12 5h12" stroke="#6E2F3A" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

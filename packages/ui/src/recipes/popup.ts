@@ -3,7 +3,7 @@ import { tv } from "tailwind-variants";
 export const popupRecipe = tv({
   base: [
     "z-50 max-h-[min(var(--available-height,24rem),24rem)] overflow-auto",
-    "border border-[var(--ui-separator)] text-[var(--ui-text)] outline-none",
+    "border border-[color-mix(in_srgb,var(--ui-separator)_88%,transparent)] text-[var(--ui-text)] outline-none",
   ].join(" "),
   compoundVariants: [
     {

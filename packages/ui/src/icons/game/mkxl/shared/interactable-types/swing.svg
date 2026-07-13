@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Swing interactable — hanging hook traversal</title>
+  <g data-game-icon-frame="true">
+    <path d="M18 6h28l12 16-4 23-12 13H22L10 45 6 22 18 6Z" fill="#21190E" stroke="#B98A3F" stroke-width="2"/>
+    <path d="M13 22c5-7 11-11 19-11s14 4 19 11" stroke="#EBCB92" stroke-width="1.5" stroke-dasharray="5 4"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M32 9v25c0 9 6 15 14 15 7 0 11-5 11-11" stroke="#D3A555" stroke-width="3" stroke-linecap="round"/>
+    <path d="M49 30v8c0 3-2 5-5 5s-5-2-5-5v-5" stroke="#FFE2AC" stroke-width="2" stroke-linecap="round"/>
+    <path d="M12 43c4-11 10-18 18-21m-6-5 7 5-5 6" stroke="#E77A43" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="32" cy="9" r="3" fill="#6E4F26" stroke="#FFE2AC" stroke-width="1.5"/>
+  </g>
+</svg>

@@ -21,17 +21,18 @@ export function GlobalTopBar(props: GlobalTopBarProps) {
       data-ui-component="UI-CMP-001"
     >
       <div className="flex min-w-0 flex-1 items-center gap-2">
-        {props.layoutMode !== uiResponsiveModes.desktop && currentLocation && (
-          <span
-            aria-current="page"
-            className="min-w-0 flex-1 truncate border-l-2 border-[var(--ui-accent)] pl-2 font-[var(--ui-font-display)] text-sm font-bold uppercase tracking-[0.04em]"
-            title={currentLocation.truncationLabel ?? currentLocation.label}
-          >
-            {currentLocation.label}
-          </span>
-        )}
-        {props.layoutMode === uiResponsiveModes.desktop && (
+        {props.layoutMode === uiResponsiveModes.desktop ? (
           <Breadcrumbs {...props.breadcrumbs} layoutMode={props.layoutMode} />
+        ) : (
+          currentLocation && (
+            <span
+              aria-current="page"
+              className="min-w-0 flex-1 truncate border-l-2 border-[var(--ui-accent)] pl-2 font-[var(--ui-font-display)] text-sm font-semibold tracking-[-0.01em]"
+              title={currentLocation.truncationLabel ?? currentLocation.label}
+            >
+              {currentLocation.label}
+            </span>
+          )
         )}
         {props.controllerHints && (
           <ControllerHintStrip {...props.controllerHints} layoutMode={props.layoutMode} />

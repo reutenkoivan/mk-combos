@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Dead Woods stage — gnarled haunted tree beneath the moon</title>
+  <g data-game-icon-frame="true">
+    <path d="M9 7h46l5 17-7 31-21 6-21-6-7-31L9 7Z" fill="#101817" stroke="#5D7669" stroke-width="2"/>
+    <path d="M14 12h36M8 26l8 5m40-5-8 5M12 50l13 7m27-7-13 7" stroke="#9A8251" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="45" cy="19" r="8" fill="#B3AA7E" stroke="#E2DAB0" stroke-width="1.8"/>
+    <path d="M28 55c2-11 2-20-1-28l-9 7-4-3 11-11-1-10 5 8 8-11-3 14 12 8-4 4-10-6c4 11 3 20 7 28H28Z" fill="#41342A" stroke="#9A8251" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M23 55 10 59m31-4 12 4M12 42l8-3m26 4 8 3" stroke="#5D7669" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

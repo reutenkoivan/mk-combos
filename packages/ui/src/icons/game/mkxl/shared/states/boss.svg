@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Boss fighter state — battle crown</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 5 7 8 11-2 2 11 7 7-6 9 3 11-11 3-6 7-7-6-8 6-5-7-11-3 3-11-6-9 7-7 2-11 11 2 7-8Z" fill="#25190B" stroke="#CF9F35" stroke-width="2"/>
+    <circle cx="32" cy="32" r="22" stroke="#FFE49B" stroke-width="1.5" stroke-dasharray="2 5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m13 20 12 10 7-17 7 17 12-10-5 25H18l-5-25Z" fill="#D7A62D" stroke="#FFF0B3" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M18 45h28v8H18z" fill="#8E4F1C" stroke="#FFE2A0" stroke-width="2"/>
+    <circle cx="24" cy="38" r="2.5" fill="#F66E4A"/><circle cx="32" cy="34" r="2.5" fill="#74D6E2"/><circle cx="40" cy="38" r="2.5" fill="#B58AE8"/>
+  </g>
+</svg>

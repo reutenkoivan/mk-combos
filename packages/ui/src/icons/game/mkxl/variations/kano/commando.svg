@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kano — Commando counter hold and grappling reversal</title>
+  <g data-variation-frame="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 7H9v14M45 7h10v14M19 57H9V43M45 57h10V43" stroke="#D7A85B" stroke-width="3"/>
+    <path d="M13 32c0-12 7-20 19-24 12 4 19 12 19 24s-7 20-19 24c-12-4-19-12-19-24z" fill="#18201B" stroke="#5FAD72" stroke-width="2" stroke-dasharray="7 3"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 20c7 4 10 9 10 16v10l-6-2-5-9 4-8" fill="#26372B" stroke="#5FAD72" stroke-width="2.3"/>
+    <path d="M46 20c-7 4-10 9-10 16v10l6-2 5-9-4-8" fill="#26372B" stroke="#5FAD72" stroke-width="2.3"/>
+    <path d="m22 26 10 8 10-8M27 42h10" stroke="#F2D59C" stroke-width="2.4"/>
+    <path d="M17 16c7 0 12 3 15 9 3-6 8-9 15-9m-4-4 4 4-4 4" stroke="#D7A85B" stroke-width="2"/>
+  </g>
+</svg>

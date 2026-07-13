@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jason Voorhees — Slasher: hockey mask and machete</title>
+  <g data-variation-frame="true">
+    <path d="m32 3 23 7-2 18 8 12-12 17-17 4-17-4L3 40l8-12-2-18 23-7Z" fill="#1B0D0E" stroke="#B84444" stroke-width="2"/>
+    <path d="m13 14 12-5m26 5L39 9M9 40l10 12m36-12L45 52" stroke="#D3C5A7" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m42 10 7 3-18 40-7-3 18-40Z" fill="#B84444" stroke="#FFD3C6" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M17 17h17l4 9-4 15-9 6-9-6-3-15 4-9Z" fill="#D3C5A7" stroke="#FFF7E3" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="20" cy="27" r="2" fill="#1B0D0E"/><circle cx="31" cy="27" r="2" fill="#1B0D0E"/>
+    <path d="M25 20v3m-5 11h3m5 0h3m-6-4v9" stroke="#B84444" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+</svg>

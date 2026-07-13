@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Sonya Blade — Covert Ops: garrote and counter stance</title>
+  <g data-variation-frame="true">
+    <path d="M8 18 18 8h28l10 10v28L46 56H18L8 46V18Z" fill="#151B18" stroke="#748F74" stroke-width="2"/>
+    <path d="M8 25h8V14m32 0v11h8M8 39h8v11m32 0V39h8" stroke="#CEE1C9" stroke-width="1.5"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M19 21c5-5 21-5 26 0 6 6 4 19-3 24-5 4-15 4-20 0-7-5-9-18-3-24Z" stroke="#A9C09E" stroke-width="2" stroke-dasharray="4 3"/>
+    <path d="M22 42 15 49m27-27 7-7M17 51l-4-4m38 0-4 4" stroke="#E7F0E2" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M24 27c3-4 13-4 16 0l-2 9-6 5-6-5-2-9Z" fill="#536A54" stroke="#DCEBD6" stroke-width="1.5"/>
+  </g>
+</svg>

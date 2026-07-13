@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kitana character — royal mask and paired steel fans</title>
+  <g data-game-icon-frame="true">
+    <path d="M10 6h44l5 17-5 31-22 6-22-6-5-31 5-17Z" fill="#101A27" stroke="#4D8FCC" stroke-width="2"/>
+    <path d="M14 11h36M9 24l8 7m38-7-8 7M13 50l12 6m26-6-12 6" stroke="#B8C8E8" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M22 16c7-5 16-3 20 4l-1 21-9 9-10-9V16Z" fill="#A56F62" stroke="#F0C8BA" stroke-width="2"/>
+    <path d="M20 31c8-4 16-4 24 0l-4 12-8 5-8-5-4-12Z" fill="#4D8FCC" stroke="#D7EBFF" stroke-width="2"/>
+    <path d="M25 26h4m6 0h4" stroke="#101A27" stroke-width="2" stroke-linecap="round"/>
+    <path d="M18 17c-8 4-11 12-9 22l12-7m25-15c8 4 11 12 9 22l-12-7" fill="#4D8FCC" stroke="#D7EBFF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m11 34 8-11m34 11-8-11" stroke="#B8C8E8" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+</svg>

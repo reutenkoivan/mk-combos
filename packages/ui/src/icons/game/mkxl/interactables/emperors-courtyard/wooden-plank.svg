@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Emperor's Courtyard — swinging wooden plank strike</title>
+  <g data-game-icon-frame="true" stroke="#D96A46" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m32 5 8 8 11-2 2 11 7 8-7 8 2 11-11 2-8 8-8-7-11 2-2-11-7-8 7-8-2-11 11-2z" fill="#211813" stroke-width="2.4"/>
+    <path d="M8 19h8m32 26h8M19 8v8m26 32v8" stroke="#92704B" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m9 42 42-23 5 10-42 23z" fill="#7B5634" stroke="#D7B781" stroke-width="2.5"/>
+    <path d="m19 40 4 7m13-22 5 8m-5-8 9-2" stroke="#4F3423" stroke-width="2"/>
+    <path d="m50 45 3 5 6 1-5 4 1 6-5-3-6 2 2-6-4-5 6-1z" fill="#D96A46" stroke="#F0A366" stroke-width="1.5"/>
+  </g>
+</svg>

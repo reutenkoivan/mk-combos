@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Ermac — Spectral: levitating spirit form</title>
+  <g data-variation-frame="true">
+    <path d="M18 5h28l12 17-4 29-15 9H20L6 49 8 20 18 5Z" fill="#0D1423" stroke="#718AE8" stroke-width="2"/>
+    <path d="M12 25c-4 6-4 12 0 18m40-18c4 6 4 12 0 18M21 9h22" stroke="#A66DE0" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <circle cx="32" cy="19" r="6" fill="#718AE8" stroke="#E3E8FF" stroke-width="2"/>
+    <path d="M22 31c3-5 17-5 20 0l-3 10-4-4-3 13-3-13-4 4-3-10Z" fill="#A66DE0" stroke="#E9D8FF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M18 48c5 5 10 6 14 2 4 4 9 3 14-2M16 37c-4-3-5-7-3-11m35 11c4-3 5-7 3-11" stroke="#718AE8" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

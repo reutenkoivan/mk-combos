@@ -1,7 +1,10 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
-import type { ReactNode } from "react";
+import type { ComponentPropsWithRef, ReactNode } from "react";
 
+import type { UiResponsiveMode } from "../components/type";
+import { uiResponsiveModes } from "../components/value";
 import { useBaseUiOpenChangeHandler } from "../internal/base-ui/use-open-change-handler";
+import { useUiRootContext } from "../internal/ui-root-context";
 import { cx } from "../recipes/class-name";
 import { controlRecipe } from "../recipes/control";
 import { popupRecipe } from "../recipes/popup";
@@ -103,7 +106,31 @@ export function DialogTrigger(props: DialogTriggerProps) {
 
 DialogTrigger.displayName = "DialogTrigger";
 
-export const DialogPortal = BaseDialog.Portal;
+export type DialogPortalProps = ComponentPropsWithRef<typeof BaseDialog.Portal>;
+
+export function DialogPortal(props: DialogPortalProps) {
+  const { className, ...portalProps } = props;
+  const { contrast, density, responsiveMode, theme } = useUiRootContext();
+
+  return (
+    <BaseDialog.Portal
+      {...portalProps}
+      className={(state) =>
+        cx(
+          "mk-combos-ui-root mk-combos-ui-portal-root",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
+      data-ui-contrast={contrast}
+      data-ui-density={density}
+      data-ui-portal="dialog"
+      data-ui-responsive={responsiveMode}
+      data-ui-theme={theme}
+    />
+  );
+}
+
+DialogPortal.displayName = "DialogPortal";
 
 export type DialogBackdropProps = Omit<UiPrimitiveProps<HTMLDivElement>, "children">;
 
@@ -113,7 +140,10 @@ export function DialogBackdrop(props: DialogBackdropProps) {
   return (
     <BaseDialog.Backdrop
       {...backdropProps}
-      className={cx("fixed inset-0 bg-black/30 backdrop-blur-[2px]", className)}
+      className={cx(
+        "fixed inset-0 z-40 bg-black/40 backdrop-blur-[3px] transition-opacity duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 motion-reduce:transition-none",
+        className,
+      )}
       data-ui-dialog-backdrop
       ref={ref}
     />
@@ -121,6 +151,49 @@ export function DialogBackdrop(props: DialogBackdropProps) {
 }
 
 DialogBackdrop.displayName = "DialogBackdrop";
+
+const dialogViewportClasses = {
+  [uiResponsiveModes.desktop]:
+    "place-items-center pb-[max(1rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(1rem,env(safe-area-inset-top))]",
+  [uiResponsiveModes.mobile]:
+    "items-end justify-items-stretch pt-[max(1rem,env(safe-area-inset-top))]",
+  [uiResponsiveModes.tablet]:
+    "items-end justify-items-center pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(1rem,env(safe-area-inset-top))]",
+} as const satisfies Record<UiResponsiveMode, string>;
+
+export type DialogViewportProps = UiPrimitiveProps<HTMLDivElement>;
+
+export function DialogViewport(props: DialogViewportProps) {
+  const { children, className, ref, ...viewportProps } = props;
+  const { responsiveMode } = useUiRootContext();
+
+  return (
+    <BaseDialog.Viewport
+      {...viewportProps}
+      className={cx(
+        "pointer-events-none fixed inset-0 z-50 grid min-h-dvh w-full overflow-hidden overscroll-contain",
+        dialogViewportClasses[responsiveMode],
+        className,
+      )}
+      data-ui-dialog-placement={responsiveMode}
+      data-ui-dialog-viewport
+      ref={ref}
+    >
+      {children}
+    </BaseDialog.Viewport>
+  );
+}
+
+DialogViewport.displayName = "DialogViewport";
+
+const dialogPopupClasses = {
+  [uiResponsiveModes.desktop]:
+    "w-[min(34rem,calc(100vw-2rem))] rounded-[var(--ui-radius-surface)] p-4 data-ending-style:scale-[0.98] data-starting-style:scale-[0.98]",
+  [uiResponsiveModes.mobile]:
+    "w-full rounded-b-none rounded-t-[var(--ui-radius-surface)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] data-ending-style:translate-y-4 data-starting-style:translate-y-4",
+  [uiResponsiveModes.tablet]:
+    "w-full max-w-[42rem] rounded-b-none rounded-t-[var(--ui-radius-surface)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] data-ending-style:translate-y-4 data-starting-style:translate-y-4",
+} as const satisfies Record<UiResponsiveMode, string>;
 
 export type DialogPopupProps = UiPrimitiveProps<HTMLDivElement> & {
   density?: UiDensityMode;
@@ -138,6 +211,7 @@ export function DialogPopup(props: DialogPopupProps) {
     shape = uiShapeModes.fixed,
     ...popupProps
   } = props;
+  const { responsiveMode } = useUiRootContext();
 
   return (
     <BaseDialog.Popup
@@ -145,11 +219,12 @@ export function DialogPopup(props: DialogPopupProps) {
       className={cx(
         popupRecipe({ density, material, shape }),
         surfaceRecipe({ density, material, shape }),
-        "fixed inset-x-0 bottom-0 grid max-h-[min(88dvh,48rem)] overflow-auto rounded-b-none px-[max(1rem,env(safe-area-inset-left))] pb-[max(1rem,env(safe-area-inset-bottom))] sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:w-[min(34rem,calc(100vw-2rem))] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[var(--ui-radius-surface)] sm:p-4",
+        "pointer-events-auto relative grid max-h-[88dvh] min-h-0 overflow-auto overscroll-contain bg-[var(--ui-dialog)] transition-[opacity,transform] duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 motion-reduce:transition-none",
+        dialogPopupClasses[responsiveMode],
         className,
       )}
+      data-ui-dialog-placement={responsiveMode}
       data-ui-dialog-popup
-      data-ui-portal
       ref={ref}
     >
       {children}
@@ -167,7 +242,7 @@ export function DialogTitle(props: DialogTitleProps) {
   return (
     <BaseDialog.Title
       {...titleProps}
-      className={cx("text-sm font-semibold text-[var(--ui-text)]", className)}
+      className={cx("text-base font-semibold tracking-[-0.01em] text-[var(--ui-text)]", className)}
       data-ui-dialog-title
       ref={ref}
     >
@@ -186,7 +261,7 @@ export function DialogDescription(props: DialogDescriptionProps) {
   return (
     <BaseDialog.Description
       {...descriptionProps}
-      className={cx("text-[13px] leading-snug text-[var(--ui-muted-text)]", className)}
+      className={cx("text-sm leading-relaxed text-[var(--ui-muted-text)]", className)}
       data-ui-dialog-description
       ref={ref}
     >

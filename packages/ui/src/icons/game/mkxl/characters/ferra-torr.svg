@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Ferra/Torr character — small masked rider on a hulking brute</title>
+  <g data-game-icon-frame="true">
+    <path d="M7 8h35l15 12 3 28-12 11H15L4 45l4-19L7 8Z" fill="#17130F" stroke="#9A7658" stroke-width="2"/>
+    <path d="M12 13h27l13 10M9 43l9 11h27M55 29l-6 7" stroke="#669C7B" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M18 27h25l8 11-5 16H14L9 40l9-13Z" fill="#9A7658" stroke="#E1C2A2" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M19 31 12 20l8-9 10 7-3 13" fill="#669C7B" stroke="#D5F2DF" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="20" cy="20" r="4" fill="#D7A456" stroke="#FFE2AC" stroke-width="1.8"/>
+    <path d="M23 37h5m10 0h5M27 46h10m-24-6-7 7m41-8 9 6" stroke="#17130F" stroke-width="2.2" stroke-linecap="round"/>
+  </g>
+</svg>

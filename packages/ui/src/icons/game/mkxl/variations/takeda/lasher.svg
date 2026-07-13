@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Takeda — Lasher: bladed energy whips</title>
+  <g data-variation-frame="true">
+    <path d="M11 42C3 25 15 7 32 7c15 0 25 12 25 25 0 14-11 25-25 25-9 0-16-5-20-12" fill="#17121E" stroke="#B269D2" stroke-width="2" stroke-linecap="round"/>
+    <path d="M15 48c-8-11-4-27 7-34m34 26c-4 10-14 16-24 16" stroke="#EBC5FF" stroke-width="1.5" stroke-dasharray="7 3" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M18 46c-9-15 2-28 13-22 8 4 4 14-2 13-5-1-5-8 0-10m17 22c8-16-2-30-13-24" stroke="#CF79ED" stroke-width="3" stroke-linecap="round"/>
+    <path d="m17 46-6 1 4 6 2-7Zm30 2 5 2-5 5v-7Z" fill="#F0D5FF" stroke="#FFF4FF" stroke-width="1.5" stroke-linejoin="round"/>
+    <path d="M32 18v9" stroke="#6EF4FF" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

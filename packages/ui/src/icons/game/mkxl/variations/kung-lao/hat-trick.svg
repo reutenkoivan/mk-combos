@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kung Lao — Hat Trick placed hat trajectories</title>
+  <g data-variation-frame="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 25V11h16M41 11h16v14M7 39v14h16M41 53h16V39" stroke="#A88BE8" stroke-width="2.5"/>
+    <path d="M13 19c4-5 9-8 15-10m23 13c4 6 5 12 3 18M13 45c4 5 9 8 15 10" stroke="#E7D6FF" stroke-width="1.8" stroke-dasharray="5 3"/>
+    <circle cx="54" cy="32" r="2.5" fill="#5DD1C5"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m12 25 10-5 10 5-10 5zM32 18l10-5 10 5-10 5zM29 45l10-5 10 5-10 5z" fill="#29243A" stroke="#A88BE8" stroke-width="2"/>
+    <path d="M17 24c2-5 8-5 10 0m10-7c2-5 8-5 10 0m-13 27c2-5 8-5 10 0" stroke="#5DD1C5" stroke-width="1.8"/>
+    <path d="M25 34c5-4 9-7 12-11m-4 17c-2-4-4-7-7-10m18-3c3 3 3 7 1 10" stroke="#E7D6FF" stroke-width="1.8" stroke-dasharray="3 3"/>
+  </g>
+</svg>

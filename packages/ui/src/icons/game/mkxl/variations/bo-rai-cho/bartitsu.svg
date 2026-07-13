@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Bo' Rai Cho — Bartitsu: sweeping combat staff</title>
+  <g data-variation-frame="true">
+    <path d="m14 5 36 4 9 19-8 27-36 4L5 36 14 5Z" fill="#111C22" stroke="#5DC7B3" stroke-width="2"/>
+    <path d="M15 13 9 28m40-15 7 15M17 52l-7-14m38 14 7-14" stroke="#E1C66D" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m17 47 30-31" stroke="#E1C66D" stroke-width="5" stroke-linecap="round"/>
+    <path d="m17 47 30-31M12 41l7 7m26-33 7 7" stroke="#F6F0C7" stroke-width="2" stroke-linecap="round"/>
+    <path d="M18 29c4-8 14-12 23-9M20 40c8 5 19 3 25-4" stroke="#5DC7B3" stroke-width="2" stroke-linecap="round"/>
+    <path d="m38 22 4 6-7 1" stroke="#5DC7B3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

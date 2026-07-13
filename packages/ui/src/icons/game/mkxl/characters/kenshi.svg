@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kenshi character — red blindfold and ancestral sword</title>
+  <g data-game-icon-frame="true">
+    <path d="M32 3 56 20v26L40 59H24L8 46V20L32 3Z" fill="#10151B" stroke="#607CA3" stroke-width="2"/>
+    <path d="M13 22 32 8l19 14M13 44l12 10m26-10L39 54" stroke="#B8434D" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m43 9 5 4-28 42-5-4L43 9Z" fill="#607CA3" stroke="#D4E4FA" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M20 18c7-6 18-5 23 3l-1 20-10 10-11-9-1-24Z" fill="#A8755A" stroke="#EBCAB5" stroke-width="2"/>
+    <path d="M19 26c8-5 17-5 25 0l-2 8c-7-3-14-3-21 0l-2-8Z" fill="#B8434D" stroke="#F3AAB1" stroke-width="2"/>
+    <path d="M26 41c4 2 8 2 12 0m7-30 5-5" stroke="#10151B" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

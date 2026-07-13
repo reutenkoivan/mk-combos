@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Sky Temple — hanging paper lantern</title>
+  <g data-game-icon-frame="true">
+    <path d="M14 8h36l8 12-4 27-12 10H22L10 47 6 20l8-12Z" fill="#23170E" stroke="#A9783C" stroke-width="2"/>
+    <path d="M11 21c6-6 13-9 21-9s15 3 21 9M14 48l9-4m27 4-9-4" stroke="#E8C89C" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M26 9h12v7H26V9Zm-6 12 6-5h12l6 5 3 24-7 7H24l-7-7 3-24Z" fill="#B46A35" stroke="#FFE0B6" stroke-width="2"/>
+    <path d="M18 28h28m-28 10h28M26 16l-4 29m16-29 4 29" stroke="#6B381F" stroke-width="1.5"/>
+    <path d="M27 52h10l-5 7-5-7Z" fill="#E1A34D" stroke="#FFF0C4" stroke-width="1.5"/>
+  </g>
+</svg>

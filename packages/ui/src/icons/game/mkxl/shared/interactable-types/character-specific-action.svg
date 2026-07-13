@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Character-specific interactable action — fighter-only technique</title>
+  <g data-game-icon-frame="true">
+    <path d="M13 8h26l12 12v11l6 7-6 7v11H25L13 44V33l-6-7 6-7V8Z" fill="#102021" stroke="#48A6A0" stroke-width="2"/>
+    <path d="M17 12h12m18 12v8m0 12v8M17 52h12" stroke="#BEE8E1" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M28 15c6 0 10 5 10 11 0 4-2 7-5 9 6 2 10 7 11 14H12c1-7 5-12 11-14-3-2-5-5-5-9 0-6 4-11 10-11Z" fill="#347B77" stroke="#E2FAF5" stroke-width="2"/>
+    <path d="m49 18 2.5 5 5.5.8-4 4 1 5.7-5-2.7-5 2.7 1-5.7-4-4 5.5-.8 2.5-5Z" fill="#F3B957" stroke="#FFF1BE" stroke-width="1.5"/>
+    <path d="M23 27h10m-8 5h6" stroke="#BCECE5" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Crossroads stage — Netherrealm forked bridge over lava</title>
+  <g data-game-icon-frame="true">
+    <path d="M32 3 56 13l5 24-16 22H19L3 37l5-24L32 3Z" fill="#1D0C0B" stroke="#9C4030" stroke-width="2"/>
+    <path d="M12 17 8 33m44-16 4 16M13 48l10 8m28-8-10 8" stroke="#D38335" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M7 50 25 31l-13-9 5-6 15 10 15-10 5 6-13 9 18 19H44L32 38 20 50H7Z" fill="#6F4535" stroke="#D8A06E" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M29 8h6v19h-6zM15 51l-5 8m15-8-2 8m26-8 5 8m-15-8 2 8" fill="#D38335" stroke="#FFB55B" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M14 43h36" stroke="#1D0C0B" stroke-width="2" stroke-dasharray="4 3"/>
+  </g>
+</svg>

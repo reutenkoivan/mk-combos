@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Alien — Tarkatan: crossed Tarkatan arm blades</title>
+  <g data-variation-frame="true">
+    <path d="m32 3 9 7 12-1 2 13 6 10-8 10-1 13-13-1-8 7-9-7-12 1-2-13-5-10 7-10L12 9l12 1 8-7Z" fill="#21100E" stroke="#E1734D" stroke-width="2"/>
+    <path d="M16 15h9M39 15h9M16 49h9m14 0h9" stroke="#FFD29A" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="m17 46 8-20 4 4-5 18-7-2Zm30 0-8-20-4 4 5 18 7-2Z" fill="#E1734D" stroke="#FFD29A" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m25 26-4-8 5-5 6 8m7 5 4-8-5-5-6 8" stroke="#FFD29A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M27 35h10l-2 8h-6l-2-8Z" fill="#FFD29A" stroke="#21100E" stroke-width="1.5"/>
+  </g>
+</svg>

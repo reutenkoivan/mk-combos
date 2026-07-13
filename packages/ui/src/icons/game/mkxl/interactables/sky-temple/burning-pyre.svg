@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Sky Temple — burning ceremonial pyre</title>
+  <g data-game-icon-frame="true">
+    <path d="M32 5 50 13l9 19-9 19-18 8-18-8-9-19 9-19 18-8Z" fill="#22160C" stroke="#BD7B31" stroke-width="2"/>
+    <path d="M14 17 22 22m28-5-8 5M11 45l10-4m32 4-10-4" stroke="#F2D09B" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M16 46h32v7H16v-7Zm4-9h24l4 9H16l4-9Zm5-8h14l5 8H20l5-8Z" fill="#77502C" stroke="#F2D3A6" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M32 9c8 9 12 16 12 23 0 7-5 11-12 11s-12-4-12-11c0-5 3-10 8-16-1 7 3 8 5 4 2-3 0-7-1-11Z" fill="#EC7130" stroke="#FFE2A5" stroke-width="2"/>
+    <path d="M32 24c4 5 4 10 0 13-5-3-5-7 0-13Z" fill="#FFD34F"/>
+  </g>
+</svg>

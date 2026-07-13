@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Netherrealm — infernal gate</title>
+  <g data-game-icon-frame="true">
+    <path d="M13 56V26C13 13 21 6 32 6s19 7 19 20v30H13Z" fill="#27100D" stroke="#D64D30" stroke-width="2"/>
+    <path d="M8 56h48M18 27c0-10 5-16 14-16s14 6 14 16" stroke="#FFB064" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M32 15c9 9 14 17 14 26 0 9-6 14-14 14s-14-5-14-14c0-6 4-12 9-19-1 7 3 8 5 4 2-3 1-7 0-11Z" fill="#B83128" stroke="#FFD19B" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M24 39c1-7 4-10 8-10s7 3 8 10l-3 8H27l-3-8Z" fill="#391316" stroke="#FFE6BB" stroke-width="1.5"/>
+    <path d="m27 38 4 2m6-2-4 2m-3 4h4" stroke="#F87936" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

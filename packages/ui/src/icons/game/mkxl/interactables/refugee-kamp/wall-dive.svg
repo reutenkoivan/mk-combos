@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Refugee Kamp — dive attack from the wall</title>
+  <g data-game-icon-frame="true">
+    <path d="M7 7h50v50H7V7Z" fill="#181918" stroke="#75746C" stroke-width="2"/>
+    <path d="M12 12v40m0-30h9m-9 10h9m-9 10h9M52 12v40" stroke="#D9D7CD" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <circle cx="34" cy="19" r="4" fill="#C8C8C2" stroke="#F5F3EA" stroke-width="1.5"/>
+    <path d="m32 24 8 7 12 3-3 7-13-3-10 12-7-5 9-14-7-5 11-2Z" fill="#767B78" stroke="#F1F1EB" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M22 27 12 32m14 0-4-5m4 5-4 5M48 17C43 10 36 8 29 9" stroke="#CD664B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

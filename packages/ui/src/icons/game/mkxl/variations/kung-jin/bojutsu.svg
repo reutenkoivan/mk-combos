@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kung Jin — Bojutsu bow used as a striking staff</title>
+  <g data-variation-frame="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 18c8-8 16-12 24-12s16 4 24 12v28c-8 8-16 12-24 12S16 54 8 46z" fill="#182118" stroke="#8BBF55" stroke-width="2.5"/>
+    <path d="M8 24h8m32 0h8M8 40h8m32 0h8" stroke="#D99A49" stroke-width="2"/>
+    <path d="m20 9 3 6m21-6-3 6m-21 40 3-6m21 6-3-6" stroke="#E9E1BA" stroke-width="1.6"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 36c10-9 24-14 34-8-9 10-22 16-34 8z" fill="#33402A" stroke="#8BBF55" stroke-width="2.3"/>
+    <path d="m17 39 31-14M20 35l-5-7m30 3 5 7" stroke="#E9E1BA" stroke-width="2.2"/>
+    <path d="M13 47c10 3 19 2 27-4m11-26c-8-3-16-2-23 3" stroke="#D99A49" stroke-width="2"/>
+    <circle cx="18" cy="36" r="3" fill="#D99A49"/>
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Ferra/Torr — Lackey: Torr fighting alone</title>
+  <g data-variation-frame="true">
+    <path d="M9 9h46v10l5 8-5 8v20H39l-7 6-7-6H9V35l-5-8 5-8V9Z" fill="#18120F" stroke="#A87C5B" stroke-width="2"/>
+    <path d="M14 14h15M50 14H35M14 50h12m24 0H38" stroke="#7DBA8B" stroke-width="1.7" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M22 18h20l6 10-4 18-12 7-12-7-4-18 6-10Z" fill="#A87C5B" stroke="#E8C7A8" stroke-width="2" stroke-linejoin="round"/>
+    <path d="m21 22-7-6m29 6 7-6M23 31l6-3m12 3-6-3M27 41h10" stroke="#18120F" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M11 39c5-3 8-2 11 2m31-2c-5-3-8-2-11 2" stroke="#7DBA8B" stroke-width="3" stroke-linecap="round"/>
+    <path d="M26 14h12" stroke="#E8C7A8" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

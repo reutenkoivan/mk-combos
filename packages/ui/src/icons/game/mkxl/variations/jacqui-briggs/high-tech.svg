@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Jacqui Briggs — High Tech: charged plasma gauntlet</title>
+  <g data-variation-frame="true">
+    <path d="m32 4 24 12v32L32 60 8 48V16L32 4Z" fill="#111025" stroke="#8A70E8" stroke-width="2"/>
+    <path d="M32 9v8m20 3-7 4m7 20-7-4M32 55v-8M12 44l7-4m-7-20 7 4" stroke="#55E0C1" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+  <g data-variation-symbol="true">
+    <path d="M18 22h18l8 9-5 17H20l-6-13 4-13Z" fill="#8A70E8" stroke="#E1DAFF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M20 22v-5m6 5v-7m6 7v-5M18 31h10l4 5h10M23 48v5m8-5v6m6-6v4" stroke="#55E0C1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="31" cy="35" r="7" fill="#111025" stroke="#B9FFE9" stroke-width="2"/>
+    <path d="m31 30 2 4 4 1-4 2-2 4-2-4-4-2 4-1 2-4Z" fill="#55E0C1"/>
+  </g>
+</svg>

@@ -4,9 +4,9 @@ export const controlRecipe = tv({
   base: [
     "inline-flex shrink-0 items-center justify-center gap-1.5",
     "border border-[var(--ui-control-border)] bg-[var(--ui-control)] text-[var(--ui-text)]",
-    "font-semibold uppercase tracking-[0.035em] leading-none outline-none transition-[background-color,border-color,color,box-shadow,transform]",
+    "font-medium leading-none outline-none transition-[background-color,border-color,color,box-shadow,filter]",
     "cursor-pointer enabled:hover:bg-[var(--ui-control-hover)]",
-    "active:translate-y-px",
+    "active:brightness-[0.97]",
     "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50",
     "data-[loading=true]:cursor-wait",
   ].join(" "),
@@ -60,8 +60,8 @@ export const controlRecipe = tv({
       small: "h-7 min-w-7 px-2.5 text-[13px]",
     },
     emphasis: {
-      normal: "shadow-[inset_0_1px_0_rgb(255_255_255_/_35%)]",
-      prominent: "shadow-sm",
+      normal: "shadow-none",
+      prominent: "shadow-none",
       subtle: "border-transparent bg-transparent shadow-none",
     },
     placement: {

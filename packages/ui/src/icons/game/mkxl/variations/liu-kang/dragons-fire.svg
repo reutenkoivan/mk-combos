@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Liu Kang — Dragon's Fire dragon-shaped flame projectile</title>
+  <g data-variation-frame="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 19C20 6 37 3 49 12c10 8 12 22 7 33-6 12-20 17-32 13C11 54 4 42 7 29" fill="#23130F" stroke="#EE542F" stroke-width="2.5"/>
+    <path d="m8 19 4 8 8-4m36 22-8-3-3 8" stroke="#FFC13D" stroke-width="2"/>
+    <path d="M23 8c-5 5-8 10-9 16m36 13c-1 8-6 14-14 18" stroke="#FF8A42" stroke-width="1.7" stroke-dasharray="4 4"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 42c1-11 8-20 19-24l-2-7 9 5 7-2-3 7 6 5-8 2c-4 10-12 17-23 20 4-5 4-10-5-6z" fill="#5C2118" stroke="#EE542F" stroke-width="2.2"/>
+    <path d="m36 21 5 3-4 4m7-7 4 4" stroke="#FFE49B" stroke-width="1.8"/>
+    <path d="M15 42c8-2 14-6 18-12m14 4 8 1-5 4 5 4-9 1" stroke="#FFC13D" stroke-width="2.2"/>
+    <circle cx="42" cy="20" r="1.8" fill="#FFE49B"/>
+  </g>
+</svg>

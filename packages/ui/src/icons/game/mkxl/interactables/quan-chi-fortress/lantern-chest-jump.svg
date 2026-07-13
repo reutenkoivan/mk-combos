@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Quan Chi's Fortress — jump from the lantern chest</title>
+  <g data-game-icon-frame="true" stroke="#64C6B1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 18 19 7h26l11 11v28L45 57H19L8 46z" fill="#161F1E" stroke-width="2.4"/>
+    <path d="M13 13h9m29 0h-9M13 51h9m29 0h-9" stroke="#9970A7" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 54h31V36H7z" fill="#5B4130" stroke="#BE996E" stroke-width="2.5"/>
+    <path d="M7 42h31M22 36v18" stroke="#D6B07C" stroke-width="2"/>
+    <path d="M17 36V19l6-6 6 6v17M18 21h10" fill="#2C2830" stroke="#A98AB9" stroke-width="2.5"/>
+    <circle cx="23" cy="26" r="4" fill="#AC73C6"/>
+    <circle cx="44" cy="38" r="4" fill="#E0E8E3"/>
+    <path d="m43 42-6 8m8-8 8 4m-8-3 5 9M32 31c8-7 16-10 24-8m-5-5 5 5-4 6" stroke="#64C6B1" stroke-width="2.5"/>
+  </g>
+</svg>

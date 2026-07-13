@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Random character state — shuffled fighter silhouette</title>
+  <g data-game-icon-frame="true">
+    <path d="M9 17 20 7h24l11 10v30L44 57H20L9 47V17Z" fill="#171727" stroke="#8588D6" stroke-width="2"/>
+    <path d="M13 20v-6h7m31 6v-6h-7M13 44v6h7m31-6v6h-7" stroke="#D5D6FF" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M32 16c6 0 10 5 10 11 0 4-2 7-5 9 6 2 10 6 11 13H16c1-7 5-11 11-13-3-2-5-5-5-9 0-6 4-11 10-11Z" fill="#696DB6" stroke="#ECECFF" stroke-width="2"/>
+    <path d="M13 29c3-7 8-11 15-12m-3-4 4 4-5 3m27 15c-3 7-8 11-15 12m3 4-4-4 5-3" stroke="#64D5D1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

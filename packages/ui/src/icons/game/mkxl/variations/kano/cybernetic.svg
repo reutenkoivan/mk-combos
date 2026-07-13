@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kano — Cybernetic eye laser and circuitry</title>
+  <g data-variation-frame="true" stroke="#E94155" stroke-linecap="square" stroke-linejoin="round">
+    <path d="M17 8h30l10 15v18L47 56H17L7 41V23z" fill="#121A20" stroke-width="2.5"/>
+    <path d="M7 27h7l4-6M57 37h-7l-4 6M26 8v6m12 36v6" stroke="#50C8E8" stroke-width="2"/>
+    <circle cx="18" cy="21" r="2" fill="#50C8E8" stroke="none"/>
+    <circle cx="46" cy="43" r="2" fill="#E94155" stroke="none"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 35c4-11 11-17 20-17 7 0 13 4 16 11-4 7-10 12-19 15-7 2-13-1-17-9z" fill="#202C34" stroke="#A7B9C5" stroke-width="2"/>
+    <path d="M34 18v26M20 27h14m-16 8h16m6-12-6 5 6 6-6 5" stroke="#50C8E8" stroke-width="1.8"/>
+    <circle cx="34" cy="31" r="7" fill="#4A1720" stroke="#E94155" stroke-width="2.4"/>
+    <circle cx="34" cy="31" r="2.5" fill="#FFCBD1"/>
+    <path d="m41 31 15-7m-14 11 14 2" stroke="#E94155" stroke-width="2.2"/>
+  </g>
+</svg>

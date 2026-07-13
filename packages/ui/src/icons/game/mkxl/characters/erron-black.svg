@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Erron Black character — gunslinger hat, mask, and revolver</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 3 8 8 11-1 1 11 9 6-6 9 2 11-11 3-5 10-9-5-10 5-4-10-11-3 2-11-6-9 9-6 1-11 11 1 8-8Z" fill="#1C140D" stroke="#C58D45" stroke-width="2"/>
+    <circle cx="32" cy="32" r="24" stroke="#638E98" stroke-width="1.5" stroke-dasharray="2 6"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="M14 23c9-11 27-13 37-1l6 4c-13 4-36 4-50 0l7-3Z" fill="#C58D45" stroke="#FFE0A3" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M20 29h25l-2 16-11 8-10-8-2-16Z" fill="#6C4B34" stroke="#E8C69B" stroke-width="2"/>
+    <path d="M21 36c7-3 15-3 22 0l-2 8-9 4-9-4-2-8ZM26 32h3m6 0h3" fill="#1C140D" stroke="#638E98" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="m43 43 10 4-3 7-9-5" stroke="#C58D45" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

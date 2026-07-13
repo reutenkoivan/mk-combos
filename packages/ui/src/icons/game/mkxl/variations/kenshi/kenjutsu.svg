@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Kenshi — Kenjutsu telekinetically controlled katana</title>
+  <g data-variation-frame="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 4 57 32 32 60 7 32z" fill="#171922" stroke="#D94B62" stroke-width="2.5"/>
+    <path d="M32 9 52 32 32 55 12 32z" stroke="#7894FF" stroke-width="1.6" stroke-dasharray="8 4"/>
+    <path d="M4 32h8m40 0h8M32 4v7m0 42v7" stroke="#E9ECFF" stroke-width="1.8"/>
+  </g>
+  <g data-variation-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m18 47 7-13 19-20 6 6-20 19z" fill="#252A3A" stroke="#DCE3FF" stroke-width="2.2"/>
+    <path d="m44 15 5 5-20 14-4-1z" fill="#7894FF" stroke="#DCE3FF" stroke-width="1.7"/>
+    <path d="m19 39 8 8m-5-4-6 7" stroke="#D94B62" stroke-width="2.5"/>
+    <path d="M12 25c6-5 12-6 18-4m22 17c-6 5-12 6-18 4" stroke="#7894FF" stroke-width="2" stroke-dasharray="3 3"/>
+  </g>
+</svg>

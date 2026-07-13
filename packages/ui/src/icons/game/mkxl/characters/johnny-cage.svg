@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Johnny Cage character — movie-star hair and sunglasses</title>
+  <g data-game-icon-frame="true">
+    <rect x="6" y="7" width="52" height="50" rx="8" fill="#161526" stroke="#8274DC" stroke-width="2"/>
+    <path d="M14 7v7m10-7v5m16-5v5m10-5v7M14 57v-7m36 7v-7" stroke="#D9B54D" stroke-width="1.5"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m21 20 3-8 5 4 5-7 3 7 7-3-2 11" fill="#674936" stroke="#E4BCA0" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M20 21h24l-2 22-10 8-10-8-2-22Z" fill="#AF7658" stroke="#F3CCB2" stroke-width="2"/>
+    <path d="M20 27c5-3 10-3 12 1 2-4 7-4 12-1l-2 6c-4 3-8 2-10-2-3 4-7 5-10 2l-2-6Z" fill="#8274DC" stroke="#E8E4FF" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M27 42c3 2 7 2 10 0m-17 9-7 5m31-5 7 5" stroke="#D9B54D" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

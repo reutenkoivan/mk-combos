@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Dead Woods — swing from the hanging tree branch</title>
+  <g data-game-icon-frame="true" stroke="#52B8A6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 8h42l6 12-5 34H10L5 20z" fill="#13201C" stroke-width="2.4"/>
+    <path d="m11 8 5 8m37-8-5 8M10 54l8-7m36 7-8-7" stroke="#94704B" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 14h41m-9 0 8-7" stroke="#6C4A30" stroke-width="5"/>
+    <path d="M34 16v17" stroke="#BBA077" stroke-width="2.5"/>
+    <circle cx="34" cy="37" r="4" fill="#DCE7E2"/>
+    <path d="m32 41-6 8m10-8 8 5m-9-5 1 11m-4-17-6 2M19 28c-5 10-2 20 7 25m-8-4 8 4-1-8" stroke="#52B8A6" stroke-width="2.5"/>
+  </g>
+</svg>

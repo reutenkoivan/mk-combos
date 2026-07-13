@@ -50,11 +50,11 @@ export function ControllerAccessGate(props: ControllerAccessGateProps) {
             <Gamepad2Icon aria-hidden="true" size={24} />
           </span>
           <div className="grid gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--ui-accent-strong)]">
+            <span className="text-xs font-medium text-[var(--ui-accent-strong)]">
               Controller-only access
             </span>
             <h1
-              className="font-[var(--ui-font-display)] text-2xl font-bold uppercase tracking-[0.04em]"
+              className="font-[var(--ui-font-display)] text-2xl font-semibold tracking-[-0.01em]"
               id="controller-access-title"
             >
               {props.title}
@@ -86,9 +86,7 @@ export function ControllerAccessGate(props: ControllerAccessGateProps) {
         </StatusMessage>
 
         {props.profileLabel && (
-          <p className="text-xs uppercase tracking-[0.12em] text-[var(--ui-muted-text)]">
-            {props.profileLabel}
-          </p>
+          <p className="text-xs text-[var(--ui-muted-text)]">{props.profileLabel}</p>
         )}
 
         {props.hints && props.hints.length > 0 && (

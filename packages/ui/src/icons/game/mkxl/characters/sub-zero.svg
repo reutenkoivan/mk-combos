@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Sub-Zero character — cryomancer mask and ice crown</title>
+  <g data-game-icon-frame="true">
+    <path d="m32 3 21 8 8 21-8 21-21 8-21-8-8-21 8-21 21-8Z" fill="#0A1721" stroke="#4D9CCB" stroke-width="2"/>
+    <path d="M15 14 9 28m40-14 6 14M10 44l12 11m32-11L42 55" stroke="#A8D9EA" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m20 18 4-10 5 7 3-12 4 12 5-7 3 10" fill="#A8D9EA" stroke="#E5FAFF" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M20 17h24l2 22-14 15-14-15 2-22Z" fill="#637D8D" stroke="#CFE3EC" stroke-width="2"/>
+    <path d="M20 29c8-4 16-4 24 0l-4 15-8 7-8-7-4-15Z" fill="#4D9CCB" stroke="#D8F3FF" stroke-width="2"/>
+    <path d="M25 27h4m6 0h4m-12 10 5 4 5-4M32 42v7" stroke="#0A1721" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

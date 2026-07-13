@@ -45,7 +45,7 @@ Each item also has `Done when` so `done` has a clear meaning.
 | 17 | done | `packages/ui` Design System Foundation | `packages/ui` | Tokens, Tailwind, recipes, Base UI wrappers, icons, notation registry, Storybook, visual/a11y setup exist. |
 | 18 | done | `packages/ui` Base Primitives | `packages/ui` | Core primitives, surfaces, states, layouts, focus helpers are implemented. |
 | 19 | done | `packages/ui` Shell/Settings Components | `packages/ui` | Responsive/controller-ready `UI-CMP-001`-`006`, `027`, `028`, `032`, `033`, `034`, `037`, `038` are implemented and covered. |
-| 20 | todo | `packages/ui` Catalog/Detail/List Components | `packages/ui` | `UI-CMP-007`-`015`, `017`-`023`, `029`, `030`, `031` are implemented and covered. |
+| 20 | done | `packages/ui` Catalog/Detail/List Components | `packages/ui` | `UI-CMP-007`-`015`, `017`-`023`, `029`, `030`, `031` are implemented and covered. |
 | 21 | todo | `packages/ui` Builder Components | `packages/ui` | `UI-CMP-026`, `035`, internal `movePicker`, `036`, and model hooks are implemented and covered. |
 | 22 | todo | `apps/web` Bootstrap | `apps/web` | TanStack Start app, static output, app package, route shell, providers exist. |
 | 23 | todo | `apps/web` Game Registry | `apps/web` | `installed-games.ts` imports only `mkxlBusiness` and `mk1Business`. |

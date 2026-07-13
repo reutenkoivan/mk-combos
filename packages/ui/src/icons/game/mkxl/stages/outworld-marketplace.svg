@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Outworld Marketplace stage — striped bazaar tents and burden beast</title>
+  <g data-game-icon-frame="true">
+    <path d="M13 4h38l9 15-5 29 4 9H5l4-9-5-29L13 4Z" fill="#1C130C" stroke="#A36B3E" stroke-width="2"/>
+    <path d="M17 9 8 22m39-13 9 13M9 50h46" stroke="#C9A64C" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <g data-game-icon-symbol="true">
+    <path d="m7 27 12-15h26l12 15H7Z" fill="#A36B3E" stroke="#E5B986" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M13 27v23m38-23v23M20 13l5 14m8-14v14m8-14-4 14" stroke="#C9A64C" stroke-width="2" stroke-linecap="round"/>
+    <path d="M18 40c5-7 14-7 20-2l8-4 7 5-5 7H22l-4-6Z" fill="#695344" stroke="#BBA589" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M25 46v8m17-8v8m6-14 7-3" stroke="#1C130C" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

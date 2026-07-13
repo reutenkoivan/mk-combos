@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Crossroads — dive kick from the bone wall</title>
+  <g data-game-icon-frame="true" stroke="#70CFC3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M7 14 18 7h28l11 7v36l-11 7H18L7 50z" fill="#15201F" stroke-width="2.4"/>
+    <path d="M14 8v9M50 47v9M6 37h8m36-10h8" stroke="#D6B978" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 11v43m0-34 8-5m-8 18 8-5m-8 18 8-5" stroke="#806651" stroke-width="4"/>
+    <circle cx="27" cy="21" r="4" fill="#DCE8E4"/>
+    <path d="m28 26 7 7 12-1m-12 1 9 10m-13-13-7 10" stroke="#DCE8E4" stroke-width="3"/>
+    <path d="m22 16 6-7m20 29 7 2-3 6" stroke="#70CFC3" stroke-width="2.5"/>
+  </g>
+</svg>

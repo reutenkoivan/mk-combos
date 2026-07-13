@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <title>Outworld Marketplace — throwable fruit barrel</title>
+  <g data-game-icon-frame="true" stroke="#E18445" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 11h42l6 11-6 33H11L5 22z" fill="#211A14" stroke-width="2.5"/>
+    <path d="M6 22h10m32 0h10M12 55l7-8m33 8-7-8" stroke="#7E9B57" stroke-width="1.8"/>
+  </g>
+  <g data-game-icon-symbol="true" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 25h30l-3 31H20z" fill="#6E4B2F" stroke="#CFA36A" stroke-width="2.5"/>
+    <path d="M18 34h28M18 47h27M24 26l1 29m15-29-1 29" stroke="#3F2B20" stroke-width="1.8"/>
+    <circle cx="23" cy="21" r="7" fill="#B64C3C" stroke="#DE8B61" stroke-width="1.7"/>
+    <circle cx="34" cy="18" r="8" fill="#80984D" stroke="#BECF7E" stroke-width="1.7"/>
+    <circle cx="44" cy="22" r="6" fill="#D69B3F" stroke="#F2CC75" stroke-width="1.7"/>
+    <path d="m33 10 3-5" stroke="#54733E" stroke-width="2.2"/>
+  </g>
+</svg>
