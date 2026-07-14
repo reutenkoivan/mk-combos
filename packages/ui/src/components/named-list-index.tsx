@@ -101,9 +101,7 @@ export function NamedListIndex(props: NamedListIndexProps) {
                 value={item.summary.id}
               >
                 <span className="truncate text-start font-semibold">{item.summary.name}</span>
-                <span className="text-xs text-[var(--ui-muted-text)]">
-                  {item.summary.itemCount}
-                </span>
+                <span className="text-xs text-(--ui-muted-text)">{item.summary.itemCount}</span>
               </SelectableItem>
               <Group>
                 {item.renameAction && (

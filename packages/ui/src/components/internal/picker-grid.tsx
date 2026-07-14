@@ -53,7 +53,7 @@ export function PickerGrid(props: PickerGridProps) {
       data-picker-layout={props.layoutId}
       data-ui-picker-grid
     >
-      <legend className="text-sm font-semibold text-[var(--ui-text)]">{props.label}</legend>
+      <legend className="text-sm font-semibold text-(--ui-text)">{props.label}</legend>
       <div className="grid min-w-0 gap-2" style={gridStyle}>
         {props.slots.map((slot, index) => {
           const option = slot.optionId ? optionsById.get(slot.optionId) : undefined;
@@ -66,7 +66,7 @@ export function PickerGrid(props: PickerGridProps) {
             return (
               <div
                 aria-hidden="true"
-                className="min-h-16 rounded-[var(--ui-radius-control)] border border-dashed border-[var(--ui-separator)] bg-[var(--ui-placeholder)] opacity-45"
+                className="min-h-16 rounded-(--ui-radius-control) border border-dashed border-(--ui-separator) bg-(--ui-placeholder) opacity-45"
                 data-picker-slot={slot.slotId}
                 data-picker-slot-status={pickerSlotStatuses.placeholder}
                 key={slot.slotId}
@@ -107,18 +107,16 @@ export function PickerGrid(props: PickerGridProps) {
                 {option.imageSrc && (
                   <img
                     alt={option.imageAlt ?? ""}
-                    className="h-9 w-9 rounded-[var(--ui-radius-control)] object-cover"
+                    className="h-9 w-9 rounded-(--ui-radius-control) object-cover"
                     src={option.imageSrc}
                   />
                 )}
                 <span className="truncate font-semibold">{option.shortLabel ?? option.label}</span>
                 {option.count !== undefined && (
-                  <span className="text-xs text-[var(--ui-muted-text)]">{option.count}</span>
+                  <span className="text-xs text-(--ui-muted-text)">{option.count}</span>
                 )}
                 {option.disabledReason && (
-                  <span className="text-xs text-[var(--ui-muted-text)]">
-                    {option.disabledReason}
-                  </span>
+                  <span className="text-xs text-(--ui-muted-text)">{option.disabledReason}</span>
                 )}
               </span>
               <span aria-hidden="true" className="grid min-h-5 min-w-5 place-items-center">

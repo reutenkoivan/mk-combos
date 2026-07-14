@@ -2,10 +2,10 @@ import { tv } from "tailwind-variants";
 
 export const fieldRecipe = tv({
   base: [
-    "inline-flex w-full items-center gap-2 border border-[var(--ui-control-border)]",
-    "bg-[var(--ui-field)] text-[var(--ui-text)] shadow-[inset_0_1px_2px_rgb(18_28_45_/_6%)]",
+    "inline-flex w-full items-center gap-2 border border-(--ui-control-border)",
+    "bg-(--ui-field) text-(--ui-text) shadow-[inset_0_1px_2px_rgb(18_28_45_/_6%)]",
     "cursor-text outline-none transition-[border-color,box-shadow]",
-    "placeholder:text-[var(--ui-placeholder)]",
+    "placeholder:text-(--ui-placeholder)",
     "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50",
   ].join(" "),
   compoundVariants: [
@@ -47,30 +47,30 @@ export const fieldRecipe = tv({
     },
     editable: {
       false: "",
-      true: "enabled:hover:border-[var(--ui-accent)]",
+      true: "enabled:hover:border-(--ui-accent)",
     },
     shape: {
       capsule: "rounded-full",
       concentric: "rounded-[calc(var(--ui-radius-control)-2px)]",
-      fixed: "rounded-[var(--ui-radius-control)]",
+      fixed: "rounded-(--ui-radius-control)",
     },
     state: {
-      active: "border-[var(--ui-accent)]",
+      active: "border-(--ui-accent)",
       disabled: "cursor-not-allowed opacity-50",
-      focusVisible: "shadow-[var(--ui-focus-ring)]",
-      hover: "border-[var(--ui-accent)]",
+      focusVisible: "shadow-(--ui-focus-ring)",
+      hover: "border-(--ui-accent)",
       idle: "",
-      invalid: "border-[var(--ui-destructive)] shadow-[0_0_0_1px_var(--ui-destructive)]",
+      invalid: "border-(--ui-destructive) shadow-[0_0_0_1px_var(--ui-destructive)]",
       loading: "cursor-wait opacity-80",
-      open: "border-[var(--ui-accent)]",
-      selected: "border-[var(--ui-selection)]",
+      open: "border-(--ui-accent)",
+      selected: "border-(--ui-selection)",
     },
     tone: {
       accent: "",
-      destructive: "border-[var(--ui-destructive)]",
+      destructive: "border-(--ui-destructive)",
       neutral: "",
-      success: "border-[var(--ui-success-border)]",
-      warning: "border-[var(--ui-warning-border)]",
+      success: "border-(--ui-success-border)",
+      warning: "border-(--ui-warning-border)",
     },
   },
 });

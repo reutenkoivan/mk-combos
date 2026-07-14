@@ -804,7 +804,7 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
       <section
         aria-busy={frozen || undefined}
         aria-label={`${props.snapshot.label}: ${scopeLabel}`}
-        className="grid min-w-0 gap-4 rounded-[var(--ui-radius-surface)] border border-[var(--ui-frame-panel-border)] bg-[var(--ui-frame-surface)] p-4 text-[var(--ui-frame-surface-text)]"
+        className="grid min-w-0 gap-4 rounded-(--ui-radius-surface) border border-(--ui-frame-panel-border) bg-(--ui-frame-surface) p-4 text-(--ui-frame-surface-text)"
         data-details-state={props.model.state.details.state}
         data-lifecycle={props.lifecycle}
         data-scope={props.model.state.scope}
@@ -848,13 +848,13 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
           <ul
             aria-label={props.snapshot.summaryLabel}
             className={cx(
-              "grid min-w-0 list-none gap-px overflow-hidden rounded-[var(--ui-radius-control)] border border-[var(--ui-frame-panel-border)] bg-[var(--ui-frame-panel-border)] p-0",
+              "grid min-w-0 list-none gap-px overflow-hidden rounded-(--ui-radius-control) border border-(--ui-frame-panel-border) bg-(--ui-frame-panel-border) p-0",
               compact ? "grid-cols-3" : "grid-cols-[repeat(auto-fit,minmax(8rem,1fr))]",
             )}
           >
             {props.snapshot.summary.map((item) => (
-              <li className="grid min-w-0 gap-1 bg-[var(--ui-frame-track)] p-3" key={item.id}>
-                <span className="text-xs uppercase tracking-wide text-[var(--ui-frame-muted-text)]">
+              <li className="grid min-w-0 gap-1 bg-(--ui-frame-track) p-3" key={item.id}>
+                <span className="text-xs uppercase tracking-wide text-(--ui-frame-muted-text)">
                   {item.label}
                 </span>
                 <strong className="text-lg" data-frame-value={item.frameValue}>
@@ -874,7 +874,7 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
             <legend className="sr-only">{props.snapshot.timelineLabel}</legend>
             <div
               {...desktopTimelineAccessibility}
-              className="min-w-0 overflow-x-auto overflow-y-visible rounded-[var(--ui-radius-control)] border border-[var(--ui-frame-panel-border)] bg-[var(--ui-frame-track)] p-3"
+              className="min-w-0 overflow-x-auto overflow-y-visible rounded-(--ui-radius-control) border border-(--ui-frame-panel-border) bg-(--ui-frame-track) p-3"
               data-frame-timeline
             >
               <div
@@ -888,7 +888,7 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
                     <div className="grid" style={getFrameGridStyle(availableGrid.cellCount)}>
                       {availableGrid.sections.map((section) => (
                         <span
-                          className="truncate border-l border-[var(--ui-frame-boundary)] px-1 pb-1 text-xs font-semibold text-[var(--ui-frame-muted-text)]"
+                          className="truncate border-l border-(--ui-frame-boundary) px-1 pb-1 text-xs font-semibold text-(--ui-frame-muted-text)"
                           data-cell-count={section.cellCount}
                           data-matching-whiteboard-step-id={section.matchingWhiteboardStepId}
                           data-section-id={section.id}
@@ -914,9 +914,9 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
                     >
                       <strong
                         className={cx(
-                          "sticky left-0 z-10 self-stretch bg-[var(--ui-frame-track)] pr-2",
+                          "sticky left-0 z-10 self-stretch bg-(--ui-frame-track) pr-2",
                           track.kind === comboFrameMeterTrackKinds.meta
-                            ? "py-0.5 text-xs uppercase tracking-wide text-[var(--ui-frame-muted-text)]"
+                            ? "py-0.5 text-xs uppercase tracking-wide text-(--ui-frame-muted-text)"
                             : "py-2 text-sm",
                         )}
                       >
@@ -1036,7 +1036,7 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
 
                               return (
                                 <span
-                                  className="px-1 text-center text-[0.6875rem] font-semibold tabular-nums text-[var(--ui-frame-muted-text)]"
+                                  className="px-1 text-center text-[0.6875rem] font-semibold tabular-nums text-(--ui-frame-muted-text)"
                                   data-cell-count={segment.cellCount}
                                   data-frame-count-label={frameCountLabel}
                                   data-segment-frame-count={segment.id}
@@ -1154,7 +1154,7 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
                     <legend
                       className={cx(
                         group.label
-                          ? "text-xs font-semibold uppercase tracking-wide text-[var(--ui-frame-muted-text)]"
+                          ? "text-xs font-semibold uppercase tracking-wide text-(--ui-frame-muted-text)"
                           : "sr-only",
                       )}
                     >
@@ -1216,7 +1216,7 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
             <PopoverArrow
               className={
                 openSegment.validity === comboFrameMeterSegmentValidities.invalid
-                  ? "border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)]"
+                  ? "border-(--ui-destructive) bg-(--ui-destructive-soft)"
                   : undefined
               }
             />
@@ -1226,7 +1226,7 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
               className={cx(
                 "grid w-[min(22rem,calc(100vw-2rem))] min-w-0 gap-3 p-3",
                 openSegment.validity === comboFrameMeterSegmentValidities.invalid
-                  ? "border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)]"
+                  ? "border-(--ui-destructive) bg-(--ui-destructive-soft)"
                   : undefined,
               )}
               data-segment-details={openSegment.id}
@@ -1236,13 +1236,13 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
                 <PopoverTitle>{openSegment.label}</PopoverTitle>
                 <Badge tone={validityTone(openSegment.validity)}>{openSegment.validityLabel}</Badge>
               </Group>
-              <PopoverDescription className="text-sm text-[var(--ui-text)]">
+              <PopoverDescription className="text-sm text-(--ui-text)">
                 {openSegment.summary}
               </PopoverDescription>
               <Stack role="list">
                 {openSegment.details.map((item) => (
                   <Group justify="between" key={item.id} role="listitem" wrap={false}>
-                    <span className="text-[var(--ui-muted-text)]">{item.label}</span>
+                    <span className="text-(--ui-muted-text)">{item.label}</span>
                     <span data-frame-value={item.frameValue}>{item.value}</span>
                   </Group>
                 ))}

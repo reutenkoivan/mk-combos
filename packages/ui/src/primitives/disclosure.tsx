@@ -124,7 +124,11 @@ export function DisclosurePanel(props: DisclosurePanelProps) {
   return (
     <BaseCollapsible.Panel
       {...panelProps}
-      className={cx(surfaceRecipe({ density, material, shape, tone }), className)}
+      className={cx(
+        surfaceRecipe({ density, material, shape, tone }),
+        "box-border h-(--collapsible-panel-height) overflow-hidden opacity-100 transition-[height,opacity] duration-200 ease-out [&[hidden]:not([hidden='until-found'])]:hidden data-ending-style:h-0 data-ending-style:opacity-0 data-starting-style:h-0 data-starting-style:opacity-0 motion-reduce:transition-none",
+        className,
+      )}
       data-ui-disclosure-panel
       keepMounted={keepMounted}
       ref={ref}

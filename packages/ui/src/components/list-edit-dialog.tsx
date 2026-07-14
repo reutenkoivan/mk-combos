@@ -127,14 +127,12 @@ export function ListEditDialog(props: ListEditDialogProps) {
                 </Field>
               ) : (
                 props.deleteImpactMessage && (
-                  <p className="text-sm text-[var(--ui-destructive)]">
-                    {props.deleteImpactMessage}
-                  </p>
+                  <p className="text-sm text-(--ui-destructive)">{props.deleteImpactMessage}</p>
                 )
               )}
             </Stack>
             <Group
-              className="sticky bottom-0 z-10 w-full flex-col-reverse items-stretch border-t border-[var(--ui-separator)] bg-[var(--ui-dialog)] pt-3 sm:flex-row sm:items-center"
+              className="sticky bottom-0 z-10 w-full flex-col-reverse items-stretch border-t border-(--ui-separator) bg-(--ui-dialog) pt-3 sm:flex-row sm:items-center"
               justify="end"
             >
               <Button

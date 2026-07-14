@@ -4,6 +4,8 @@ import { UiRoot } from "@mk-combos/ui/primitives/layout";
 import { uiContrastModes, uiDensityModes, uiThemeModes } from "@mk-combos/ui/tokens/value";
 import { createContext, type ReactNode, useContext } from "react";
 
+import { LocalStateProvider } from "../local-state/provider";
+
 type AppProvidersProps = Readonly<{
   children: ReactNode;
 }>;
@@ -24,17 +26,19 @@ export function AppProviders({ children }: AppProvidersProps) {
   const { responsiveMode } = useResponsiveMode().state;
 
   return (
-    <AppResponsiveModeContext value={responsiveMode}>
-      <UiRoot
-        className="min-h-dvh"
-        contrast={uiContrastModes.standard}
-        density={uiDensityModes.small}
-        responsiveMode={responsiveMode}
-        theme={uiThemeModes.dark}
-      >
-        {children}
-      </UiRoot>
-    </AppResponsiveModeContext>
+    <LocalStateProvider>
+      <AppResponsiveModeContext value={responsiveMode}>
+        <UiRoot
+          className="min-h-dvh"
+          contrast={uiContrastModes.standard}
+          density={uiDensityModes.small}
+          responsiveMode={responsiveMode}
+          theme={uiThemeModes.dark}
+        >
+          {children}
+        </UiRoot>
+      </AppResponsiveModeContext>
+    </LocalStateProvider>
   );
 }
 

@@ -89,9 +89,9 @@ export function ComboCard(props: ComboCardProps) {
       aria-disabled={disabled || undefined}
       aria-label={props.summary.accessibleLabel}
       className={cx(
-        "grid min-w-0 gap-3 rounded-[var(--ui-radius-surface)] bg-[var(--ui-content)] p-3 outline-none focus-visible:shadow-[var(--ui-focus-ring)]",
-        props.selected && "bg-[var(--ui-selection-muted)]",
-        props.focused && "shadow-[var(--ui-focus-ring)]",
+        "grid min-w-0 gap-3 rounded-(--ui-radius-surface) bg-(--ui-content) p-3 outline-none focus-visible:shadow-(--ui-focus-ring)",
+        props.selected && "bg-(--ui-selection-muted)",
+        props.focused && "shadow-(--ui-focus-ring)",
         disabled && "opacity-70",
       )}
       data-combo-id={props.summary.ref.comboId}
@@ -131,13 +131,13 @@ export function ComboCard(props: ComboCardProps) {
         </Group>
       )}
       {props.summary.notesSnippet && (
-        <p className="text-sm text-[var(--ui-muted-text)]">{props.summary.notesSnippet}</p>
+        <p className="text-sm text-(--ui-muted-text)">{props.summary.notesSnippet}</p>
       )}
       {props.summary.membershipHint && (
-        <p className="text-xs text-[var(--ui-muted-text)]">{props.summary.membershipHint}</p>
+        <p className="text-xs text-(--ui-muted-text)">{props.summary.membershipHint}</p>
       )}
       {props.disabledReason && (
-        <p className="text-xs text-[var(--ui-destructive)]">{props.disabledReason}</p>
+        <p className="text-xs text-(--ui-destructive)">{props.disabledReason}</p>
       )}
       {props.actions.length > 0 && (
         <Group>

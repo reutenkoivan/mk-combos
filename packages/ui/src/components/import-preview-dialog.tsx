@@ -69,6 +69,15 @@ export function ImportPreviewDialog(props: ImportPreviewDialogProps) {
       }),
       backupCandidateId: props.backupCandidateId,
     });
+  const validationMessageKeyCounts = new Map<string, number>();
+  const validationMessages = props.validationResult.gameSliceMessages?.map((message) => {
+    const baseKey = `${message.gameId}-${message.tone}-${message.message}`;
+    const occurrence = (validationMessageKeyCounts.get(baseKey) ?? 0) + 1;
+
+    validationMessageKeyCounts.set(baseKey, occurrence);
+
+    return { key: `${baseKey}-${occurrence}`, message };
+  });
 
   return (
     <DialogRoot
@@ -118,13 +127,13 @@ export function ImportPreviewDialog(props: ImportPreviewDialogProps) {
                   {props.validationResult.message}
                 </StatusMessage>
               )}
-              {props.validationResult.gameSliceMessages?.map((message) => (
-                <StatusMessage key={`${message.gameId}-${message.message}`} tone={message.tone}>
+              {validationMessages?.map(({ key, message }) => (
+                <StatusMessage key={key} tone={message.tone}>
                   {message.message}
                 </StatusMessage>
               ))}
             </div>
-            <div className="sticky bottom-0 z-10 flex flex-col-reverse items-stretch gap-2 border-t border-[var(--ui-separator)] bg-[var(--ui-dialog)] pt-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+            <div className="sticky bottom-0 z-10 flex flex-col-reverse items-stretch gap-2 border-t border-(--ui-separator) bg-(--ui-dialog) pt-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
               <Button
                 disabled={props.busy}
                 onRequestPress={() => emit(importPreviewDialogActions.cancelImport)}

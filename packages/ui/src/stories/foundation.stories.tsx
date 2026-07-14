@@ -33,6 +33,7 @@ import {
 } from "../primitives/layout";
 import { SegmentedControl } from "../primitives/segmented-control";
 import { Badge, LoadingIndicator, StatusMessage } from "../primitives/state";
+import { TabsList, TabsPanel, TabsRoot, TabsTab } from "../primitives/tabs";
 import { controlRecipe } from "../recipes/control";
 import { fieldRecipe } from "../recipes/field";
 import { indicatorRecipe } from "../recipes/indicator";
@@ -121,8 +122,8 @@ function FoundationStorySurface() {
 }
 
 const Section = (props: { children: React.ReactNode; title: string }) => (
-  <section className="flex flex-col gap-3 border-t border-[var(--ui-separator)] pt-5 first:border-t-0 first:pt-0">
-    <h2 className="font-[var(--ui-font-display)] text-base font-semibold text-[var(--ui-text)]">
+  <section className="flex flex-col gap-3 border-t border-(--ui-separator) pt-5 first:border-t-0 first:pt-0">
+    <h2 className="font-(--ui-font-display) text-base font-semibold text-(--ui-text)">
       {props.title}
     </h2>
     {props.children}
@@ -133,13 +134,13 @@ const TokenGrid = () => (
   <div className="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-2">
     {Object.entries(uiSemanticTokens).map(([name, variable]) => (
       <div
-        className="grid min-h-16 gap-1 rounded-[var(--ui-radius-control)] border border-[var(--ui-separator)] bg-[var(--ui-content)] p-2"
+        className="grid min-h-16 gap-1 rounded-(--ui-radius-control) border border-(--ui-separator) bg-(--ui-content) p-2"
         key={name}
       >
-        <span className="text-xs font-medium text-[var(--ui-text)]">{name}</span>
-        <span className="text-xs text-[var(--ui-muted-text)]">{variable}</span>
+        <span className="text-xs font-medium text-(--ui-text)">{name}</span>
+        <span className="text-xs text-(--ui-muted-text)">{variable}</span>
         <span
-          className="h-4 rounded-sm border border-[var(--ui-separator)]"
+          className="h-4 rounded-sm border border-(--ui-separator)"
           style={{ background: `var(${variable})` }}
         />
       </div>
@@ -207,7 +208,7 @@ const RecipeMatrix = () => (
       <div className={itemRecipe({ selection: uiSelectionStates.selected })}>
         <span className={indicatorRecipe({ tone: uiToneModes.accent })}>1</span>
         <span>Selected row keeps stable density</span>
-        <span className="text-[var(--ui-muted-text)]">⌘K</span>
+        <span className="text-(--ui-muted-text)">⌘K</span>
       </div>
       <div
         className={itemRecipe({
@@ -224,7 +225,7 @@ const RecipeMatrix = () => (
           !
         </span>
         <span>Invalid state does not rely on color alone</span>
-        <span className="text-[var(--ui-muted-text)]">State</span>
+        <span className="text-(--ui-muted-text)">State</span>
       </div>
       <div className={separatorRecipe({ orientation: separatorOrientations.horizontal })} />
     </div>
@@ -238,6 +239,7 @@ const PrimitiveMatrix = () => {
   const [disclosureOpen, setDisclosureOpen] = useState(true);
   const [query, setQuery] = useState("Very long localized input value without layout shift");
   const [status, setStatus] = useState("Primitives are ready for interaction");
+  const [tab, setTab] = useState("interface");
 
   return (
     <Stack density={uiDensityModes.medium}>
@@ -289,6 +291,24 @@ const PrimitiveMatrix = () => {
           </Grid>
 
           <Separator />
+
+          <TabsRoot
+            onValueChange={({ value }) => {
+              setTab(value);
+              setStatus(`Tab selected: ${value}`);
+            }}
+            value={tab}
+          >
+            <TabsList aria-label="Settings sections">
+              <TabsTab value="interface">Interface</TabsTab>
+              <TabsTab value="backup">Game backups</TabsTab>
+              <TabsTab disabled value="unavailable">
+                Unavailable
+              </TabsTab>
+            </TabsList>
+            <TabsPanel value="interface">Language and button-label preferences.</TabsPanel>
+            <TabsPanel value="backup">Per-game backup controls.</TabsPanel>
+          </TabsRoot>
 
           <Stack>
             <SegmentedControl
@@ -353,7 +373,7 @@ const IconMatrix = () => (
   <div className="flex flex-wrap gap-2">
     {iconExamples.map((Icon) => (
       <span
-        className="inline-flex h-8 w-8 items-center justify-center rounded-[var(--ui-radius-control)] border border-[var(--ui-control-border)] bg-[var(--ui-control)] text-[var(--ui-text)]"
+        className="inline-flex h-8 w-8 items-center justify-center rounded-(--ui-radius-control) border border-(--ui-control-border) bg-(--ui-control) text-(--ui-text)"
         key={Icon.displayName}
       >
         <Icon size={16} />
@@ -376,7 +396,7 @@ const NotationMatrix = () => {
                 <NotationIcon descriptor={icon} key={icon.iconName} />
               ))}
             </span>
-            <span className="text-[var(--ui-muted-text)]">{row.modeIcon.accessibleLabel}</span>
+            <span className="text-(--ui-muted-text)">{row.modeIcon.accessibleLabel}</span>
           </div>
         ))}
       </div>
@@ -384,14 +404,14 @@ const NotationMatrix = () => {
       <div className="grid gap-3">
         {notationRegistryTokenGroups.map((group) => (
           <div className="grid gap-2" key={group.kind}>
-            <span className="text-xs font-semibold text-[var(--ui-muted-text)]">{group.label}</span>
+            <span className="text-xs font-semibold text-(--ui-muted-text)">{group.label}</span>
             <div className="grid gap-1">
               {Object.values(notationDisplayModes).map((mode) => (
                 <div
                   className="grid items-start gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]"
                   key={`${group.kind}-${mode}`}
                 >
-                  <span className="text-xs font-medium text-[var(--ui-muted-text)]">{mode}</span>
+                  <span className="text-xs font-medium text-(--ui-muted-text)">{mode}</span>
                   <span className="flex flex-wrap gap-1">
                     {mapNotationStep(group.tokens, mode).map((token) => (
                       <span
@@ -399,9 +419,7 @@ const NotationMatrix = () => {
                         key={`${mode}-${group.kind}-${token.token}`}
                       >
                         <NotationIcon descriptor={token} />
-                        <span className="text-[10px] text-[var(--ui-muted-text)]">
-                          {token.token}
-                        </span>
+                        <span className="text-[10px] text-(--ui-muted-text)">{token.token}</span>
                       </span>
                     ))}
                   </span>
@@ -413,13 +431,13 @@ const NotationMatrix = () => {
       </div>
 
       <div className="grid gap-1">
-        <span className="text-xs font-semibold text-[var(--ui-muted-text)]">Fallback</span>
+        <span className="text-xs font-semibold text-(--ui-muted-text)">Fallback</span>
         {Object.values(notationDisplayModes).map((mode) => (
           <div
             className="grid items-start gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]"
             key={`fallback-${mode}`}
           >
-            <span className="text-xs font-medium text-[var(--ui-muted-text)]">{mode}</span>
+            <span className="text-xs font-medium text-(--ui-muted-text)">{mode}</span>
             <span className="flex flex-wrap gap-1">
               {mapNotationStep(unknownNotationTokens, mode).map((token) => (
                 <NotationIcon descriptor={token} key={`${mode}-${token.token}`} />

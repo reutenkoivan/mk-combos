@@ -4,7 +4,7 @@ import type { SettingsSearch, SettingsSection } from "./type";
 import { settingsSections } from "./value";
 
 describe("settings search contract", () => {
-  it("publishes the backup section and accepts an optional section", () => {
+  it("publishes the optional backup section", () => {
     expect(settingsSections).toEqual({ backup: "backup" });
     expect(SettingsSectionSchema.parse(settingsSections.backup)).toBe("backup");
     expect(SettingsSearchSchema.parse({})).toEqual({});
@@ -18,6 +18,7 @@ describe("settings search contract", () => {
   });
 
   it("rejects unknown section values", () => {
+    expect(SettingsSearchSchema.safeParse({ section: "interface" }).success).toBe(false);
     expect(SettingsSearchSchema.safeParse({ section: "future" }).success).toBe(false);
   });
 

@@ -93,7 +93,7 @@ export function MovePicker(props: MovePickerProps) {
     >
       <Stack density="mini">
         <Group justify="between">
-          <span className="font-semibold text-[var(--ui-text)]">{props.editTargetLabel}</span>
+          <span className="font-semibold text-(--ui-text)">{props.editTargetLabel}</span>
           <Button
             className={compactTargetClassName}
             disabled={props.disabled || props.busy}
@@ -103,7 +103,7 @@ export function MovePicker(props: MovePickerProps) {
           </Button>
         </Group>
         {currentGroup && (
-          <span className="text-xs text-[var(--ui-muted-text)]">{currentGroup.label}</span>
+          <span className="text-xs text-(--ui-muted-text)">{currentGroup.label}</span>
         )}
       </Stack>
 
@@ -136,9 +136,7 @@ export function MovePicker(props: MovePickerProps) {
                 <span className="grid gap-1">
                   <span>{group.label}</span>
                   {group.disabledReason && (
-                    <span className="text-xs text-[var(--ui-destructive)]">
-                      {group.disabledReason}
-                    </span>
+                    <span className="text-xs text-(--ui-destructive)">{group.disabledReason}</span>
                   )}
                 </span>
               </SelectableItem>
@@ -208,7 +206,7 @@ export function MovePicker(props: MovePickerProps) {
                     ))}
                   </span>
                   {candidate.disabledReason && (
-                    <span className="text-xs text-[var(--ui-destructive)]">
+                    <span className="text-xs text-(--ui-destructive)">
                       {candidate.disabledReason}
                     </span>
                   )}
@@ -234,7 +232,7 @@ export function MovePicker(props: MovePickerProps) {
                     {candidate.detailsAction.label}
                   </Button>
                   {candidate.detailsAction.disabledReason && (
-                    <span className="max-w-40 text-xs text-[var(--ui-destructive)]">
+                    <span className="max-w-40 text-xs text-(--ui-destructive)">
                       {candidate.detailsAction.disabledReason}
                     </span>
                   )}
@@ -253,7 +251,7 @@ export function MovePicker(props: MovePickerProps) {
         <StatusMessage tone={uiToneModes.neutral}>{props.statusMessage}</StatusMessage>
       )}
       {props.labels.hints.length > 0 && (
-        <ul className="grid gap-1 pl-4 text-xs text-[var(--ui-muted-text)]">
+        <ul className="grid gap-1 pl-4 text-xs text-(--ui-muted-text)">
           {props.labels.hints.map((hint) => (
             <li key={hint}>{hint}</li>
           ))}

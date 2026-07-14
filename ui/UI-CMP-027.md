@@ -11,7 +11,7 @@
 
 ## Призначення
 
-`UI-CMP-027` показує optional confirmation/details перед export full backup.
+`UI-CMP-027` показує optional confirmation/details перед export backup для однієї гри.
 
 ## Володіння
 
@@ -55,7 +55,7 @@
 
 ## Вхідні дані
 
-- backup generation state, export availability і local state summary.
+- target `gameId`/game label, backup generation state, export availability і summary цієї game slice.
 - optional warning/error message.
 - source focus target і active language.
 
@@ -69,11 +69,12 @@ Payload містить action id, reason і source focus target. Об'єкти b
 
 ## Межі відповідальності
 
-Компонент не читає seeded data, не генерує backup JSON, не запускає browser download і не змінює local state.
+Компонент не читає seeded data, не генерує `GameBackupEnvelope`, не запускає browser download і не змінює local state. Він не показує global settings або slices інших ігор як частину export.
 
 ## Критерії приймання
 
 - Export busy/error state controlled сторінкою.
+- Summary однозначно називає target game і пояснює, що файл містить лише її user slice.
 - Cancel не мутує local state.
 - Focus повертається до source target після close.
 

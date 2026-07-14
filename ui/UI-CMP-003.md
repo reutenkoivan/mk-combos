@@ -9,7 +9,7 @@
 - Батьківська мапа: [UI.md](../UI.md)
 - Власники:
   - `packages/ui` для reusable visual component, semantic recipes, states, icon/indicator usage, Storybook stories і visual coverage
-  - `apps/web` для selected language, browser-locale defaulting, validation, Settings save/apply behavior, first-launch confirmation, persistence і localized copy source
+  - `apps/web` для selected language, browser-locale defaulting, validation, Settings immediate apply/autosave, first-launch confirmation, persistence і localized copy source
 - Батьківські сторінки: [`UI-PAGE-002 First-Launch Setup`](./UI-PAGE-002.md), [`UI-PAGE-008 Settings`](./UI-PAGE-008.md)
 - Батьківські компоненти: `UI-CMP-006 First-Launch Setup Form`, Settings form
 - Пов'язані UX сценарії: `US-001`, `US-008`, `US-023`, `US-024`
@@ -21,7 +21,7 @@
 Компонент має два context-и використання:
 
 - `firstLaunch`: pending initial language choice у `UI-PAGE-002 First-Launch Setup`;
-- `settings`: draft language choice у `UI-PAGE-008 Settings`.
+- `settings`: applied language choice з immediate autosave у `UI-PAGE-008 Settings`.
 
 У v1 дозволені language values:
 
@@ -50,9 +50,9 @@
 `apps/web` відповідає за:
 
 - current або pending selected language;
-- browser-locale defaulting для first launch;
+- browser-locale defaulting (`uk`/`uk-*` -> `UA`, інші locale -> `EN`) для first launch;
 - validation selected language проти supported app languages;
-- Settings draft state, apply/save behavior і persistence;
+- Settings immediate application, synchronous persistence attempt і session-only fallback;
 - first-launch confirmation і completion marker;
 - localized copy source, labels, descriptions і validation messages;
 - поширення applied language в App Shell, active pages і game business-provided localized content.
@@ -176,9 +176,9 @@ Selection у цьому context:
 
 Selection у цьому context:
 
-- оновлює draft language value;
-- переводить Settings form у `editing`, якщо value відрізняється від applied language;
-- не виконує page-level save/apply action;
+- одразу стає applied language value у parent flow;
+- одразу запускає page-level persistence attempt;
+- не потребує page-level save/apply action;
 - не пише localStorage напряму;
 - не змінює notation display mode або active game.
 
@@ -203,7 +203,7 @@ Selection у цьому context:
 Parent flow інтерпретує `requestSelectLanguage` за context:
 
 - у `firstLaunch` оновлює pending setup value;
-- у `settings` оновлює draft settings value і залишає save/apply behavior на Settings page.
+- у `settings` одразу застосовує value і запускає Settings autosave/session-only behavior.
 
 ## Межі відповідальності
 
@@ -222,7 +222,7 @@ Parent flow інтерпретує `requestSelectLanguage` за context:
 - browser locale fallback;
 - persistence у localStorage або session-only storage;
 - first-launch completion marker;
-- Settings save/apply lifecycle;
+- Settings immediate application, autosave або session-only lifecycle;
 - route navigation;
 - active/default game;
 - notation display mode;
@@ -241,7 +241,7 @@ Options готові, selected language валідна.
 
 - selected segment чітко позначений;
 - усі available segments reachable;
-- save/apply state не показується всередині component, якщо parent не передав `busy`.
+- persistence state не показується всередині component, якщо parent не передав `busy`.
 
 ### `firstLaunchPending`
 
@@ -253,29 +253,29 @@ Options готові, selected language валідна.
 - change оновлює pending initial language;
 - confirmation action лишається owner для completion.
 
-### `settingsClean`
+### `settingsReady`
 
 Компонент рендериться у Settings form і selected value дорівнює applied language.
 
 Очікуваний UI:
 
 - selected language readable;
-- control enabled, якщо Settings не saving;
+- control enabled, якщо parent не передав disabled/busy state;
 - validation/status message прихований, якщо немає проблеми.
 
-### `settingsEditing`
+### `settingsPersisting`
 
-Користувач вибрав language, яка відрізняється від applied value.
+Користувач вибрав нову language; value вже applied, а Settings виконує persistence attempt.
 
 Очікуваний UI:
 
-- draft selected segment позначений як current UI selection;
-- page-level apply/save action стає owner для final application;
+- new applied segment позначений як current UI selection;
+- page-level flow synchronously намагається persist-нути value;
 - component не показує власний save button.
 
 ### `saving`
 
-Parent flow застосовує або persist-ить settings.
+Parent flow завершує first-launch confirmation або persist-ить already-applied Settings value.
 
 Очікуваний UI:
 
@@ -314,14 +314,15 @@ Selected language не знайдена серед available languages або б
 4. `UI-PAGE-002` оновлює pending initial language.
 5. First-launch confirmation застосовує selected language разом із game і notation display mode.
 
-### Settings Draft Selection
+### Settings Autosave Selection
 
 1. Користувач відкриває `UI-PAGE-008 Settings`.
 2. Settings передає applied language як `selectedLanguage`.
 3. Користувач вибирає іншу language.
 4. `UI-CMP-003` емітить `requestSelectLanguage(targetLanguage)`.
-5. Settings оновлює draft value і переходить у `editing`.
-6. Page-level apply/save action застосовує і persist-ить selected language.
+5. Settings одразу застосовує selected language, localized copy і відповідний `<html lang>`.
+6. Page-level flow синхронно намагається persist-нути value.
+7. Persistence failure не відкатує selection: Settings показує session-only warning.
 
 ### No Top Bar Rendering
 
@@ -398,7 +399,7 @@ Forbidden primary public axes:
 - `ArrowLeft`/`ArrowRight` або `ArrowUp`/`ArrowDown` переміщують focus між options.
 - `Enter` і `Space` вибирають focused available option.
 - `focus-visible` має бути помітний у light, dark, standard contrast і increased contrast.
-- Busy state під час saving має бути оголошений assistive technologies через component або surrounding form.
+- Busy state під час persistence attempt, якщо він показаний, має бути оголошений assistive technologies через component або surrounding form.
 - Reduced motion має прибирати або скорочувати selected indicator transitions.
 - Color не є єдиним сигналом selected, invalid або unavailable state.
 
@@ -407,14 +408,14 @@ Forbidden primary public axes:
 - `UI-CMP-003` має окрему повну специфікацію.
 - `UI.md` посилається на `ui/UI-CMP-003.md`.
 - `UI-CMP-003` рендериться у `UI-PAGE-002 First-Launch Setup` як pending initial language control.
-- `UI-CMP-003` рендериться у `UI-PAGE-008 Settings` як draft/apply language control.
+- `UI-CMP-003` рендериться у `UI-PAGE-008 Settings` як applied/autosave language control.
 - Visual component, recipes, states, indicators, Storybook stories і visual coverage належать `packages/ui`.
-- App state, browser-locale defaulting, validation, Settings save/apply, first-launch confirmation, persistence і localized copy source належать `apps/web`.
+- App state, exact browser-locale defaulting, validation, Settings immediate apply/autosave, first-launch confirmation, persistence і localized copy source належать `apps/web`.
 - Control є compact segmented selector, а не dropdown або menu.
 - Supported languages у v1: `EN` і `UA`.
 - Labels приходять від parent/localization layer, а не хардкодяться visual primitive-ом.
 - Selection у first launch не завершує setup без explicit confirmation.
-- Selection у Settings не persist-иться без page-level apply/save behavior.
+- Selection у Settings застосовується одразу; page-level flow одразу намагається persist-нути її, а failure лишає session-only value без rollback.
 - Language change не змінює selected game, notation display mode, route, combo path, seeded data, custom data або backup state.
 - Top Bar і Top Bar Dropdown Menu не рендерять Language Switcher.
 
@@ -426,8 +427,8 @@ Storybook у `packages/ui` має містити сценарії:
 - `SelectedEN`;
 - `SelectedUA`;
 - `FirstLaunch`;
-- `SettingsClean`;
-- `SettingsEditing`;
+- `SettingsReady`;
+- `SettingsPersisting`;
 - `SavingDisabled`;
 - `InvalidSelectedLanguage`;
 - `UnavailableOption`;
@@ -470,10 +471,10 @@ Automated accessibility checks мають перевірити:
 - Вибір `UA` у setup оновлює pending language і не створює completion marker без confirmation.
 - Confirmation setup із `UA` застосовує app language і відкриває selected game Catalog.
 - Settings показує current applied language.
-- Вибір `UA` у Settings переводить form у `editing`.
-- Save success застосовує `UA` до UI labels і localized content.
-- Save error не стирає selected draft language і показує recoverable message.
-- localStorage unavailable дозволяє session-only language application через page-level flow.
+- Вибір `UA` у Settings одразу застосовує `UA` до UI labels, localized content і `<html lang="uk">`.
+- Persistence success зберігає applied `UA` без окремого Save action.
+- Persistence error не відкатує selected language і показує recoverable session-only message.
+- localStorage unavailable лишає language applied у session-only page-level flow.
 - Invalid selected language показує validation message і не auto-select-ить fallback без parent decision.
 - Disabled unavailable language не емітить `requestSelectLanguage`.
 - Top Bar не містить Language Switcher у wide layout.
@@ -484,7 +485,7 @@ Automated accessibility checks мають перевірити:
 
 - Exact visual primitive може бути project-owned segmented control або Base UI radio/toggle-group wrapper у `packages/ui`.
 - Exact icon/current indicator module залежить від icon facade, який реалізує `packages/ui`.
-- Exact browser-locale fallback policy лишається app-level settings decision.
+- Browser-locale fallback належить app-level boundary: `uk`/`uk-*` -> `UA`, інші locale -> `EN`.
 
 ## Канонічний Responsive і Controller-only Contract
 

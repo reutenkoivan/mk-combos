@@ -8,118 +8,142 @@
 - Статус деталізації: `Описано`
 - Батьківська мапа: [UI.md](../UI.md)
 - Батьківська сторінка: `UI-PAGE-001 App Shell`
-- Пов'язані компоненти: [`UI-CMP-003`](./UI-CMP-003.md), [`UI-CMP-004`](./UI-CMP-004.md), [`UI-CMP-037`](./UI-CMP-037.md), `UI-CMP-027`, `UI-CMP-028`, `UI-CMP-030`, `UI-CMP-034`
+- Пов'язані компоненти: [`UI-CMP-003`](./UI-CMP-003.md), [`UI-CMP-004`](./UI-CMP-004.md), [`UI-CMP-037`](./UI-CMP-037.md), [`UI-CMP-027`](./UI-CMP-027.md), [`UI-CMP-028`](./UI-CMP-028.md), `UI-CMP-030`, [`UI-CMP-034`](./UI-CMP-034.md)
 - Пов'язані UX сценарії: `US-002`, `US-008`, `US-009`, `US-017`, `US-018`, `US-024`
 
 ## Призначення
 
-`UI-PAGE-008 Settings` є route-level сторінкою для ручної зміни applied settings після входу в застосунок.
+`UI-PAGE-008 Settings` є route-level сторінкою для зміни applied settings і
+per-game export/import після входу в застосунок.
 
 Settings відповідає за:
 
-- зміну active `language`: `EN` або `UA`;
-- зміну `notation display mode`: `FGC`, `PlayStation` або `Xbox`;
-- застосування settings до app-level state;
-- persistence у local browser settings або session-only equivalent;
-- export full backup JSON;
-- import backup JSON через preview і replace confirmation;
-- повернення користувача до попередньої робочої surface або до `UI-PAGE-003 Catalog`.
+- негайне застосування й autosave active `language`: `EN` або `UA`;
+- негайне застосування й autosave `notation display mode`: `FGC`, `PlayStation` або `Xbox`;
+- session-only warning без rollback, якщо persistent storage недоступний;
+- accordion backup controls для всіх installed games;
+- export/import рівно однієї game slice за одну операцію;
+- повернення до captured working surface або до resolved game Catalog fallback.
 
-Settings не є first-launch gate. Початкові settings можуть бути встановлені через `UI-PAGE-002 First-Launch Setup` або через valid route-prefixed deep link auto-config: URL-derived `gameId` і default `notation display mode = FGC`.
+Settings не є first-launch gate. Fresh browser locale нормалізується app-level
+логікою: `uk` і `uk-*` дають `UA`, усі інші locale — `EN`; initial notation mode —
+`FGC`. Valid route-prefixed deep link використовує URL-derived `gameId`, той самий
+language fallback і `FGC` без ручного setup.
 
-Після first launch ручна зміна game відбувається через [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md) як перший item у global breadcrumbs, а не через Settings form.
+Після first launch гру змінюють через [`UI-CMP-002 Game Switcher`](./UI-CMP-002.md)
+у global breadcrumbs. Settings не рендерить page-owned Game Switcher.
 
 ## Архітектурний контекст
 
-Game Switcher будується з `installedGames`, які зареєстровані в `apps/web/src/game-business/installed-games/value.ts`, але рендериться у global breadcrumbs через `UI-CMP-001 -> UI-CMP-032`, не у Settings form. Backup envelope має форму `games: Record<GameId, unknown>`, а кожну game slice валідить відповідний business entry point.
+Game Switcher будується з `installedGames` у
+`apps/web/src/game-business/installed-games/value.ts` і рендериться через
+`UI-CMP-001 -> UI-CMP-032`, не у Settings form.
 
-Backup flow є частиною Settings і рендериться в `UI-CMP-034 Backup Collapsible Block`. Старий `UI-PAGE-007 Backup Management` має статус `Deprecated`; route або deep link до нього перенаправляє в Settings із розгорнутим backup block.
+Per-game backup використовує shared contract:
+
+```ts
+type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue }
+
+type GameBackupEnvelope = {
+  version: number
+  exportedAt: string
+  gameId: GameId
+  slice: JsonValue
+}
+```
+
+Один файл містить тільки user slice однієї гри: custom combos, named lists і last
+catalog context цієї гри. Global settings, slices інших ігор і seeded game data у
+файл не входять. Opaque game-owned `slice` обов'язково є JSON-safe.
+
+`apps/web` володіє file IO, envelope/version/installed-target validation,
+persistence та replace orchestration. Matching game business entry point серіалізує
+і валідить `slice`. Settings не відтворює game-specific rules.
+
+TanStack Router і Zod route boundary є єдиним owner URL-state. Plain `/settings`
+показує tab `Interface`; `/settings?section=backup` показує tab `Game backups` і
+розгортає item для resolved `lastActiveGameId`, потім `defaultGameId`, потім першої
+installed game. Deprecated logical route `/backup` replace-навігує до цього URL.
+Окремий query-state provider не використовується.
 
 ## Володіння
 
-`UI-PAGE-008` є owner для settings switchers:
+`UI-PAGE-008` або його problem-specific page hooks володіють:
 
-- [`UI-CMP-003 Language Switcher`](./UI-CMP-003.md);
-- [`UI-CMP-004 Display Mode Switcher`](./UI-CMP-004.md).
+- app settings source і observable state;
+- synchronous persistence attempt та session-only message;
+- structured ephemeral return target;
+- single-open accordion state keyed by installed `GameId`;
+- current backup operation, target `gameId`, validation result і candidate ID;
+- page-owned hidden file input та normalized file result;
+- singleton `UI-CMP-027` і `UI-CMP-028` overlay state;
+- explicit one-slice replace після confirmation.
 
-`UI-PAGE-008` може рендерити read-only notation reference поруч із display mode selector:
+Pure components отримують prepared models і semantic handlers. Native/form/browser
+events не входять у public component callbacks.
 
-- [`UI-CMP-037 Notation Legend Table`](./UI-CMP-037.md).
-
-`UI-PAGE-008` також є owner для backup block:
-
-- `UI-CMP-034 Backup Collapsible Block`;
-- `UI-CMP-027 Export Dialog`;
-- `UI-CMP-028 Import Preview Dialog`.
-
-`UI-CMP-001 Global Top Bar` може відкрити `UI-PAGE-008 Settings` через `UI-CMP-033 Top Bar Dropdown Menu`. Той самий Top Bar рендерить `UI-CMP-002 Game Switcher` у breadcrumbs і передає game-switch intent в App Shell.
-
-## Контракт Стану Сторінки
+## Контракт стану сторінки
 
 Стан у власності сторінки:
 
-- settings draft values, validation state, dirty state і save/apply state;
-- previous surface або return target;
-- backup block expanded/collapsed state, export/import operation state і validation result;
-- export dialog state, import preview dialog state і source focus target;
-- session-only persistence і system message state.
+- applied language і notation display mode;
+- persistence mode: `persistent` або `sessionOnly`;
+- optional persistence warning;
+- `expandedBackupGameId: GameId | null`;
+- backup operation state і target `gameId`;
+- validation result, optional valid candidate ID і preview state;
+- source focus target та Settings return target.
+- active section, підготовлений із validated route search;
 
-Підготовлені UI models для дочірніх компонентів:
+Semantic methods:
 
-- `UI-CMP-003` language switcher model;
-- `UI-CMP-004` display mode switcher model;
-- `UI-CMP-037` read-only notation legend model;
-- `UI-CMP-034` backup block model і nested `UI-CMP-027`/`UI-CMP-028` dialog models.
+- `selectLanguage(payload)`;
+- `selectNotationDisplayMode(payload)`;
+- `selectSettingsSection(payload)`;
+- `toggleBackupGame(payload)`;
+- `openGameExport(payload)`;
+- `confirmGameExport(payload)`;
+- `openGameBackupFilePicker(payload)`;
+- `validateGameBackupCandidate(payload)`;
+- `openGameImportPreview(payload)`;
+- `confirmGameSliceReplace(payload)`;
+- `cancelBackupOperation(payload)`;
+- `returnFromSettings(payload)`.
 
-Сторінкові handlers / intents:
-
-- `requestSelectLanguage(payload)`, `requestSelectDisplayMode(payload)`, `requestApplySettings(payload)`;
-- `requestToggleBackupBlock(payload)`, `requestExportFullBackup(payload)`, `requestOpenBackupFilePicker(payload)`;
-- `requestValidateBackupSelection(payload)`, `requestConfirmBackupReplace(payload)`, `requestCancelImport(payload)`;
-- `requestReturnFromSettings(payload)`.
-
-Бізнес-залежності:
-
-- app-level settings state і persistence;
-- local state envelope serialization і backup validation;
-- registered game business entry points для per-game backup slice validation.
-
-Не відповідає за:
-
-- page-owned game switcher rendering;
-- direct file input event payloads у backup UI callbacks;
-- local state replacement до explicit page-level confirmation.
+Language і notation methods одразу змінюють app memory state, після чого синхронно
+намагаються записати persisted state. Помилка запису не повертає попереднє value.
 
 ## Анатомія
-
-Розміщення Settings читається згори вниз: applied settings form і notation reference стоять перед backup block, а import/export dialogs відкриваються як page-owned overlays від Settings flow.
 
 ```jsx
 <SettingsPage ui="UI-PAGE-008">
   <SettingsSurface slot="UI-PAGE-001 active route">
     <Stack name="SettingsLayout">
-      <SettingsForm>
-        <Stack name="SettingsFormControls">
-          <LanguageSwitcher ui="UI-CMP-003" />
-          <DisplayModeSwitcher ui="UI-CMP-004" />
-        </Stack>
-      </SettingsForm>
+      <Header>
+        <PageTitle />
+        <ContextualNavigationReturnAction />
+      </Header>
 
-      <NotationLegendTable ui="UI-CMP-037" />
+      <TabsRoot primitive="@mk-combos/ui/primitives/tabs" value={activeSection}>
+        <TabsList labels="Interface|Game backups" />
+        <TabsPanel value="interface" keepMounted={false}>
+          <SettingsForm>
+            <LanguageSwitcher ui="UI-CMP-003" />
+            <DisplayModeSwitcher ui="UI-CMP-004" />
+          </SettingsForm>
+          <NotationLegendTable ui="UI-CMP-037" />
+        </TabsPanel>
 
-      <BackupCollapsibleBlock ui="UI-CMP-034">
-        <DisclosureHeader />
-
-        <Show when={backupBlockExpanded}>
-          <BackupActionGroups />
-        </Show>
-      </BackupCollapsibleBlock>
+        <TabsPanel value="backup" keepMounted={false}>
+          <BackupAccordionRegion>
+            <BackupCollapsibleBlock ui="UI-CMP-034" registry="installedGames" />
+          </BackupAccordionRegion>
+        </TabsPanel>
+      </TabsRoot>
 
       <Show when={hasPersistenceSystemMessage}>
         <PersistenceSystemMessageArea />
       </Show>
-
-      <NavigationReturnAction />
 
       <Show when={isExportDialogOpen}>
         <ExportDialog ui="UI-CMP-027" />
@@ -135,584 +159,206 @@ Backup flow є частиною Settings і рендериться в `UI-CMP-03
 
 Правила розміщення:
 
-- `UI-CMP-003` стоїть над `UI-CMP-004`, щоб form reading order збігався з first-launch setup.
-- `UI-CMP-037` є read-only companion нижче settings controls, а не control усередині segmented switcher.
-- `UI-CMP-034` стоїть після regular settings і містить тільки disclosure/panel structure; dialogs монтуються як singleton overlays на рівні Settings.
-- File picker result входить у Settings flow як prepared intent/result; anatomy не описує native `<input>` event.
-
-### SettingsSurface
-
-SettingsSurface є page-level container, який рендериться в slot активної сторінки `UI-PAGE-001 App Shell`.
-
-SettingsSurface має:
-
-- показувати поточні applied settings;
-- не бути modal або dropdown panel;
-- не дублювати Top Bar navigation;
-- не дублювати `UI-CMP-002 Game Switcher`;
-- не показувати catalog, list або builder controls;
-- показувати backup controls тільки через `UI-CMP-034 Backup Collapsible Block`;
-- дозволяти повернення до попередньої робочої surface або `UI-PAGE-003 Catalog`.
-
-### Settings form
-
-Settings form групує controls для ручної зміни language і notation display mode.
-
-Форма має:
-
-- показувати current language і notation display mode;
-- зберігати unsaved values під час `editing`;
-- мати явний apply/save action або equivalent page-level save event;
-- показувати pending/busy state під час `saving`;
-- не змінювати source of truth combo data.
-
-### UI-CMP-003 Language Switcher
-
-Детальна специфікація: [UI-CMP-003 Language Switcher](./UI-CMP-003.md).
-
-`UI-CMP-003 Language Switcher` дає змінити мову UI і localized content.
-
-Дозволені значення:
-
-- `EN`;
-- `UA`.
-
-Зміна language не має змінювати selected game, notation display mode, combo path або custom data.
-
-### UI-CMP-004 Display Mode Switcher
-
-Детальна специфікація: [UI-CMP-004 Display Mode Switcher](./UI-CMP-004.md).
-
-`UI-CMP-004 Display Mode Switcher` дає змінити спосіб відображення notation.
-
-Дозволені значення:
-
-- `FGC`;
-- `PlayStation`;
-- `Xbox`.
-
-Notation display mode впливає тільки на rendering. Він не змінює `movePath`, canonical FGC notation, seeded combo data або `cachedNotation`.
-
-### UI-CMP-037 Notation Legend Table
-
-Детальна специфікація: [UI-CMP-037 Notation Legend Table](./UI-CMP-037.md).
-
-`UI-CMP-037 Notation Legend Table` показує read-only SVG marker examples для `FGC`, `PlayStation`, `Xbox` і notation modifiers.
-
-Table не змінює selected display mode, не бере участі у save/apply lifecycle і не перераховує notation.
-
-### UI-CMP-034 Backup Collapsible Block
-
-`UI-CMP-034 Backup Collapsible Block` містить import/export backup у Settings.
-
-Block має:
-
-- бути згорнутим за замовчуванням;
-- відкриватися за явною взаємодією користувача;
-- відкриватися автоматично після deprecated redirect із `UI-PAGE-007 Backup Management`;
-- показувати export action для full backup JSON;
-- показувати import action для вибору backup JSON;
-- відкривати `UI-CMP-028 Import Preview Dialog` перед replace;
-- не змінювати local state до явного підтвердження replace.
-
-Backup включає local settings, custom combos і named lists. Backup не змінює seeded combo data.
-
-### Persistence / system message area
-
-Persistence / system message area показує стан збереження settings.
-
-Приклади:
-
-- settings збережені;
-- settings застосовані тільки в session-only режимі;
-- localStorage недоступний;
-- persistence save завершився recoverable помилкою.
-
-`UI-CMP-030 Error State` використовується для recoverable persistence errors або пояснення session-only limitation.
-
-### Navigation / return action
-
-Navigation / return action дозволяє вийти зі Settings після застосування або перегляду settings.
-
-Повернення відбувається до:
-
-- попередньої робочої surface, якщо вона відома і валідна;
-- `UI-PAGE-003 Catalog`, якщо previous surface відсутня або stale.
-
-## Контракти компонентів
-
-### UI-CMP-003 Language Switcher
-
-Детальна специфікація: [UI-CMP-003 Language Switcher](./UI-CMP-003.md).
-
-Вхідні дані:
-
-- active language: `EN` або `UA`;
-- available languages;
-- disabled state під час `saving`;
-- optional validation message.
-
-Вихідні події:
-
-- змінити selected language value.
-
-Межі відповідальності:
-
-- не вирішує browser locale fallback;
-- не зберігає language напряму;
-- не змінює active/default game або display mode.
-
-### UI-CMP-004 Display Mode Switcher
-
-Детальна специфікація: [UI-CMP-004 Display Mode Switcher](./UI-CMP-004.md).
-
-Вхідні дані:
-
-- active notation display mode: `FGC`, `PlayStation` або `Xbox`;
-- available display modes;
-- disabled state під час `saving`;
-- optional validation message.
-
-Вихідні події:
-
-- змінити selected notation display mode value.
-
-Межі відповідальності:
-
-- не перераховує notation самостійно;
-- не змінює source of truth combo data;
-- не пише `cachedNotation`.
-
-### UI-CMP-037 Notation Legend Table
-
-Детальна специфікація: [UI-CMP-037 Notation Legend Table](./UI-CMP-037.md).
-
-Вхідні дані:
-
-- legend rows для `FGC`, `PlayStation` і `Xbox`;
-- UI-owned SVG icon descriptors для display mode, attack marker і modifier examples;
-- caption або accessible name;
-- compact layout state, якщо Settings form width або zoom потребує stacked rows.
-
-Вихідні події:
-
-- немає.
-
-Межі відповідальності:
-
-- не вибирає notation display mode;
-- не бере участі у Settings save/apply lifecycle;
-- не перераховує notation самостійно;
-- не змінює source of truth combo data;
-- не пише `cachedNotation`.
-
-### UI-CMP-034 Backup Collapsible Block
-
-Вхідні дані:
-
-- collapsed або expanded state;
-- local state summary для backup;
-- import/export availability;
-- persistence availability;
-- validation або import state;
-- optional прапорець deprecated redirect для auto-expand.
-
-Вихідні події:
-
-- toggle backup block;
-- export full backup JSON;
-- open backup file picker;
-- validate selected backup JSON;
-- open import preview;
-- підтвердити replace local state backup-даними;
-- cancel import без mutation;
-- close backup dialogs.
-
-Межі відповідальності:
-
-- не є окремою route-level page;
-- не змінює seeded combo data;
-- не замінює local state без explicit replace confirmation;
-- не змінює `game`, `language` або `notation display mode` через backup controls напряму;
-- не відкриває `UI-PAGE-007 Backup Management`.
-
-### UI-CMP-027 Export Dialog
-
-Вхідні дані:
-
-- backup generation state;
-- local state summary;
-- export availability;
-- optional error message.
-
-Вихідні події:
-
-- confirm export;
-- cancel export;
-- close dialog.
-
-Межі відповідальності:
-
-- не читає seeded data напряму;
-- не виконує import;
-- не змінює local state.
-
-### UI-CMP-028 Import Preview Dialog
-
-Вхідні дані:
-
-- parsed backup summary;
-- validation result;
-- replace impact summary;
-- import busy state.
-
-Вихідні події:
-
-- confirm replace;
-- cancel import;
-- close dialog;
-- retry file selection після invalid backup.
-
-Межі відповідальності:
-
-- не виконує replace без explicit confirmation;
-- не приховує validation errors;
-- не змінює seeded combo data.
-
-### Page-level settings form
-
-Вхідні дані:
-
-- current app-level settings;
-- persistence availability;
-- previous surface або return target;
-- save state;
-- validation state для selected values.
-
-Вихідні події:
-
-- apply selected settings to app-level state;
-- persist settings to local browser settings;
-- apply session-only settings, якщо persistence недоступна;
-- return to previous surface;
-- return to `UI-PAGE-003 Catalog`.
-
-Межі відповідальності:
-
-- не виконує backup flow напряму; backup flow належить `UI-CMP-034`;
-- не рендерить або не обробляє `UI-CMP-002 Game Switcher`;
-- не змінює seeded або custom combo content;
-- не керує controller command mapping;
-- не рендерить робочі controls catalog, lists або builder.
+- inactive tab panel unmount-иться й не лишає hidden focus targets;
+- interface controls і notation reference стоять у двох колонках на desktop та
+  послідовно на mobile;
+- Settings повторює `UI-CMP-034` для кожної installed game;
+- одночасно expanded не більше одного backup item;
+- dialogs є singleton page-owned overlays, а не repeated children accordion items;
+- native file input page-owned і не входить у видиму component anatomy.
+
+## Settings autosave
+
+`UI-CMP-003` і `UI-CMP-004` показують applied values. Окремого draft, Apply або Save
+action немає.
+
+Після selection:
+
+1. Settings негайно оновлює app-level state.
+2. Language change одразу оновлює localized app copy і `<html lang>` (`EN -> en`, `UA -> uk`).
+3. Settings синхронно намагається persist-нути state.
+4. Success лишає page у `ready`.
+5. Failure лишає selected value applied, переходить у `sessionOnly` і показує warning.
+
+Notation mode змінює тільки rendering. Він не змінює `movePath`, canonical FGC
+notation, seeded data, custom data або `cachedNotation`.
+
+## Backup accordion
+
+Settings формує ordered items з `installedGames`. Для кожного item передається:
+
+- target `gameId` і localized game label;
+- expanded/collapsed state;
+- summary тільки target game slice;
+- export/import availability;
+- target-specific operation/validation state;
+- semantic intents із target `gameId`.
+
+Plain `/settings` не монтує backup controls. `/settings?section=backup`, включно з
+deprecated `/backup` redirect, auto-expands resolved last/default item. Toggle іншого
+item закриває попередній. Під час active create/restore operation accordion, tabs і
+інші game operations недоступні.
+
+## Export flow
+
+1. User opens target game item і export dialog.
+2. Settings resolves matching installed business entry point.
+3. Business `backup.serializeSlice` серіалізує тільки target game user state.
+4. Settings формує supported version `GameBackupEnvelope` і завантажує
+   `mk-combos-{gameId}-{timestamp}.json`.
+5. Global settings, other game slices і seeded data не читаються як export payload.
+6. Local state не мутує.
+
+Structurally invalid known slice блокує export і показує readable repair/import path.
+
+## Import flow
+
+1. User activates import у target item; Settings відкриває page-owned file picker.
+2. Settings parse-ить JSON і валідить strict envelope та current version `1`.
+3. Envelope `gameId` має бути installed і точно збігатися з target item.
+4. Matching business `backup.validateSlice` валідить `slice`.
+5. Malformed JSON, unsupported version, uninstalled/mismatched `gameId` або invalid
+   slice не відкривають preview і не мутують state.
+6. Business warnings дозволяють preview, але raw business/Zod diagnostics не
+   показуються; UI використовує локалізоване review warning.
+7. Valid candidate отримує ephemeral ID; `UI-CMP-028` відкривається тільки для нього.
+8. Replace приймається лише для matching candidate ID після explicit destructive confirmation.
+9. Replace змінює тільки `state.games[targetGameId]`.
+
+Global settings, other game slices і seeded data лишаються незмінними. Після invalid
+import operation повертається в `idle`, а message лишається видимим, щоб retry був
+доступним.
 
 ## Мапа станів
 
 ### `ready`
 
-Settings завантажені з app-level state, форма показує current values.
+Applied controls доступні; persistence warning відсутній; backup items відображають
+target-specific summaries.
 
-Очікуваний UI:
+### `persistingSelection`
 
-- language і display mode controls видимі;
-- save/apply action відображає clean або no-op state;
-- persistence warnings приховані, якщо немає активної проблеми.
-
-### `editing`
-
-Користувач змінив один або кілька settings values.
-
-Очікуваний UI:
-
-- changed values показані у формі;
-- apply/save action доступний;
-- return action не має губити зміни без зрозумілої поведінки.
-
-### `saving`
-
-App застосовує settings і намагається зберегти їх у local browser settings.
-
-Очікуваний UI:
-
-- language/display mode controls можуть бути disabled;
-- save/apply action показує busy state;
-- повторне збереження недоступне до завершення operation.
+Selected value вже applied, виконується synchronous persistence attempt. Control не
+повинен показувати stale previous value.
 
 ### `sessionOnly`
 
-Persistence недоступна, але settings застосовані в поточній сесії.
-
-Очікуваний UI:
-
-- показано non-blocking session-only message;
-- користувач може продовжити роботу;
-- settings можуть бути втрачені після reload.
-
-### `saveError`
-
-Settings не вдалося зберегти permanent storage.
-
-Очікуваний UI:
-
-- `UI-CMP-030 Error State` або system message пояснює recoverable проблему;
-- selected values не губляться;
-- користувач може повторити save або продовжити session-only, якщо app це дозволяє.
-
-### `saved`
-
-Settings застосовані й збережені або прийняті як session-only.
-
-Очікуваний UI:
-
-- форма показує актуальні applied values;
-- save/apply action повертається в clean state;
-- active surfaces отримують оновлені settings через App Shell.
-
-### `returningToPreviousSurface`
-
-Користувач завершує роботу зі Settings і повертається до робочої surface.
-
-Очікуваний UI:
-
-- якщо previous surface валідна, app повертає користувача туди;
-- якщо previous surface stale або відсутня, app відкриває `UI-PAGE-003 Catalog`;
-- unsaved changes мають бути застосовані, відхилені або пояснені перед return.
+Selected value applied у memory, persistence failed, non-blocking warning visible.
 
 ### `backupCollapsed`
 
-Backup block згорнутий.
-
-Очікуваний UI:
-
-- видимий compact header або trigger для `UI-CMP-034`;
-- export/import controls не є active focus targets;
-- користувач може розгорнути block mouse, touch або keyboard input.
+Всі items або конкретний item згорнуті; hidden panels не є focus targets.
 
 ### `backupExpanded`
 
-Backup block відкритий користувачем або автоматично після deprecated redirect із `UI-PAGE-007 Backup Management`.
-
-Очікуваний UI:
-
-- показані export і import actions;
-- коротко пояснено, що backup містить local settings, custom combos і named lists;
-- focus після deprecated redirect потрапляє на backup block heading або перший safe control.
+Рівно один target game item відкритий і показує per-game actions/summary.
 
 ### `exporting`
 
-App формує full backup JSON і запускає browser download.
-
-Очікуваний UI:
-
-- export action показує busy або pending state;
-- повторний export недоступний до завершення operation;
-- local state не змінюється.
+Target export busy; accordion та інші game operations blocked; state immutable.
 
 ### `importFilePicker`
 
-Користувач обирає backup JSON для import.
-
-Очікуваний UI:
-
-- file picker відкривається з backup block;
-- cancel повертає користувача до `backupExpanded`;
-- жодна mutation не виконується до validation і confirmation.
+Page-owned native picker active; cancel повертає focus до target import action.
 
 ### `importValidating`
 
-App перевіряє backup schema і compatibility.
-
-Очікуваний UI:
-
-- import action або preview dialog показує busy state;
-- користувач не може підтвердити replace до завершення validation;
-- validation errors готуються для readable display.
-
-### `importPreview`
-
-Backup валідний і показаний preview майбутньої заміни.
-
-Очікуваний UI:
-
-- `UI-CMP-028 Import Preview Dialog` показує кількість settings, custom combos і named lists;
-- replace action чітко позначений як destructive для local state;
-- cancel закриває dialog без змін local state.
-
-### `replaceConfirm`
-
-Користувач підтверджує повну заміну local state backup-даними.
-
-Очікуваний UI:
-
-- confirmation action недвозначний;
-- import busy state блокує повторне підтвердження;
-- seeded combo data не змінюється.
+Envelope й matching game slice validating; preview/replace unavailable.
 
 ### `importInvalid`
 
-Обраний backup файл невалідний або несумісний.
+Readable message visible; preview closed; operation idle; retry available; no mutation.
 
-Очікуваний UI:
+### `importPreview`
 
-- `UI-CMP-030 Error State` або inline message показує validation errors;
-- користувач може обрати інший файл;
-- local state не змінюється.
+Matching candidate preview open; target game and one-slice impact visible.
+
+### `replaceBusy`
+
+Explicit confirmation accepted; only target game slice replacement is in progress.
 
 ### `importComplete`
 
-Local state замінено backup-даними після explicit confirmation.
+Target slice replaced; Settings/other games unchanged; success announced.
 
-Очікуваний UI:
+## Навігація і return
 
-- показано success/system message;
-- app-level settings, custom combos і named lists оновлені з backup;
-- active surface після import має перейти до safe state або лишитися Settings, якщо це підтримано router behavior.
+Перед навігацією зі working surface до Settings App Shell зберігає structured
+ephemeral return target. Return веде до нього, якщо target валідний. Direct або
+reloaded Settings використовує resolved game Catalog fallback.
 
-## Навігація і потік даних
-
-### Вхід у Settings
-
-1. Користувач відкриває `UI-CMP-033 Top Bar Dropdown Menu`.
-2. Користувач обирає Settings action.
-3. `UI-CMP-001 Global Top Bar` емітить `requestNavigateSettings`.
-4. `UI-PAGE-001 App Shell` відкриває `UI-PAGE-008 Settings`.
-5. Settings читає current app-level settings.
-
-### Deprecated перенаправлення із UI-PAGE-007
-
-1. Користувач відкриває старий route або deep link для `UI-PAGE-007 Backup Management`.
-2. `UI-PAGE-001 App Shell` не рендерить окрему backup page.
-3. App Shell відкриває `UI-PAGE-008 Settings`.
-4. Settings отримує прапорець auto-expand для `UI-CMP-034 Backup Collapsible Block`.
-5. Backup block переходить у `backupExpanded`.
-
-### Застосування settings
-
-1. Користувач змінює language або notation display mode.
-2. Settings переходить у `editing`.
-3. Користувач застосовує зміни.
-4. Settings передає selected values в app-level settings state.
-5. App-level state застосовує values до active app state.
-6. App намагається зберегти values у local browser settings.
-7. Якщо persistence недоступна, app застосовує session-only equivalent.
-
-```text
-UI-PAGE-008 Settings
-  -> selected language / notation display mode
-  -> App-level settings state
-  -> local browser settings або session-only state
-  -> UI-PAGE-001 App Shell
-  -> Active surface
-```
-
-### Backup export/import
-
-Export flow:
-
-1. Користувач розгортає `UI-CMP-034 Backup Collapsible Block`.
-2. Користувач обирає export.
-3. Settings формує full backup JSON для local settings і `games: Record<GameId, unknown>`.
-4. Browser download запускається без зміни local state.
-
-Import flow:
-
-1. Користувач розгортає `UI-CMP-034 Backup Collapsible Block`.
-2. Користувач обирає backup JSON.
-3. App валідує schema і compatibility.
-4. `UI-CMP-028 Import Preview Dialog` показує preview.
-5. Користувач підтверджує replace.
-6. Local settings і known game slices замінюються backup-даними після envelope validation і per-game slice validation.
-7. Seeded combo data не змінюється.
-
-### Deep link auto-config context
-
-Settings може показувати values, які з'явилися через valid route-prefixed deep link auto-config:
-
-- URL-derived `gameId`;
-- default `notation display mode = FGC`.
-
-Settings може редагувати `notation display mode` після auto-config. URL-derived game редагується через `UI-CMP-002 Game Switcher` у breadcrumbs. Settings не бере участі в самому auto-config flow. Він належить `UI-PAGE-001 App Shell`.
-
-### Повернення зі Settings
-
-1. Користувач обирає return action або navigation action.
-2. Якщо settings мають unsaved changes, page-level flow має застосувати, відхилити або пояснити changes.
-3. Якщо previous surface валідна, app повертається до неї.
-4. Якщо previous surface відсутня або stale, app відкриває `UI-PAGE-003 Catalog`.
+Return label називає реальний target, наприклад `Back to MK1 lists` або `Назад до
+каталогу MKXL`. Return не чекає Apply/Save, бо settings autosave. Active backup dialog/operation
+спочатку cancel-иться або завершується за власним lifecycle.
 
 ## Доступність і поведінка вводу
 
-- [`UI-CMP-003`](./UI-CMP-003.md) і [`UI-CMP-004`](./UI-CMP-004.md) мають visible label або accessible name.
-- [`UI-CMP-037`](./UI-CMP-037.md) має caption або accessible name, readable row/column relationships і non-interactive SVG icons.
-- Keyboard order іде від page heading до controls, save/apply action і return action.
-- `focus-visible` має бути помітним на settings controls, save/apply action, message actions і return action.
-- Busy state під час `saving` має бути оголошений assistive technologies.
-- Session-only і save error messages мають бути зрозумілими без кольору як єдиного сигналу.
-- Settings action у Top Bar dropdown не має відкривати inline language/display mode controls або notation legend у Top Bar.
-- Game switcher лишається global breadcrumbs control, доступним у Shell, але не є частиною Settings form focus order.
-- Backup block trigger має keyboard focus, readable label і expanded/collapsed state.
-- Export і import dialogs мають керований focus і повертають focus до backup block trigger після закриття.
-- Import preview має пояснювати replace effect без покладання тільки на колір.
-- Повернення зі Settings має повертати focus до safe surface control або page heading target.
+- Settings controls мають visible label/accessibility name і current state.
+- Autosave warning не покладається лише на color і оголошується assistive technology.
+- Tab list має localized accessible name; keyboard navigation і selected/disabled
+  states належать shared Tabs primitive.
+- Accordion headers expose expanded state; collapsed panels не focusable.
+- Focus order проходить installed game items у registry order.
+- Redirect focus переходить до auto-expanded target heading або first safe action.
+- Export/import dialogs trap focus while modal і restore focus to target item action.
+- Native picker cancel/selection повертає focus до target import flow.
+- Destructive replace чітко називає target game і one-slice effect.
+- Mismatch/uninstalled/version/validation errors мають readable target relationship.
+- `Escape` ніколи не підтверджує replace.
+- Controller-only flow дотримується prepared focus graph; native picker є єдиним external-input винятком.
 
 ## Критерії приймання
 
-- `UI-PAGE-008` є route-level page, не modal і не dropdown panel.
-- Settings рендерить [`UI-CMP-003`](./UI-CMP-003.md) і [`UI-CMP-004`](./UI-CMP-004.md) як page-owned controls.
-- Settings рендерить [`UI-CMP-037`](./UI-CMP-037.md) поруч із display mode selector як read-only companion table.
+- Settings є route-level page, не modal і не dropdown.
 - Settings не рендерить page-owned `UI-CMP-002 Game Switcher`.
-- Settings рендерить `UI-CMP-034 Backup Collapsible Block` як page-owned backup controls.
-- `UI-CMP-001 Global Top Bar` рендерить `UI-CMP-002` у breadcrumbs і не рендерить language/display mode switchers або [`UI-CMP-037`](./UI-CMP-037.md).
-- Користувач може змінити `language` і `notation display mode` у Settings.
-- Користувач може змінити installed `game` через `UI-CMP-002` у breadcrumbs.
-- Settings застосовує changes до app-level state.
-- Settings намагається зберегти changes у local browser settings.
-- Якщо persistence недоступна, Settings показує session-only state і дозволяє продовжити роботу.
-- `notation display mode` змінює тільки rendering і не змінює `movePath`, seeded data або `cachedNotation`.
-- Settings може редагувати `notation display mode`, отриманий через deep link auto-config, але не виконує auto-config самостійно.
-- Backup block згорнутий за замовчуванням.
-- Deprecated route/deep link `UI-PAGE-007 Backup Management` відкриває Settings із розгорнутим backup block.
-- Export створює full backup JSON без зміни local state.
-- Import replace змінює local settings і known game slices тільки після explicit confirmation.
-- Import не змінює seeded combo data.
-- Return action веде до previous surface або `UI-PAGE-003 Catalog` fallback.
+- Language і notation selection застосовуються та persist-яться одразу без Apply.
+- Persistence failure не відкатує selection і показує session-only warning.
+- Fresh locale `uk`/`uk-*` дає `UA`, інші locale — `EN`; default mode — `FGC`.
+- Settings рендерить один `UI-CMP-034` на кожну installed game.
+- Accordion дозволяє expanded максимум один item.
+- `/settings` відкриває Interface; `/settings?section=backup` і deprecated `/backup`
+  відкривають Game backups та auto-expand resolved last/default game.
+- Export формує `GameBackupEnvelope` тільки для target game slice і не мутує state.
+- Backup file не містить global settings, other game slices або seeded data.
+- Import відхиляє malformed JSON, version не `1`, uninstalled або mismatched `gameId`.
+- Matching game business валідить slice; invalid slice не відкриває preview.
+- Valid candidate відкриває preview перед explicit destructive replace.
+- Replace змінює лише `state.games[targetGameId]`.
+- Return веде до captured surface або resolved Catalog fallback.
 
 ## Тестові сценарії
 
-- Top Bar dropdown action відкриває `UI-PAGE-008 Settings`.
-- Settings показує current language і notation display mode.
-- Settings показує notation legend table із UI-owned SVG marker examples.
-- `/settings` не має page-owned Game Switcher.
-- Game Switcher у breadcrumbs на `/settings` із вибором `MK1` лишає route `/settings` і оновлює active/default game state.
-- Зміна language на `UA` оновлює UI і localized content.
-- Зміна display mode на `Xbox` змінює rendering notation без зміни `movePath`.
-- Save success переводить page у `saved`.
-- localStorage unavailable переводить page у `sessionOnly` і не блокує роботу.
-- Save error показує recoverable message і не губить selected values.
-- Settings після deep link auto-config показує `FGC`, а URL-derived game видно в breadcrumbs game switcher.
-- Return action повертає до previous surface.
-- Якщо previous surface stale, return action відкриває `UI-PAGE-003 Catalog`.
-- Top Bar рендерить Game Switcher у breadcrumbs, але не рендерить Language Switcher, Display Mode Switcher або Notation Legend Table.
-- Settings показує backup block згорнутим за замовчуванням.
-- Deprecated `UI-PAGE-007` route відкриває Settings із розгорнутим backup block.
-- Export action формує full backup JSON і не змінює local state.
-- Import invalid backup показує validation error і не змінює local state.
-- Import valid backup показує preview перед replace.
-- Cancel import закриває preview без змін local state.
-- Confirm replace замінює local settings і game slices backup-даними.
-
-## Відкриті уточнення
-
-- Точний вигляд apply/save interaction буде визначено під час UI реалізації.
-- Точний fallback для unsaved changes під час return буде узгоджено з app navigation behavior.
-- Точний persistence error copy буде узгоджено зі shared system message styles.
-- Точний вигляд backup block trigger і destructive confirmation copy буде узгоджено зі shared system message styles.
+- Settings показує current language/display mode без Apply action.
+- Selection `UA` одразу оновлює localized copy, `<html lang="uk">` і persistence.
+- Selection `Xbox` одразу оновлює notation rendering без mutation combo source.
+- localStorage failure зберігає selected value у session-only state.
+- Plain Settings не монтує backup items; backup tab створює два registry-backed items
+  і auto-expands resolved active game.
+- Expanding MK1 closes expanded MKXL.
+- Deprecated `/backup` expands last/default installed game item.
+- Export MK1 створює envelope `gameId = "mk1"` лише з MK1 slice.
+- Invalid JSON, unsupported version і uninstalled `gameId` не відкривають preview.
+- MKXL file у MK1 item повертає target mismatch без mutation.
+- Business-invalid slice показує error; business warning відкриває preview із warning.
+- Cancel preview не мутує state.
+- Candidate-ID mismatch не може confirm-нути replace.
+- Confirm MK1 replace не змінює settings, MKXL slice або seeded data.
+- Direct Settings return веде до resolved game Catalog fallback.
 
 ## Канонічний Responsive і Controller-only Contract
 
-Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
+Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared
+focus graph із [UI.md](../UI.md).
 
-- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повну workstation composition і spatial row/column navigation;
-- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
-- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+- `mobile` використовує vertical-first accordion і edge-safe bottom-sheet dialogs;
+- `tablet` використовує hybrid composition та explicit directional neighbors;
+- `desktop` використовує workstation composition і spatial row/column navigation;
+- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic events;
+- native backup file picker є єдиним external-input винятком.
+
+## Flat Workspace Visual Contract
+
+- Settings використовує один flat page canvas без card wrapper для кожного game item.
+- Peer sections розділяються spacing, hierarchy та одним separator.
+- Повна border/radius/shadow дозволені owning dialog overlays.
+- Text controls, status/validation messages і focus indicators зберігають semantic boundaries.

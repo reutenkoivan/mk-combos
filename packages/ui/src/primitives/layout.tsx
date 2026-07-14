@@ -82,7 +82,7 @@ export function UiRoot(props: UiRootProps) {
     <UiRootContext value={{ contrast, density, responsiveMode, theme }}>
       <div
         {...rootProps}
-        className={cx("mk-combos-ui-root min-h-full text-[var(--ui-text)]", className)}
+        className={cx("mk-combos-ui-root min-h-full text-(--ui-text)", className)}
         data-ui-contrast={contrast}
         data-ui-density={density}
         data-ui-responsive={responsiveMode}
@@ -318,7 +318,7 @@ export function WorkstationSection(props: WorkstationSectionProps) {
           material: uiMaterialModes.none,
           tone,
         }),
-        "grid min-w-0 gap-4 border-t border-[var(--ui-separator)] p-0 pt-5 first:border-t-0 first:pt-0",
+        "grid min-w-0 gap-4 border-t border-(--ui-separator) p-0 pt-5 first:border-t-0 first:pt-0",
         className,
       )}
       data-ui-workstation-section
@@ -326,12 +326,12 @@ export function WorkstationSection(props: WorkstationSectionProps) {
     >
       <header className="grid gap-1">
         {eyebrow && (
-          <span className="text-xs font-medium text-[var(--ui-accent-strong)]">{eyebrow}</span>
+          <span className="text-xs font-medium text-(--ui-accent-strong)">{eyebrow}</span>
         )}
-        <h2 className="font-[var(--ui-font-display)] text-base font-semibold tracking-[-0.01em]">
+        <h2 className="font-(--ui-font-display) text-base font-semibold tracking-[-0.01em]">
           {title}
         </h2>
-        {description && <p className="text-sm text-[var(--ui-muted-text)]">{description}</p>}
+        {description && <p className="text-sm text-(--ui-muted-text)">{description}</p>}
       </header>
       <div className="grid min-w-0 gap-4">{children}</div>
     </section>

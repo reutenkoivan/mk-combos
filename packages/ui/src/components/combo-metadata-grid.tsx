@@ -41,13 +41,13 @@ export function ComboMetadataGrid(props: ComboMetadataGridProps) {
           <div
             className={
               compact
-                ? "grid min-w-0 gap-1 border-b border-[var(--ui-separator)] py-2"
-                : "grid min-w-0 grid-cols-[minmax(8rem,0.35fr)_1fr_auto] items-center gap-3 border-b border-[var(--ui-separator)] py-2"
+                ? "grid min-w-0 gap-1 border-b border-(--ui-separator) py-2"
+                : "grid min-w-0 grid-cols-[minmax(8rem,0.35fr)_1fr_auto] items-center gap-3 border-b border-(--ui-separator) py-2"
             }
             data-metadata-importance={row.importance}
             key={row.id}
           >
-            <dt className="text-sm font-semibold text-[var(--ui-muted-text)]">{row.label}</dt>
+            <dt className="text-sm font-semibold text-(--ui-muted-text)">{row.label}</dt>
             <dd className="min-w-0 text-sm">{row.value}</dd>
             {row.statusLabel && (
               <Badge tone={row.tone ?? uiToneModes.neutral}>{row.statusLabel}</Badge>
@@ -55,7 +55,7 @@ export function ComboMetadataGrid(props: ComboMetadataGridProps) {
           </div>
         ))}
       </dl>
-      {props.annotation && <p className="text-sm text-[var(--ui-warning)]">{props.annotation}</p>}
+      {props.annotation && <p className="text-sm text-(--ui-warning)">{props.annotation}</p>}
     </section>
   );
 }

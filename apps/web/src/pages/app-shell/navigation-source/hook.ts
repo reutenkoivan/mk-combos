@@ -3,6 +3,10 @@ import { appRouteKinds } from "@mk-combos/contracts/routes/value";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
+import {
+  useLocalStateObservableState,
+  useLocalStateSource,
+} from "../../../app/local-state/provider";
 import { useAppResponsiveMode } from "../../../app/providers/provider";
 import { resolveInstalledGame } from "../../../game-business/installed-games/runtime";
 import { installedGames } from "../../../game-business/installed-games/value";
@@ -15,9 +19,10 @@ import { breadcrumbActionPrefix, shellActionIds } from "./value";
 export function useAppShellSource(route: AppShellRoute): AppShellSource {
   const responsiveMode = useAppResponsiveMode();
   const navigate = useNavigate();
+  const localState = useLocalStateObservableState();
+  const localStateSource = useLocalStateSource();
   const routeGameId = getRouteGameId(route);
   const routeBusiness = routeGameId === undefined ? undefined : resolveInstalledGame(routeGameId);
-  const [sessionGameId, setSessionGameId] = useState<GameId>(installedGames[0].id);
   const [gameMenuOpen, setGameMenuOpen] = useState(false);
   const [topBarMenuOpen, setTopBarMenuOpen] = useState(false);
   const [queuedGameId, setQueuedGameId] = useState<GameId>();
@@ -28,27 +33,25 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
   const navigationPendingRef = useRef(false);
   const navigationPending = navigationInFlight || transitionPending;
 
-  useEffect(() => {
-    if (routeBusiness !== undefined) {
-      setSessionGameId(routeBusiness.id);
-    }
-  }, [routeBusiness]);
-
-  const activeBusiness = routeBusiness ?? resolveInstalledGame(sessionGameId) ?? installedGames[0];
+  const activeBusiness =
+    routeBusiness ?? resolveInstalledGame(localState.resolvedActiveGameId) ?? installedGames[0];
 
   const closeMenus = useCallback(() => {
     setGameMenuOpen(false);
     setTopBarMenuOpen(false);
   }, []);
 
-  const requestNavigation = useCallback((request: AppShellNavigationRequest) => {
-    if (navigationPendingRef.current) {
-      return;
-    }
+  const requestNavigation = useCallback(
+    (request: AppShellNavigationRequest) => {
+      if (navigationPendingRef.current || !localState.firstLaunchCompleted) {
+        return;
+      }
 
-    navigationPendingRef.current = true;
-    setQueuedNavigation(() => request);
-  }, []);
+      navigationPendingRef.current = true;
+      setQueuedNavigation(() => request);
+    },
+    [localState.firstLaunchCompleted],
+  );
 
   useEffect(() => {
     if (queuedNavigation === undefined) {
@@ -94,20 +97,39 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
   );
 
   const navigateToSettings = useCallback(() => {
-    setSessionGameId(activeBusiness.id);
+    switch (route.kind) {
+      case appRouteKinds.builder:
+      case appRouteKinds.catalog:
+      case appRouteKinds.comboDetail:
+      case appRouteKinds.lists:
+        localStateSource.setSettingsReturnTarget(route);
+        break;
+      case appRouteKinds.settings:
+      case appShellOnlyRouteKinds.recovery:
+      case appShellOnlyRouteKinds.root:
+        localStateSource.clearSettingsReturnTarget();
+    }
+    localStateSource.rememberLastActiveGame(activeBusiness.id);
     closeMenus();
     requestNavigation(() => navigate({ search: {}, to: "/settings" }));
-  }, [activeBusiness.id, closeMenus, navigate, requestNavigation]);
+  }, [activeBusiness.id, closeMenus, localStateSource, navigate, requestNavigation, route]);
 
-  const requestSelectGame = useCallback((gameId: string) => {
-    const selectedBusiness = resolveInstalledGame(gameId);
+  const requestSelectGame = useCallback(
+    (gameId: string) => {
+      if (!localState.firstLaunchCompleted) {
+        return;
+      }
 
-    if (selectedBusiness === undefined) {
-      return;
-    }
+      const selectedBusiness = resolveInstalledGame(gameId);
 
-    requestedGameIdRef.current = selectedBusiness.id;
-  }, []);
+      if (selectedBusiness === undefined) {
+        return;
+      }
+
+      requestedGameIdRef.current = selectedBusiness.id;
+    },
+    [localState.firstLaunchCompleted],
+  );
 
   useEffect(() => {
     if (gameMenuOpen || requestedGameIdRef.current === undefined) {
@@ -144,10 +166,18 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
         navigateToCatalog(queuedGameId);
         return;
       case appRouteKinds.settings:
-        setSessionGameId(queuedGameId);
+        localStateSource.rememberLastActiveGame(queuedGameId);
         closeMenus();
     }
-  }, [closeMenus, navigateToBuilder, navigateToCatalog, navigateToLists, queuedGameId, route.kind]);
+  }, [
+    closeMenus,
+    localStateSource,
+    navigateToBuilder,
+    navigateToCatalog,
+    navigateToLists,
+    queuedGameId,
+    route.kind,
+  ]);
 
   const requestNavigateAction = useCallback(
     (action: string) => {
@@ -182,6 +212,8 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
     state: {
       activeBusiness,
       gameMenuOpen,
+      language: localState.appliedSettings.language,
+      navigationAvailable: localState.firstLaunchCompleted,
       navigationPending,
       responsiveMode,
       route,

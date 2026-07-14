@@ -227,7 +227,7 @@ function ResponsiveTopBarDrawer(props: TopBarDropdownMenuProps & { blocked: bool
         <DrawerViewport className="justify-end">
           <DrawerPopup className="h-dvh max-h-dvh w-full max-w-96 shrink-0 overflow-y-auto rounded-none border-y-0 border-r-0 pb-[max(1rem,env(safe-area-inset-bottom))] pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))] pt-[max(1rem,env(safe-area-inset-top))] [transform:translateX(var(--drawer-swipe-movement-x))] data-ending-style:[transform:translateX(100%)] data-starting-style:[transform:translateX(100%)]">
             <DrawerContent>
-              <header className="flex items-center justify-between gap-2 border-b border-[var(--ui-separator)] pb-2">
+              <header className="flex items-center justify-between gap-2 border-b border-(--ui-separator) pb-2">
                 <DrawerTitle>{navigationLabel}</DrawerTitle>
                 <DrawerClose
                   appearance={uiControlPresentationModes.icon}
@@ -238,7 +238,7 @@ function ResponsiveTopBarDrawer(props: TopBarDropdownMenuProps & { blocked: bool
               </header>
               {props.responsiveGameSwitcher && (
                 <section className="grid gap-1">
-                  <h2 className="px-2 text-xs font-semibold text-[var(--ui-muted-text)]">
+                  <h2 className="px-2 text-xs font-semibold text-(--ui-muted-text)">
                     {props.responsiveGameSwitcher.label}
                   </h2>
                   <GameSwitcher {...props.responsiveGameSwitcher} context="breadcrumbs" />
@@ -246,7 +246,7 @@ function ResponsiveTopBarDrawer(props: TopBarDropdownMenuProps & { blocked: bool
               )}
               {props.breadcrumbs && props.breadcrumbs.length > 0 && (
                 <section className="grid gap-1">
-                  <h2 className="px-2 text-xs font-semibold text-[var(--ui-muted-text)]">
+                  <h2 className="px-2 text-xs font-semibold text-(--ui-muted-text)">
                     {navigationLabel}
                   </h2>
                   {props.breadcrumbs.map((item) => (
@@ -264,7 +264,7 @@ function ResponsiveTopBarDrawer(props: TopBarDropdownMenuProps & { blocked: bool
                   ))}
                 </section>
               )}
-              <section className="grid gap-1 border-t border-[var(--ui-separator)] pt-2">
+              <section className="grid gap-1 border-t border-(--ui-separator) pt-2">
                 {actions.map((action) => (
                   <DrawerAction
                     action={action.id}

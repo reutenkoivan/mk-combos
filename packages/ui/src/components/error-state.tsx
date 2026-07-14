@@ -63,7 +63,7 @@ export function ErrorState(props: ErrorStateProps) {
   return (
     <section
       aria-labelledby={`${props.errorToken}-error-title`}
-      className="grid min-w-0 gap-3 rounded-[var(--ui-radius-surface)] border border-[var(--ui-destructive-border)] bg-[var(--ui-destructive-soft)] p-4"
+      className="grid min-w-0 gap-3 rounded-(--ui-radius-surface) border border-(--ui-destructive-border) bg-(--ui-destructive-soft) p-4"
       data-error-severity={props.severity}
       data-error-token={props.errorToken}
       data-ui-component="UI-CMP-030"
@@ -79,7 +79,7 @@ export function ErrorState(props: ErrorStateProps) {
         </Stack>
       </Group>
       {props.technicalReference && (
-        <code className="text-xs text-[var(--ui-muted-text)]">{props.technicalReference}</code>
+        <code className="text-xs text-(--ui-muted-text)">{props.technicalReference}</code>
       )}
       {props.actions.length > 0 && (
         <Group>

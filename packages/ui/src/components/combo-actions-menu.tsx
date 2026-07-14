@@ -99,7 +99,7 @@ export function ComboActionsMenu(props: ComboActionsMenuProps) {
                   <span className="grid min-w-0 gap-1">
                     <span>{descriptor.label}</span>
                     {!descriptor.available && descriptor.disabledReason && (
-                      <span className="text-xs text-[var(--ui-muted-text)]">
+                      <span className="text-xs text-(--ui-muted-text)">
                         {descriptor.disabledReason}
                       </span>
                     )}

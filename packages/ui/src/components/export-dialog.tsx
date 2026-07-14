@@ -81,7 +81,7 @@ export function ExportDialog(props: ExportDialogProps) {
                 </StatusMessage>
               )}
             </div>
-            <div className="sticky bottom-0 z-10 flex flex-col-reverse items-stretch gap-2 border-t border-[var(--ui-separator)] bg-[var(--ui-dialog)] pt-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+            <div className="sticky bottom-0 z-10 flex flex-col-reverse items-stretch gap-2 border-t border-(--ui-separator) bg-(--ui-dialog) pt-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
               <Button
                 onRequestPress={() =>
                   actionEmitter.methods.emitAction(exportDialogActions.cancelExport)

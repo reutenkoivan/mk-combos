@@ -18,7 +18,7 @@ export const MkxlDataSourceSchema = z
   .object({
     id: MkxlSourceIdSchema,
     label: z.string().min(1),
-    url: z.string().url().optional(),
+    url: z.url().optional(),
     kind: MkxlDataSourceKindSchema,
   })
   .strict();

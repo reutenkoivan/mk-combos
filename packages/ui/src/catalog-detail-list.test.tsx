@@ -332,6 +332,13 @@ describe("catalog presentation components", () => {
       />,
     );
 
+    const filterTrigger = screen.getByRole("button", { name: /Filters/ });
+    const filterChevron = filterTrigger.querySelector<SVGElement>('[data-ui-icon="chevron-down"]');
+
+    expect(filterTrigger.getAttribute("aria-expanded")).toBe("true");
+    expect(filterChevron?.getAttribute("class")).toContain("rotate-180");
+    expect(filterChevron?.getAttribute("class")).toContain("motion-reduce:transition-none");
+
     fireEvent.click(screen.getByRole("button", { name: "Midscreen" }));
     fireEvent.click(screen.getByRole("button", { name: "Easy" }));
     fireEvent.change(screen.getByRole("textbox", { name: "Minimum damage" }), {
@@ -339,7 +346,7 @@ describe("catalog presentation components", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Remove damage filter" }));
     fireEvent.click(screen.getByRole("button", { name: "Clear filters" }));
-    fireEvent.click(screen.getByRole("button", { name: /Filters/ }));
+    fireEvent.click(filterTrigger);
 
     expect(onRequestAction).toHaveBeenCalledWith(
       expect.objectContaining({

@@ -1,7 +1,9 @@
+import type { SubmitEvent } from "react";
+
 import { useComponentActionEmitter } from "../hooks/intents";
 import { Button } from "../primitives/button";
 import { StatusMessage } from "../primitives/state";
-import { uiToneModes } from "../tokens/value";
+import { uiEmphasisModes, uiToneModes } from "../tokens/value";
 import { DisplayModeSwitcher, type DisplayModeSwitcherProps } from "./display-mode-switcher";
 import { GameSwitcher, type GameSwitcherProps, gameSwitcherContexts } from "./game-switcher";
 import { LanguageSwitcher, type LanguageSwitcherProps } from "./language-switcher";
@@ -41,18 +43,36 @@ export function FirstLaunchSetupForm(props: FirstLaunchSetupFormProps) {
     sourceFocusTarget: props.sourceFocusTarget,
     sourceSurface: props.sourceSurface,
   });
+  const sessionOnly = Boolean(props.sessionOnlyAcknowledgeLabel);
+  const submitAvailable = props.confirmAvailable && !props.saving;
+  const submitAction = sessionOnly
+    ? firstLaunchSetupFormActions.acknowledgeSessionOnly
+    : firstLaunchSetupFormActions.confirm;
+  const submitLabel = props.sessionOnlyAcknowledgeLabel ?? props.confirmLabel;
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (submitAvailable) {
+      actionEmitter.methods.emitAction(submitAction);
+    }
+  };
 
   return (
-    <section className="grid min-w-0 gap-4" data-ui-component="UI-CMP-006">
+    <form
+      aria-busy={props.saving || undefined}
+      className="grid min-w-0 gap-4"
+      data-ui-component="UI-CMP-006"
+      onSubmit={handleSubmit}
+    >
       {(props.title || props.description) && (
         <header className="grid gap-1 pb-2">
           {props.title && (
-            <h1 className="font-[var(--ui-font-display)] text-xl font-semibold tracking-[-0.01em]">
+            <h2 className="font-(--ui-font-display) text-xl font-semibold tracking-[-0.01em]">
               {props.title}
-            </h1>
+            </h2>
           )}
           {props.description && (
-            <p className="text-sm text-[var(--ui-muted-text)]">{props.description}</p>
+            <p className="text-sm text-(--ui-muted-text)">{props.description}</p>
           )}
         </header>
       )}
@@ -64,31 +84,22 @@ export function FirstLaunchSetupForm(props: FirstLaunchSetupFormProps) {
         <StatusMessage tone={uiToneModes.destructive}>{props.validationMessage}</StatusMessage>
       )}
       {props.persistenceMessage && (
-        <div className="grid gap-2">
-          <StatusMessage tone={uiToneModes.warning}>{props.persistenceMessage}</StatusMessage>
-          {props.sessionOnlyAcknowledgeLabel && (
-            <Button
-              onRequestPress={() =>
-                actionEmitter.methods.emitAction(firstLaunchSetupFormActions.acknowledgeSessionOnly)
-              }
-            >
-              {props.sessionOnlyAcknowledgeLabel}
-            </Button>
-          )}
-        </div>
+        <StatusMessage tone={uiToneModes.warning}>{props.persistenceMessage}</StatusMessage>
       )}
       {!props.confirmAvailable && props.confirmDisabledReason && (
         <StatusMessage tone={uiToneModes.neutral}>{props.confirmDisabledReason}</StatusMessage>
       )}
       <Button
-        disabled={!props.confirmAvailable || props.saving}
+        className="w-full sm:justify-self-end sm:w-auto"
+        disabled={!submitAvailable}
+        emphasis={uiEmphasisModes.prominent}
         loading={props.saving}
-        onRequestPress={() => actionEmitter.methods.emitAction(firstLaunchSetupFormActions.confirm)}
         tone={uiToneModes.accent}
+        type="submit"
       >
-        {props.confirmLabel}
+        {submitLabel}
       </Button>
-    </section>
+    </form>
   );
 }
 

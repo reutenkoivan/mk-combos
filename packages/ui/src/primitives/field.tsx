@@ -38,7 +38,7 @@ export function FieldLabel(props: FieldLabelProps) {
     <label
       {...labelProps}
       htmlFor={htmlFor}
-      className={cx("text-xs font-medium text-[var(--ui-muted-text)]", className)}
+      className={cx("text-xs font-medium text-(--ui-muted-text)", className)}
       data-ui-field-label
       ref={ref}
     >
@@ -126,11 +126,11 @@ export type FieldMessageProps = UiPrimitiveProps<HTMLDivElement> & {
 };
 
 const fieldMessageToneClasses = {
-  accent: "text-[var(--ui-accent-strong)]",
-  destructive: "text-[var(--ui-destructive)]",
-  neutral: "text-[var(--ui-muted-text)]",
-  success: "text-[var(--ui-success)]",
-  warning: "text-[var(--ui-warning)]",
+  accent: "text-(--ui-accent-strong)",
+  destructive: "text-(--ui-destructive)",
+  neutral: "text-(--ui-muted-text)",
+  success: "text-(--ui-success)",
+  warning: "text-(--ui-warning)",
 } as const;
 
 export function FieldMessage(props: FieldMessageProps) {

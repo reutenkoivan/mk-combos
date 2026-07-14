@@ -932,7 +932,7 @@ describe("ComboWhiteboard", () => {
     expect(focusedStep?.dataset.focused).toBe("true");
     expect(focusedStep?.className).toContain("w-44");
     expect(focusedStep?.className).toContain("inset_0_0_0_4px_var(--ui-accent)");
-    expect(focusedStep?.className).not.toContain("shadow-[var(--ui-focus-ring)]");
+    expect(focusedStep?.className).not.toContain("shadow-(--ui-focus-ring)");
     expect(flowNode?.style.width).toBe("176px");
     expect(flowNode?.getAttribute("style")).toBe(initialGeometry);
   });
@@ -1068,8 +1068,8 @@ describe("ComboWhiteboard", () => {
     expect(pickerWindow.className).toContain("w-[min(72rem,calc(100vw-2rem))]");
     expect(pickerWindow.className).toContain("max-h-[calc(100dvh-2rem)]");
     expect(pickerWindow.className).toContain("overflow-y-auto");
-    expect(pickerWindow.className).toContain("var(--ui-popover)");
-    expect(pickerWindow.className).toContain("var(--ui-shadow)");
+    expect(pickerWindow.className).toContain("bg-(--ui-popover)");
+    expect(pickerWindow.className).toContain("shadow-(--ui-shadow)");
     expect(picker.dataset.uiComboWhiteboardPickerLayout).toBe("horizontal");
     expect(screen.getAllByText(labels.appendTarget)).toHaveLength(2);
     expect(screen.getByRole("button", { name: "Standing jab" })).toBeTruthy();
@@ -1679,15 +1679,15 @@ describe("comboWhiteboardTargetRecipe", () => {
 
     expect(focusedPicked).toContain("after:border-dashed");
     expect(focusedPicked).toContain("inset_0_0_0_4px_var(--ui-accent)");
-    expect(focusedPicked).not.toContain("shadow-[var(--ui-focus-ring)]");
+    expect(focusedPicked).not.toContain("shadow-(--ui-focus-ring)");
     expect(invalid).toContain("border-l-4");
-    expect(invalid).toContain("var(--ui-destructive)");
+    expect(invalid).toContain("border-(--ui-destructive)");
     expect(invalid).toContain("before:content-['!']");
     expect(connector).toContain("w-11");
     expect(step).toContain("w-44");
-    expect(step).toContain("border-[var(--ui-control-border)]");
-    expect(step).toContain("bg-[var(--ui-control)]");
-    expect(idle).not.toContain("shadow-[var(--ui-focus-ring)]");
+    expect(step).toContain("border-(--ui-control-border)");
+    expect(step).toContain("bg-(--ui-control)");
+    expect(idle).not.toContain("shadow-(--ui-focus-ring)");
     expect(disabled).toContain("cursor-not-allowed");
     expect(disabled).toContain("inset_0_0_0_4px_var(--ui-accent)");
     expect(busy).toContain("cursor-wait");

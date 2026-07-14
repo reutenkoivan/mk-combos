@@ -45,7 +45,7 @@ export function EmptyState(props: EmptyStateProps) {
   return (
     <section
       aria-labelledby={`${props.stateToken}-empty-title`}
-      className="grid min-w-0 place-items-start gap-3 rounded-[var(--ui-radius-surface)] bg-[var(--ui-content)] p-4"
+      className="grid min-w-0 place-items-start gap-3 rounded-(--ui-radius-surface) bg-(--ui-content) p-4"
       data-empty-state={props.stateToken}
       data-ui-component="UI-CMP-029"
     >
@@ -53,8 +53,8 @@ export function EmptyState(props: EmptyStateProps) {
         <h2 className="text-base font-semibold" id={`${props.stateToken}-empty-title`}>
           {props.title}
         </h2>
-        <p className="text-sm text-[var(--ui-muted-text)]">{props.message}</p>
-        {props.details && <p className="text-xs text-[var(--ui-muted-text)]">{props.details}</p>}
+        <p className="text-sm text-(--ui-muted-text)">{props.message}</p>
+        {props.details && <p className="text-xs text-(--ui-muted-text)">{props.details}</p>}
       </Stack>
       {(props.actions.length > 0 || props.dismissLabel) && (
         <Group>

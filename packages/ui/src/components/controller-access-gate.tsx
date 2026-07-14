@@ -46,21 +46,21 @@ export function ControllerAccessGate(props: ControllerAccessGateProps) {
     >
       <section className="grid w-full max-w-xl gap-5 p-1 sm:p-4">
         <div className="grid grid-cols-[auto_1fr] items-start gap-4">
-          <span className="grid h-12 w-12 place-items-center text-[var(--ui-accent-strong)]">
+          <span className="grid h-12 w-12 place-items-center text-(--ui-accent-strong)">
             <Gamepad2Icon aria-hidden="true" size={24} />
           </span>
           <div className="grid gap-2">
-            <span className="text-xs font-medium text-[var(--ui-accent-strong)]">
+            <span className="text-xs font-medium text-(--ui-accent-strong)">
               Controller-only access
             </span>
             <h1
-              className="font-[var(--ui-font-display)] text-2xl font-semibold tracking-[-0.01em]"
+              className="font-(--ui-font-display) text-2xl font-semibold tracking-[-0.01em]"
               id="controller-access-title"
             >
               {props.title}
             </h1>
             <p
-              className="text-sm leading-relaxed text-[var(--ui-muted-text)]"
+              className="text-sm leading-relaxed text-(--ui-muted-text)"
               id="controller-access-description"
             >
               {props.description}
@@ -86,17 +86,17 @@ export function ControllerAccessGate(props: ControllerAccessGateProps) {
         </StatusMessage>
 
         {props.profileLabel && (
-          <p className="text-xs text-[var(--ui-muted-text)]">{props.profileLabel}</p>
+          <p className="text-xs text-(--ui-muted-text)">{props.profileLabel}</p>
         )}
 
         {props.hints && props.hints.length > 0 && (
-          <ul className="grid list-none divide-y divide-[var(--ui-separator)] border-y border-[var(--ui-separator)] p-0 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+          <ul className="grid list-none divide-y divide-(--ui-separator) border-y border-(--ui-separator) p-0 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
             {props.hints.map((hint) => (
               <li
                 className="grid grid-cols-[auto_1fr] items-center gap-2 py-3 sm:px-3"
                 key={`${hint.inputLabel}-${hint.label}`}
               >
-                <span className="grid min-h-8 min-w-8 place-items-center bg-[var(--ui-control)] px-2 font-bold text-[var(--ui-accent-strong)]">
+                <span className="grid min-h-8 min-w-8 place-items-center bg-(--ui-control) px-2 font-bold text-(--ui-accent-strong)">
                   {hint.inputLabel}
                 </span>
                 <span className="text-sm">{hint.label}</span>

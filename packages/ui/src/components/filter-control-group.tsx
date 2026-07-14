@@ -5,6 +5,7 @@ import { DisclosurePanel, DisclosureRoot, DisclosureTrigger } from "../primitive
 import { Field, FieldLabel, FieldMessage, TextInput } from "../primitives/field";
 import { Group, Stack } from "../primitives/layout";
 import { LoadingIndicator, StatusMessage } from "../primitives/state";
+import { cx } from "../recipes/class-name";
 import { uiToneModes } from "../tokens/value";
 import { SelectableItem } from "./internal/selectable-item";
 import type { ComponentActionIntent } from "./type";
@@ -211,9 +212,16 @@ export function FilterControlGroup(props: FilterControlGroupProps) {
           <Group justify="between">
             <DisclosureTrigger className="justify-between">
               {props.label}
-              <ChevronDownIcon aria-hidden="true" size="small" />
+              <ChevronDownIcon
+                aria-hidden="true"
+                className={cx(
+                  "shrink-0 transition-transform duration-200 ease-out motion-reduce:transition-none",
+                  props.expanded && "rotate-180",
+                )}
+                size="small"
+              />
             </DisclosureTrigger>
-            <span aria-live="polite" className="text-sm text-[var(--ui-muted-text)]">
+            <span aria-live="polite" className="text-sm text-(--ui-muted-text)">
               {props.resultCountLabel}
             </span>
             {props.activeFilters.length > 0 && (
@@ -232,7 +240,7 @@ export function FilterControlGroup(props: FilterControlGroupProps) {
             >
               {props.activeFilters.map((chip) => (
                 <li
-                  className="inline-flex items-center gap-1 rounded-full bg-[var(--ui-selection-muted)] px-2 py-1 text-xs"
+                  className="inline-flex items-center gap-1 rounded-full bg-(--ui-selection-muted) px-2 py-1 text-xs"
                   key={chip.id}
                 >
                   {chip.label}

@@ -28,7 +28,12 @@ import {
   notationLegendTableLayouts,
 } from "../components/notation-legend-table";
 import { topBarDropdownMenuChangeActions } from "../components/top-bar-dropdown-menu";
-import type { BackupDisclosureState, BreadcrumbItem, UiResponsiveMode } from "../components/type";
+import type {
+  BackupDisclosureState,
+  BackupOperationState,
+  BreadcrumbItem,
+  UiResponsiveMode,
+} from "../components/type";
 import {
   backupDisclosureStates,
   backupOperationStates,
@@ -110,23 +115,18 @@ const displayModeOptions = [
   },
 ] as const;
 
-const localStateSummary = {
+const mkxlLocalStateSummary = {
   gameSlices: [
     {
       customComboCount: 3,
       gameId: "mkxl",
       label: "MKXL",
-      status: backupSliceStatuses.ready,
-    },
-    {
-      customComboCount: 2,
-      gameId: "mk1",
-      label: "MK1",
+      namedListCount: 2,
       status: backupSliceStatuses.ready,
     },
   ],
   persistenceMode: backupPersistenceModes.persistent,
-  settingsSummary: "Українська · PlayStation",
+  settingsSummary: "Ready to create a backup.",
 } as const;
 
 type StoryInitialDialog = "export" | "import" | "none";
@@ -136,6 +136,7 @@ type ShellSettingsStoryArgs = {
   initialActiveBreadcrumbId: (typeof breadcrumbFacts)[number]["id"];
   initialActiveGameId: (typeof games)[number]["gameId"];
   initialBackupDisclosureState: BackupDisclosureState;
+  initialBackupOperationState: BackupOperationState;
   initialDialog: StoryInitialDialog;
   initialDisplayMode: NotationDisplayMode;
   initialGameMenuOpen: boolean;
@@ -157,6 +158,7 @@ const meta = {
     initialActiveBreadcrumbId: "detail",
     initialActiveGameId: "mkxl",
     initialBackupDisclosureState: backupDisclosureStates.expanded,
+    initialBackupOperationState: backupOperationStates.idle,
     initialDialog: "none",
     initialDisplayMode: notationDisplayModes.PlayStation,
     initialGameMenuOpen: false,
@@ -177,6 +179,10 @@ const meta = {
     initialBackupDisclosureState: {
       control: "select",
       options: [backupDisclosureStates.collapsed, backupDisclosureStates.expanded],
+    },
+    initialBackupOperationState: {
+      control: "select",
+      options: Object.values(backupOperationStates),
     },
     initialDialog: { control: "select", options: ["none", "export", "import"] },
     initialDisplayMode: {
@@ -352,6 +358,7 @@ function ShellStoryHarness(props: {
 function SettingsStoryHarness(props: {
   contrast: UiContrastMode;
   initialBackupDisclosureState: BackupDisclosureState;
+  initialBackupOperationState: BackupOperationState;
   initialDialog: StoryInitialDialog;
   initialDisplayMode: NotationDisplayMode;
   initialLanguage: LanguageCode;
@@ -366,22 +373,23 @@ function SettingsStoryHarness(props: {
   const [displayMode, setDisplayMode] = useState<NotationDisplayMode>(props.initialDisplayMode);
   const [language, setLanguage] = useState<LanguageCode>(props.initialLanguage);
   const [status, setStatus] = useState(props.initialStatus);
-  const storyLocalStateSummary = {
-    ...localStateSummary,
-    settingsSummary: `${language === languageCodes.UA ? "Українська" : "English"} · ${displayMode}`,
+  const importCandidateSummary = {
+    ...mkxlLocalStateSummary,
+    lastExportedAt: "2026-07-14T10:00:00.000Z",
+    settingsSummary: "This file contains only MKXL local data.",
   };
 
   return (
     <Frame contrast={props.contrast} layoutMode={props.layoutMode} theme={props.theme}>
       <main className="grid w-full max-w-3xl gap-1">
-        <header className="grid gap-1 border-l-4 border-[var(--ui-accent)] py-1 pl-3">
-          <span className="text-xs font-medium text-[var(--ui-accent-strong)]">
+        <header className="grid gap-1 border-l-4 border-(--ui-accent) py-1 pl-3">
+          <span className="text-xs font-medium text-(--ui-accent-strong)">
             System configuration
           </span>
-          <h1 className="font-[var(--ui-font-display)] text-2xl font-semibold tracking-[-0.01em]">
+          <h1 className="font-(--ui-font-display) text-2xl font-semibold tracking-[-0.01em]">
             Settings
           </h1>
-          <p className="text-sm text-[var(--ui-muted-text)]">
+          <p className="text-sm text-(--ui-muted-text)">
             Interface, notation reference, and local data controls.
           </p>
         </header>
@@ -427,56 +435,56 @@ function SettingsStoryHarness(props: {
           exportAvailability={{ available: true }}
           exportDialog={{
             cancelLabel: "Cancel",
-            confirmLabel: "Export backup",
-            description: "Review the prepared local-state summary before export.",
+            confirmLabel: "Download file",
+            description: "Download this game's local data as a file.",
             exportAvailability: { available: true },
-            localStateSummary: storyLocalStateSummary,
+            localStateSummary: mkxlLocalStateSummary,
             onRequestAction: ({ action }) => {
               setActiveDialog("none");
               setStatus(
                 action === exportDialogActions.confirmExport
-                  ? "Export confirmed"
-                  : "Export cancelled",
+                  ? "Backup download confirmed"
+                  : "Backup download cancelled",
               );
             },
             open: activeDialog === "export",
             sourceFocusTarget: "storybook-export",
             sourceSurface: "storybook-settings",
-            title: "Export backup",
+            title: "Create a MKXL backup",
           }}
-          exportLabel="Export backup"
+          exportLabel="Create backup"
           importAvailability={{ available: true }}
-          importExternalInputNotice="Opening and using the system file picker requires touch, mouse, or keyboard input."
-          importLabel="Import backup"
+          importLabel="Restore from backup"
           importPreviewDialog={{
             backupCandidateId: "storybook-candidate",
             cancelLabel: "Cancel",
-            confirmLabel: "Replace local data",
+            confirmLabel: "Replace MKXL data",
             confirmationAvailability: { available: true },
-            description: "This story uses a prepared and validated backup candidate.",
-            localStateSummary: storyLocalStateSummary,
+            description: "Review the file before replacing MKXL data in this browser.",
+            localStateSummary: importCandidateSummary,
             onRequestAction: ({ action }) => {
               setActiveDialog("none");
               setStatus(
                 action === importPreviewDialogActions.confirmReplace
-                  ? "Import replacement confirmed"
+                  ? "Restore confirmed"
                   : action === importPreviewDialogActions.retryFileSelection
                     ? "New file selection requested"
-                    : "Import cancelled",
+                    : "Restore cancelled",
               );
             },
             open: activeDialog === "import",
-            replaceImpactSummary: "Settings and both game slices will be replaced.",
+            replaceImpactSummary:
+              "Only MKXL custom combos, named lists, and catalog context will be replaced.",
             retryLabel: "Choose another file",
             sourceFocusTarget: "storybook-import",
             sourceSurface: "storybook-settings",
-            title: "Import backup",
+            title: "Restore MKXL from this backup?",
             validationResult: {
-              message: "Backup is valid",
+              message: "The MKXL backup is valid",
               status: backupValidationStatuses.valid,
             },
           }}
-          localStateSummary={storyLocalStateSummary}
+          localStateSummary={mkxlLocalStateSummary}
           onRequestAction={({ action }) => {
             if (
               action === backupCollapsibleBlockActions.expand ||
@@ -499,10 +507,10 @@ function SettingsStoryHarness(props: {
             }
             setActiveDialog("import");
           }}
-          operationState={backupOperationStates.idle}
+          operationState={props.initialBackupOperationState}
           sourceFocusTarget="storybook-backup"
           sourceSurface="storybook-settings"
-          title="Backup"
+          title="MKXL"
           validationResult={{ status: backupValidationStatuses.none }}
         />
         <div aria-live="polite">
@@ -532,11 +540,11 @@ function FirstLaunchStoryHarness(props: {
       <main className="w-full max-w-3xl">
         <FirstLaunchSetupForm
           confirmAvailable
-          confirmLabel="Continue"
-          description="Choose the defaults used by the controller-first interface."
+          confirmLabel="Open catalog"
+          description="Choose a starting game, interface language, and button labels. You can change them later."
           displayModeSwitcher={{
             availableDisplayModes: displayModeOptions,
-            label: "Notation display mode",
+            label: "Button labels",
             onRequestSelectDisplayMode: ({ value }) => setDisplayMode(value),
             selectedDisplayMode: displayMode,
             sourceSurface: "storybook-first-launch",
@@ -544,7 +552,7 @@ function FirstLaunchStoryHarness(props: {
           gameSwitcher={{
             availableGames: games,
             context: gameSwitcherContexts.firstLaunch,
-            label: "Choose game",
+            label: "Starting game",
             menuOpen: gameMenu.state.open,
             onRequestMenuChange: ({ action }) =>
               gameMenu.methods.setOpen(action === gameSwitcherMenuActions.open),
@@ -557,27 +565,23 @@ function FirstLaunchStoryHarness(props: {
           }}
           languageSwitcher={{
             availableLanguages: languageOptions,
-            label: "Language",
+            label: "Interface language",
             onRequestSelectLanguage: ({ value }) => setLanguage(value),
             selectedLanguage: language,
             sourceSurface: "storybook-first-launch",
           }}
           notationLegend={{
-            caption: "Notation legend",
+            caption: "Preview",
             layout:
               props.layoutMode === uiResponsiveModes.desktop
                 ? notationLegendTableLayouts.table
                 : notationLegendTableLayouts.stacked,
-            legendRows: createNotationLegendRows([
-              notationDisplayModes.FGC,
-              notationDisplayModes.PlayStation,
-              notationDisplayModes.Xbox,
-            ]),
-            markersHeaderLabel: "Markers",
-            modeHeaderLabel: "Mode",
+            legendRows: createNotationLegendRows([displayMode]),
+            markersHeaderLabel: "Buttons",
+            modeHeaderLabel: "Format",
           }}
           sourceSurface="storybook-first-launch"
-          title="Initial setup"
+          title="Your preferences"
         />
       </main>
     </Frame>
@@ -601,6 +605,7 @@ const settingsControlNames = [
   "theme",
   "contrast",
   "initialBackupDisclosureState",
+  "initialBackupOperationState",
   "initialDialog",
   "initialDisplayMode",
   "initialLanguage",
@@ -640,6 +645,7 @@ const renderSettingsStory = (args: ShellSettingsStoryArgs) => (
     key={JSON.stringify({
       contrast: args.contrast,
       initialBackupDisclosureState: args.initialBackupDisclosureState,
+      initialBackupOperationState: args.initialBackupOperationState,
       initialDialog: args.initialDialog,
       initialDisplayMode: args.initialDisplayMode,
       initialLanguage: args.initialLanguage,
@@ -696,6 +702,17 @@ export const ControllerHintsOpen: Story = {
 export const SettingsControls: Story = {
   args: {
     initialStatus: "Settings are ready for interaction",
+    layoutMode: uiResponsiveModes.desktop,
+  },
+  globals: storyViewportGlobals.desktop,
+  parameters: { controls: { include: settingsControlNames } },
+  render: renderSettingsStory,
+};
+
+export const BackupAccordionLocked: Story = {
+  args: {
+    initialBackupOperationState: backupOperationStates.replaceConfirm,
+    initialStatus: "A backup operation owns the accordion; disclosure and actions are locked",
     layoutMode: uiResponsiveModes.desktop,
   },
   globals: storyViewportGlobals.desktop,

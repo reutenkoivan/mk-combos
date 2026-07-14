@@ -20,26 +20,23 @@ export const indicatorRecipe = tv({
       fixed: "rounded-md",
     },
     state: {
-      active: "bg-[var(--ui-control-active)]",
+      active: "bg-(--ui-control-active)",
       disabled: "opacity-50",
-      focusVisible: "shadow-[var(--ui-focus-ring)]",
-      hover: "bg-[var(--ui-control-hover)]",
+      focusVisible: "shadow-(--ui-focus-ring)",
+      hover: "bg-(--ui-control-hover)",
       idle: "",
-      invalid: "border-[var(--ui-destructive-border)] bg-[var(--ui-destructive-soft)]",
+      invalid: "border-(--ui-destructive-border) bg-(--ui-destructive-soft)",
       loading: "opacity-80",
-      open: "bg-[var(--ui-control-active)]",
-      selected: "border-[var(--ui-selection)] bg-[var(--ui-selection-muted)]",
+      open: "bg-(--ui-control-active)",
+      selected: "border-(--ui-selection) bg-(--ui-selection-muted)",
     },
     tone: {
-      accent:
-        "border-[var(--ui-accent)] bg-[var(--ui-selection-muted)] text-[var(--ui-accent-strong)]",
+      accent: "border-(--ui-accent) bg-(--ui-selection-muted) text-(--ui-accent-strong)",
       destructive:
-        "border-[var(--ui-destructive-border)] bg-[var(--ui-destructive-soft)] text-[var(--ui-destructive)]",
-      neutral: "border-[var(--ui-control-border)] bg-[var(--ui-control)] text-[var(--ui-text)]",
-      success:
-        "border-[var(--ui-success-border)] bg-[var(--ui-success-soft)] text-[var(--ui-success)]",
-      warning:
-        "border-[var(--ui-warning-border)] bg-[var(--ui-warning-soft)] text-[var(--ui-warning)]",
+        "border-(--ui-destructive-border) bg-(--ui-destructive-soft) text-(--ui-destructive)",
+      neutral: "border-(--ui-control-border) bg-(--ui-control) text-(--ui-text)",
+      success: "border-(--ui-success-border) bg-(--ui-success-soft) text-(--ui-success)",
+      warning: "border-(--ui-warning-border) bg-(--ui-warning-soft) text-(--ui-warning)",
     },
   },
 });

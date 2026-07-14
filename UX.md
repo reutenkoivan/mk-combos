@@ -11,14 +11,16 @@
 - Settings зберігають default/last active game, але не перемагають valid route prefix.
 - Game-specific правила не змішуються в UX: MKXL має variation/stage/interactable контекст, MK1 має main character/kameo контекст.
 - Локальні lists і custom combos scoped by `gameId`.
-- Backup переносить усі game slices, але кожну slice валідить відповідний business entry point.
+- Кожен backup переносить рівно одну game slice; global settings та slices інших ігор не входять у файл.
+- Settings показує по одному backup accordion item для кожної installed game, а slice валідить відповідний business entry point.
+- Settings autosave-ить language і notation display mode одразу після вибору; persistence failure лишає value активним у session-only режимі.
 
 ## Контексти входу
 
 ### Перший запуск
 
 - [`US-001`](./ux/US-001.md): Перший запуск.
-  Мета: дати користувачу пройти обов'язкове легке налаштування default language, default game і notation display mode перед root catalog entry.
+  Мета: дати користувачу пройти обов'язкове легке налаштування default language, default game і notation display mode перед root catalog entry; `uk`/`uk-*` browser locale дає default `UA`, решта locale — `EN`.
   Статус деталізації: Описано.
 
 ### Перший запуск за прямим посиланням
@@ -42,11 +44,11 @@
 ### Початкове налаштування
 
 - `US-008`: Перемикання мови `EN/UA`.
-  Мета: дати користувачу змінити мову інтерфейсу та локалізованого контенту.
+  Мета: дати користувачу змінити й одразу autosave-нути мову інтерфейсу та локалізованого контенту.
   Статус деталізації: Заплановано.
 
 - `US-009`: Перемикання відображення інпутів `FGC/PlayStation/Xbox`.
-  Мета: показувати одне й те саме combo у зручному для користувача форматі інпутів.
+  Мета: показувати одне й те саме combo у зручному форматі та одразу autosave-нути selected display mode.
   Статус деталізації: Заплановано.
 
 - `US-021`: Перегляд controller hints.
@@ -113,12 +115,12 @@
 
 ### Перенесення та відновлення даних
 
-- `US-017`: Експорт full backup.
-  Мета: дати користувачу зберегти settings і `games: Record<GameId, unknown>` backup.
+- `US-017`: Експорт per-game backup.
+  Мета: дати користувачу експортувати `GameBackupEnvelope` для однієї installed game без global settings та slices інших ігор.
   Статус деталізації: Заплановано.
 
-- `US-018`: Імпорт full backup з preview і replace.
-  Мета: дати користувачу відновити local state після envelope validation і per-game slice validation.
+- `US-018`: Імпорт per-game backup з preview і replace.
+  Мета: дати користувачу замінити лише selected game slice після envelope/version/target validation і game-business validation; mismatched або uninstalled `gameId` відхиляється.
   Статус деталізації: Заплановано.
 
 ### Керування контролером

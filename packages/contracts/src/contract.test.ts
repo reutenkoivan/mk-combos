@@ -1,3 +1,5 @@
+import * as backupSchemaEntry from "@mk-combos/contracts/backup/schema";
+import type { GameBackupEnvelope as GameBackupEnvelopeFromSubpath } from "@mk-combos/contracts/backup/type";
 import {
   createReactTsdownConfig,
   createTsdownConfig,
@@ -6,10 +8,10 @@ import { createViteConfig } from "@mk-combos/contracts/build/vite/config";
 import { withStorybookViteConfig } from "@mk-combos/contracts/build/vite/storybook";
 import * as contractEntry from "@mk-combos/contracts/contract";
 import {
-  type BackupEnvelope,
   type ComboDetailRouteParams,
   type ComboRef,
   contractGroups,
+  type GameBackupEnvelope,
   type LocalizedText,
   mkCombosContract,
 } from "@mk-combos/contracts/contract";
@@ -102,6 +104,10 @@ describe("@mk-combos/contracts", () => {
       schema: "@mk-combos/contracts/backup/schema",
       type: "@mk-combos/contracts/backup/type",
     });
+    expect(Object.keys(backupSchemaEntry).sort()).toEqual([
+      "GameBackupEnvelopeSchema",
+      "createGameBackupEnvelopeSchema",
+    ]);
     expect(contractGroups.result).toEqual({
       runtime: "@mk-combos/contracts/result/runtime",
       schema: "@mk-combos/contracts/result/schema",
@@ -142,21 +148,17 @@ describe("@mk-combos/contracts", () => {
     expect(text.fallback).toBe("Combo");
   });
 
-  it("models backup envelopes keyed by open game ids", () => {
+  it("models a backup envelope for one open game id", () => {
     const backup = {
       version: 1,
       exportedAt: "2026-07-02T00:00:00.000Z",
-      settings: {
-        language: "EN",
-        defaultGameId: "future-game",
-        notationDisplayMode: "FGC",
-      },
-      games: {
-        "future-game": { customCombos: [] },
-      },
-    } satisfies BackupEnvelope;
+      gameId: "future-game",
+      slice: { customCombos: [] },
+    } satisfies GameBackupEnvelope;
+    const subpathBackup: GameBackupEnvelopeFromSubpath = backup;
 
-    expect(backup.games["future-game"]).toEqual({ customCombos: [] });
+    expect(subpathBackup.gameId).toBe("future-game");
+    expect(subpathBackup.slice).toEqual({ customCombos: [] });
   });
 
   it("creates result helpers with stable discriminants", () => {

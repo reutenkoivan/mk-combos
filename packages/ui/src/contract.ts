@@ -140,6 +140,7 @@ export const uiContractGroups = {
     positioning: "@mk-combos/ui/primitives/positioning",
     segmentedControl: "@mk-combos/ui/primitives/segmented-control",
     state: "@mk-combos/ui/primitives/state",
+    tabs: "@mk-combos/ui/primitives/tabs",
   },
   styles: {
     css: "@mk-combos/ui/styles.css",

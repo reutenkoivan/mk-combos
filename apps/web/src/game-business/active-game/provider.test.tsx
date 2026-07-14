@@ -26,7 +26,7 @@ describe("ActiveGameBusinessProvider", () => {
   });
 
   it("fails clearly outside the app shell provider", () => {
-    expect(() => render(<ActiveGameConsumer onRead={vi.fn()} />)).toThrowError(
+    expect(() => render(<ActiveGameConsumer onRead={vi.fn()} />)).toThrow(
       "useActiveGameBusiness must be used within ActiveGameBusinessProvider",
     );
   });

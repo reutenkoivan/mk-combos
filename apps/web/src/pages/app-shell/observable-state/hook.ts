@@ -6,32 +6,72 @@ import type { GlobalTopBarProps } from "@mk-combos/ui/components/global-top-bar"
 import { topBarDropdownMenuChangeActions } from "@mk-combos/ui/components/top-bar-dropdown-menu";
 import { useMemo } from "react";
 
+import { getAppCopy } from "../../../app/localization/runtime";
+import { installedGameOptions } from "../../../game-business/installed-games/presentation";
 import type { AppShellSource } from "../navigation-source/type";
+import { shellActionIds } from "../navigation-source/value";
 import { getBreadcrumbs } from "./runtime";
 import type { AppShellViewModel } from "./type";
-import { installedGameOptions, shellSourceSurface, topBarActions } from "./value";
+import { shellSourceSurface } from "./value";
 
 export function useAppShellObservableState(source: AppShellSource): AppShellViewModel {
+  const copy = getAppCopy(source.state.language).shell;
   const breadcrumbs = useMemo(() => {
-    const routeBreadcrumbs = getBreadcrumbs(source.state.route, source.state.activeBusiness.id);
+    const routeBreadcrumbs = getBreadcrumbs(
+      source.state.route,
+      source.state.activeBusiness.id,
+      copy,
+    );
 
-    if (!source.state.navigationPending) {
+    if (source.state.navigationAvailable && !source.state.navigationPending) {
       return routeBreadcrumbs;
     }
 
     return routeBreadcrumbs.map((item) => (item.current ? item : { ...item, disabled: true }));
-  }, [source.state.activeBusiness.id, source.state.navigationPending, source.state.route]);
+  }, [
+    copy,
+    source.state.activeBusiness.id,
+    source.state.navigationAvailable,
+    source.state.navigationPending,
+    source.state.route,
+  ]);
+  const topBarActions = useMemo(
+    () => [
+      {
+        available: source.state.navigationAvailable,
+        id: shellActionIds.catalog,
+        label: copy.catalog,
+      },
+      {
+        available: source.state.navigationAvailable,
+        id: shellActionIds.lists,
+        label: copy.namedLists,
+      },
+      {
+        available: source.state.navigationAvailable,
+        id: shellActionIds.builder,
+        label: copy.builder,
+      },
+      {
+        available: source.state.navigationAvailable,
+        id: shellActionIds.settings,
+        label: copy.settings,
+      },
+    ],
+    [copy, source.state.navigationAvailable],
+  );
   const menuActions = useMemo(() => {
     const breadcrumbIds = new Set(breadcrumbs.map((item) => item.id));
 
     return topBarActions.filter((action) => !breadcrumbIds.has(action.id));
-  }, [breadcrumbs]);
+  }, [breadcrumbs, topBarActions]);
 
   const gameSwitcher = {
     availableGames: installedGameOptions,
     busy: source.state.navigationPending,
     context: gameSwitcherContexts.breadcrumbs,
-    label: "Choose game",
+    disabled: !source.state.navigationAvailable,
+    label: copy.chooseGame,
     menuOpen: source.state.gameMenuOpen,
     onRequestMenuChange: ({ action }) =>
       source.methods.requestGameMenuOpen(action === gameSwitcherMenuActions.open),
@@ -43,7 +83,7 @@ export function useAppShellObservableState(source: AppShellSource): AppShellView
 
   const topBar: GlobalTopBarProps = {
     breadcrumbs: {
-      ariaLabel: "Breadcrumbs",
+      ariaLabel: copy.breadcrumbs,
       gameSwitcher,
       items: breadcrumbs,
       layoutMode: source.state.responsiveMode,
@@ -55,16 +95,17 @@ export function useAppShellObservableState(source: AppShellSource): AppShellView
     menu: {
       actions: menuActions,
       breadcrumbs,
-      label: "Open global menu",
+      disabled: !source.state.navigationAvailable,
+      label: copy.openGlobalMenu,
       layoutMode: source.state.responsiveMode,
       navigationPending: source.state.navigationPending,
       onRequestAction: ({ action }) => source.methods.requestNavigateAction(action),
       onRequestMenuChange: ({ action }) =>
         source.methods.requestTopBarMenuOpen(action === topBarDropdownMenuChangeActions.open),
       open: source.state.topBarMenuOpen,
-      responsiveCloseLabel: "Close navigation",
+      responsiveCloseLabel: copy.closeNavigation,
       responsiveGameSwitcher: gameSwitcher,
-      responsiveNavigationLabel: "Navigation",
+      responsiveNavigationLabel: copy.navigation,
       sourceFocusTarget: "app-shell-global-menu",
       sourceSurface: shellSourceSurface,
     },

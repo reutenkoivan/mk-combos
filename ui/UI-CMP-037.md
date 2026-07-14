@@ -221,7 +221,7 @@ Table є read-only reference component:
 Компонент не відповідає за:
 
 - display mode selection;
-- Settings save/apply lifecycle;
+- Settings immediate apply/autosave lifecycle;
 - first-launch completion marker;
 - persistence;
 - route navigation;
@@ -297,7 +297,7 @@ Related display mode setting invalid або unsupported.
 1. `UI-PAGE-008` рендерить [`UI-CMP-004 Display Mode Switcher`](./UI-CMP-004.md).
 2. Page рендерить `UI-CMP-037` поруч зі switcher-ом.
 3. Користувач порівнює display modes і modifiers.
-4. Table не впливає на Settings draft або save/apply state.
+4. Table не впливає на Settings applied value, autosave або persistence state.
 
 ### Renderer Consistency
 

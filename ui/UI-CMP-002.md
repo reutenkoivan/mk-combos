@@ -28,7 +28,7 @@
 
 ## Володіння
 
-`UI-PAGE-001 App Shell` володіє active `gameId`, route, active business entry point, navigation strategy, last active/default game persistence і recoverable fallback behavior.
+`UI-PAGE-001 App Shell` володіє active `gameId`, route, active business entry point, navigation strategy, initial `defaultGameId`, post-launch `lastActiveGameId` persistence і recoverable fallback behavior.
 
 `UI-CMP-001 Global Top Bar` розміщує [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md). Breadcrumbs рендерить `UI-CMP-002` як перший game crumb і передає selection intent в App Shell.
 
@@ -89,6 +89,7 @@ type GameSwitcherOption = {
 
 - У `breadcrumbs` context `SingleSelectControl` займає перший crumb і стоїть лівіше за `Catalog`/current trail items.
 - У `firstLaunch` context `SingleSelectControl` стоїть над language і display mode controls усередині `UI-CMP-006`.
+- У `firstLaunch` context localized `label` видимий над trigger і програмно називає control.
 - Options list є controlled surface від parent model; selection state не зберігається всередині switcher.
 
 ### Breadcrumbs context
@@ -114,6 +115,8 @@ Switcher має виглядати як частина breadcrumb trail, але 
 У `firstLaunch` context компонент рендериться в `UI-CMP-006 First-Launch Setup Form` поруч із language і display mode controls.
 
 Selection у цьому context не запускає route navigation і не завершує setup. Вона тільки оновлює pending initial game value.
+Form-row label не приховується в `aria-label`: користувач бачить призначення control до
+відкриття menu.
 
 ## Вхідні дані
 
@@ -153,7 +156,7 @@ Parent flow інтерпретує `requestSelectGame` за context:
 Компонент не відповідає за:
 
 - route redirect або route replacement;
-- persistence last active/default game;
+- persistence initial `defaultGameId` або post-launch `lastActiveGameId`;
 - first-launch completion marker;
 - browser locale fallback;
 - вибір character, variation або kameo;
@@ -255,7 +258,7 @@ Selected game id не знайдений серед installed games.
 2. Користувач вибирає installed game.
 3. `UI-CMP-002` емітить `requestSelectGame(targetGameId)`.
 4. `UI-CMP-001` передає intent в `UI-PAGE-001 App Shell`.
-5. App Shell передає target game в app-level settings state, який оновлює active/default або last active game і намагається persist-ити його.
+5. App Shell передає target game в app-level settings state, який оновлює лише `lastActiveGameId` і намагається persist-ити його. `defaultGameId` після initial setup не змінюється.
 6. App Shell виконує analogous navigation або fallback.
 
 Navigation strategy:
@@ -266,7 +269,7 @@ Navigation strategy:
 | `UI-PAGE-005 Named Lists` | Відкрити `/:targetGameId/lists`. |
 | `UI-PAGE-006 Custom Combo Builder` | Відкрити `/:targetGameId/builder` без перенесення game-specific builder path. |
 | `UI-PAGE-004 Combo Detail` | Fallback до `/:targetGameId/catalog`, бо combo ids/context не cross-game. |
-| `UI-PAGE-008 Settings` | Лишитися на `/settings`, але оновити active/default або last active game value. |
+| `UI-PAGE-008 Settings` | Лишитися на `/settings`, але оновити `lastActiveGameId`, не змінюючи `defaultGameId`. |
 
 Game switch не видаляє local user data іншої гри.
 
@@ -303,7 +306,7 @@ Valid route-prefixed deep link перемагає saved/default game.
 - Lists game switch відкриває target game Lists.
 - Builder game switch відкриває target game Builder без перенесення path.
 - Detail game switch fallback-ить до target game Catalog.
-- Settings game switch лишає route `/settings` і оновлює active/default або last active game.
+- Settings game switch лишає route `/settings`, оновлює `lastActiveGameId` і не змінює `defaultGameId`.
 - Game switch не видаляє named lists, custom combos або local game slices іншої гри.
 
 ## Тестові сценарії
@@ -315,7 +318,7 @@ Valid route-prefixed deep link перемагає saved/default game.
 - Вибір `MK1` із breadcrumbs на `/mkxl/lists` відкриває `/mk1/lists` і не показує `mkxl` lists.
 - Вибір `MK1` із breadcrumbs на `/mkxl/builder` відкриває `/mk1/builder` без перенесення current builder path.
 - Вибір `MK1` із breadcrumbs на `/mkxl/combos/seeded/...` відкриває `/mk1/catalog`.
-- Вибір `MK1` із breadcrumbs на `/settings` лишає `/settings` і оновлює active/default game state.
+- Вибір `MK1` із breadcrumbs на `/settings` лишає `/settings`, оновлює `lastActiveGameId` і не змінює `defaultGameId`.
 - Direct link `/mk1/catalog` у fresh browser bypass-ить setup і breadcrumbs показують `MK1`.
 - Disabled game option не емітить selection і має readable disabled reason.
 - Invalid selected game показує recoverable message і не auto-select-ить іншу game без parent decision.
@@ -323,7 +326,6 @@ Valid route-prefixed deep link перемагає saved/default game.
 ## Відкриті уточнення
 
 - Exact visual primitive для breadcrumbs context може бути menu button, compact listbox або equivalent single-select control.
-- Exact persistence policy для last active/default game після breadcrumb switch належить App Shell implementation.
 - Повний standalone contract [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md) описаний окремо; цей документ фіксує тільки Game Switcher contract усередині breadcrumbs.
 
 ## Канонічний Responsive і Controller-only Contract

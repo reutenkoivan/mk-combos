@@ -3,9 +3,9 @@ import { tv } from "tailwind-variants";
 export const controlRecipe = tv({
   base: [
     "inline-flex shrink-0 items-center justify-center gap-1.5",
-    "border border-[var(--ui-control-border)] bg-[var(--ui-control)] text-[var(--ui-text)]",
+    "border border-(--ui-control-border) bg-(--ui-control) text-(--ui-text)",
     "font-medium leading-none outline-none transition-[background-color,border-color,color,box-shadow,filter]",
-    "cursor-pointer enabled:hover:bg-[var(--ui-control-hover)]",
+    "cursor-pointer enabled:hover:bg-(--ui-control-hover)",
     "active:brightness-[0.97]",
     "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50",
     "data-[loading=true]:cursor-wait",
@@ -18,20 +18,20 @@ export const controlRecipe = tv({
     },
     {
       class:
-        "border-[var(--ui-destructive)] bg-[var(--ui-destructive)] text-[var(--ui-accent-text)] enabled:hover:border-[color-mix(in_srgb,var(--ui-destructive)_88%,var(--ui-text))] enabled:hover:bg-[color-mix(in_srgb,var(--ui-destructive)_88%,var(--ui-text))]",
+        "border-(--ui-destructive) bg-(--ui-destructive) text-(--ui-accent-text) enabled:hover:border-[color-mix(in_srgb,var(--ui-destructive)_88%,var(--ui-text))] enabled:hover:bg-[color-mix(in_srgb,var(--ui-destructive)_88%,var(--ui-text))]",
       emphasis: "prominent",
       tone: "destructive",
     },
     {
       class:
-        "border-[var(--ui-accent)] bg-[var(--ui-accent)] text-[var(--ui-accent-text)] enabled:hover:border-[color-mix(in_srgb,var(--ui-accent)_88%,var(--ui-text))] enabled:hover:bg-[color-mix(in_srgb,var(--ui-accent)_88%,var(--ui-text))]",
+        "border-(--ui-accent) bg-(--ui-accent) text-(--ui-accent-text) enabled:hover:border-[color-mix(in_srgb,var(--ui-accent)_88%,var(--ui-text))] enabled:hover:bg-[color-mix(in_srgb,var(--ui-accent)_88%,var(--ui-text))]",
       emphasis: "prominent",
       tone: "accent",
     },
     {
       appearance: "icon",
       class:
-        "border-transparent bg-transparent shadow-none enabled:hover:border-transparent enabled:hover:bg-transparent enabled:hover:text-[var(--ui-accent-strong)] active:bg-transparent aria-expanded:bg-transparent aria-expanded:text-[var(--ui-accent-strong)]",
+        "border-transparent bg-transparent shadow-none enabled:hover:border-transparent enabled:hover:bg-transparent enabled:hover:text-(--ui-accent-strong) active:bg-transparent aria-expanded:bg-transparent aria-expanded:text-(--ui-accent-strong)",
     },
     {
       appearance: "filled",
@@ -74,25 +74,25 @@ export const controlRecipe = tv({
     shape: {
       capsule: "rounded-full",
       concentric: "rounded-[calc(var(--ui-radius-control)-2px)]",
-      fixed: "rounded-[var(--ui-radius-control)]",
+      fixed: "rounded-(--ui-radius-control)",
     },
     state: {
-      active: "bg-[var(--ui-control-active)]",
+      active: "bg-(--ui-control-active)",
       disabled: "cursor-not-allowed opacity-50",
-      focusVisible: "shadow-[var(--ui-focus-ring)]",
-      hover: "bg-[var(--ui-control-hover)]",
+      focusVisible: "shadow-(--ui-focus-ring)",
+      hover: "bg-(--ui-control-hover)",
       idle: "",
-      invalid: "border-[var(--ui-destructive)] text-[var(--ui-destructive)]",
+      invalid: "border-(--ui-destructive) text-(--ui-destructive)",
       loading: "cursor-wait opacity-80",
-      open: "bg-[var(--ui-control-active)]",
-      selected: "border-[var(--ui-selection)] bg-[var(--ui-selection-muted)]",
+      open: "bg-(--ui-control-active)",
+      selected: "border-(--ui-selection) bg-(--ui-selection-muted)",
     },
     tone: {
-      accent: "text-[var(--ui-accent-strong)]",
-      destructive: "text-[var(--ui-destructive)]",
+      accent: "text-(--ui-accent-strong)",
+      destructive: "text-(--ui-destructive)",
       neutral: "",
-      success: "text-[var(--ui-success)]",
-      warning: "text-[var(--ui-warning)]",
+      success: "text-(--ui-success)",
+      warning: "text-(--ui-warning)",
     },
   },
 });

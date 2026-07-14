@@ -1,10 +1,13 @@
+import { useId } from "react";
+
 import { useComponentActionEmitter } from "../hooks/intents";
 import { ChevronDownIcon } from "../icons/chevron-down";
 import { DownloadIcon } from "../icons/download";
 import { UploadIcon } from "../icons/upload";
 import { Button } from "../primitives/button";
 import { DisclosurePanel, DisclosureRoot, DisclosureTrigger } from "../primitives/disclosure";
-import { Badge, StatusMessage } from "../primitives/state";
+import { StatusMessage } from "../primitives/state";
+import { cx } from "../recipes/class-name";
 import { uiEmphasisModes, uiMaterialModes, uiToneModes } from "../tokens/value";
 import { ExportDialog, type ExportDialogProps } from "./export-dialog";
 import { ImportPreviewDialog, type ImportPreviewDialogProps } from "./import-preview-dialog";
@@ -19,7 +22,6 @@ import type {
 import {
   backupDisclosureStates,
   backupOperationStates,
-  backupSliceStatuses,
   backupValidationStatuses,
   componentInteractionReasons,
 } from "./value";
@@ -41,7 +43,6 @@ export type BackupCollapsibleBlockProps = {
   exportLabel: string;
   importAvailability: BackupAvailability;
   importLabel: string;
-  importExternalInputNotice: string;
   importPreviewDialog?: ImportPreviewDialogProps;
   importCompleteMessage?: string;
   localStateSummary: BackupLocalStateSummary;
@@ -55,12 +56,18 @@ export type BackupCollapsibleBlockProps = {
 };
 
 const blockingOperations: readonly BackupOperationState[] = [
+  backupOperationStates.exporting,
+  backupOperationStates.importFilePicker,
+  backupOperationStates.importPreview,
+  backupOperationStates.importValidating,
   backupOperationStates.replaceConfirm,
   backupOperationStates.replaceBusy,
 ];
 
 export function BackupCollapsibleBlock(props: BackupCollapsibleBlockProps) {
+  const summaryId = useId();
   const blocking = blockingOperations.includes(props.operationState);
+  const expanded = props.disclosureState === backupDisclosureStates.expanded;
   const busy =
     props.operationState !== backupOperationStates.idle &&
     props.operationState !== backupOperationStates.importComplete;
@@ -74,7 +81,7 @@ export function BackupCollapsibleBlock(props: BackupCollapsibleBlockProps) {
   return (
     <>
       <section
-        className="border-t border-[var(--ui-separator)] pt-4"
+        className="border-t border-(--ui-separator) pt-4"
         data-operation={props.operationState}
         data-redirect-auto-expand={props.redirectAutoExpand || undefined}
         data-ui-component="UI-CMP-034"
@@ -86,40 +93,34 @@ export function BackupCollapsibleBlock(props: BackupCollapsibleBlockProps) {
               open ? backupCollapsibleBlockActions.expand : backupCollapsibleBlockActions.collapse,
             )
           }
-          open={props.disclosureState === backupDisclosureStates.expanded}
+          open={expanded}
           sourceFocusTarget={props.sourceFocusTarget}
         >
           <DisclosureTrigger
+            aria-describedby={summaryId}
             aria-label={props.title}
             className="min-h-11 w-full justify-between px-0"
+            data-ui-focus-target={props.sourceFocusTarget}
             disabled={blocking}
             emphasis={uiEmphasisModes.subtle}
           >
-            <span>{props.title}</span>
-            <ChevronDownIcon aria-hidden="true" size="small" />
+            <span className="grid min-w-0 gap-0.5 text-left">
+              <span>{props.title}</span>
+              <span className="truncate text-xs font-normal text-(--ui-muted-text)" id={summaryId}>
+                {props.localStateSummary.settingsSummary}
+              </span>
+            </span>
+            <ChevronDownIcon
+              aria-hidden="true"
+              className={cx(
+                "shrink-0 transition-transform duration-200 ease-out motion-reduce:transition-none",
+                expanded && "rotate-180",
+              )}
+              size="small"
+            />
           </DisclosureTrigger>
           <DisclosurePanel className="p-0" material={uiMaterialModes.none}>
             <div className="grid gap-4 pt-3">
-              <div className="grid gap-2">
-                <p className="text-sm">{props.localStateSummary.settingsSummary}</p>
-                <div className="flex flex-wrap gap-2">
-                  <Badge>{props.localStateSummary.persistenceMode}</Badge>
-                  {props.localStateSummary.gameSlices.map((slice) => (
-                    <Badge
-                      key={slice.gameId}
-                      tone={
-                        slice.status === backupSliceStatuses.invalid
-                          ? uiToneModes.destructive
-                          : slice.status === backupSliceStatuses.unsupported
-                            ? uiToneModes.warning
-                            : uiToneModes.neutral
-                      }
-                    >
-                      {slice.label}: {slice.status}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
               {props.validationResult.message && (
                 <StatusMessage
                   tone={
@@ -155,9 +156,6 @@ export function BackupCollapsibleBlock(props: BackupCollapsibleBlockProps) {
                     )}
                 </div>
                 <div className="grid gap-1">
-                  <StatusMessage tone={uiToneModes.warning}>
-                    {props.importExternalInputNotice}
-                  </StatusMessage>
                   <Button
                     disabled={!props.importAvailability.available || busy}
                     loading={

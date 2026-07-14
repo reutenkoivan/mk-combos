@@ -539,7 +539,7 @@ function DetailAndListsSurface(props: CatalogDetailListStoryArgs) {
 function AddToListSurface(props: CatalogDetailListStoryArgs & { overflow?: boolean }) {
   return (
     <Frame {...props}>
-      <p className="text-sm text-[var(--ui-muted-text)]">
+      <p className="text-sm text-(--ui-muted-text)">
         The dialog remains open because Storybook supplies controlled state.
       </p>
       <AddToListDialog

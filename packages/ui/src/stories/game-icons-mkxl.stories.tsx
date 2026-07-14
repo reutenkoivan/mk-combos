@@ -31,14 +31,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const IconTile = ({ asset }: { asset: GameIconAsset }) => (
-  <article className="grid min-w-0 content-start gap-2 rounded-[var(--ui-radius-control)] border border-[var(--ui-separator)] bg-[var(--ui-content)] p-3">
+  <article className="grid min-w-0 content-start gap-2 rounded-(--ui-radius-control) border border-(--ui-separator) bg-(--ui-content) p-3">
     <GameIcon asset={asset} className="h-16 w-16 object-contain" />
     <div className="grid min-w-0 gap-1">
-      <strong className="text-sm text-[var(--ui-text)]">{asset.accessibleLabel}</strong>
-      <code className="break-all text-xs text-[var(--ui-muted-text)]">{asset.id}</code>
-      <code className="break-all text-[0.65rem] text-[var(--ui-muted-text)]">
-        {asset.assetPath}
-      </code>
+      <strong className="text-sm text-(--ui-text)">{asset.accessibleLabel}</strong>
+      <code className="break-all text-xs text-(--ui-muted-text)">{asset.id}</code>
+      <code className="break-all text-[0.65rem] text-(--ui-muted-text)">{asset.assetPath}</code>
     </div>
   </article>
 );
@@ -55,7 +53,7 @@ const ShapeAuditGrid = ({ assets }: { assets: readonly GameIconAsset[] }) => (
   <div className="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3">
     {assets.map((asset) => (
       <article
-        className="grid min-w-0 justify-items-center gap-3 rounded-[var(--ui-radius-control)] border border-[var(--ui-separator)] bg-[var(--ui-content)] p-3"
+        className="grid min-w-0 justify-items-center gap-3 rounded-(--ui-radius-control) border border-(--ui-separator) bg-(--ui-content) p-3"
         key={asset.id}
       >
         <div className="flex min-h-16 items-end justify-center gap-3">
@@ -63,8 +61,8 @@ const ShapeAuditGrid = ({ assets }: { assets: readonly GameIconAsset[] }) => (
           <GameIcon asset={asset} className="h-8 w-8 grayscale contrast-200" decorative />
         </div>
         <div className="grid min-w-0 justify-items-center gap-1 text-center">
-          <strong className="text-xs text-[var(--ui-text)]">{asset.accessibleLabel}</strong>
-          <code className="break-all text-[0.65rem] text-[var(--ui-muted-text)]">{asset.id}</code>
+          <strong className="text-xs text-(--ui-text)">{asset.accessibleLabel}</strong>
+          <code className="break-all text-[0.65rem] text-(--ui-muted-text)">{asset.id}</code>
         </div>
       </article>
     ))}
@@ -73,21 +71,21 @@ const ShapeAuditGrid = ({ assets }: { assets: readonly GameIconAsset[] }) => (
 
 const PageHeader = (props: { count: number; description: string; title: string }) => (
   <header className="grid gap-2">
-    <p className="text-xs font-semibold text-[var(--ui-accent-strong)]">MKXL · {props.count}</p>
-    <h1 className="font-[var(--ui-font-display)] text-2xl font-semibold text-[var(--ui-text)]">
+    <p className="text-xs font-semibold text-(--ui-accent-strong)">MKXL · {props.count}</p>
+    <h1 className="font-(--ui-font-display) text-2xl font-semibold text-(--ui-text)">
       {props.title}
     </h1>
-    <p className="max-w-3xl text-sm text-[var(--ui-muted-text)]">{props.description}</p>
+    <p className="max-w-3xl text-sm text-(--ui-muted-text)">{props.description}</p>
   </header>
 );
 
 const GroupSection = (props: { children: ReactNode; count: number; title: string }) => (
-  <section className="grid gap-3 border-t border-[var(--ui-separator)] pt-5 first:border-t-0 first:pt-0">
+  <section className="grid gap-3 border-t border-(--ui-separator) pt-5 first:border-t-0 first:pt-0">
     <div className="flex flex-wrap items-baseline justify-between gap-2">
-      <h2 className="font-[var(--ui-font-display)] text-lg font-semibold text-[var(--ui-text)]">
+      <h2 className="font-(--ui-font-display) text-lg font-semibold text-(--ui-text)">
         {props.title}
       </h2>
-      <span className="text-xs text-[var(--ui-muted-text)]">{props.count} icons</span>
+      <span className="text-xs text-(--ui-muted-text)">{props.count} icons</span>
     </div>
     {props.children}
   </section>
@@ -203,7 +201,7 @@ export const StagesAndInteractables: Story = {
             {interactables.length > 0 ? (
               <IconGrid assets={interactables} />
             ) : (
-              <p className="self-center text-sm text-[var(--ui-muted-text)]">
+              <p className="self-center text-sm text-(--ui-muted-text)">
                 No unique stage interactables.
               </p>
             )}

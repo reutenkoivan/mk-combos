@@ -3,7 +3,7 @@ import { validationSeverities } from "./result/value";
 import { appRouteKinds, gameRouteKinds } from "./routes/value";
 import { languageCodes, notationDisplayModes } from "./settings/value";
 
-export type { BackupEnvelope } from "./backup/type";
+export type { GameBackupEnvelope } from "./backup/type";
 export type { ComboId, ComboRef, ComboSource, GameId, RouteComboSource } from "./identity/type";
 export type {
   AppErr,

@@ -61,7 +61,7 @@ App Shell не відповідає за:
 Стан у власності сторінки:
 
 - active route, route params, active surface code і deprecated redirect state;
-- applied settings, first-launch completion, active/default game і active business entry point;
+- applied settings, first-launch completion, active game, initial `defaultGameId`, persisted `lastActiveGameId` і active business entry point;
 - controller connection state, semantic command stream і shell-level focus target;
 - top bar layout mode, breadcrumbs model, top bar menu state і controller hint panel state;
 - shell overlays, system messages і safe fallback navigation target.
@@ -486,13 +486,13 @@ App Shell може перемикати active surface через:
 1. Користувач вибирає target game у `UI-CMP-002 Game Switcher`.
 2. `UI-CMP-001 Global Top Bar` передає `requestSwitchGameFromBreadcrumb` або `requestSwitchGameFromMenu` в App Shell.
 3. App Shell перевіряє, що target `gameId` є installed game.
-4. App Shell передає target game в app-level settings state, який оновлює active/default або last active game і намагається persist-ити його.
+4. App Shell передає target game в app-level settings state, який оновлює лише `lastActiveGameId` і намагається persist-ити його. `defaultGameId` після initial setup не змінюється.
 5. App Shell виконує analogous navigation:
    - Catalog -> `/:targetGameId/catalog` із valid last catalog context або fresh Catalog;
    - Lists -> `/:targetGameId/lists`;
    - Builder -> `/:targetGameId/builder` без перенесення game-specific builder path;
    - Combo Detail -> `/:targetGameId/catalog` fallback;
-   - Settings -> лишається `/settings`, але active/default game state оновлюється.
+   - Settings -> лишається `/settings`, але `lastActiveGameId` оновлюється.
 6. App Shell не видаляє named lists, custom combos або local game slices іншої гри.
 
 ### Передача застосованих налаштувань
@@ -507,7 +507,7 @@ App-level settings state
   -> Display-only components, які потребують settings
 ```
 
-App Shell змінює active/default або last active game тільки як відповідь на `UI-CMP-002` breadcrumb/mobile і tablet-menu switch або first-launch/deep-link flow. Ручна зміна `language` і `notation display mode` відбувається на `UI-PAGE-008 Settings`.
+Explicit first-launch confirmation або fresh valid deep-link initialization встановлюють initial `defaultGameId` і `lastActiveGameId`. Після цього `UI-CMP-002` breadcrumb/mobile і tablet-menu switch змінює лише `lastActiveGameId`; `defaultGameId` лишається незмінним. Ручна зміна `language` і `notation display mode` відбувається на `UI-PAGE-008 Settings`.
 
 Initial settings можуть з'явитися двома шляхами:
 
@@ -571,7 +571,7 @@ Settings не мають змінювати source of truth seeded або custom
 - Game switcher у mobile і tablet menu на `/mkxl/catalog` із вибором `MK1` відкриває `/mk1/catalog`.
 - Game switcher у breadcrumbs на `/mkxl/lists` із вибором `MK1` відкриває `/mk1/lists`.
 - Game switcher у breadcrumbs на combo detail fallback-ить до target game Catalog.
-- Game switcher у breadcrumbs на `/settings` лишає route `/settings` і оновлює active/default game state.
+- Game switcher у breadcrumbs на `/settings` лишає route `/settings`, оновлює `lastActiveGameId` і не змінює `defaultGameId`.
 - Deprecated route `UI-PAGE-007 Backup Management` відкриває `UI-PAGE-008 Settings` із розгорнутим `UI-CMP-034 Backup Collapsible Block`.
 - Після зміни language у `UI-PAGE-008 Settings` App Shell отримує оновлений app-level state і передає language активній сторінці.
 - Після зміни notation display mode у `UI-PAGE-008 Settings` App Shell не змінює `movePath` або seeded data.

@@ -923,7 +923,7 @@ function BuilderComponentsStoryContent(props: BuilderComponentsStoryArgs) {
           sourceSurface="builder-story"
         />
         <div
-          className="sticky bottom-0 z-20 min-w-0 bg-[var(--ui-window)] pt-2 [padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]"
+          className="sticky bottom-0 z-20 min-w-0 bg-(--ui-window) pt-2 [padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]"
           data-page-owned-builder-dock
         >
           <BuilderActionBar

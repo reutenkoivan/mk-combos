@@ -54,7 +54,7 @@ export function KameoPicker(props: KameoPickerProps) {
   return (
     <section className="grid min-w-0 gap-2" data-ui-component="UI-CMP-009">
       {props.parentContextLabel && (
-        <p className="text-xs text-[var(--ui-muted-text)]">{props.parentContextLabel}</p>
+        <p className="text-xs text-(--ui-muted-text)">{props.parentContextLabel}</p>
       )}
       <PickerGrid
         busy={props.busy}

@@ -12,7 +12,7 @@ export function RouteRecoveryPage() {
 
   return (
     <main
-      className="grid min-h-full content-start bg-[var(--ui-window)] p-6 text-[var(--ui-text)]"
+      className="grid min-h-full content-start bg-(--ui-window) p-6 text-(--ui-text)"
       data-ui-page="route-recovery"
     >
       <ErrorState

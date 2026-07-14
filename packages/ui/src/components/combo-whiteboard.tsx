@@ -1424,13 +1424,13 @@ function WhiteboardStepNodeView(props: NodeProps<WhiteboardStepNode>) {
       >
         <span className="grid min-w-0 content-start gap-1.5">
           <span className="flex min-w-0 items-start justify-between gap-2">
-            <span className="text-xs font-black tabular-nums text-[var(--ui-muted-text)]">
+            <span className="text-xs font-black tabular-nums text-(--ui-muted-text)">
               {data.positionLabel}
             </span>
             {data.continuesToNextRow && (
               <span
                 aria-label={data.continuationLabel}
-                className="inline-flex items-center gap-1 text-xs font-black text-[var(--ui-accent-strong)]"
+                className="inline-flex items-center gap-1 text-xs font-black text-(--ui-accent-strong)"
                 data-row-continuation="outgoing"
                 role="img"
               >
@@ -1449,7 +1449,7 @@ function WhiteboardStepNodeView(props: NodeProps<WhiteboardStepNode>) {
           </span>
           <WhiteboardMetaList items={data.step.metaItems} />
           {data.step.disabledReason && (
-            <span className="text-xs text-[var(--ui-destructive)]">{data.step.disabledReason}</span>
+            <span className="text-xs text-(--ui-destructive)">{data.step.disabledReason}</span>
           )}
         </span>
       </SelectableItem>
@@ -1512,7 +1512,7 @@ function WhiteboardConnectorNodeView(props: NodeProps<WhiteboardConnectorNode>) 
               : (data.gap.accessibleLabel ?? data.gap.label)
           }
           busy={data.busy}
-          className="nodrag nopan h-11 min-h-11 w-11 min-w-11 grid-cols-[1fr] border border-dashed border-[var(--ui-control-border)] p-0 text-center text-xl font-semibold"
+          className="nodrag nopan h-11 min-h-11 w-11 min-w-11 grid-cols-[1fr] border border-dashed border-(--ui-control-border) p-0 text-center text-xl font-semibold"
           current={data.focused}
           disabled={data.disabled}
           onRequestFocus={data.onFocus}
@@ -1526,7 +1526,7 @@ function WhiteboardConnectorNodeView(props: NodeProps<WhiteboardConnectorNode>) 
             <span aria-hidden="true">+</span>
             <span className="sr-only">{data.gap.label}</span>
             {data.gap.disabledReason && (
-              <span className="sr-only text-xs text-[var(--ui-destructive)]">
+              <span className="sr-only text-xs text-(--ui-destructive)">
                 {data.gap.disabledReason}
               </span>
             )}
@@ -1564,7 +1564,7 @@ function WhiteboardTransitionNodeView(props: NodeProps<WhiteboardTransitionNode>
       {data.continuesFromPreviousRow && (
         <span
           aria-label={data.continuationLabel}
-          className="inline-flex min-h-5.5 shrink-0 items-center text-xs font-black text-[var(--ui-accent-strong)]"
+          className="inline-flex min-h-5.5 shrink-0 items-center text-xs font-black text-(--ui-accent-strong)"
           data-row-continuation="incoming"
           role="img"
         >
@@ -2034,7 +2034,7 @@ function SummaryStrip(props: { items: readonly ComboWhiteboardSummary[]; label: 
       {props.items.map((item) => (
         <li key={item.id}>
           <Badge>
-            <span className="text-[var(--ui-muted-text)]">{item.label}</span>
+            <span className="text-(--ui-muted-text)">{item.label}</span>
             <span>{item.value}</span>
           </Badge>
         </li>
@@ -2086,7 +2086,7 @@ function PickerContextMove(props: {
 }) {
   return (
     <span className="grid min-w-0 content-start gap-1" data-ui-combo-whiteboard-picker-context-move>
-      <span className="text-xs font-semibold text-[var(--ui-muted-text)]">{props.label}</span>
+      <span className="text-xs font-semibold text-(--ui-muted-text)">{props.label}</span>
       <span className="break-words font-semibold">{props.step?.label ?? props.boundaryLabel}</span>
       {props.step && (
         <NotationRenderer
@@ -2117,7 +2117,7 @@ function PickerInsertionContextStrip(props: {
     <section
       aria-label={props.editTargetLabel}
       className={cx(
-        "grid min-w-0 items-stretch gap-2 rounded-[var(--ui-radius-control)] border border-[var(--ui-separator)] bg-[var(--ui-content)] p-3",
+        "grid min-w-0 items-stretch gap-2 rounded-(--ui-radius-control) border border-(--ui-separator) bg-(--ui-content) p-3",
         vertical
           ? "grid-cols-1"
           : "grid-cols-[minmax(0,1fr)_auto_minmax(10rem,1fr)_auto_minmax(0,1fr)]",
@@ -2130,16 +2130,14 @@ function PickerInsertionContextStrip(props: {
         notationDisplayMode={props.notationDisplayMode}
         step={context.beforeStep}
       />
-      <span aria-hidden="true" className="self-center text-xl text-[var(--ui-muted-text)]">
+      <span aria-hidden="true" className="self-center text-xl text-(--ui-muted-text)">
         {vertical ? "↓" : "→"}
       </span>
       <span
-        className="grid min-w-0 content-center gap-1 rounded-[var(--ui-radius-control)] border border-[var(--ui-accent)] bg-[var(--ui-selection-muted)] p-3 text-center"
+        className="grid min-w-0 content-center gap-1 rounded-(--ui-radius-control) border border-(--ui-accent) bg-(--ui-selection-muted) p-3 text-center"
         data-ui-combo-whiteboard-picker-context-target
       >
-        <span className="font-semibold text-[var(--ui-accent-strong)]">
-          {props.editTargetLabel}
-        </span>
+        <span className="font-semibold text-(--ui-accent-strong)">{props.editTargetLabel}</span>
         {context.activeStep && (
           <>
             <span className="break-words font-semibold">{context.activeStep.label}</span>
@@ -2152,7 +2150,7 @@ function PickerInsertionContextStrip(props: {
           </>
         )}
       </span>
-      <span aria-hidden="true" className="self-center text-xl text-[var(--ui-muted-text)]">
+      <span aria-hidden="true" className="self-center text-xl text-(--ui-muted-text)">
         {vertical ? "↓" : "→"}
       </span>
       <PickerContextMove
@@ -2240,13 +2238,13 @@ function MovePickerComposerLayer(props: MovePickerComposerLayerProps) {
         <div
           aria-label={props.label}
           aria-modal="true"
-          className="grid max-h-[calc(100dvh-2rem)] w-[min(72rem,calc(100vw-2rem))] min-w-0 gap-3 overflow-y-auto overscroll-contain rounded-[var(--ui-radius-surface)] border border-[var(--ui-separator)] bg-[var(--ui-popover)] p-4 shadow-[var(--ui-shadow)]"
+          className="grid max-h-[calc(100dvh-2rem)] w-[min(72rem,calc(100vw-2rem))] min-w-0 gap-3 overflow-y-auto overscroll-contain rounded-(--ui-radius-surface) border border-(--ui-separator) bg-(--ui-popover) p-4 shadow-(--ui-shadow)"
           data-ui-combo-whiteboard-picker-window
           onKeyDown={handleKeyDown}
           ref={panelRef}
           role="dialog"
         >
-          <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-[var(--ui-separator)] bg-[var(--ui-popover)] pb-3">
+          <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-(--ui-separator) bg-(--ui-popover) pb-3">
             <span className="text-lg font-semibold">{props.label}</span>
             <Button
               aria-label={props.closeLabel}
@@ -2294,7 +2292,7 @@ function PreparedActionButton(props: {
         {props.action.label}
       </Button>
       {props.action.disabledReason && (
-        <span className="text-xs text-[var(--ui-destructive)]">{props.action.disabledReason}</span>
+        <span className="text-xs text-(--ui-destructive)">{props.action.disabledReason}</span>
       )}
     </span>
   );
@@ -2658,7 +2656,7 @@ export function ComboWhiteboard(props: ComboWhiteboardProps) {
       >
         {source.steps.length === 0 && <StatusMessage>{source.labels.emptyPath}</StatusMessage>}
         <div
-          className="min-w-0 bg-[var(--ui-content)]"
+          className="min-w-0 bg-(--ui-content)"
           data-ui-combo-whiteboard-canvas-height={flow.height}
           style={{ height: flow.height }}
         >
@@ -2793,7 +2791,7 @@ export function ComboWhiteboard(props: ComboWhiteboardProps) {
       {menuTarget && source.mode !== comboWhiteboardModes.savingFrozen && (
         <div
           aria-label={source.labels.menu}
-          className="z-50 grid w-60 max-w-[calc(100vw-1rem)] justify-items-stretch gap-2 border border-[var(--ui-separator)] bg-[var(--ui-popover)] p-3 shadow-[var(--ui-shadow)]"
+          className="z-50 grid w-60 max-w-[calc(100vw-1rem)] justify-items-stretch gap-2 border border-(--ui-separator) bg-(--ui-popover) p-3 shadow-(--ui-shadow)"
           data-ui-combo-whiteboard-local-menu-anchor={menuFocusTargetId}
           data-ui-combo-whiteboard-local-menu
           onKeyDown={handleMenuKeyDown}
@@ -2936,7 +2934,7 @@ export function ComboWhiteboard(props: ComboWhiteboardProps) {
       {source.mode === comboWhiteboardModes.pendingTruncate && source.truncateConfirmation && (
         <section
           aria-label={source.truncateConfirmation.message}
-          className="grid gap-2 border-l-4 border-[var(--ui-warning)] bg-[var(--ui-warning-soft)] p-3"
+          className="grid gap-2 border-l-4 border-(--ui-warning) bg-(--ui-warning-soft) p-3"
           data-ui-combo-whiteboard-truncate
           role="alert"
         >

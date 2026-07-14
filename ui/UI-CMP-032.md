@@ -276,7 +276,7 @@ Inputs мають бути already localized і already validated parent flow-о
 ## Вихідні події
 
 - `requestNavigateBreadcrumb`: перейти за navigable breadcrumb item, зокрема до `UI-PAGE-003 Catalog`.
-- `requestSwitchGameFromBreadcrumb`: змінити active/default або last active game через App Shell і виконати analogous navigation.
+- `requestSwitchGameFromBreadcrumb`: оновити через App Shell тільки post-launch `lastActiveGameId`, не змінювати `defaultGameId` і виконати analogous navigation.
 - `requestFocusBreadcrumb`: optional focus movement event, якщо implementation робить focus state controlled.
 - `requestOpenGameMenu`: optional event, forwarded із `UI-CMP-002`, якщо game switcher використовує popup/listbox.
 - `requestCloseGameMenu`: optional event, forwarded із `UI-CMP-002`.
@@ -301,7 +301,7 @@ Events є intent events. Route changes, focus destination після navigation,
 - desktop global dropdown і mobile/tablet drawer actions;
 - actual route navigation;
 - game switch analogous navigation;
-- persistence active/default game;
+- persistence post-launch `lastActiveGameId`;
 - first-launch setup;
 - language або notation display mode changes;
 - rendering `UI-CMP-003`, `UI-CMP-004` або `UI-CMP-037`;
@@ -435,7 +435,7 @@ Trail або labels не вміщуються в available Top Bar width.
    - Lists -> `/:targetGameId/lists`;
    - Builder -> `/:targetGameId/builder`;
    - Combo Detail -> `/:targetGameId/catalog` fallback;
-   - Settings -> лишається `/settings` із оновленим active/default або last active game.
+   - Settings -> лишається `/settings` із оновленим `lastActiveGameId`; `defaultGameId` не змінюється.
 
 Game switch не видаляє named lists, custom combos або local game slices іншої гри.
 

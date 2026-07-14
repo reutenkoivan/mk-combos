@@ -188,11 +188,11 @@ DialogViewport.displayName = "DialogViewport";
 
 const dialogPopupClasses = {
   [uiResponsiveModes.desktop]:
-    "w-[min(34rem,calc(100vw-2rem))] rounded-[var(--ui-radius-surface)] p-4 data-ending-style:scale-[0.98] data-starting-style:scale-[0.98]",
+    "w-[min(34rem,calc(100vw-2rem))] rounded-(--ui-radius-surface) p-4 data-ending-style:scale-[0.98] data-starting-style:scale-[0.98]",
   [uiResponsiveModes.mobile]:
-    "w-full rounded-b-none rounded-t-[var(--ui-radius-surface)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] data-ending-style:translate-y-4 data-starting-style:translate-y-4",
+    "w-full rounded-b-none rounded-t-(--ui-radius-surface) p-4 pb-[max(1rem,env(safe-area-inset-bottom))] data-ending-style:translate-y-4 data-starting-style:translate-y-4",
   [uiResponsiveModes.tablet]:
-    "w-full max-w-[42rem] rounded-b-none rounded-t-[var(--ui-radius-surface)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] data-ending-style:translate-y-4 data-starting-style:translate-y-4",
+    "w-full max-w-[42rem] rounded-b-none rounded-t-(--ui-radius-surface) p-4 pb-[max(1rem,env(safe-area-inset-bottom))] data-ending-style:translate-y-4 data-starting-style:translate-y-4",
 } as const satisfies Record<UiResponsiveMode, string>;
 
 export type DialogPopupProps = UiPrimitiveProps<HTMLDivElement> & {
@@ -219,7 +219,7 @@ export function DialogPopup(props: DialogPopupProps) {
       className={cx(
         popupRecipe({ density, material, shape }),
         surfaceRecipe({ density, material, shape }),
-        "pointer-events-auto relative grid max-h-[88dvh] min-h-0 overflow-auto overscroll-contain bg-[var(--ui-dialog)] transition-[opacity,transform] duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 motion-reduce:transition-none",
+        "pointer-events-auto relative grid max-h-[88dvh] min-h-0 overflow-auto overscroll-contain bg-(--ui-dialog) transition-[opacity,transform] duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 motion-reduce:transition-none",
         dialogPopupClasses[responsiveMode],
         className,
       )}
@@ -242,7 +242,7 @@ export function DialogTitle(props: DialogTitleProps) {
   return (
     <BaseDialog.Title
       {...titleProps}
-      className={cx("text-base font-semibold tracking-[-0.01em] text-[var(--ui-text)]", className)}
+      className={cx("text-base font-semibold tracking-[-0.01em] text-(--ui-text)", className)}
       data-ui-dialog-title
       ref={ref}
     >
@@ -261,7 +261,7 @@ export function DialogDescription(props: DialogDescriptionProps) {
   return (
     <BaseDialog.Description
       {...descriptionProps}
-      className={cx("text-sm leading-relaxed text-[var(--ui-muted-text)]", className)}
+      className={cx("text-sm leading-relaxed text-(--ui-muted-text)", className)}
       data-ui-dialog-description
       ref={ref}
     >

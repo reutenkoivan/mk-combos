@@ -16,7 +16,7 @@ export function GlobalTopBar(props: GlobalTopBarProps) {
 
   return (
     <header
-      className="flex min-w-0 items-center justify-between gap-2 border-b border-[var(--ui-separator)] bg-[var(--ui-toolbar)] p-2"
+      className="flex min-w-0 items-center justify-between gap-2 border-b border-(--ui-separator) bg-(--ui-toolbar) p-2"
       data-layout={props.layoutMode}
       data-ui-component="UI-CMP-001"
     >
@@ -27,7 +27,7 @@ export function GlobalTopBar(props: GlobalTopBarProps) {
           currentLocation && (
             <span
               aria-current="page"
-              className="min-w-0 flex-1 truncate border-l-2 border-[var(--ui-accent)] pl-2 font-[var(--ui-font-display)] text-sm font-semibold tracking-[-0.01em]"
+              className="min-w-0 flex-1 truncate border-l-2 border-(--ui-accent) pl-2 font-(--ui-font-display) text-sm font-semibold tracking-[-0.01em]"
               title={currentLocation.truncationLabel ?? currentLocation.label}
             >
               {currentLocation.label}

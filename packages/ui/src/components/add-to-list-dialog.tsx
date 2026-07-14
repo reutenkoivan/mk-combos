@@ -143,7 +143,7 @@ export function AddToListDialog(props: AddToListDialogProps) {
                     value={option.summary.id}
                   >
                     <span className="text-start">{option.summary.name}</span>
-                    <span className="text-xs text-[var(--ui-muted-text)]">
+                    <span className="text-xs text-(--ui-muted-text)">
                       {option.alreadyMember ? props.membershipLabel : option.summary.itemCount}
                     </span>
                   </SelectableItem>
@@ -154,7 +154,7 @@ export function AddToListDialog(props: AddToListDialogProps) {
               )}
             </Stack>
             <Group
-              className="sticky bottom-0 z-10 w-full flex-col-reverse items-stretch border-t border-[var(--ui-separator)] bg-[var(--ui-dialog)] pt-3 sm:flex-row sm:items-center"
+              className="sticky bottom-0 z-10 w-full flex-col-reverse items-stretch border-t border-(--ui-separator) bg-(--ui-dialog) pt-3 sm:flex-row sm:items-center"
               justify="end"
             >
               {props.createListAction && (

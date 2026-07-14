@@ -274,7 +274,7 @@ Expected behavior:
 - `requestNavigateBuilder`: перейти до `UI-PAGE-006 Custom Combo Builder`.
 - `requestNavigateSettings`: перейти до `UI-PAGE-008 Settings`.
 - `requestNavigateBreadcrumb`: перейти за navigable breadcrumb item, якщо item включено в mobile і tablet drawer.
-- `requestSwitchGameFromMenu`: змінити active/default або last active game через App Shell і виконати analogous navigation.
+- `requestSwitchGameFromMenu`: оновити через App Shell тільки post-launch `lastActiveGameId`, не змінювати `defaultGameId` і виконати analogous navigation.
 - `requestSelectTopBarMenuAction`: виконати allowed utility action.
 
 `requestSwitchGameFromMenu` має той самий App Shell effect, що й `requestSwitchGameFromBreadcrumb`.

@@ -844,11 +844,11 @@ describe("frameMeterSegmentRecipe", () => {
       validity: comboFrameMeterSegmentValidities.invalid,
     });
 
-    expect(selectedInvalid).toContain("bg-[var(--ui-destructive-soft)]");
+    expect(selectedInvalid).toContain("bg-(--ui-destructive-soft)");
     expect(selectedInvalid).toContain("inset_0_-3px_0_var(--ui-destructive)");
-    expect(focusedInvalid).toContain("bg-[var(--ui-destructive-soft)]");
+    expect(focusedInvalid).toContain("bg-(--ui-destructive-soft)");
     expect(focusedInvalid).toContain("var(--ui-focus-ring)");
-    expect(frozenInvalid).toContain("bg-[var(--ui-destructive-soft)]");
+    expect(frozenInvalid).toContain("bg-(--ui-destructive-soft)");
     expect(frozenInvalid).toContain("cursor-wait");
   });
 
@@ -900,12 +900,12 @@ describe("frameMeterSegmentRecipe", () => {
       validity: comboFrameMeterSegmentValidities.valid,
     });
 
-    expect(startup).toContain("bg-[var(--ui-frame-startup)]");
-    expect(active).toContain("bg-[var(--ui-frame-active)]");
-    expect(invalidRecovery).toContain("bg-[var(--ui-frame-recovery)]");
+    expect(startup).toContain("bg-(--ui-frame-startup)");
+    expect(active).toContain("bg-(--ui-frame-active)");
+    expect(invalidRecovery).toContain("bg-(--ui-frame-recovery)");
     expect(invalidRecovery).toContain("repeating-linear-gradient");
-    expect(invalidRecovery).toContain("outline-[var(--ui-destructive)]");
-    expect(metaLink).toContain("bg-[var(--ui-frame-transition)]");
+    expect(invalidRecovery).toContain("outline-(--ui-destructive)");
+    expect(metaLink).toContain("bg-(--ui-frame-transition)");
     expect(metaLink).toContain("h-4");
   });
 
@@ -935,12 +935,12 @@ describe("frameMeterSegmentRecipe", () => {
 
     expect(selectedValid).toContain("scale-[1.06]");
     expect(selectedValid).toContain("outline-offset-2");
-    expect(selectedValid).toContain("outline-[var(--ui-selection)]");
+    expect(selectedValid).toContain("outline-(--ui-selection)");
     expect(selectedValid).toContain("enabled:cursor-pointer");
     expect(selectedValid).toContain("motion-reduce:transition-none");
     expect(selectedInvalid).toContain("repeating-linear-gradient");
-    expect(selectedInvalid).toContain("outline-[var(--ui-selection)]");
-    expect(focusedSelected).toContain("var(--ui-focus-ring)");
+    expect(selectedInvalid).toContain("outline-(--ui-selection)");
+    expect(focusedSelected).toContain("shadow-(--ui-focus-ring)");
     expect(focusedSelected).toContain("z-30");
     expect(frozen).toContain("cursor-wait");
   });

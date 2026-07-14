@@ -386,7 +386,7 @@ Package name: `@mk-combos/contracts`.
 Owns stable cross-game contracts only:
 
 - `GameId` as a string value, not a closed union of known games.
-- `ComboRef`, source identifiers, route source identifiers, localized text, notation display mode, generic backup envelope types, and shared result/error shapes.
+- `ComboRef`, source identifiers, route source identifiers, localized text, notation display mode, the generic per-game `GameBackupEnvelope`, and shared result/error shapes.
 - Generic app-facing interfaces that are already common across games.
 
 It does not know MKXL variations, MKXL stages, MK1 kameos, concrete combo schemas, concrete graph schemas, or installed game lists.
@@ -640,29 +640,54 @@ The app must not hardcode fixed state properties for specific installed games. G
 
 The app should create or recover a game slice when a registered `gameId` is opened.
 
+On a fresh launch, browser locale is normalized at the web boundary: `uk` and every
+`uk-*` locale select `UA`; every other locale selects `EN`. The initial notation
+display mode is `FGC`. Settings changes for language and notation display mode apply
+immediately and synchronously attempt persistence. A persistence failure does not
+roll back the applied value; the app keeps it for the current session and exposes a
+recoverable session-only warning.
+
 ## Backup
 
-Full backup is an app-level envelope with game slices:
+Backup files are per-game. `packages/contracts` owns the game-agnostic envelope:
 
 ```ts
-type BackupEnvelope = {
+type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue }
+
+type GameBackupEnvelope = {
   version: number
   exportedAt: string
-  settings: AppSettings
-  games: Record<GameId, unknown>
+  gameId: GameId
+  slice: JsonValue
 }
 ```
 
-The web app validates the envelope. Each registered business entry point validates its own slice.
+One file contains exactly one game-owned user slice: custom combos, named lists, and
+that game's last catalog context. It never contains app settings, another game's
+slice, or seeded game data. The envelope keeps that game-owned shape opaque while
+requiring it to be JSON-safe.
+
+The shared schema keeps `version` as a forward-compatible positive integer. The web
+app currently accepts only version `1` and validates JSON, the envelope, installed `gameId`, and
+the Settings target game. It rejects an uninstalled `gameId` or a `gameId` that does
+not match the target accordion item. The resolved game business entry point validates
+and serializes `slice`; `apps/web` does not reconstruct game-specific validation.
 
 Import replace is allowed only after:
 
 - the envelope is valid;
-- settings are valid;
-- every known installed game slice is valid or recoverably absent according to the backup version policy;
-- unknown future game slices are handled by the explicit forward-compatibility policy.
+- its version is exactly the currently supported version `1`;
+- `gameId` is installed and matches the selected target game;
+- the matching game business entry point accepts `slice`;
+- the user reviews the preview and explicitly confirms destructive replace.
 
-Seeded game data is never imported or replaced by backup.
+Replace changes only `LocalAppState.games[gameId]`. Global settings and all other
+game slices remain unchanged. Seeded game data is never imported or replaced.
+
+Settings renders one controlled `UI-CMP-034 Backup Collapsible Block` for every
+installed game as a single-open accordion. Plain `/settings` starts with all items
+collapsed. Deprecated `/backup` redirects to Settings and expands the item for the
+resolved last/default installed game.
 
 ## Import Direction
 

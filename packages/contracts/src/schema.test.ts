@@ -1,6 +1,6 @@
 import {
-  BackupEnvelopeSchema,
-  createBackupEnvelopeSchema,
+  createGameBackupEnvelopeSchema,
+  GameBackupEnvelopeSchema,
 } from "@mk-combos/contracts/backup/schema";
 import { ComboRefSchema, ComboSourceSchema } from "@mk-combos/contracts/identity/schema";
 import { AppErrorSchema, ValidationMessageSchema } from "@mk-combos/contracts/result/schema";
@@ -80,58 +80,82 @@ describe("@mk-combos/contracts schemas", () => {
     ).toBe(false);
   });
 
-  it("accepts backup envelopes with open game ids and opaque game slices", () => {
-    const parsed = BackupEnvelopeSchema.parse({
+  it("accepts strict per-game backup envelopes with open game ids and opaque slices", () => {
+    const envelope = {
       version: 1,
       exportedAt: "2026-07-02T00:00:00.000Z",
-      settings: validSettings,
-      games: {
-        "future-game": { customCombos: [{ id: "local-1" }] },
-        "another-future-game": ["opaque", "slice"],
-      },
-    });
+      gameId: "future-game",
+      slice: { customCombos: [{ id: "local-1" }] },
+    };
+    const parsed = GameBackupEnvelopeSchema.parse(envelope);
 
-    expect(parsed.games["future-game"]).toEqual({ customCombos: [{ id: "local-1" }] });
-    expect(parsed.games["another-future-game"]).toEqual(["opaque", "slice"]);
+    expect(parsed).toEqual(envelope);
     expect(
-      BackupEnvelopeSchema.safeParse({
+      GameBackupEnvelopeSchema.parse({
+        ...envelope,
+        gameId: "another-future-game",
+        slice: ["opaque", "slice"],
+      }).slice,
+    ).toEqual(["opaque", "slice"]);
+    expect(
+      GameBackupEnvelopeSchema.safeParse({ ...envelope, exportedAt: "not-a-date" }).success,
+    ).toBe(false);
+    expect(GameBackupEnvelopeSchema.safeParse({ ...envelope, version: 0 }).success).toBe(false);
+    expect(GameBackupEnvelopeSchema.safeParse({ ...envelope, version: 1.5 }).success).toBe(false);
+    expect(GameBackupEnvelopeSchema.safeParse({ ...envelope, gameId: "" }).success).toBe(false);
+    expect(GameBackupEnvelopeSchema.safeParse({ ...envelope, extra: true }).success).toBe(false);
+    expect(
+      GameBackupEnvelopeSchema.safeParse({
+        version: envelope.version,
+        exportedAt: envelope.exportedAt,
+        gameId: envelope.gameId,
+      }).success,
+    ).toBe(false);
+    expect(GameBackupEnvelopeSchema.safeParse({ ...envelope, slice: undefined }).success).toBe(
+      false,
+    );
+    expect(
+      GameBackupEnvelopeSchema.safeParse({ ...envelope, slice: () => undefined }).success,
+    ).toBe(false);
+    expect(
+      GameBackupEnvelopeSchema.safeParse({ ...envelope, slice: Symbol("slice") }).success,
+    ).toBe(false);
+    expect(GameBackupEnvelopeSchema.safeParse({ ...envelope, slice: 1n }).success).toBe(false);
+    expect(
+      GameBackupEnvelopeSchema.safeParse({
         version: 1,
-        exportedAt: "not-a-date",
+        exportedAt: envelope.exportedAt,
         settings: validSettings,
-        games: {},
+        games: { "future-game": envelope.slice },
       }).success,
     ).toBe(false);
   });
 
-  it("validates backup game slices when a custom slice schema is provided", () => {
+  it("validates a per-game backup slice when a custom schema is provided", () => {
     const sliceSchema = z
       .object({
         customCombos: z.array(z.string()),
       })
       .strict();
-    const backupSchema = createBackupEnvelopeSchema(sliceSchema);
+    const backupSchema = createGameBackupEnvelopeSchema(sliceSchema);
 
     const parsed = backupSchema.parse({
       version: 1,
       exportedAt: "2026-07-02T00:00:00.000Z",
-      settings: validSettings,
-      games: {
-        "future-game": {
-          customCombos: ["local-1"],
-        },
+      gameId: "future-game",
+      slice: {
+        customCombos: ["local-1"],
       },
     });
 
-    expect(parsed.games["future-game"]?.customCombos).toEqual(["local-1"]);
+    expect(parsed.slice.customCombos).toEqual(["local-1"]);
     expect(
       backupSchema.safeParse({
         version: 1,
         exportedAt: "2026-07-02T00:00:00.000Z",
-        settings: validSettings,
-        games: {
-          "future-game": {
-            customCombos: [1],
-          },
+        gameId: "future-game",
+        slice: {
+          customCombos: [1],
         },
       }).success,
     ).toBe(false);

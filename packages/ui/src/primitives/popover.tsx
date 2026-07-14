@@ -182,7 +182,7 @@ export function PopoverArrow(props: PopoverArrowProps) {
       {...arrowProps}
       className={cx(
         [
-          "h-2.5 w-2.5 rotate-45 border border-[color-mix(in_srgb,var(--ui-separator)_88%,transparent)] bg-[var(--ui-popover)]",
+          "h-2.5 w-2.5 rotate-45 border border-[color-mix(in_srgb,var(--ui-separator)_88%,transparent)] bg-(--ui-popover)",
           "data-[side=top]:-bottom-[0.3125rem] data-[side=bottom]:-top-[0.3125rem]",
           "data-[side=left]:-right-[0.3125rem] data-[side=right]:-left-[0.3125rem]",
         ].join(" "),
@@ -237,7 +237,7 @@ export function PopoverTitle(props: PopoverTitleProps) {
   return (
     <BasePopover.Title
       {...titleProps}
-      className={cx("text-sm font-semibold text-[var(--ui-text)]", className)}
+      className={cx("text-sm font-semibold text-(--ui-text)", className)}
       data-ui-popover-title
       ref={ref}
     >
@@ -256,7 +256,7 @@ export function PopoverDescription(props: PopoverDescriptionProps) {
   return (
     <BasePopover.Description
       {...descriptionProps}
-      className={cx("text-[13px] leading-snug text-[var(--ui-muted-text)]", className)}
+      className={cx("text-[13px] leading-snug text-(--ui-muted-text)", className)}
       data-ui-popover-description
       ref={ref}
     >

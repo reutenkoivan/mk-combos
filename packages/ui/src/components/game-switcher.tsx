@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 import { useFieldMessage } from "../hooks/field-message";
 import { useComponentOpenChangeEmitter, useComponentValueEmitter } from "../hooks/intents";
 import { ChevronDownIcon } from "../icons/chevron-down";
@@ -47,6 +49,7 @@ export type GameSwitcherProps = {
 };
 
 export function GameSwitcher(props: GameSwitcherProps) {
+  const labelId = useId();
   const selected = props.availableGames.find((option) => option.gameId === props.selectedGameId);
   const blocked = Boolean(props.disabled || props.busy);
   const fieldMessage = useFieldMessage({
@@ -71,12 +74,17 @@ export function GameSwitcher(props: GameSwitcherProps) {
       aria-busy={props.busy || undefined}
       className={
         props.context === gameSwitcherContexts.firstLaunch
-          ? "grid min-w-0 gap-2 border-t border-[var(--ui-separator)] py-4"
+          ? "grid min-w-0 gap-2 border-t border-(--ui-separator) py-4"
           : "grid min-w-0 gap-1"
       }
       data-context={props.context}
       data-ui-component="UI-CMP-002"
     >
+      {props.context === gameSwitcherContexts.firstLaunch && (
+        <span className="text-sm font-medium" id={labelId}>
+          {props.label}
+        </span>
+      )}
       <MenuRoot
         disabled={blocked}
         onOpenChange={menuChangeEmitter.methods.handleOpenChange}
@@ -85,7 +93,8 @@ export function GameSwitcher(props: GameSwitcherProps) {
       >
         <MenuTrigger
           {...fieldMessage.methods.getControlProps()}
-          aria-label={props.label}
+          aria-label={props.context === gameSwitcherContexts.breadcrumbs ? props.label : undefined}
+          aria-labelledby={props.context === gameSwitcherContexts.firstLaunch ? labelId : undefined}
           className="max-w-full justify-between"
           disabled={blocked}
           tone={props.invalidSelectedGame ? uiToneModes.destructive : uiToneModes.neutral}
@@ -118,7 +127,7 @@ export function GameSwitcher(props: GameSwitcherProps) {
                     <span className="grid min-w-0 gap-1">
                       <span className="truncate">{option.label}</span>
                       {(option.description || option.disabledReason) && (
-                        <span className="text-xs text-[var(--ui-muted-text)]">
+                        <span className="text-xs text-(--ui-muted-text)">
                           {option.disabledReason ?? option.description}
                         </span>
                       )}

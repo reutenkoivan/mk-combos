@@ -365,21 +365,25 @@ describe("shell and settings component contracts", () => {
     });
   });
 
-  it("derives backup busy behavior from every operation-state dictionary value", () => {
+  it("derives backup busy and disclosure blocking behavior from every operation state", () => {
     for (const operationState of Object.values(backupOperationStates)) {
       const expectedBusy =
         operationState !== backupOperationStates.idle &&
         operationState !== backupOperationStates.importComplete;
+      const expectedBlocking =
+        operationState !== backupOperationStates.idle &&
+        operationState !== backupOperationStates.importComplete &&
+        operationState !== backupOperationStates.importInvalid;
       const view = render(
         <BackupCollapsibleBlock
           disclosureState={backupDisclosureStates.expanded}
           exportAvailability={{ available: true }}
           exportLabel="Export backup"
           importAvailability={{ available: true }}
-          importExternalInputNotice="External input required"
           importLabel="Import backup"
           localStateSummary={summary}
           operationState={operationState}
+          sourceFocusTarget="backup-future-game"
           sourceSurface="test"
           title="Backup"
           validationResult={{ status: backupValidationStatuses.none }}
@@ -394,12 +398,134 @@ describe("shell and settings component contracts", () => {
         "disabled",
         expectedBusy,
       );
+      expect(screen.getByRole("button", { name: "Backup" }).getAttribute("aria-disabled")).toBe(
+        expectedBlocking ? "true" : "false",
+      );
+      expect(
+        screen.getByRole("button", { name: "Backup" }).getAttribute("data-ui-focus-target"),
+      ).toBe("backup-future-game");
+      expect(screen.getByRole("button", { name: "Backup" }).textContent).toContain(
+        summary.settingsSummary,
+      );
+      expect(
+        document.getElementById(
+          screen.getByRole("button", { name: "Backup" }).getAttribute("aria-describedby") ?? "",
+        )?.textContent,
+      ).toBe(summary.settingsSummary);
+      expect(screen.queryByText("External input required")).toBeNull();
       view.unmount();
     }
   });
 });
 
 describe("controlled selectors", () => {
+  it("renders a labelled semantic first-launch form with one current submit action", () => {
+    const onAction = vi.fn();
+    const { container, rerender } = render(
+      <FirstLaunchSetupForm
+        confirmAvailable
+        confirmLabel="Open catalog"
+        displayModeSwitcher={{
+          availableDisplayModes: displayModes,
+          label: "Button labels",
+          selectedDisplayMode: "FGC",
+          sourceSurface: "first-launch",
+        }}
+        gameSwitcher={{
+          availableGames: games,
+          context: gameSwitcherContexts.firstLaunch,
+          label: "Starting game",
+          menuOpen: false,
+          selectedGameId: "mkxl",
+          sourceSurface: "first-launch",
+        }}
+        languageSwitcher={{
+          availableLanguages: languages,
+          label: "Interface language",
+          selectedLanguage: "EN",
+          sourceSurface: "first-launch",
+        }}
+        notationLegend={{
+          caption: "Preview",
+          legendRows: createNotationLegendRows(["FGC"]),
+          markersHeaderLabel: "Buttons",
+          modeHeaderLabel: "Format",
+        }}
+        onRequestAction={onAction}
+        sourceSurface="first-launch"
+        title="Your preferences"
+      />,
+    );
+
+    const form = container.querySelector("form");
+
+    expect(form).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 2, name: "Your preferences" })).toBeTruthy();
+    expect(screen.getByText("Starting game")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Starting game" })).toBeTruthy();
+    expect(screen.getAllByRole("button", { name: /Open catalog/ })).toHaveLength(1);
+    expect(screen.getByRole("button", { name: "Open catalog" }).getAttribute("type")).toBe(
+      "submit",
+    );
+    expect(screen.getByRole("button", { name: "Open catalog" }).className).toContain(
+      "bg-(--ui-accent)",
+    );
+
+    fireEvent.submit(form as HTMLFormElement);
+    expect(onAction).toHaveBeenLastCalledWith({
+      action: firstLaunchSetupFormActions.confirm,
+      reason: "press",
+      sourceSurface: "first-launch",
+    });
+
+    rerender(
+      <FirstLaunchSetupForm
+        confirmAvailable
+        confirmLabel="Open catalog"
+        displayModeSwitcher={{
+          availableDisplayModes: displayModes,
+          label: "Button labels",
+          selectedDisplayMode: "FGC",
+          sourceSurface: "first-launch",
+        }}
+        gameSwitcher={{
+          availableGames: games,
+          context: gameSwitcherContexts.firstLaunch,
+          label: "Starting game",
+          menuOpen: false,
+          selectedGameId: "mkxl",
+          sourceSurface: "first-launch",
+        }}
+        languageSwitcher={{
+          availableLanguages: languages,
+          label: "Interface language",
+          selectedLanguage: "EN",
+          sourceSurface: "first-launch",
+        }}
+        notationLegend={{
+          caption: "Preview",
+          legendRows: createNotationLegendRows(["FGC"]),
+          markersHeaderLabel: "Buttons",
+          modeHeaderLabel: "Format",
+        }}
+        onRequestAction={onAction}
+        persistenceMessage="These settings cannot be saved."
+        sessionOnlyAcknowledgeLabel="Continue without saving"
+        sourceSurface="first-launch"
+        title="Your preferences"
+      />,
+    );
+
+    expect(screen.queryByRole("button", { name: "Open catalog" })).toBeNull();
+    expect(screen.getAllByRole("button", { name: "Continue without saving" })).toHaveLength(1);
+    fireEvent.submit(container.querySelector("form") as HTMLFormElement);
+    expect(onAction).toHaveBeenLastCalledWith({
+      action: firstLaunchSetupFormActions.acknowledgeSessionOnly,
+      reason: "press",
+      sourceSurface: "first-launch",
+    });
+  });
+
   it("emits a semantic language selection without a browser event", () => {
     const onSelect = vi.fn();
     render(

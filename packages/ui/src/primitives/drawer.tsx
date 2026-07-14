@@ -248,7 +248,7 @@ export function DrawerTitle(props: DrawerTitleProps) {
     <BaseDrawer.Title
       {...titleProps}
       className={cx(
-        "font-[var(--ui-font-display)] text-base font-semibold tracking-[-0.01em]",
+        "font-(--ui-font-display) text-base font-semibold tracking-[-0.01em]",
         className,
       )}
       data-ui-drawer-title
@@ -269,7 +269,7 @@ export function DrawerDescription(props: DrawerDescriptionProps) {
   return (
     <BaseDrawer.Description
       {...descriptionProps}
-      className={cx("text-[13px] leading-snug text-[var(--ui-muted-text)]", className)}
+      className={cx("text-[13px] leading-snug text-(--ui-muted-text)", className)}
       data-ui-drawer-description
       ref={ref}
     >

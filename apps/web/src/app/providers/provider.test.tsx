@@ -120,7 +120,7 @@ describe("AppProviders", () => {
   });
 
   it("fails clearly when responsive mode is read outside AppProviders", () => {
-    expect(() => render(<ResponsiveModeConsumer />)).toThrowError(
+    expect(() => render(<ResponsiveModeConsumer />)).toThrow(
       "useAppResponsiveMode must be used within AppProviders",
     );
   });

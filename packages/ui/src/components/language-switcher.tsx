@@ -37,7 +37,7 @@ export function LanguageSwitcher(props: LanguageSwitcherProps) {
   return (
     <Field
       aria-busy={props.busy || undefined}
-      className="border-t border-[var(--ui-separator)] py-4 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-center"
+      className="border-t border-(--ui-separator) py-4 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-center"
       data-ui-component="UI-CMP-003"
     >
       {props.label && <FieldLabel>{props.label}</FieldLabel>}

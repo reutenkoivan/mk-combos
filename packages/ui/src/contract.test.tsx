@@ -174,6 +174,13 @@ import {
 } from "@mk-combos/ui/primitives/segmented-control";
 import { Badge, LoadingIndicator, StatusMessage } from "@mk-combos/ui/primitives/state";
 import {
+  TabsList,
+  TabsPanel,
+  TabsRoot,
+  type TabsRootProps,
+  TabsTab,
+} from "@mk-combos/ui/primitives/tabs";
+import {
   uiContrastModes as schemaContrastModes,
   uiControlPresentationModes as schemaControlPresentationModes,
   uiDensityModes as schemaDensityModes,
@@ -259,6 +266,7 @@ import { itemRecipe } from "./recipes/item";
 import { popupRecipe } from "./recipes/popup";
 import { separatorRecipe } from "./recipes/separator";
 import { surfaceRecipe } from "./recipes/surface";
+import { tabsIndicatorRecipe, tabsTabRecipe } from "./recipes/tabs";
 
 const acceptsUiTokenTypes = <
   _Tokens extends {
@@ -302,6 +310,7 @@ const acceptsPrimitiveTypes = <
     popoverPositionerProps: PopoverPositionerProps;
     popoverTriggerProps: PopoverTriggerProps;
     segmentOption: SegmentedControlOption<"EN" | "UA">;
+    tabsRoot: TabsRootProps;
     workstationSection: WorkstationSectionProps;
     focusNeighbors: UiFocusNeighbors;
     focusRestoreReason: UiFocusRestoreReason;
@@ -409,6 +418,7 @@ describe("@mk-combos/ui foundation", () => {
       positioning: "@mk-combos/ui/primitives/positioning",
       segmentedControl: "@mk-combos/ui/primitives/segmented-control",
       state: "@mk-combos/ui/primitives/state",
+      tabs: "@mk-combos/ui/primitives/tabs",
     });
     expect(contractEntry.uiContractGroups.styles.css).toBe("@mk-combos/ui/styles.css");
     expect(contractEntry.uiContractGroups.icons.gamepad2).toBe("@mk-combos/ui/icons/gamepad-2");
@@ -781,10 +791,10 @@ describe("@mk-combos/ui foundation", () => {
     expect(filledControlClasses).toContain("cursor-pointer");
     expect(filledControlClasses).toContain("font-medium");
     expect(filledControlClasses).not.toContain("uppercase");
-    expect(filledControlClasses).toContain("enabled:hover:bg-[var(--ui-control-hover)]");
-    expect(prominentAccentClasses).toContain("var(--ui-accent)");
+    expect(filledControlClasses).toContain("enabled:hover:bg-(--ui-control-hover)");
+    expect(prominentAccentClasses).toContain("bg-(--ui-accent)");
     expect(prominentAccentClasses).toContain("enabled:hover:bg-[color-mix");
-    expect(selectedControlClasses).toContain("var(--ui-selection-muted)");
+    expect(selectedControlClasses).toContain("bg-(--ui-selection-muted)");
     expect(selectedControlClasses).toContain("enabled:hover:bg-[color-mix");
     expect(iconControlClasses).toContain("border-transparent");
     expect(iconControlClasses).toContain("bg-transparent");
@@ -792,13 +802,13 @@ describe("@mk-combos/ui foundation", () => {
     expect(iconControlClasses).toContain("shadow-none");
     expect(iconControlClasses).toContain("enabled:hover:border-transparent");
     expect(iconControlClasses).toContain("enabled:hover:bg-transparent");
-    expect(iconControlClasses).toContain("enabled:hover:text-[var(--ui-accent-strong)]");
+    expect(iconControlClasses).toContain("enabled:hover:text-(--ui-accent-strong)");
     expect(disabledControlClasses).toContain("cursor-not-allowed");
     expect(disabledControlClasses).not.toContain("pointer-events-none");
     expect(loadingControlClasses).toContain("cursor-wait");
     expect(editableFieldClasses).toContain("cursor-text");
-    expect(editableFieldClasses).toContain("enabled:hover:border-[var(--ui-accent)]");
-    expect(invalidFieldClasses).toContain("var(--ui-destructive)");
+    expect(editableFieldClasses).toContain("enabled:hover:border-(--ui-accent)");
+    expect(invalidFieldClasses).toContain("border-(--ui-destructive)");
     expect(invalidFieldClasses).toContain("enabled:hover:border-[color-mix");
     expect(readOnlyFieldClasses).toContain("cursor-text");
     expect(readOnlyFieldClasses).not.toContain("hover:");
@@ -808,18 +818,22 @@ describe("@mk-combos/ui foundation", () => {
     expect(surfaceRecipe({ material: "glass" })).toContain("backdrop-blur");
     expect(interactiveItemClasses).toContain("[&:not([data-disabled=true])]:cursor-pointer");
     expect(interactiveItemClasses).toContain(
-      "[&:not([data-disabled=true])]:hover:bg-[var(--ui-control-hover)]",
+      "[&:not([data-disabled=true])]:hover:bg-(--ui-control-hover)",
     );
-    expect(selectedItemClasses).toContain("var(--ui-selection)");
+    expect(selectedItemClasses).toContain("bg-(--ui-selection)");
     expect(selectedItemClasses).toContain("[&:not([data-disabled=true])]:hover:bg-[color-mix");
     expect(disabledItemClasses).toContain("cursor-not-allowed");
     expect(disabledItemClasses).not.toContain("pointer-events-none");
     expect(loadingItemClasses).toContain("cursor-wait");
     expect(staticItemClasses).not.toContain("cursor-pointer");
     expect(staticItemClasses).not.toContain("hover:");
-    expect(indicatorRecipe({ tone: "warning" })).toContain("var(--ui-warning)");
-    expect(popupRecipe({ material: "elevated" })).toContain("var(--ui-shadow)");
+    expect(indicatorRecipe({ tone: "warning" })).toContain("text-(--ui-warning)");
+    expect(popupRecipe({ material: "elevated" })).toContain("shadow-(--ui-shadow)");
     expect(separatorRecipe({ orientation: "vertical" })).toContain("w-px");
+    expect(tabsTabRecipe()).toContain("[&:not([data-disabled])]:hover:bg-(--ui-control-hover)");
+    expect(tabsTabRecipe()).toContain("data-[active]:text-(--ui-text)");
+    expect(tabsTabRecipe()).toContain("data-[disabled]:cursor-not-allowed");
+    expect(tabsIndicatorRecipe()).toContain("motion-reduce:transition-none");
     expect(recipeBarrel.controlRecipe).toBe(controlRecipe);
     expect(recipeBarrel.fieldRecipe).toBe(fieldRecipe);
     expect(recipeBarrel.indicatorRecipe).toBe(indicatorRecipe);
@@ -827,6 +841,8 @@ describe("@mk-combos/ui foundation", () => {
     expect(recipeBarrel.popupRecipe).toBe(popupRecipe);
     expect(recipeBarrel.separatorRecipe).toBe(separatorRecipe);
     expect(recipeBarrel.surfaceRecipe).toBe(surfaceRecipe);
+    expect(recipeBarrel.tabsIndicatorRecipe).toBe(tabsIndicatorRecipe);
+    expect(recipeBarrel.tabsTabRecipe).toBe(tabsTabRecipe);
     expect(recipeBarrel.cx("a", false, "b")).toBe("a b");
   });
 
@@ -917,7 +933,7 @@ describe("@mk-combos/ui foundation", () => {
     );
     expect(screen.getByRole("textbox", { name: "Query" }).className).toContain("cursor-text");
     expect(screen.getByRole("textbox", { name: "Query" }).className).toContain(
-      "enabled:hover:border-[var(--ui-accent)]",
+      "enabled:hover:border-(--ui-accent)",
     );
     expect(screen.getByRole("textbox", { name: "Read only query" }).className).toContain(
       "cursor-text",
@@ -1014,6 +1030,60 @@ describe("@mk-combos/ui foundation", () => {
     expect(segmentPayloads).toEqual([]);
   });
 
+  it("renders controlled tabs with normalized changes and unmounted inactive panels", () => {
+    const tabPayloads: Array<{ reason: string; value: string }> = [];
+    const { rerender } = render(
+      <TabsRoot onValueChange={(payload) => tabPayloads.push(payload)} value="interface">
+        <TabsList aria-label="Settings sections">
+          <TabsTab value="interface">Interface</TabsTab>
+          <TabsTab value="backup">Game backups</TabsTab>
+          <TabsTab disabled value="disabled">
+            Disabled section
+          </TabsTab>
+        </TabsList>
+        <TabsPanel value="interface">Interface settings</TabsPanel>
+        <TabsPanel value="backup">Backup settings</TabsPanel>
+      </TabsRoot>,
+    );
+
+    const interfaceTab = screen.getByRole("tab", { name: "Interface" });
+    const backupTab = screen.getByRole("tab", { name: "Game backups" });
+    const disabledTab = screen.getByRole("tab", { name: "Disabled section" });
+
+    expect(interfaceTab.getAttribute("aria-selected")).toBe("true");
+    expect(interfaceTab.className).toContain("cursor-pointer");
+    expect(interfaceTab.className).toContain("focus-visible:shadow");
+    expect(disabledTab.className).toContain("data-[disabled]:cursor-not-allowed");
+    expect(disabledTab.getAttribute("aria-disabled")).toBe("true");
+    expect(screen.getByText("Interface settings")).toBeTruthy();
+    expect(screen.queryByText("Backup settings")).toBeNull();
+    expect(document.querySelector("[data-ui-tabs-indicator]")).toBeTruthy();
+
+    fireEvent.click(backupTab);
+    fireEvent.click(disabledTab);
+
+    expect(tabPayloads).toEqual([{ reason: "none", value: "backup" }]);
+    expect(tabPayloads[0]).not.toHaveProperty("event");
+
+    rerender(
+      <TabsRoot onValueChange={(payload) => tabPayloads.push(payload)} value="backup">
+        <TabsList aria-label="Settings sections">
+          <TabsTab value="interface">Interface</TabsTab>
+          <TabsTab value="backup">Game backups</TabsTab>
+        </TabsList>
+        <TabsPanel value="interface">Interface settings</TabsPanel>
+        <TabsPanel value="backup">Backup settings</TabsPanel>
+      </TabsRoot>,
+    );
+
+    expect(screen.queryByText("Interface settings")).toBeNull();
+    expect(screen.getByText("Backup settings")).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "Game backups" }).getAttribute("aria-selected")).toBe(
+      "true",
+    );
+    expect(acceptsPrimitiveTypes()).toBe(true);
+  });
+
   it("wraps Base UI disclosure, popover, and menu mechanics behind semantic surfaces", () => {
     const disclosurePayloads: Array<{ open: boolean; reason: string; sourceFocusTarget?: string }> =
       [];
@@ -1108,6 +1178,25 @@ describe("@mk-combos/ui foundation", () => {
     });
     expect(disclosurePayloads[0]).not.toHaveProperty("event");
     expect(menuPayloads[0]).not.toHaveProperty("event");
+  });
+
+  it("animates disclosure panels with a reduced-motion fallback", () => {
+    render(
+      <DisclosureRoot open>
+        <DisclosureTrigger>Animated details</DisclosureTrigger>
+        <DisclosurePanel>Animated panel content</DisclosurePanel>
+      </DisclosureRoot>,
+    );
+
+    const panel = document.querySelector("[data-ui-disclosure-panel]");
+
+    expect(panel).toBeTruthy();
+    expect(panel?.className).toContain("h-(--collapsible-panel-height)");
+    expect(panel?.className).toContain("overflow-hidden");
+    expect(panel?.className).toContain("transition-[height,opacity]");
+    expect(panel?.className).toContain("data-starting-style:h-0");
+    expect(panel?.className).toContain("data-ending-style:h-0");
+    expect(panel?.className).toContain("motion-reduce:transition-none");
   });
 
   it("renders modal dialog primitives with accessible title and close control", () => {

@@ -1,5 +1,5 @@
 import type { z } from "zod/v4";
 
-import type { BackupEnvelopeSchema } from "./schema";
+import type { GameBackupEnvelopeSchema } from "./schema";
 
-export type BackupEnvelope = z.output<typeof BackupEnvelopeSchema>;
+export type GameBackupEnvelope = z.output<typeof GameBackupEnvelopeSchema>;

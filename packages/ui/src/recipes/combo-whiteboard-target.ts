@@ -21,7 +21,7 @@ export const comboWhiteboardTargetRecipe = tv({
   base: "relative outline-none transition-[background-color,border-color,box-shadow,opacity]",
   compoundVariants: [
     {
-      class: `bg-[var(--ui-selection-muted)] ${insetFocusRing} after:pointer-events-none after:absolute after:inset-1 after:border after:border-dashed after:border-[var(--ui-accent)] after:content-['']`,
+      class: `bg-(--ui-selection-muted) ${insetFocusRing} after:pointer-events-none after:absolute after:inset-1 after:border after:border-dashed after:border-(--ui-accent) after:content-['']`,
       focused: true,
       pickedUp: true,
     },
@@ -65,15 +65,15 @@ export const comboWhiteboardTargetRecipe = tv({
     },
     kind: {
       gap: "grid w-11 place-items-center gap-1",
-      step: "grid h-full w-44 gap-1 rounded-[var(--ui-radius-control)] border border-[var(--ui-control-border)] bg-[var(--ui-control)] p-1",
+      step: "grid h-full w-44 gap-1 rounded-(--ui-radius-control) border border-(--ui-control-border) bg-(--ui-control) p-1",
     },
     invalid: {
       false: "",
-      true: "border-l-4 border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)] before:absolute before:right-1 before:top-1 before:z-20 before:grid before:h-5 before:w-5 before:place-items-center before:rounded-full before:border before:border-current before:text-xs before:font-black before:content-['!']",
+      true: "border-l-4 border-(--ui-destructive) bg-(--ui-destructive-soft) before:absolute before:right-1 before:top-1 before:z-20 before:grid before:h-5 before:w-5 before:place-items-center before:rounded-full before:border before:border-current before:text-xs before:font-black before:content-['!']",
     },
     pickedUp: {
       false: "",
-      true: "bg-[var(--ui-selection-muted)]",
+      true: "bg-(--ui-selection-muted)",
     },
     state: {
       busy: "cursor-wait opacity-80",

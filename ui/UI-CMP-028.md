@@ -11,7 +11,7 @@
 
 ## Призначення
 
-`UI-CMP-028` показує parsed backup summary, validation result і destructive replace confirmation.
+`UI-CMP-028` показує parsed per-game backup summary, validation result і destructive confirmation заміни однієї game slice.
 
 ## Володіння
 
@@ -58,7 +58,7 @@
 
 ## Вхідні дані
 
-- parsed backup summary, validation result і replace impact summary.
+- target `gameId`, parsed `GameBackupEnvelope` summary, validation result і replace impact summary для matching game slice.
 - import busy/error state, destructive confirmation availability і source focus target.
 - active language.
 
@@ -73,12 +73,13 @@ Payload містить backup candidate id або validation result id, reason �
 
 ## Межі відповідальності
 
-Компонент не парсить JSON, не виконує replace, не приховує validation errors і не змінює seeded combo data.
+Компонент не парсить JSON, не виконує replace, не приховує validation errors і не змінює seeded combo data. Global settings та інші game slices не входять у preview impact.
 
 ## Критерії приймання
 
 - Replace action явно destructive.
-- Invalid backup не може перейти в confirm replace.
+- Invalid backup, unsupported version, uninstalled `gameId` або target mismatch не можуть перейти в confirm replace.
+- Preview однозначно показує, що replace змінить лише matching `games[gameId]`.
 - Cancel/close не мутує local state.
 
 ## Канонічний Responsive і Controller-only Contract

@@ -51,7 +51,7 @@ export function SegmentedControl<Value extends string>(props: SegmentedControlPr
       {...controlProps}
       aria-label={ariaLabel}
       className={cx(
-        "inline-flex min-w-0 flex-wrap items-center gap-1 rounded-[var(--ui-radius-control)] bg-[var(--ui-control)] p-1",
+        "inline-flex min-w-0 flex-wrap items-center gap-1 rounded-(--ui-radius-control) bg-(--ui-control) p-1",
         className,
       )}
       data-disabled={disabled ? "true" : undefined}

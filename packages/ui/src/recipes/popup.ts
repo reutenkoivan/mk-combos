@@ -3,7 +3,7 @@ import { tv } from "tailwind-variants";
 export const popupRecipe = tv({
   base: [
     "z-50 max-h-[min(var(--available-height,24rem),24rem)] overflow-auto",
-    "border border-[color-mix(in_srgb,var(--ui-separator)_88%,transparent)] text-[var(--ui-text)] outline-none",
+    "border border-[color-mix(in_srgb,var(--ui-separator)_88%,transparent)] text-(--ui-text) outline-none",
   ].join(" "),
   compoundVariants: [
     {
@@ -24,11 +24,11 @@ export const popupRecipe = tv({
       small: "p-1.5",
     },
     material: {
-      elevated: "bg-[var(--ui-popover)] shadow-[var(--ui-shadow)]",
-      glass: "bg-[var(--ui-glass)] shadow-[var(--ui-shadow)]",
+      elevated: "bg-(--ui-popover) shadow-(--ui-shadow)",
+      glass: "bg-(--ui-glass) shadow-(--ui-shadow)",
       none: "border-transparent bg-transparent",
-      opaque: "bg-[var(--ui-popover)]",
-      separated: "bg-[var(--ui-popover)]",
+      opaque: "bg-(--ui-popover)",
+      separated: "bg-(--ui-popover)",
     },
     placement: {
       block: "",
@@ -40,7 +40,7 @@ export const popupRecipe = tv({
     shape: {
       capsule: "rounded-full",
       concentric: "rounded-[calc(var(--ui-radius-surface)-3px)]",
-      fixed: "rounded-[var(--ui-radius-surface)]",
+      fixed: "rounded-(--ui-radius-surface)",
     },
   },
 });

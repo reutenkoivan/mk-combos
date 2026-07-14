@@ -1,7 +1,7 @@
 import { tv } from "tailwind-variants";
 
 export const separatorRecipe = tv({
-  base: "shrink-0 bg-[var(--ui-separator)]",
+  base: "shrink-0 bg-(--ui-separator)",
   defaultVariants: {
     density: "small",
     orientation: "horizontal",
@@ -18,11 +18,11 @@ export const separatorRecipe = tv({
       vertical: "h-full w-px",
     },
     tone: {
-      accent: "bg-[var(--ui-accent)]",
-      destructive: "bg-[var(--ui-destructive-border)]",
+      accent: "bg-(--ui-accent)",
+      destructive: "bg-(--ui-destructive-border)",
       neutral: "",
-      success: "bg-[var(--ui-success-border)]",
-      warning: "bg-[var(--ui-warning-border)]",
+      success: "bg-(--ui-success-border)",
+      warning: "bg-(--ui-warning-border)",
     },
   },
 });

@@ -246,14 +246,14 @@ describe("BuilderActionBar", () => {
     const dock = view.container.querySelector('[data-ui-component="UI-CMP-026"]');
 
     expect(dock?.getAttribute("data-layout")).toBe("dock");
-    expect(dock?.className).toContain("shadow-[var(--ui-shadow)]");
+    expect(dock?.className).toContain("shadow-(--ui-shadow)");
     expect(dock?.className).not.toContain("sticky");
     expect(view.container.querySelector('[data-builder-action-region="undo"]')).toBeTruthy();
     expect(view.container.querySelector('[data-builder-action-region="status"]')).toBeTruthy();
     expect(view.container.querySelector('[data-builder-action-region="primary"]')).toBeTruthy();
     expect(screen.getByRole("button", { name: "Undo move" }).className).not.toContain("min-h-11");
     expect(screen.getByRole("button", { name: "Finish combo" }).className).toContain(
-      "bg-[var(--ui-accent)]",
+      "bg-(--ui-accent)",
     );
 
     for (const responsiveMode of [uiResponsiveModes.mobile, uiResponsiveModes.tablet] as const) {
@@ -307,7 +307,7 @@ describe("BuilderActionBar", () => {
 
     const status = screen.getByRole("alert");
     expect(status.textContent).toBe("Combo could not be saved");
-    expect(status.className).toContain("text-[var(--ui-destructive)]");
+    expect(status.className).toContain("text-(--ui-destructive)");
     expect(status.getAttribute("aria-live")).toBe("assertive");
     expect(
       view.container.querySelector('[data-ui-component="UI-CMP-026"]')?.getAttribute("data-state"),

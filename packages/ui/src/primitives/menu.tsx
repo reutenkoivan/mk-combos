@@ -234,7 +234,7 @@ export function MenuGroupLabel(props: MenuGroupLabelProps) {
   return (
     <BaseMenu.GroupLabel
       {...labelProps}
-      className={cx("px-2 text-xs font-semibold text-[var(--ui-muted-text)]", className)}
+      className={cx("px-2 text-xs font-semibold text-(--ui-muted-text)", className)}
       data-ui-menu-group-label
       ref={ref}
     >

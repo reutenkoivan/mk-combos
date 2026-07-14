@@ -190,7 +190,7 @@ UI-PAGE-001 App Shell
 
 ### `UI-PAGE-002` First-Launch Setup
 
-Збирає default language, default game і notation display mode для root first launch. Valid route-prefixed deep link обходить setup і виводить active game з URL.
+Збирає default language, default game і notation display mode для root first launch. Browser locale `uk` або `uk-*` дає default `UA`, решта locale — `EN`. Valid route-prefixed deep link обходить setup і виводить active game з URL.
 
 ### `UI-PAGE-003` Catalog
 
@@ -213,7 +213,7 @@ Shared builder page. Використовує `@mk-combos/ui` для whiteboard/
 
 ### `UI-PAGE-008` Settings
 
-Global settings page. Language/display mode settings і backup import/export живуть тут. Game switching після first launch відбувається через `UI-CMP-002 Game Switcher` усередині global breadcrumbs.
+Global settings page. Language і display mode застосовуються та autosave-яться одразу після вибору. Backup section будується як single-open accordion: по одному `UI-CMP-034` для кожної installed game, і кожен item імпортує/експортує лише свою game slice. Game switching після first launch відбувається через `UI-CMP-002 Game Switcher` усередині global breadcrumbs.
 
 ## Підсумок Володіння Компонентами
 
@@ -224,6 +224,7 @@ Global settings page. Language/display mode settings і backup import/export ж�
 - `UI-CMP-007`, `UI-CMP-008` і `UI-CMP-009` є picker surfaces. Їхні option descriptors і layout data приходять з active game business або game-specific catalog packages.
 - `UI-CMP-010`, `UI-CMP-011`, `UI-CMP-012` і `UI-CMP-013` рендерять prepared catalog models і емітять events до page.
 - `UI-CMP-015` рендерить notation із provided notation data і display mode через UI-owned notation icon registry; він не мутує combo data.
+- `UI-CMP-034` рендериться Settings по одному разу на installed game; parent володіє accordion state, target `gameId`, file IO та orchestration game-business validation.
 - `UI-CMP-035` і `UI-CMP-036` є pure components із `@mk-combos/ui`; їхні page-level hooks готують view models і semantic handlers, а graph validity і replay належать active game builder logic.
 
 ## System States

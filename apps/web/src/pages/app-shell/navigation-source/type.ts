@@ -1,3 +1,4 @@
+import type { LanguageCode } from "@mk-combos/contracts/settings/type";
 import type { UiResponsiveMode } from "@mk-combos/ui/components/type";
 
 import type { InstalledGameBusiness } from "../../../game-business/installed-games/type";
@@ -15,6 +16,8 @@ export type AppShellSource = Readonly<{
   state: Readonly<{
     activeBusiness: InstalledGameBusiness;
     gameMenuOpen: boolean;
+    language: LanguageCode;
+    navigationAvailable: boolean;
     navigationPending: boolean;
     responsiveMode: UiResponsiveMode;
     route: AppShellRoute;

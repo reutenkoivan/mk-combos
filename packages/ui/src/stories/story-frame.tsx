@@ -27,7 +27,7 @@ export function StoryFrame(props: StoryFrameProps) {
   return (
     <UiRoot
       className={cx(
-        "grid min-h-screen content-start justify-items-center bg-[var(--ui-window)]",
+        "grid min-h-screen content-start justify-items-center bg-(--ui-window)",
         storyFramePaddingClasses[responsiveMode],
       )}
       contrast={props.contrast ?? uiContrastModes.standard}

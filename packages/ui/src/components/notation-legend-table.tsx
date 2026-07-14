@@ -28,7 +28,7 @@ export function NotationLegendTable(props: NotationLegendTableProps) {
 
   return (
     <div
-      className="min-w-0 overflow-hidden border-t border-[var(--ui-separator)] py-4"
+      className="min-w-0 overflow-hidden border-t border-(--ui-separator) py-4"
       data-disabled={props.disabled || undefined}
       data-invalid={props.invalid || undefined}
       data-layout={layout}
@@ -39,17 +39,25 @@ export function NotationLegendTable(props: NotationLegendTableProps) {
         className={
           layout === notationLegendTableLayouts.table
             ? "w-full border-collapse text-left text-sm"
-            : "block w-full text-left text-sm [&_tbody]:grid [&_tbody]:divide-y [&_tbody]:divide-[var(--ui-separator)] [&_thead]:sr-only [&_tr]:grid [&_tr]:gap-2 [&_tr]:py-3"
+            : "block w-full text-left text-sm [&_tbody]:grid [&_tbody]:divide-y [&_tbody]:divide-(--ui-separator) [&_thead]:sr-only [&_tr]:grid [&_tr]:gap-2 [&_tr]:py-3"
         }
       >
         {props.caption && (
-          <caption className="pb-3 text-left font-semibold">{props.caption}</caption>
+          <caption
+            className={
+              layout === notationLegendTableLayouts.table
+                ? "pb-3 text-left font-semibold"
+                : "block w-full pb-3 text-left font-semibold"
+            }
+          >
+            {props.caption}
+          </caption>
         )}
         <thead>
           <tr
             className={
               layout === notationLegendTableLayouts.table
-                ? "border-b border-[var(--ui-separator)]"
+                ? "border-b border-(--ui-separator)"
                 : undefined
             }
           >
@@ -71,7 +79,7 @@ export function NotationLegendTable(props: NotationLegendTableProps) {
             <tr
               className={
                 layout === notationLegendTableLayouts.table
-                  ? "border-b border-[var(--ui-separator)] last:border-b-0"
+                  ? "border-b border-(--ui-separator) last:border-b-0"
                   : undefined
               }
               key={row.mode}

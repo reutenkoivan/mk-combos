@@ -29,39 +29,38 @@ export const createFrameMeterSegmentRecipe = (
 ) =>
   tv({
     base: [
-      "inline-flex min-h-11 w-40 min-w-11 shrink-0 snap-start items-center justify-center overflow-hidden rounded-[var(--ui-radius-control)] border px-2.5 py-1.5 text-left text-xs font-medium outline-none",
+      "inline-flex min-h-11 w-40 min-w-11 shrink-0 snap-start items-center justify-center overflow-hidden rounded-(--ui-radius-control) border px-2.5 py-1.5 text-left text-xs font-medium outline-none",
       "transition-[background-color,border-color,box-shadow,color,filter,opacity]",
-      "focus-visible:shadow-[var(--ui-focus-ring)]",
+      "focus-visible:shadow-(--ui-focus-ring)",
       "enabled:cursor-pointer enabled:hover:brightness-[1.08]",
       "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-55",
       "data-[frozen=true]:cursor-wait data-[frozen=true]:opacity-80",
     ].join(" "),
     compoundVariants: [
       {
-        class: "border-[var(--ui-selection)] shadow-[inset_0_-3px_0_var(--ui-selection)]",
+        class: "border-(--ui-selection) shadow-[inset_0_-3px_0_var(--ui-selection)]",
         selected: true,
         validity: comboFrameMeterSegmentValidities.valid,
       },
       {
-        class: "border-[var(--ui-selection)] shadow-[inset_0_-3px_0_var(--ui-selection)]",
+        class: "border-(--ui-selection) shadow-[inset_0_-3px_0_var(--ui-selection)]",
         selected: true,
         validity: comboFrameMeterSegmentValidities.unavailable,
       },
       {
         class:
-          "border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)] text-[var(--ui-destructive)] shadow-[inset_0_-3px_0_var(--ui-destructive)]",
+          "border-(--ui-destructive) bg-(--ui-destructive-soft) text-(--ui-destructive) shadow-[inset_0_-3px_0_var(--ui-destructive)]",
         selected: true,
         validity: comboFrameMeterSegmentValidities.invalid,
       },
       {
         class:
-          "border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)] text-[var(--ui-destructive)] shadow-[var(--ui-focus-ring),inset_0_-3px_0_var(--ui-destructive)]",
+          "border-(--ui-destructive) bg-(--ui-destructive-soft) text-(--ui-destructive) shadow-[var(--ui-focus-ring),inset_0_-3px_0_var(--ui-destructive)]",
         focused: true,
         validity: comboFrameMeterSegmentValidities.invalid,
       },
       {
-        class:
-          "border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)] text-[var(--ui-destructive)]",
+        class: "border-(--ui-destructive) bg-(--ui-destructive-soft) text-(--ui-destructive)",
         frozen: true,
         validity: comboFrameMeterSegmentValidities.invalid,
       },
@@ -75,7 +74,7 @@ export const createFrameMeterSegmentRecipe = (
     variants: {
       focused: {
         false: "",
-        true: "shadow-[var(--ui-focus-ring)]",
+        true: "shadow-(--ui-focus-ring)",
       },
       frozen: {
         false: "",
@@ -83,32 +82,32 @@ export const createFrameMeterSegmentRecipe = (
       },
       kind: {
         [comboFrameMeterSegmentKinds.active]:
-          "border-[var(--ui-frame-active-border)] bg-[var(--ui-frame-active-soft)]",
+          "border-(--ui-frame-active-border) bg-(--ui-frame-active-soft)",
         [comboFrameMeterSegmentKinds.cancel]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition-soft)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition-soft)",
         [comboFrameMeterSegmentKinds.juggle]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition-soft)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition-soft)",
         [comboFrameMeterSegmentKinds.link]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition-soft)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition-soft)",
         [comboFrameMeterSegmentKinds.other]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition-soft)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition-soft)",
         [comboFrameMeterSegmentKinds.recovery]:
-          "border-[var(--ui-frame-recovery-border)] bg-[var(--ui-frame-recovery-soft)]",
+          "border-(--ui-frame-recovery-border) bg-(--ui-frame-recovery-soft)",
         [comboFrameMeterSegmentKinds.startup]:
-          "border-[var(--ui-frame-startup-border)] bg-[var(--ui-frame-startup-soft)]",
+          "border-(--ui-frame-startup-border) bg-(--ui-frame-startup-soft)",
         [comboFrameMeterSegmentKinds.transition]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition-soft)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition-soft)",
       },
       selected: {
         false: "",
-        true: "border-[var(--ui-selection)]",
+        true: "border-(--ui-selection)",
       },
       validity: {
         [comboFrameMeterSegmentValidities.invalid]:
-          "border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)] text-[var(--ui-destructive)] enabled:hover:brightness-[0.96]",
+          "border-(--ui-destructive) bg-(--ui-destructive-soft) text-(--ui-destructive) enabled:hover:brightness-[0.96]",
         [comboFrameMeterSegmentValidities.unavailable]:
-          "border-dashed border-[var(--ui-control-border)] bg-[var(--ui-control)] text-[var(--ui-muted-text)] enabled:hover:bg-[var(--ui-control-hover)]",
-        [comboFrameMeterSegmentValidities.valid]: "text-[var(--ui-text)]",
+          "border-dashed border-(--ui-control-border) bg-(--ui-control) text-(--ui-muted-text) enabled:hover:bg-(--ui-control-hover)",
+        [comboFrameMeterSegmentValidities.valid]: "text-(--ui-text)",
       },
     },
   });
@@ -121,17 +120,17 @@ export const createFrameMeterCellRecipe = (
   tv({
     base: [
       "relative h-7 origin-center appearance-none overflow-hidden border-y border-r p-0 text-inherit",
-      "after:pointer-events-none after:absolute after:inset-0 after:border-r after:border-[var(--ui-frame-cell-divider)]",
+      "after:pointer-events-none after:absolute after:inset-0 after:border-r after:border-(--ui-frame-cell-divider)",
       "transition-[filter,outline-color,transform] motion-reduce:transition-none",
     ].join(" "),
     compoundVariants: [
       {
         class:
-          "outline outline-2 outline-offset-[-2px] outline-[var(--ui-destructive)] after:bg-[repeating-linear-gradient(135deg,transparent_0,transparent_4px,color-mix(in_srgb,var(--ui-destructive)_48%,transparent)_4px,color-mix(in_srgb,var(--ui-destructive)_48%,transparent)_7px)]",
+          "outline outline-2 outline-offset-[-2px] outline-(--ui-destructive) after:bg-[repeating-linear-gradient(135deg,transparent_0,transparent_4px,color-mix(in_srgb,var(--ui-destructive)_48%,transparent)_4px,color-mix(in_srgb,var(--ui-destructive)_48%,transparent)_7px)]",
         validity: comboFrameMeterSegmentValidities.invalid,
       },
       {
-        class: "outline-offset-2 outline-[var(--ui-selection)]",
+        class: "outline-offset-2 outline-(--ui-selection)",
         selected: true,
         validity: comboFrameMeterSegmentValidities.invalid,
       },
@@ -152,7 +151,7 @@ export const createFrameMeterCellRecipe = (
     variants: {
       focused: {
         false: "",
-        true: "z-30 shadow-[var(--ui-focus-ring)]",
+        true: "z-30 shadow-(--ui-focus-ring)",
       },
       frozen: {
         false: "",
@@ -164,21 +163,21 @@ export const createFrameMeterCellRecipe = (
       },
       kind: {
         [comboFrameMeterSegmentKinds.active]:
-          "border-[var(--ui-frame-active-border)] bg-[var(--ui-frame-active)]",
+          "border-(--ui-frame-active-border) bg-(--ui-frame-active)",
         [comboFrameMeterSegmentKinds.cancel]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition)",
         [comboFrameMeterSegmentKinds.juggle]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition)",
         [comboFrameMeterSegmentKinds.link]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition)",
         [comboFrameMeterSegmentKinds.other]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition)",
         [comboFrameMeterSegmentKinds.recovery]:
-          "border-[var(--ui-frame-recovery-border)] bg-[var(--ui-frame-recovery)]",
+          "border-(--ui-frame-recovery-border) bg-(--ui-frame-recovery)",
         [comboFrameMeterSegmentKinds.startup]:
-          "border-[var(--ui-frame-startup-border)] bg-[var(--ui-frame-startup)]",
+          "border-(--ui-frame-startup-border) bg-(--ui-frame-startup)",
         [comboFrameMeterSegmentKinds.transition]:
-          "border-[var(--ui-frame-transition-border)] bg-[var(--ui-frame-transition)]",
+          "border-(--ui-frame-transition-border) bg-(--ui-frame-transition)",
       },
       trackKind: {
         [comboFrameMeterTrackKinds.comparison]: "h-7",
@@ -187,12 +186,12 @@ export const createFrameMeterCellRecipe = (
       },
       selected: {
         false: "",
-        true: "z-20 scale-[1.06] outline outline-2 outline-offset-2 outline-[var(--ui-selection)]",
+        true: "z-20 scale-[1.06] outline outline-2 outline-offset-2 outline-(--ui-selection)",
       },
       validity: {
         [comboFrameMeterSegmentValidities.invalid]: "",
         [comboFrameMeterSegmentValidities.unavailable]:
-          "border-dashed bg-[var(--ui-control)] opacity-65",
+          "border-dashed bg-(--ui-control) opacity-65",
         [comboFrameMeterSegmentValidities.valid]: "",
       },
     },

@@ -2,6 +2,7 @@ import type { GameId } from "@mk-combos/contracts/identity/type";
 import { appRouteKinds } from "@mk-combos/contracts/routes/value";
 import type { BreadcrumbItem } from "@mk-combos/ui/components/type";
 
+import type { AppCopy } from "../../../app/localization/type";
 import type { AppShellRoute } from "../route-state/type";
 import { appShellOnlyRouteKinds } from "../route-state/value";
 import { shellBreadcrumbIds } from "./value";
@@ -9,13 +10,14 @@ import { shellBreadcrumbIds } from "./value";
 export function getBreadcrumbs(
   route: AppShellRoute,
   activeGameId: GameId,
+  copy: AppCopy["shell"],
 ): readonly BreadcrumbItem[] {
   const catalog: BreadcrumbItem = {
     current: false,
     disabled: false,
     id: shellBreadcrumbIds.catalog,
     kind: appRouteKinds.catalog,
-    label: "Catalog",
+    label: copy.catalog,
     target: {
       params: { gameId: activeGameId },
       route: "/$gameId/catalog",
@@ -34,7 +36,7 @@ export function getBreadcrumbs(
           disabled: false,
           id: shellBreadcrumbIds.lists,
           kind: appRouteKinds.lists,
-          label: "Named Lists",
+          label: copy.namedLists,
         },
       ];
     case appRouteKinds.builder:
@@ -45,7 +47,7 @@ export function getBreadcrumbs(
           disabled: false,
           id: shellBreadcrumbIds.builder,
           kind: appRouteKinds.builder,
-          label: "Builder",
+          label: copy.builder,
         },
       ];
     case appRouteKinds.comboDetail:
@@ -67,7 +69,7 @@ export function getBreadcrumbs(
           disabled: false,
           id: shellBreadcrumbIds.settings,
           kind: appRouteKinds.settings,
-          label: "Settings",
+          label: copy.settings,
         },
       ];
     case appShellOnlyRouteKinds.root:
@@ -77,7 +79,7 @@ export function getBreadcrumbs(
           disabled: false,
           id: shellBreadcrumbIds.root,
           kind: appShellOnlyRouteKinds.root,
-          label: "First launch",
+          label: copy.firstLaunch,
         },
       ];
     case appShellOnlyRouteKinds.recovery:
@@ -87,7 +89,7 @@ export function getBreadcrumbs(
           disabled: false,
           id: shellBreadcrumbIds.recovery,
           kind: appShellOnlyRouteKinds.recovery,
-          label: "Unavailable route",
+          label: copy.unavailableRoute,
         },
       ];
   }

@@ -79,7 +79,7 @@ export function StaleInvalidComboMarker(props: StaleInvalidComboMarkerProps) {
 
   return (
     <section
-      className="grid min-w-0 gap-2 rounded-[var(--ui-radius-control)] border border-[var(--ui-warning-border)] bg-[var(--ui-warning-soft)] p-3"
+      className="grid min-w-0 gap-2 rounded-(--ui-radius-control) border border-(--ui-warning-border) bg-(--ui-warning-soft) p-3"
       data-marker-state={props.state}
       data-ui-component="UI-CMP-031"
     >
@@ -95,10 +95,10 @@ export function StaleInvalidComboMarker(props: StaleInvalidComboMarkerProps) {
         </Stack>
       </Group>
       {props.affectedReference && (
-        <code className="text-xs text-[var(--ui-muted-text)]">{props.affectedReference}</code>
+        <code className="text-xs text-(--ui-muted-text)">{props.affectedReference}</code>
       )}
       {props.validPrefixSummary && (
-        <p className="text-xs text-[var(--ui-muted-text)]">{props.validPrefixSummary}</p>
+        <p className="text-xs text-(--ui-muted-text)">{props.validPrefixSummary}</p>
       )}
       {props.actions.length > 0 && (
         <Group>

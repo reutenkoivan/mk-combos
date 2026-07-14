@@ -40,11 +40,11 @@ export type StatusMessageProps = UiPrimitiveProps<HTMLDivElement> & {
 };
 
 const statusToneClasses = {
-  accent: "text-[var(--ui-accent-strong)]",
-  destructive: "text-[var(--ui-destructive)]",
-  neutral: "text-[var(--ui-muted-text)]",
-  success: "text-[var(--ui-success)]",
-  warning: "text-[var(--ui-warning)]",
+  accent: "text-(--ui-accent-strong)",
+  destructive: "text-(--ui-destructive)",
+  neutral: "text-(--ui-muted-text)",
+  success: "text-(--ui-success)",
+  warning: "text-(--ui-warning)",
 } as const;
 
 export function StatusMessage(props: StatusMessageProps) {

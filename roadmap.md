@@ -50,7 +50,7 @@ Each item also has `Done when` so `done` has a clear meaning.
 | 22 | done | `apps/web` Bootstrap | `apps/web` | TanStack Start app, static output, app package, route shell, providers exist. |
 | 23 | done | `apps/web` Game Registry | `apps/web` | `installed-games/value.ts` imports only `mkxlBusiness` and `mk1Business`. |
 | 24 | done | `apps/web` Routing And App Shell | `apps/web` | `UI-PAGE-001`, route `gameId`, generic routes, breadcrumbs, switching, deprecated redirect work. |
-| 25 | todo | `apps/web` First Launch And Settings | `apps/web` | `UI-PAGE-002`, `UI-PAGE-008`, settings, backup, export/import, persistence work. |
+| 25 | done | `apps/web` First Launch And Settings | `apps/web` | `UI-PAGE-002` and `UI-PAGE-008` persist first-launch/settings state; Settings autosaves language/notation and exports/imports one validated `GameBackupEnvelope` per installed game without changing settings or another `GameId` slice. |
 | 26 | todo | `apps/web` Catalog And Detail Pages | `apps/web` | `UI-PAGE-003` and `UI-PAGE-004` use business entry points and `@mk-combos/ui`. |
 | 27 | todo | `apps/web` Lists Page | `apps/web` | `UI-PAGE-005`, named lists, add-to-list, `GameId` isolation work. |
 | 28 | todo | `apps/web` Builder Page | `apps/web` | `UI-PAGE-006` supports create, duplicate, edit, repair, stale recovery, persistence. |

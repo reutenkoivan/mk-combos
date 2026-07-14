@@ -104,9 +104,9 @@ export function NamedListDetail(props: NamedListDetailProps) {
     <section className="grid min-w-0 gap-3" data-ui-component="UI-CMP-020">
       <Stack>
         <h2 className="text-lg font-semibold">{props.list.name}</h2>
-        <span className="text-sm text-[var(--ui-muted-text)]">{props.list.itemCount}</span>
+        <span className="text-sm text-(--ui-muted-text)">{props.list.itemCount}</span>
         {props.statusMessage && (
-          <p className="text-sm text-[var(--ui-muted-text)]">{props.statusMessage}</p>
+          <p className="text-sm text-(--ui-muted-text)">{props.statusMessage}</p>
         )}
       </Stack>
       {props.items.length === 0 && props.emptyState && (

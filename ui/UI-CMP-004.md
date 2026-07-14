@@ -9,7 +9,7 @@
 - Батьківська мапа: [UI.md](../UI.md)
 - Власники:
   - `packages/ui` для reusable segmented switcher, semantic recipes, states, Storybook stories і visual coverage
-  - `apps/web` для selected display mode, validation, Settings save/apply behavior, first-launch confirmation, persistence і localized copy source
+  - `apps/web` для selected display mode, validation, Settings immediate apply/autosave, first-launch confirmation, persistence і localized copy source
 - Батьківські сторінки: [`UI-PAGE-002 First-Launch Setup`](./UI-PAGE-002.md), [`UI-PAGE-008 Settings`](./UI-PAGE-008.md)
 - Батьківські компоненти: `UI-CMP-006 First-Launch Setup Form`, Settings form
 - Пов'язані компоненти: [`UI-CMP-037 Notation Legend Table`](./UI-CMP-037.md), [`UI-CMP-015 Notation Renderer`](./UI-CMP-015.md)
@@ -22,7 +22,7 @@
 Компонент має два context-и використання:
 
 - `firstLaunch`: pending initial notation display mode у `UI-PAGE-002 First-Launch Setup`;
-- `settings`: draft notation display mode у `UI-PAGE-008 Settings`.
+- `settings`: applied notation display mode з immediate autosave у `UI-PAGE-008 Settings`.
 
 У v1 дозволені display mode values:
 
@@ -55,7 +55,7 @@
 
 - current або pending selected display mode;
 - validation selected display mode проти supported app display modes;
-- Settings draft state, apply/save behavior і persistence;
+- Settings immediate application, synchronous persistence attempt і session-only fallback;
 - first-launch confirmation і completion marker;
 - localized copy source, labels, descriptions і validation messages;
 - поширення applied display mode в App Shell, active pages і [`UI-CMP-015 Notation Renderer`](./UI-CMP-015.md).
@@ -186,9 +186,9 @@ Selection у цьому context:
 
 Selection у цьому context:
 
-- оновлює draft notation display mode;
-- переводить Settings form у `editing`, якщо value відрізняється від applied display mode;
-- не виконує page-level save/apply action;
+- одразу стає applied notation display mode у parent flow;
+- одразу запускає page-level persistence attempt;
+- не потребує page-level save/apply action;
 - не пише localStorage напряму;
 - не змінює language або active game;
 - не мутує notation source data.
@@ -216,7 +216,7 @@ Selection у цьому context:
 Parent flow інтерпретує `requestSelectDisplayMode` за context:
 
 - у `firstLaunch` оновлює pending setup value;
-- у `settings` оновлює draft settings value і залишає save/apply behavior на Settings page.
+- у `settings` одразу застосовує value і запускає Settings autosave/session-only behavior.
 
 ## Межі відповідальності
 
@@ -235,7 +235,7 @@ Parent flow інтерпретує `requestSelectDisplayMode` за context:
 - rendering notation legend або SVG notation examples;
 - persistence у localStorage або session-only storage;
 - first-launch completion marker;
-- Settings save/apply lifecycle;
+- Settings immediate application, autosave або session-only lifecycle;
 - route navigation;
 - active/default game;
 - language;
@@ -267,29 +267,29 @@ Options готові, selected display mode валідний.
 - change оновлює pending initial display mode;
 - confirmation action лишається owner для completion.
 
-### `settingsClean`
+### `settingsReady`
 
 Компонент рендериться у Settings form і selected value дорівнює applied display mode.
 
 Очікуваний UI:
 
 - selected display mode readable;
-- control enabled, якщо Settings не saving;
+- control enabled, якщо parent не передав disabled/busy state;
 - validation/status message прихований, якщо немає проблеми.
 
-### `settingsEditing`
+### `settingsPersisting`
 
-Користувач вибрав display mode, який відрізняється від applied value.
+Користувач вибрав новий display mode; value вже applied, а Settings виконує persistence attempt.
 
 Очікуваний UI:
 
-- draft selected segment позначений як current UI selection;
-- page-level apply/save action стає owner для final application;
+- new applied segment позначений як current UI selection;
+- page-level flow synchronously намагається persist-нути value;
 - component не показує власний save button.
 
 ### `saving`
 
-Parent flow застосовує або persist-ить settings.
+Parent flow завершує first-launch confirmation або persist-ить already-applied Settings value.
 
 Очікуваний UI:
 
@@ -328,14 +328,15 @@ Selected display mode не знайдений серед available display modes
 4. `UI-PAGE-002` оновлює pending initial notation display mode.
 5. First-launch confirmation застосовує selected display mode разом із game і language.
 
-### Settings Draft Selection
+### Settings Autosave Selection
 
 1. Користувач відкриває `UI-PAGE-008 Settings`.
 2. Settings передає applied notation display mode як `selectedDisplayMode`.
 3. Користувач вибирає інший display mode.
 4. `UI-CMP-004` емітить `requestSelectDisplayMode(targetMode)`.
-5. Settings оновлює draft value і переходить у `editing`.
-6. Page-level apply/save action застосовує і persist-ить selected display mode.
+5. Settings одразу застосовує selected display mode до notation rendering.
+6. Page-level flow синхронно намагається persist-нути value.
+7. Persistence failure не відкатує selection: Settings показує session-only warning.
 
 ### No Top Bar Rendering
 
@@ -412,7 +413,7 @@ Forbidden primary public axes:
 - `ArrowLeft`/`ArrowRight` або `ArrowUp`/`ArrowDown` переміщують focus між options.
 - `Enter` і `Space` вибирають focused available option.
 - `focus-visible` має бути помітний у light, dark, standard contrast і increased contrast.
-- Busy state під час saving має бути оголошений assistive technologies через component або surrounding form.
+- Busy state під час persistence attempt, якщо він показаний, має бути оголошений assistive technologies через component або surrounding form.
 - Reduced motion має прибирати або скорочувати selected indicator transitions.
 - Color не є єдиним сигналом selected, invalid або unavailable state.
 
@@ -421,14 +422,14 @@ Forbidden primary public axes:
 - `UI-CMP-004` має окрему повну специфікацію.
 - `UI.md` посилається на `ui/UI-CMP-004.md`.
 - `UI-CMP-004` рендериться у `UI-PAGE-002 First-Launch Setup` як pending initial display mode control.
-- `UI-CMP-004` рендериться у `UI-PAGE-008 Settings` як draft/apply display mode control.
+- `UI-CMP-004` рендериться у `UI-PAGE-008 Settings` як applied/autosave display mode control.
 - Visual component, recipes, states, indicators, Storybook stories і visual coverage належать `packages/ui`.
-- App state, validation, Settings save/apply, first-launch confirmation, persistence і localized copy source належать `apps/web`.
+- App state, validation, Settings immediate apply/autosave, first-launch confirmation, persistence і localized copy source належать `apps/web`.
 - Control є compact segmented selector, а не dropdown або menu.
 - Supported display modes у v1: `FGC`, `PlayStation`, `Xbox`.
 - Labels приходять від parent/localization layer, а не хардкодяться visual primitive-ом.
 - Selection у first launch не завершує setup без explicit confirmation.
-- Selection у Settings не persist-иться без page-level apply/save behavior.
+- Selection у Settings застосовується одразу; page-level flow одразу намагається persist-нути її, а failure лишає session-only value без rollback.
 - Display mode change не змінює selected game, language, route, combo path, canonical FGC notation, seeded data, custom data, `cachedNotation` або backup state.
 - Top Bar і Top Bar Dropdown Menu не рендерять Display Mode Switcher.
 - Companion notation examples належать [`UI-CMP-037 Notation Legend Table`](./UI-CMP-037.md).
@@ -442,8 +443,8 @@ Storybook у `packages/ui` має містити сценарії:
 - `SelectedPlayStation`;
 - `SelectedXbox`;
 - `FirstLaunch`;
-- `SettingsClean`;
-- `SettingsEditing`;
+- `SettingsReady`;
+- `SettingsPersisting`;
 - `SavingDisabled`;
 - `InvalidSelectedDisplayMode`;
 - `UnavailableOption`;
@@ -486,10 +487,10 @@ Automated accessibility checks мають перевірити:
 - Вибір `Xbox` у setup оновлює pending display mode і не створює completion marker без confirmation.
 - Confirmation setup із `Xbox` застосовує app display mode і відкриває selected game Catalog.
 - Settings показує current applied display mode.
-- Вибір `PlayStation` у Settings переводить form у `editing`.
-- Save success застосовує `PlayStation` до notation rendering.
-- Save error не стирає selected draft display mode і показує recoverable message.
-- localStorage unavailable дозволяє session-only display mode application через page-level flow.
+- Вибір `PlayStation` у Settings одразу застосовує його до notation rendering.
+- Persistence success зберігає applied `PlayStation` без окремого Save action.
+- Persistence error не відкатує selected display mode і показує recoverable session-only message.
+- localStorage unavailable лишає display mode applied у session-only page-level flow.
 - Invalid selected display mode показує validation message і не auto-select-ить fallback без parent decision.
 - Disabled unavailable display mode не емітить `requestSelectDisplayMode`.
 - Top Bar не містить Display Mode Switcher у wide layout.

@@ -13,7 +13,7 @@ The canonical architecture document is [ARCHITECTURE.md](./ARCHITECTURE.md). Thi
 - Keep shared packages generic and reusable.
 - Support GitHub Pages hash links such as `/mk-combos/#/mkxl/catalog` and
   `/mk-combos/#/mk1/catalog`.
-- Support local settings, custom combos, named lists, full backup export/import, and stale combo recovery.
+- Support local settings, custom combos, named lists, per-game backup export/import, and stale combo recovery.
 - Support controller navigation through DualSense, Xbox-compatible, and Standard Gamepad API devices.
 - Render notation as `FGC`, `PlayStation`, or `Xbox` without changing the stored combo data.
 - Validate seeded data, graph data, local user data, and backup slices before release.
@@ -63,7 +63,7 @@ Root scopes have meaning:
 
 Package name: `@mk-combos/contracts`.
 
-Contains stable cross-game contracts only: `GameId`, `ComboRef`, localized text, notation display mode, backup envelope shape, generic route/source identifiers, and shared result shapes.
+Contains stable cross-game contracts only: `GameId`, `ComboRef`, localized text, notation display mode, the per-game `GameBackupEnvelope` shape, generic route/source identifiers, and shared result shapes.
 
 It must not contain MKXL variation rules, MKXL stage rules, MK1 kameo rules, installed game lists, or concrete game schemas.
 
@@ -175,24 +175,28 @@ type LocalAppState = {
 
 The web app owns the envelope and browser persistence. Each game business entry point owns validation and serialization for its game-specific slice.
 
-Full backup is also keyed by `GameId`:
+Each backup file contains one game slice:
 
 ```ts
-type BackupEnvelope = {
+type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue }
+
+type GameBackupEnvelope = {
   version: number
   exportedAt: string
-  settings: AppSettings
-  games: Record<GameId, unknown>
+  gameId: GameId
+  slice: JsonValue
 }
 ```
 
-Seeded game data is never imported from backup.
+The opaque slice must be JSON-safe. The file does not contain global settings or another game's slice. The shared schema keeps `version` forward-compatible, while the current web app accepts version `1`; it also validates installed/target `gameId` and then delegates `slice` validation to that game's business entry point. Import replaces only the matching `games[gameId]`; seeded game data is never imported from backup.
 
 ## User Workflows
 
 ### First Launch
 
-Root first launch shows required setup for default language, default game, and notation display mode. A valid route-prefixed deep link bypasses setup, derives active game from the URL, uses `FGC` display mode by default, and creates the first-launch marker or session-only equivalent.
+Root first launch shows required setup for default language, default game, and notation display mode. Browser locale `uk` or `uk-*` defaults to `UA`; every other locale defaults to `EN`. A valid route-prefixed deep link bypasses setup, derives active game from the URL, uses the same language fallback and `FGC` display mode, and creates the first-launch marker or session-only equivalent.
+
+Language and notation changes in Settings autosave immediately. If persistent storage fails, the selected value remains applied for the session and Settings shows a recoverable warning. Backup controls are an accordion with one `UI-CMP-034` item per installed game; every export/import operates only on that item’s game slice.
 
 ### Catalog
 
@@ -325,13 +329,13 @@ Acceptance:
 - Implement local state envelope keyed by `GameId`.
 - Implement custom combos and named lists through active game business validation.
 - Implement stale custom combo detection without deleting user data.
-- Implement full backup export/import with per-game slice validation.
+- Implement per-game backup export/import with matching game-business slice validation.
 
 Acceptance:
 
 - Local data survives refresh.
 - MKXL and MK1 lists/custom combos do not mix.
-- Backup import validates known game slices before replace.
+- Backup import rejects unsupported, uninstalled, or target-mismatched envelopes and validates the matching game slice before replace.
 - Stale custom combos remain visible and repairable.
 
 ### 8. CI/CD
@@ -359,7 +363,7 @@ Acceptance:
 - Builder-core primitives work without game-specific imports.
 - MKXL schemas validate variation/stage/interactable data.
 - MK1 schemas validate main character + kameo data.
-- Backup envelope validates known game slices through business entry points.
+- `GameBackupEnvelope` validates its wire shape and the matching game slice through the resolved business entry point.
 - Notation rendering maps FGC to PlayStation/Xbox display without mutating source notation.
 
 ### Integration
@@ -378,7 +382,7 @@ Acceptance:
 - Fresh browser direct link `/mk1/catalog` bypasses setup and opens MK1.
 - User switches games and each game restores its own last catalog context.
 - User creates a custom combo through valid transitions only.
-- User exports and imports full backup.
+- User exports and imports one game backup without changing settings or another game slice.
 - Controller navigation works across catalog, detail, lists, builder, and settings.
 
 ## Adding Another Game

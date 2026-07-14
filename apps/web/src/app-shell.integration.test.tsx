@@ -1,3 +1,5 @@
+import type { AppSettings } from "@mk-combos/contracts/settings/type";
+import { languageCodes, notationDisplayModes } from "@mk-combos/contracts/settings/value";
 import {
   act,
   fireEvent,
@@ -9,6 +11,10 @@ import {
 import { uiResponsiveModes } from "@mk-combos/ui/components/value";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
+import { PersistedLocalStateSchema } from "./app/local-state/schema";
+import { localStateStorageKey, localStateStorageVersion } from "./app/local-state/value";
+import { installedGames } from "./game-business/installed-games/value";
 import { getRouter } from "./router";
 
 vi.mock("./styles.css?url", () => ({ default: "/styles.css" }));
@@ -30,7 +36,39 @@ function installResponsiveMode(mode: "desktop" | "tablet") {
   });
 }
 
-async function renderRoute(path: string, mode: "desktop" | "tablet" = "desktop") {
+async function renderRoute(
+  path: string,
+  mode: "desktop" | "tablet" = "desktop",
+  completed = true,
+  settingsOverride: Partial<AppSettings> = {},
+) {
+  globalThis.window.localStorage.clear();
+
+  if (completed) {
+    const games = Object.fromEntries(
+      installedGames.map((business) => [business.id, business.backup.createEmptySlice()]),
+    );
+
+    globalThis.window.localStorage.setItem(
+      localStateStorageKey,
+      JSON.stringify(
+        PersistedLocalStateSchema.parse({
+          firstLaunchCompleted: true,
+          state: {
+            games,
+            settings: {
+              defaultGameId: installedGames[0].id,
+              language: languageCodes.EN,
+              lastActiveGameId: installedGames[0].id,
+              notationDisplayMode: notationDisplayModes.FGC,
+              ...settingsOverride,
+            },
+          },
+          version: localStateStorageVersion,
+        }),
+      ),
+    );
+  }
   installResponsiveMode(mode);
   const history = createMemoryHistory({
     initialEntries: [path],
@@ -54,7 +92,18 @@ async function selectGame(label: "MK1" | "MKXL") {
   fireEvent.click(await screen.findByRole("menuitem", { name: label }));
 }
 
+function readPersistedLocalState() {
+  const stored = globalThis.window.localStorage.getItem(localStateStorageKey);
+
+  if (stored === null) {
+    throw new Error("Expected persisted local state.");
+  }
+
+  return PersistedLocalStateSchema.parse(JSON.parse(stored));
+}
+
 afterEach(() => {
+  globalThis.window.localStorage.clear();
   Object.defineProperty(globalThis.window, "matchMedia", {
     configurable: true,
     value: originalMatchMedia,
@@ -62,6 +111,80 @@ afterEach(() => {
 });
 
 describe("AppShell route integration", () => {
+  it("keeps a fresh root on explicit first launch with shell navigation disabled", async () => {
+    const { router } = await renderRoute("/", "desktop", false);
+
+    expect(router.state.location.pathname).toBe("/");
+    expect(await screen.findByRole("heading", { name: "Set up MK Combos" })).toBeTruthy();
+    expect(
+      (screen.getByRole("button", { name: "Choose game" }) as HTMLButtonElement).disabled,
+    ).toBe(true);
+    expect(
+      (screen.getByRole("button", { name: "Open global menu" }) as HTMLButtonElement).disabled,
+    ).toBe(true);
+  });
+
+  it("bypasses first launch for a valid game deep link and persists URL-derived defaults", async () => {
+    const { router } = await renderRoute("/mk1/catalog", "desktop", false);
+
+    await waitFor(() => expect(router.state.location.pathname).toBe("/mk1/catalog"));
+    expect(await screen.findByRole("heading", { name: "Catalog" })).toBeTruthy();
+    await waitFor(() => {
+      const persisted = readPersistedLocalState();
+
+      expect(persisted.firstLaunchCompleted).toBe(true);
+      expect(persisted.state.settings.defaultGameId).toBe("mk1");
+      expect(persisted.state.settings.lastActiveGameId).toBe("mk1");
+    });
+  });
+
+  it("does not let a fresh non-game route bypass first launch", async () => {
+    const { router } = await renderRoute("/settings", "desktop", false);
+
+    await waitFor(() => expect(router.state.location.pathname).toBe("/"));
+    expect(await screen.findByRole("heading", { name: "Set up MK Combos" })).toBeTruthy();
+  });
+
+  it("redirects a completed root to the resolved game catalog", async () => {
+    const { router } = await renderRoute("/");
+
+    await waitFor(() => expect(router.state.location.pathname).toBe("/mkxl/catalog"));
+    expect(await screen.findByRole("heading", { name: "Catalog" })).toBeTruthy();
+  });
+
+  it("prefers a valid last-active game over a different configured default", async () => {
+    const { router } = await renderRoute("/", "desktop", true, {
+      defaultGameId: "mkxl",
+      lastActiveGameId: "mk1",
+    });
+
+    await waitFor(() => expect(router.state.location.pathname).toBe("/mk1/catalog"));
+    expect(await screen.findByText("Active game: MK1")).toBeTruthy();
+    expect(readPersistedLocalState().state.settings.defaultGameId).toBe("mkxl");
+  });
+
+  it("lets the route game win while preserving the configured default game", async () => {
+    await renderRoute("/mk1/catalog");
+
+    await waitFor(() => {
+      const settings = readPersistedLocalState().state.settings;
+
+      expect(settings.defaultGameId).toBe("mkxl");
+      expect(settings.lastActiveGameId).toBe("mk1");
+    });
+  });
+
+  it("returns from Settings to the captured working route", async () => {
+    const { router } = await renderRoute("/mk1/lists");
+
+    fireEvent.click(screen.getByRole("button", { name: "Open global menu" }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "Settings" }));
+    await waitFor(() => expect(router.state.location.pathname).toBe("/settings"));
+
+    fireEvent.click(screen.getByRole("button", { name: "Back to MK1 lists" }));
+    await waitFor(() => expect(router.state.location.pathname).toBe("/mk1/lists"));
+  });
+
   it.each([
     ["/mkxl/catalog", "MKXL", "mkxl"],
     ["/mk1/catalog", "MK1", "mk1"],
@@ -137,7 +260,9 @@ describe("AppShell route integration", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open global menu" }));
     fireEvent.click(await screen.findByRole("menuitem", { name: "Settings" }));
     await waitFor(() => expect(router.state.location.pathname).toBe("/settings"));
-    expect(screen.getByText("Active game: MKXL")).toBeTruthy();
+    expect(
+      document.querySelector('[data-ui-page="UI-PAGE-001"]')?.getAttribute("data-active-game"),
+    ).toBe("mkxl");
   });
 
   it("does not duplicate breadcrumb destinations in the desktop dropdown", async () => {
@@ -185,11 +310,17 @@ describe("AppShell route integration", () => {
   it("changes the session game on settings without leaving settings", async () => {
     const { router } = await renderRoute("/settings");
 
-    expect(screen.getByText("Active game: MKXL")).toBeTruthy();
+    expect(
+      document.querySelector('[data-ui-page="UI-PAGE-001"]')?.getAttribute("data-active-game"),
+    ).toBe("mkxl");
     await selectGame("MK1");
 
     expect(router.state.location.pathname).toBe("/settings");
-    await waitFor(() => expect(screen.getByText("Active game: MK1")).toBeTruthy());
+    await waitFor(() =>
+      expect(
+        document.querySelector('[data-ui-page="UI-PAGE-001"]')?.getAttribute("data-active-game"),
+      ).toBe("mk1"),
+    );
   });
 
   it("remembers a route game when entering settings", async () => {
@@ -199,7 +330,9 @@ describe("AppShell route integration", () => {
     fireEvent.click(await screen.findByRole("menuitem", { name: "Settings" }));
 
     await waitFor(() => expect(router.state.location.pathname).toBe("/settings"));
-    expect(screen.getByText("Active game: MK1")).toBeTruthy();
+    expect(
+      document.querySelector('[data-ui-page="UI-PAGE-001"]')?.getAttribute("data-active-game"),
+    ).toBe("mk1");
   });
 
   it.each([
@@ -240,14 +373,46 @@ describe("AppShell route integration", () => {
     expect(router.state.location.pathname).toBe("/settings");
     expect(router.state.location.search).toEqual({ section: "backup" });
     expect(history.length).toBe(1);
-    expect(screen.getByText(/Requested section: backup/)).toBeTruthy();
+    expect(screen.getByRole("tab", { name: "Game backups" }).getAttribute("aria-selected")).toBe(
+      "true",
+    );
+    expect(screen.getAllByRole("button", { name: /^MK(?:XL|1)$/u })).toHaveLength(
+      installedGames.length,
+    );
+    const target = screen.getByRole("button", { name: "MKXL" });
+
+    expect(target.getAttribute("aria-expanded")).toBe("true");
+    await waitFor(() => expect(document.activeElement).toBe(target));
+  });
+
+  it("synchronizes backup expansion when mounted Settings enters and leaves the section", async () => {
+    const { router } = await renderRoute("/settings");
+    expect(screen.queryByRole("button", { name: "MKXL" })).toBeNull();
+
+    await act(async () => {
+      await router.navigate({ search: { section: "backup" }, to: "/settings" });
+    });
+
+    const target = await screen.findByRole("button", { name: "MKXL" });
+
+    await waitFor(() => expect(target.getAttribute("aria-expanded")).toBe("true"));
+    await waitFor(() => expect(document.activeElement).toBe(target));
+
+    await act(async () => {
+      await router.navigate({ search: {}, to: "/settings" });
+    });
+
+    await waitFor(() => expect(screen.queryByRole("button", { name: "MKXL" })).toBeNull());
+    expect(screen.getByRole("heading", { name: "Interface" })).toBeTruthy();
   });
 
   it("ignores foreign settings keys without entering recovery", async () => {
     const view = await renderRoute("/settings?future=value");
 
     expect(screen.getByRole("heading", { name: "Settings" })).toBeTruthy();
-    expect(screen.getByText(/Settings, backup, and persistence/)).toBeTruthy();
+    expect(
+      screen.getByText("Adjust the interface or manage a separate backup for each game."),
+    ).toBeTruthy();
     expect(view.container.querySelector('[data-ui-page="route-recovery"]')).toBeNull();
     expect(screen.queryByText("value")).toBeNull();
   });

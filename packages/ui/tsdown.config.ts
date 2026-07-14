@@ -95,6 +95,7 @@ export default createReactTsdownConfig({
     "primitives/positioning": "src/primitives/positioning.ts",
     "primitives/segmented-control": "src/primitives/segmented-control.tsx",
     "primitives/state": "src/primitives/state.tsx",
+    "primitives/tabs": "src/primitives/tabs.tsx",
     "tokens/schema": "src/tokens/schema.ts",
     "tokens/type": "src/tokens/type.ts",
     "tokens/value": "src/tokens/value.ts",

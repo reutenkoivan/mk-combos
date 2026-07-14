@@ -85,7 +85,7 @@ export function ControllerHintStrip(props: ControllerHintStripProps) {
         <PopoverTrigger
           appearance={uiControlPresentationModes.icon}
           aria-label={props.label}
-          className="h-7 w-7 min-w-7 p-0 aria-expanded:text-[var(--ui-accent-strong)]"
+          className="h-7 w-7 min-w-7 p-0 aria-expanded:text-(--ui-accent-strong)"
           data-connection-state={props.connectionState}
           data-panel-state={props.panelOpen ? "open" : "closed"}
           tone={connected ? uiToneModes.success : uiToneModes.warning}
@@ -100,7 +100,7 @@ export function ControllerHintStrip(props: ControllerHintStripProps) {
           <PopoverPositioner align={uiFloatingAlignments.end}>
             <PopoverPopup className="w-[min(20rem,calc(100vw-2rem))]">
               <div className="grid gap-2">
-                <div className="grid gap-1 border-b border-[var(--ui-separator)] p-1 pb-2">
+                <div className="grid gap-1 border-b border-(--ui-separator) p-1 pb-2">
                   <PopoverTitle>{props.profileLabel ?? props.label}</PopoverTitle>
                   <StatusMessage tone={connected ? uiToneModes.success : uiToneModes.warning}>
                     {props.label}
@@ -109,16 +109,14 @@ export function ControllerHintStrip(props: ControllerHintStripProps) {
                 <ol className="grid list-none gap-1 p-0">
                   {props.hints.map((hint) => (
                     <li
-                      className="grid grid-cols-[auto_1fr] items-start gap-2 rounded-[var(--ui-radius-control)] p-1"
+                      className="grid grid-cols-[auto_1fr] items-start gap-2 rounded-(--ui-radius-control) p-1"
                       key={hint.commandId}
                     >
                       <Badge>{hint.inputLabel}</Badge>
                       <span className="grid gap-1">
                         <span className="text-sm font-medium">{hint.label}</span>
                         {hint.description && (
-                          <span className="text-xs text-[var(--ui-muted-text)]">
-                            {hint.description}
-                          </span>
+                          <span className="text-xs text-(--ui-muted-text)">{hint.description}</span>
                         )}
                       </span>
                     </li>
@@ -133,14 +131,14 @@ export function ControllerHintStrip(props: ControllerHintStripProps) {
         <div
           className={
             layoutMode === uiResponsiveModes.mobile
-              ? "fixed inset-x-2 bottom-[max(0.5rem,env(safe-area-inset-bottom))] z-40 flex min-w-0 items-center justify-center gap-3 rounded-[var(--ui-radius-control)] bg-[var(--ui-glass)] p-2 shadow-[var(--ui-shadow)] backdrop-blur-xl"
+              ? "fixed inset-x-2 bottom-[max(0.5rem,env(safe-area-inset-bottom))] z-40 flex min-w-0 items-center justify-center gap-3 rounded-(--ui-radius-control) bg-(--ui-glass) p-2 shadow-(--ui-shadow) backdrop-blur-xl"
               : "flex min-w-0 items-center gap-2"
           }
         >
           {visibleHints.map((hint) => (
             <span className="inline-flex min-w-0 items-center gap-1 text-xs" key={hint.commandId}>
               <Badge tone={uiToneModes.accent}>{hint.inputLabel}</Badge>
-              <span className="truncate text-[var(--ui-muted-text)]">{hint.label}</span>
+              <span className="truncate text-(--ui-muted-text)">{hint.label}</span>
             </span>
           ))}
         </div>

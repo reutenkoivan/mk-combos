@@ -77,7 +77,7 @@ export function NotationRenderer(props: NotationRendererProps) {
     return (
       <span
         aria-label={props.accessibleLabel ?? props.fallbackLabel ?? "Notation unavailable"}
-        className="text-sm text-[var(--ui-muted-text)]"
+        className="text-sm text-(--ui-muted-text)"
         data-ui-component="UI-CMP-015"
         data-ui-notation-empty
         role="img"
@@ -115,7 +115,7 @@ export function NotationRenderer(props: NotationRendererProps) {
             />
           ))}
           {step.stepIndex < mapped.length - 1 && (
-            <span className="text-[var(--ui-muted-text)]" data-ui-notation-separator>
+            <span className="text-(--ui-muted-text)" data-ui-notation-separator>
               ›
             </span>
           )}
