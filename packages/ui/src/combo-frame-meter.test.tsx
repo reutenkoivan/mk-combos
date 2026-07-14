@@ -298,6 +298,11 @@ describe("useComboFrameMeterModel", () => {
     expect(requireModel(model)).toBe(initial);
     act(() => requireModel(model).methods.focusTimelineSegment("missing-segment"));
     expect(requireModel(model)).toBe(initial);
+
+    act(() => requireModel(model).methods.openSegmentDetails("startup"));
+    const opened = requireModel(model);
+    act(() => requireModel(model).methods.clearTimelineFocus());
+    expect(requireModel(model)).toBe(opened);
   });
 
   it("owns segment focus and details, then rebases presentation state", () => {
@@ -335,6 +340,21 @@ describe("useComboFrameMeterModel", () => {
       state: comboFrameMeterDetailsStates.closed,
     });
     expect(requireModel(model).state.focusedSegmentId).toBe("invalid-transition");
+
+    act(() => requireModel(model).methods.clearTimelineFocus());
+    expect(requireModel(model).state).toMatchObject({
+      details: { state: comboFrameMeterDetailsStates.closed },
+      focusedSegmentId: undefined,
+    });
+    const cleared = requireModel(model);
+    act(() => requireModel(model).methods.clearTimelineFocus());
+    expect(requireModel(model)).toBe(cleared);
+
+    act(() => requireModel(model).methods.openSegmentDetails());
+    expect(requireModel(model).state).toMatchObject({
+      details: { segmentId: "startup", state: comboFrameMeterDetailsStates.open },
+      focusedSegmentId: "startup",
+    });
 
     act(() => requireModel(model).methods.openSegmentDetails("unavailable-window"));
     const beforeStaleOpen = requireModel(model);
@@ -466,7 +486,7 @@ describe("ComboFrameMeter", () => {
     );
   });
 
-  it("shows phase frame counts below the primary track and grouped legend below navigation", () => {
+  it("shows phase frame counts below the primary track and grouped legend after the timeline", () => {
     const view = render(<MeterHarness lifecycle={comboFrameMeterLifecycles.ready} />);
     const preparedSection = view.container.querySelector(
       '[data-section-id="step-1-section"]',
@@ -485,6 +505,7 @@ describe("ComboFrameMeter", () => {
     const navigation = view.container.querySelector(
       "[data-frame-segment-navigation]",
     ) as HTMLElement;
+    const timeline = view.container.querySelector("[data-frame-timeline]") as HTMLElement;
     const legend = screen.getByRole("region", { name: "Frame phase legend" });
 
     expect(preparedSection.textContent).toBe("1. Launcher");
@@ -495,7 +516,8 @@ describe("ComboFrameMeter", () => {
     expect(fallbackCount.textContent).toBe("Active frames: 3f");
     expect(view.container.querySelectorAll("[data-segment-frame-count]")).toHaveLength(4);
     expect(primaryTrack.nextElementSibling).toBe(countRow);
-    expect(navigation.nextElementSibling).toBe(legend);
+    expect(navigation).toBeNull();
+    expect(timeline.nextElementSibling).toBe(legend);
     expect(screen.getByRole("group", { name: "Phases" })).toBeTruthy();
     expect(screen.getByRole("group", { name: "Meta" })).toBeTruthy();
   });
@@ -522,7 +544,7 @@ describe("ComboFrameMeter", () => {
 
   it("keeps invalid and unavailable reasons readable and details keyboard reachable", () => {
     const onRequestAction = vi.fn();
-    render(
+    const view = render(
       <MeterHarness
         lifecycle={comboFrameMeterLifecycles.pendingTruncate}
         onRequestAction={onRequestAction}
@@ -542,9 +564,11 @@ describe("ComboFrameMeter", () => {
     fireEvent.click(invalid);
     expect(invalid.getAttribute("aria-expanded")).toBe("true");
     expect(invalid.getAttribute("aria-controls")).toBe("snapshot-1-segment-details");
-    expect(
-      screen.getByRole("region", { name: `${labels.details}: Invalid transition` }),
-    ).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Invalid transition" })).toBeTruthy();
+    expect(document.querySelector("[data-ui-popover-arrow]")).toBeTruthy();
+    expect(view.container.querySelector("[data-segment-details]")).toBeNull();
+    expect(invalid.className).toContain("scale-[1.06]");
+    expect(invalid.className).toContain("outline-2");
     expect(screen.getByText("The transition cannot reach the next move.")).toBeTruthy();
     expect(onRequestAction).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -564,10 +588,24 @@ describe("ComboFrameMeter", () => {
       comboFrameMeterSegmentValidities.unavailable,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: labels.closeDetails }));
+    fireEvent.click(invalid);
+    expect(screen.getByRole("dialog", { name: "Invalid transition" })).toBeTruthy();
     expect(
-      screen.queryByRole("region", { name: `${labels.details}: Invalid transition` }),
-    ).toBeNull();
+      onRequestAction.mock.calls.filter(
+        ([intent]) => intent.action === comboFrameMeterActions.openSegmentDetails,
+      ),
+    ).toHaveLength(1);
+
+    fireEvent.click(unavailable);
+    expect(screen.getByRole("dialog", { name: "Unavailable window" })).toBeTruthy();
+    expect(unavailable.className).toContain("scale-[1.06]");
+    expect(invalid.className).not.toContain("scale-[1.06]");
+
+    fireEvent.click(invalid);
+    expect(screen.getByRole("dialog", { name: "Invalid transition" })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: labels.closeDetails }));
+    expect(screen.queryByRole("dialog", { name: "Invalid transition" })).toBeNull();
     expect(document.activeElement).toBe(invalid);
     expect(invalid.getAttribute("aria-expanded")).toBe("false");
     expect(onRequestAction).toHaveBeenLastCalledWith(
@@ -577,12 +615,27 @@ describe("ComboFrameMeter", () => {
       }),
     );
 
+    fireEvent.keyDown(invalid, { key: "Escape" });
+    expect(document.activeElement).not.toBe(invalid);
+    expect(invalid.getAttribute("data-focused")).toBeNull();
+    expect(invalid.tabIndex).toBe(-1);
+    expect(screen.getByRole("button", { name: /Startup move\. Frames 1–8\. Valid/ }).tabIndex).toBe(
+      0,
+    );
+    expect(onRequestAction).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        action: comboFrameMeterActions.clearTimelineFocus,
+        reason: "escapeKey",
+        segmentId: "invalid-transition",
+      }),
+    );
+
+    invalid.focus();
     fireEvent.click(invalid);
     fireEvent.keyDown(invalid, { key: "Escape" });
-    expect(
-      screen.queryByRole("region", { name: `${labels.details}: Invalid transition` }),
-    ).toBeNull();
+    expect(screen.queryByRole("dialog", { name: "Invalid transition" })).toBeNull();
     expect(document.activeElement).toBe(invalid);
+    expect(invalid.className).not.toContain("scale-[1.06]");
     expect(onRequestAction).toHaveBeenLastCalledWith(
       expect.objectContaining({
         action: comboFrameMeterActions.closeSegmentDetails,
@@ -590,9 +643,28 @@ describe("ComboFrameMeter", () => {
         segmentId: "invalid-transition",
       }),
     );
+    const closeIntentCount = onRequestAction.mock.calls.filter(
+      ([intent]) => intent.action === comboFrameMeterActions.closeSegmentDetails,
+    ).length;
+
+    fireEvent.keyDown(invalid, { key: "Escape" });
+    expect(document.activeElement).not.toBe(invalid);
+    expect(invalid.getAttribute("data-focused")).toBeNull();
+    expect(onRequestAction).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        action: comboFrameMeterActions.clearTimelineFocus,
+        reason: "escapeKey",
+        segmentId: "invalid-transition",
+      }),
+    );
+    expect(
+      onRequestAction.mock.calls.filter(
+        ([intent]) => intent.action === comboFrameMeterActions.closeSegmentDetails,
+      ),
+    ).toHaveLength(closeIntentCount);
   });
 
-  it("uses one roving segment focus model without focusable frame cells", () => {
+  it("uses the desktop timeline cells as one roving segment focus model", () => {
     const view = render(<MeterHarness lifecycle={comboFrameMeterLifecycles.ready} />);
     const navigator = view.container.querySelector(
       "[data-frame-segment-navigation]",
@@ -606,12 +678,17 @@ describe("ComboFrameMeter", () => {
 
     expect(startup.tabIndex).toBe(0);
     expect(active.tabIndex).toBe(-1);
-    expect(navigator.getAttribute("aria-orientation")).toBe("horizontal");
-    expect(navigator.className).toContain("overflow-x-auto");
-    expect(navigator.className).not.toContain("flex-wrap");
-    expect(startup.className).toContain("shrink-0");
-    expect(startup.className).toContain("w-40");
-    expect(view.container.querySelectorAll("[data-frame-cell-run][tabindex]")).toHaveLength(0);
+    expect(navigator).toBeNull();
+    expect(
+      screen
+        .getByRole("toolbar", { name: snapshot.timelineLabel })
+        .getAttribute("aria-orientation"),
+    ).toBe("horizontal");
+    expect(startup.getAttribute("data-frame-cell-run")).toBe("startup");
+    expect(active.getAttribute("data-frame-cell-run")).toBe("active");
+    expect(view.container.querySelectorAll("[data-frame-cell-run][tabindex]")).toHaveLength(
+      segmentIds.length,
+    );
 
     startup.focus();
     fireEvent.keyDown(startup, { key: "ArrowRight" });
@@ -654,9 +731,9 @@ describe("ComboFrameMeter", () => {
     );
 
     expect(view.container.querySelector("[data-frame-timeline]")).toBeTruthy();
-    expect(screen.getByRole("region", { name: `${labels.details}: Startup move` })).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Startup move" })).toBeTruthy();
     const startup = view.container.querySelector(
-      '[data-segment-id="startup"]',
+      '[data-frame-cell-run="startup"]',
     ) as HTMLButtonElement;
     expect(startup.disabled).toBe(true);
     expect(startup.getAttribute("data-frozen")).toBe("true");
@@ -673,14 +750,15 @@ describe("ComboFrameMeter", () => {
 
     fireEvent.focus(startup);
     fireEvent.click(startup);
+    fireEvent.keyDown(startup, { key: "Escape" });
     fireEvent.click(screen.getByRole("button", { name: labels.wholeCombo }));
     fireEvent.click(screen.getByRole("button", { name: labels.closeDetails }));
     expect(onRequestAction).not.toHaveBeenCalled();
-    expect(screen.getByRole("region", { name: `${labels.details}: Startup move` })).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "Startup move" })).toBeTruthy();
   });
 
   it("provides explicit 44px controller targets in compact responsive modes", () => {
-    render(
+    const view = render(
       <MeterHarness
         initialDetailsSegmentId="startup"
         lifecycle={comboFrameMeterLifecycles.ready}
@@ -691,12 +769,63 @@ describe("ComboFrameMeter", () => {
     expect(screen.getByLabelText(labels.scope).className).toContain(
       "[&_[data-ui-segmented-control-option]]:min-h-11",
     );
+    const navigation = view.container.querySelector(
+      "[data-frame-segment-navigation]",
+    ) as HTMLElement;
+    const startupControl = screen.getByRole("button", {
+      name: /Startup move\. Frames 1–8\. Valid/,
+    });
+    const startupCell = view.container.querySelector(
+      '[data-frame-cell-run="startup"]',
+    ) as HTMLElement;
+    expect(navigation.getAttribute("aria-orientation")).toBe("horizontal");
+    expect(startupControl.className).toContain("min-h-11");
+    expect(startupControl.className).toContain("min-w-11");
+    expect(startupCell.className).toContain("scale-[1.06]");
+    expect(startupCell.getAttribute("tabindex")).toBeNull();
     expect(
       screen.getByRole("button", { name: labels.focusMatchingWhiteboardStep }).className,
     ).toContain("min-h-11");
     expect(screen.getByRole("button", { name: labels.closeDetails }).className).toContain(
       "min-w-11",
     );
+  });
+
+  it("dismisses compact segment focus with Escape when details are already closed", () => {
+    const onRequestAction = vi.fn();
+    render(
+      <MeterHarness
+        lifecycle={comboFrameMeterLifecycles.ready}
+        onRequestAction={onRequestAction}
+        responsiveMode={uiResponsiveModes.mobile}
+      />,
+    );
+    const startup = screen.getByRole("button", {
+      name: /Startup move\. Frames 1–8\. Valid/,
+    }) as HTMLButtonElement;
+    const active = screen.getByRole("button", {
+      name: /Active frames\. Frames 9–11\. Valid/,
+    }) as HTMLButtonElement;
+
+    act(() => active.focus());
+    expect(document.activeElement).toBe(active);
+    expect(active.getAttribute("data-focused")).toBe("true");
+    expect(active.tabIndex).toBe(0);
+
+    fireEvent.keyDown(active, { key: "Escape" });
+    expect(document.activeElement).not.toBe(active);
+    expect(active.getAttribute("data-focused")).toBeNull();
+    expect(active.tabIndex).toBe(-1);
+    expect(startup.tabIndex).toBe(0);
+    expect(onRequestAction).toHaveBeenLastCalledWith({
+      action: comboFrameMeterActions.clearTimelineFocus,
+      lifecycle: comboFrameMeterLifecycles.ready,
+      reason: "escapeKey",
+      scope: comboFrameMeterScopes.selectedMove,
+      segmentId: "active",
+      sourceFocusTarget: "frame-zone",
+      sourceSurface: "builder",
+    });
   });
 });
 
@@ -778,5 +907,41 @@ describe("frameMeterSegmentRecipe", () => {
     expect(invalidRecovery).toContain("outline-[var(--ui-destructive)]");
     expect(metaLink).toContain("bg-[var(--ui-frame-transition)]");
     expect(metaLink).toContain("h-4");
+  });
+
+  it("wires interactive, selected, focused, and frozen timeline cell states", () => {
+    const selectedValid = frameMeterCellRecipe({
+      interactive: true,
+      kind: comboFrameMeterSegmentKinds.startup,
+      selected: true,
+      validity: comboFrameMeterSegmentValidities.valid,
+    });
+    const selectedInvalid = frameMeterCellRecipe({
+      kind: comboFrameMeterSegmentKinds.recovery,
+      selected: true,
+      validity: comboFrameMeterSegmentValidities.invalid,
+    });
+    const focusedSelected = frameMeterCellRecipe({
+      focused: true,
+      kind: comboFrameMeterSegmentKinds.active,
+      selected: true,
+      validity: comboFrameMeterSegmentValidities.valid,
+    });
+    const frozen = frameMeterCellRecipe({
+      frozen: true,
+      kind: comboFrameMeterSegmentKinds.active,
+      validity: comboFrameMeterSegmentValidities.valid,
+    });
+
+    expect(selectedValid).toContain("scale-[1.06]");
+    expect(selectedValid).toContain("outline-offset-2");
+    expect(selectedValid).toContain("outline-[var(--ui-selection)]");
+    expect(selectedValid).toContain("enabled:cursor-pointer");
+    expect(selectedValid).toContain("motion-reduce:transition-none");
+    expect(selectedInvalid).toContain("repeating-linear-gradient");
+    expect(selectedInvalid).toContain("outline-[var(--ui-selection)]");
+    expect(focusedSelected).toContain("var(--ui-focus-ring)");
+    expect(focusedSelected).toContain("z-30");
+    expect(frozen).toContain("cursor-wait");
   });
 });

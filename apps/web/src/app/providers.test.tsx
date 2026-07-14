@@ -3,9 +3,13 @@ import { uiResponsiveModes } from "@mk-combos/ui/components/value";
 import { uiContrastModes, uiDensityModes, uiThemeModes } from "@mk-combos/ui/tokens/value";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { webBasePath } from "../config/web-path";
-import { AppProviders } from "./providers";
+import { AppProviders, useAppResponsiveMode } from "./providers";
 
 type MockMediaQuery = ReturnType<typeof createMockMediaQuery>;
+
+function ResponsiveModeConsumer() {
+  return <span data-testid="app-responsive-mode">{useAppResponsiveMode()}</span>;
+}
 
 function createMockMediaQuery(media: string, initialMatches: boolean) {
   let matches = initialMatches;
@@ -95,6 +99,31 @@ describe("AppProviders", () => {
     view.unmount();
     expect(desktop.query.removeEventListener).toHaveBeenCalledTimes(1);
     expect(tablet.query.removeEventListener).toHaveBeenCalledTimes(1);
+  });
+
+  it("shares the computed responsive mode with descendants without another subscription", () => {
+    const desktop = createMockMediaQuery("(min-width: 70rem)", false);
+    const tablet = createMockMediaQuery("(min-width: 40rem)", false);
+    installMatchMedia(desktop, tablet);
+
+    render(
+      <AppProviders>
+        <ResponsiveModeConsumer />
+      </AppProviders>,
+    );
+
+    expect(screen.getByTestId("app-responsive-mode").textContent).toBe(uiResponsiveModes.mobile);
+    expect(desktop.query.addEventListener).toHaveBeenCalledTimes(1);
+    expect(tablet.query.addEventListener).toHaveBeenCalledTimes(1);
+
+    act(() => tablet.emit(true));
+    expect(screen.getByTestId("app-responsive-mode").textContent).toBe(uiResponsiveModes.tablet);
+  });
+
+  it("fails clearly when responsive mode is read outside AppProviders", () => {
+    expect(() => render(<ResponsiveModeConsumer />)).toThrowError(
+      "useAppResponsiveMode must be used within AppProviders",
+    );
   });
 });
 

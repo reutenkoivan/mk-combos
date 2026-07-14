@@ -180,7 +180,9 @@ describe("@mk-combos/contracts", () => {
     expect(typeof withStorybookViteConfig).toBe("function");
     expect(typeof getMkCombosEnv).toBe("function");
     const resolvedEnv = mkCombosEnv satisfies MkCombosEnv;
-    expect(resolvedEnv).toEqual(expect.objectContaining({ isCi: expect.any(Boolean) }));
+    expect(resolvedEnv).toEqual(
+      expect.objectContaining({ isCi: expect.any(Boolean), viteBase: expect.any(String) }),
+    );
     expect(typeof createUnitConfig).toBe("function");
     expect(typeof createE2eConfig).toBe("function");
     expect(createE2eRunId("mk-combos")).toMatch(/^mk-combos-\d{14}-[a-z0-9]{6}$/u);

@@ -340,6 +340,7 @@ describe("builder component public contracts", () => {
       step: "step",
     });
     expect(comboFrameMeterActions).toEqual({
+      clearTimelineFocus: "clearTimelineFocus",
       closeSegmentDetails: "closeSegmentDetails",
       focusMatchingWhiteboardStep: "focusMatchingWhiteboardStep",
       focusTimelineSegment: "focusTimelineSegment",

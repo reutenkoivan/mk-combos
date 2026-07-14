@@ -532,9 +532,37 @@ This is the only place in `apps/web` that imports game business entry points dir
 
 Pages may branch by `gameId` only to choose an installed business entry point. They must not reimplement MKXL or MK1 rules inline.
 
+## Web Build Environments
+
+`VITE_BASE` is a build-time input owned and normalized by `packages/contracts/env`. Consumers read
+the prepared `mkCombosEnv.viteBase`; `apps/web` does not read `process.env` directly. When
+`VITE_BASE` is absent, the contract fallback is `./`.
+
+The repository supports two explicit web build vectors:
+
+- **Local development.** The tracked `apps/web/.env.example` documents `VITE_BASE=/`. Developers
+  copy it to the ignored `apps/web/.env`, which the web `dev`, `build`, and `preview` scripts
+  explicitly load so they use the same root asset base. Local documents and assets are served
+  from `/`, while TanStack Router keeps logical routes in the fragment, for example
+  `/#/mkxl/catalog`.
+- **Production.** GitHub Pages is the only production target. The Pages CI workflow supplies
+  `VITE_BASE=/mk-combos/` as job environment, overriding the local env file. The deployed document
+  lives at `/mk-combos/`, built assets live below `/mk-combos/assets/`, and public routes use the
+  form `/mk-combos/#/mkxl/catalog`. Production base configuration belongs to CI rather than a
+  package script or Vite CLI flag.
+
+Both build vectors run `apps/web/scripts/verify-static-build.ts`. The verifier reads the normalized
+base from `packages/contracts/env` and rejects asset references outside the expected base before an
+artifact can be previewed or deployed.
+
 ## Routes
 
-Routes are generic and game-prefixed:
+The web app uses hash history because GitHub Pages cannot rewrite arbitrary application paths to
+the SPA entry point. TanStack Router owns logical paths inside the fragment with router basepath
+`/`, independently of the active local or production asset base. Thus `/mk1/catalog` is the logical
+route and `/mk-combos/#/mk1/catalog` is its public GitHub Pages URL.
+
+Logical routes are generic and game-prefixed:
 
 ```text
 /:gameId/catalog
@@ -543,6 +571,11 @@ Routes are generic and game-prefixed:
 /:gameId/builder
 /settings
 ```
+
+The deprecated backup compatibility route is exactly logical `/backup` (public
+`/mk-combos/#/backup`). It performs a replace redirect to logical `/settings?section=backup`
+(public `/mk-combos/#/settings?section=backup`), so Settings can open the backup section without
+adding a second active page. There is no `/:gameId/backup` compatibility route.
 
 Examples:
 

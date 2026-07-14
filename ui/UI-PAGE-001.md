@@ -198,6 +198,12 @@ Top Bar має:
 
 `UI-PAGE-007 Backup Management` лишається route code зі статусом `Deprecated`. Якщо route або deep link вказує на `UI-PAGE-007`, App Shell має перенаправити до `UI-PAGE-008 Settings` із розгорнутим `UI-CMP-034 Backup Collapsible Block`.
 
+Застосунок використовує hash history для GitHub Pages: route patterns нижче є logical fragment
+paths, а public URL має префікс `/mk-combos/#` (наприклад, logical `/mk1/catalog` відповідає
+`/mk-combos/#/mk1/catalog`). Точний compatibility route: logical `/backup`, public
+`/mk-combos/#/backup`. Він виконує replace redirect до logical `/settings?section=backup`, public
+`/mk-combos/#/settings?section=backup`; game-prefixed варіант `/:gameId/backup` не підтримується.
+
 Слот отримує глобальний контекст від App Shell і не має самостійно читати глобальні browser settings.
 
 ### Шар накладних панелей і діалогів

@@ -1,17 +1,18 @@
 import { z } from "zod/v4";
 
-type MkCombosEnvFlags = Readonly<{
+type MkCombosEnvCommon = Readonly<{
   isCi: boolean;
   isTsdownVerbose: boolean;
+  viteBase: string;
 }>;
 
-type MkCombosProductionEnv = MkCombosEnvFlags &
+type MkCombosProductionEnv = MkCombosEnvCommon &
   Readonly<{
     nodeEnv: "production";
     isProduction: true;
   }>;
 
-type MkCombosNonProductionEnv = MkCombosEnvFlags &
+type MkCombosNonProductionEnv = MkCombosEnvCommon &
   Readonly<{
     nodeEnv: string | undefined;
     isProduction: false;
@@ -26,12 +27,14 @@ const ProcessEnvSchema = z.looseObject({
   CI: z.string().optional(),
   NODE_ENV: z.string().optional(),
   TSDOWN_VERBOSE: z.string().optional(),
+  VITE_BASE: z.string().default("./"),
 });
 
 const toMkCombosEnv = (env: z.output<typeof ProcessEnvSchema>): MkCombosEnvValue => {
   const flags = {
     isCi: Boolean(env.CI),
     isTsdownVerbose: isTsdownVerboseValue(env.TSDOWN_VERBOSE),
+    viteBase: env.VITE_BASE,
   };
 
   if (env.NODE_ENV === "production") {

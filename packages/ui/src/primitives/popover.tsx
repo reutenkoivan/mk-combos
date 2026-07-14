@@ -37,10 +37,19 @@ export type PopoverRootProps = {
   onOpenChange?: (payload: UiPrimitiveOpenChangePayload) => void;
   open?: boolean;
   sourceFocusTarget?: string;
+  triggerId?: string | null;
 };
 
 export function PopoverRoot(props: PopoverRootProps) {
-  const { children, defaultOpen, modal = false, onOpenChange, open, sourceFocusTarget } = props;
+  const {
+    children,
+    defaultOpen,
+    modal = false,
+    onOpenChange,
+    open,
+    sourceFocusTarget,
+    triggerId,
+  } = props;
   const handleOpenChange = useBaseUiOpenChangeHandler({ onOpenChange, sourceFocusTarget });
 
   return (
@@ -49,6 +58,7 @@ export function PopoverRoot(props: PopoverRootProps) {
       modal={modal}
       onOpenChange={handleOpenChange}
       open={open}
+      triggerId={triggerId}
     >
       {children}
     </BasePopover.Root>
@@ -127,6 +137,7 @@ PopoverPortal.displayName = "PopoverPortal";
 
 export type PopoverPositionerProps = UiPrimitiveProps<HTMLDivElement> & {
   align?: UiFloatingAlignment;
+  anchor?: ComponentPropsWithRef<typeof BasePopover.Positioner>["anchor"];
   side?: UiFloatingSide;
   sideOffset?: number;
 };
@@ -134,6 +145,7 @@ export type PopoverPositionerProps = UiPrimitiveProps<HTMLDivElement> & {
 export function PopoverPositioner(props: PopoverPositionerProps) {
   const {
     align = uiFloatingAlignments.start,
+    anchor,
     children,
     className,
     ref,
@@ -146,6 +158,7 @@ export function PopoverPositioner(props: PopoverPositionerProps) {
     <BasePopover.Positioner
       {...positionerProps}
       align={align}
+      anchor={anchor}
       className={cx("z-50", className)}
       data-ui-popover-positioner
       ref={ref}
@@ -158,6 +171,32 @@ export function PopoverPositioner(props: PopoverPositionerProps) {
 }
 
 PopoverPositioner.displayName = "PopoverPositioner";
+
+export type PopoverArrowProps = UiPrimitiveProps<HTMLDivElement>;
+
+export function PopoverArrow(props: PopoverArrowProps) {
+  const { children, className, ref, ...arrowProps } = props;
+
+  return (
+    <BasePopover.Arrow
+      {...arrowProps}
+      className={cx(
+        [
+          "h-2.5 w-2.5 rotate-45 border border-[color-mix(in_srgb,var(--ui-separator)_88%,transparent)] bg-[var(--ui-popover)]",
+          "data-[side=top]:-bottom-[0.3125rem] data-[side=bottom]:-top-[0.3125rem]",
+          "data-[side=left]:-right-[0.3125rem] data-[side=right]:-left-[0.3125rem]",
+        ].join(" "),
+        className,
+      )}
+      data-ui-popover-arrow
+      ref={ref}
+    >
+      {children}
+    </BasePopover.Arrow>
+  );
+}
+
+PopoverArrow.displayName = "PopoverArrow";
 
 export type PopoverPopupProps = UiPrimitiveProps<HTMLDivElement> & {
   density?: UiDensityMode;

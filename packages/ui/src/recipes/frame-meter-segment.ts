@@ -120,8 +120,9 @@ export const createFrameMeterCellRecipe = (
 ) =>
   tv({
     base: [
-      "relative h-7 overflow-hidden border-y border-r first:border-l",
+      "relative h-7 origin-center appearance-none overflow-hidden border-y border-r p-0 text-inherit",
       "after:pointer-events-none after:absolute after:inset-0 after:border-r after:border-[var(--ui-frame-cell-divider)]",
+      "transition-[filter,outline-color,transform] motion-reduce:transition-none",
     ].join(" "),
     compoundVariants: [
       {
@@ -129,12 +130,38 @@ export const createFrameMeterCellRecipe = (
           "outline outline-2 outline-offset-[-2px] outline-[var(--ui-destructive)] after:bg-[repeating-linear-gradient(135deg,transparent_0,transparent_4px,color-mix(in_srgb,var(--ui-destructive)_48%,transparent)_4px,color-mix(in_srgb,var(--ui-destructive)_48%,transparent)_7px)]",
         validity: comboFrameMeterSegmentValidities.invalid,
       },
+      {
+        class: "outline-offset-2 outline-[var(--ui-selection)]",
+        selected: true,
+        validity: comboFrameMeterSegmentValidities.invalid,
+      },
+      {
+        class: "z-30",
+        focused: true,
+        selected: true,
+      },
     ],
     defaultVariants: {
+      focused: false,
+      frozen: false,
+      interactive: false,
+      selected: false,
       trackKind: comboFrameMeterTrackKinds.primary,
       validity: comboFrameMeterSegmentValidities.valid,
     },
     variants: {
+      focused: {
+        false: "",
+        true: "z-30 shadow-[var(--ui-focus-ring)]",
+      },
+      frozen: {
+        false: "",
+        true: "cursor-wait opacity-80",
+      },
+      interactive: {
+        false: "",
+        true: "enabled:cursor-pointer enabled:hover:brightness-[1.08] disabled:cursor-wait",
+      },
       kind: {
         [comboFrameMeterSegmentKinds.active]:
           "border-[var(--ui-frame-active-border)] bg-[var(--ui-frame-active)]",
@@ -157,6 +184,10 @@ export const createFrameMeterCellRecipe = (
         [comboFrameMeterTrackKinds.comparison]: "h-7",
         [comboFrameMeterTrackKinds.meta]: "h-4",
         [comboFrameMeterTrackKinds.primary]: "h-7",
+      },
+      selected: {
+        false: "",
+        true: "z-20 scale-[1.06] outline outline-2 outline-offset-2 outline-[var(--ui-selection)]",
       },
       validity: {
         [comboFrameMeterSegmentValidities.invalid]: "",

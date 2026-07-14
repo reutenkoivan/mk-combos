@@ -274,8 +274,8 @@ Rules:
 - відсутність focused step показує `wholeCombo`;
 - focused whiteboard step показує `selectedMove`;
 - timeline segment може попросити сфокусувати matching whiteboard step;
-- segment details відкривають readable details panel або disclosure;
-- `back` закриває segment details і повертає focus на source segment;
+- segment details відкривають click-persistent non-modal popover з arrow, anchored до active timeline span;
+- `back`, перший `Escape`, outside press або Close закривають segment details і повертають focus на source trigger; наступний keyboard `Escape` із уже закритими details очищає timeline focus, а повторний Tab-вхід починається з першого segment;
 - Frame Meter не емітить edit proposals, graph validation або persistence events.
 
 ### Combo description
@@ -515,8 +515,9 @@ Frame Meter показує readable details active timeline segment.
 
 Очікуваний UI:
 
-- details є локальним disclosure або panel усередині Frame Meter, не route;
-- `back` закриває details і повертає focus на source segment;
+- details є локальним portal-rendered non-modal popover Frame Meter, не route;
+- popover не кліпається timeline scroller-ом, а selection рамка й `scale(1.06)` позначають його source span;
+- `back`, перший `Escape`, outside press або Close закривають details і повертають focus на source trigger; наступний keyboard `Escape` із закритими details прибирає DOM focus/focus ring із segment;
 - details не мутують combo data;
 - invalid або unavailable reason readable без hover-only interaction.
 
@@ -675,7 +676,7 @@ Controller commands не мають:
 - Header return action має бути доступний keyboard і controller input.
 - Notation має readable text equivalent у canonical і mapped display modes.
 - Whiteboard step focus має бути видимим і не покладатися тільки на колір.
-- Frame Meter timeline segments мають readable labels і details через `confirm` або keyboard equivalent.
+- Frame Meter timeline segments мають readable labels і click-persistent anchored details через click, `confirm` або keyboard equivalent.
 - Invalid boundary, stale state і unavailable frame segment не мають покладатися тільки на color.
 - `UI-CMP-031` має readable invalid reason і repair path.
 - `UI-CMP-021` має trap або еквівалентний focus management і повертає focus до source action.

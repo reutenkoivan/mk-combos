@@ -148,12 +148,15 @@ import {
   type MenuTriggerProps,
 } from "@mk-combos/ui/primitives/menu";
 import {
+  PopoverArrow,
+  type PopoverArrowProps,
   PopoverClose,
   type PopoverCloseProps,
   PopoverDescription,
   PopoverPopup,
   PopoverPortal,
   PopoverPositioner,
+  type PopoverPositionerProps,
   PopoverRoot,
   PopoverTitle,
   PopoverTrigger,
@@ -295,6 +298,8 @@ const acceptsPrimitiveTypes = <
     menuItemPayload: MenuItemSelectPayload<"edit">;
     menuTriggerProps: MenuTriggerProps;
     popoverCloseProps: PopoverCloseProps;
+    popoverArrowProps: PopoverArrowProps;
+    popoverPositionerProps: PopoverPositionerProps;
     popoverTriggerProps: PopoverTriggerProps;
     segmentOption: SegmentedControlOption<"EN" | "UA">;
     workstationSection: WorkstationSectionProps;
@@ -1033,6 +1038,7 @@ describe("@mk-combos/ui foundation", () => {
           <PopoverTrigger>Open popover</PopoverTrigger>
           <PopoverPortal>
             <PopoverPositioner>
+              <PopoverArrow />
               <PopoverPopup>
                 <PopoverTitle>Controller hints</PopoverTitle>
                 <PopoverDescription>Hints stay in an anchored surface.</PopoverDescription>
@@ -1071,6 +1077,7 @@ describe("@mk-combos/ui foundation", () => {
     expect(screen.getByRole("button", { name: "Close popover" }).className).toContain(
       "cursor-pointer",
     );
+    expect(document.querySelector("[data-ui-popover-arrow]")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Open actions menu" }).className).toContain(
       "cursor-pointer",
     );

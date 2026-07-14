@@ -1,14 +1,15 @@
 import { createViteConfig } from "@mk-combos/contracts/build/vite/config";
+import { mkCombosEnv } from "@mk-combos/contracts/env/value";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import { webBasePath } from "./src/config/web-path";
 
 export default createViteConfig({
-  base: webBasePath,
+  base: mkCombosEnv.viteBase,
   preReactPlugins: tanstackStart({
     prerender: {
       failOnError: true,
     },
     router: {
+      basepath: "/",
       quoteStyle: "double",
       semicolons: true,
     },
@@ -17,6 +18,7 @@ export default createViteConfig({
     },
     spa: {
       enabled: true,
+      maskPath: mkCombosEnv.viteBase,
       prerender: {
         outputPath: "/index.html",
       },

@@ -850,7 +850,10 @@ function BuilderComponentsStoryContent(props: BuilderComponentsStoryArgs) {
   );
   const frameMeter = useComboFrameMeterModel({
     initialDetailsSegmentId:
-      props.scenario === builderStoryScenarios.selected ? "step-1-startup" : undefined,
+      props.scenario === builderStoryScenarios.selected ||
+      props.scenario === builderStoryScenarios.saving
+        ? "step-1-startup"
+        : undefined,
     initialScope:
       props.scenario === builderStoryScenarios.whole ||
       props.scenario === builderStoryScenarios.pending
@@ -993,6 +996,19 @@ export const DetailReadOnly: Story = {
 
 export const SelectedMoveScope: Story = {
   args: { scenario: builderStoryScenarios.selected },
+};
+
+export const MobileSelectedSegmentTooltip: Story = {
+  args: { responsiveMode: uiResponsiveModes.mobile, scenario: builderStoryScenarios.selected },
+  globals: storyViewportGlobals.mobile,
+};
+
+export const SelectedMoveLightIncreasedContrast: Story = {
+  args: {
+    contrast: uiContrastModes.increased,
+    scenario: builderStoryScenarios.selected,
+    theme: uiThemeModes.light,
+  },
 };
 
 export const WholeComboWithMeta: Story = {

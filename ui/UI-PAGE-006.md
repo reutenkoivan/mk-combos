@@ -663,10 +663,11 @@ Builder має graph input, а Whiteboard може показати старто
 Очікуваний UI:
 
 - active scope є `selectedMove` або `wholeCombo`;
-- один roving segment navigation model надає focus targets для prepared segments; окремі frame cells є presentation-only і не потрапляють у tab order;
+- один roving segment model надає focus targets для prepared segments: на desktop triggers живуть у timeline spans, а на mobile/tablet — у compact `44×44px` controls;
 - `navLeft` і `navRight` рухають focus між segments;
 - `navUp` і `navDown` переводять focus між Whiteboard, Frame Meter і Action Bar відповідно до layout;
 - `confirm` або `openActions` на segment відкриває readable segment details;
+- keyboard `Escape` із закритими details очищає timeline focus; перший segment лишається точкою наступного Tab-входу без передчасного focus ring;
 - Frame Meter не виконує append, insert, replace, remove, reorder або save.
 
 ### Frame Meter details `open`
@@ -675,10 +676,10 @@ Frame Meter показує readable details для active timeline segment.
 
 Очікуваний UI:
 
-- details panel є локальним disclosure у Frame Meter, не route і не modal;
-- panel показує segment name, frame range, startup/active/recovery або transition gap, advantage/cancel/link window і invalid/unavailable reason, якщо він є;
-- details, annotations і summary стоять поза horizontal grid scroller та не обрізаються його overflow;
-- `back` закриває details і повертає focus на source segment;
+- details є локальним click-persistent non-modal popover у Frame Meter, не route і не modal dialog flow;
+- popover показує segment name, frame range, startup/active/recovery або transition gap, advantage/cancel/link window і invalid/unavailable reason, якщо він є;
+- popover рендериться через portal, має collision-aware arrow до selected span і не обрізається horizontal grid scroller-ом;
+- `back`, перший `Escape`, outside press або Close закривають details і повертають focus на source trigger; наступний keyboard `Escape` із закритими details очищає focus із timeline segment;
 - довгий текст details доступний для keyboard/controller читання без pointer-only scroll.
 
 ### `pendingTruncate`
@@ -870,9 +871,10 @@ App Shell передає semantic builder commands активній сторін
 - `navLeft` і `navRight` рухають focus між timeline segments;
 - `navUp` і `navDown` переводять focus між Whiteboard, Frame Meter і Action Bar відповідно до layout;
 - `confirm` на segment відкриває readable segment details;
-- `openActions` відкриває ті самі segment details або розширений details panel, якщо доступний;
+- `openActions` відкриває той самий anchored segment-details popover;
 - `back` закриває details і повертає focus на source segment;
 - якщо details закриті, `back` повертає focus до safe builder control;
+- keyboard `Escape` працює локально у два етапи: спочатку закриває details, а наступним натисканням прибирає segment focus ring і DOM focus; це не замінює controller `back` для переходу до safe builder control;
 - controller hints пояснюють ці дії без додавання нових semantic commands.
 
 Controller commands не мають:
@@ -889,11 +891,11 @@ Controller commands не мають:
 - Internal `movePicker` region не є окремою page-level focus zone.
 - Focus у combo whiteboard має бути помітним для candidates, steps і gaps.
 - Focus у combo frame meter має бути помітним для timeline segments.
-- Individual frame cells не є focus targets; segment navigation використовує один roving focus model.
-- Frame grid прокручується тільки горизонтально, а summary, annotations, invalid/unavailable reasons і details лишаються поза scroller та не обрізаються.
+- Desktop timeline segment spans є roving focus targets; на mobile/tablet exact spans лишаються anchors, а compact controls використовують той самий focus model.
+- Frame grid прокручується тільки горизонтально; summary, annotations та invalid/unavailable reasons лишаються поза scroller, а portal details не обрізаються ним.
 - Local whiteboard menu має закриватися через `Escape`/`back` і повертати focus на source step або gap.
-- Frame meter segment details мають відкриватися через `confirm`/`openActions`, закриватися через `Escape`/`back` і повертати focus на source segment.
-- Segment details не мають бути hover-only tooltip.
+- Frame meter segment details мають відкриватися через `confirm`/`openActions`, закриватися через перший `Escape`/`back` і повертати focus на source segment; наступний keyboard `Escape` із закритими details прибирає timeline focus.
+- Segment details мають non-modal popover semantics і не є hover-only tooltip.
 - Disabled candidates мають readable reason, якщо вони відображаються.
 - `UI-CMP-031 Stale/Invalid Combo Marker` не має покладатися тільки на колір.
 - Invalid boundary і pending truncate у whiteboard не мають покладатися тільки на колір.
@@ -974,10 +976,10 @@ Controller commands не мають:
 - `builderUndoMove` відкочує останній move.
 - `builderNextGroup` і `builderPreviousGroup` перемикають internal Whiteboard move groups.
 - Controller focus переходить у Frame Meter і між timeline segments.
-- Individual frame cells не створюють сотні tab stops.
+- Frame Meter створює один tab stop на prepared segment, а не на кожен frame.
 - Selected-move grid вирівнює primary та optional comparison tracks за спільними cells.
 - Whole-combo grid показує один continuous timeline зі step boundaries і transition spans.
-- Довгий grid прокручується горизонтально без vertical clipping summary, annotations або details.
+- Довгий grid прокручується горизонтально без vertical clipping summary/annotations або portal clipping details.
 - Unavailable grid не рендерить synthetic frame cells.
 - `confirm` відкриває segment details.
 - `back` закриває segment details і повертає focus на source segment.

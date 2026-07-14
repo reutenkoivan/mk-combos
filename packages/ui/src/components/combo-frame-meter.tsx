@@ -1,7 +1,28 @@
-import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Popover as BasePopover } from "@base-ui/react/popover";
+import {
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { Button } from "../primitives/button";
 import { Group, Stack } from "../primitives/layout";
+import {
+  PopoverArrow,
+  PopoverClose,
+  PopoverDescription,
+  PopoverPopup,
+  PopoverPortal,
+  PopoverPositioner,
+  PopoverRoot,
+  PopoverTitle,
+} from "../primitives/popover";
+import { uiFloatingAlignments, uiFloatingSides } from "../primitives/positioning";
 import { SegmentedControl } from "../primitives/segmented-control";
 import { Badge, StatusMessage } from "../primitives/state";
 import { cx } from "../recipes/class-name";
@@ -98,6 +119,7 @@ export type ComboFrameMeterInspectionTargetKind =
   (typeof comboFrameMeterInspectionTargetKinds)[keyof typeof comboFrameMeterInspectionTargetKinds];
 
 export const comboFrameMeterActions = {
+  clearTimelineFocus: "clearTimelineFocus",
   closeSegmentDetails: "closeSegmentDetails",
   focusMatchingWhiteboardStep: "focusMatchingWhiteboardStep",
   focusTimelineSegment: "focusTimelineSegment",
@@ -230,6 +252,7 @@ type ComboFrameMeterIntentBase = ComponentActionIntent<ComboFrameMeterAction> & 
 export type ComboFrameMeterIntent =
   | (ComboFrameMeterIntentBase & {
       action:
+        | typeof comboFrameMeterActions.clearTimelineFocus
         | typeof comboFrameMeterActions.closeSegmentDetails
         | typeof comboFrameMeterActions.focusTimelineSegment
         | typeof comboFrameMeterActions.openSegmentDetails;
@@ -267,6 +290,7 @@ export type ComboFrameMeterModelState = {
 };
 
 export type ComboFrameMeterModelMethods = {
+  clearTimelineFocus: () => void;
   closeSegmentDetails: () => void;
   focusTimelineSegment: (segmentId: string) => void;
   openSegmentDetails: (segmentId?: string) => void;
@@ -325,7 +349,10 @@ export function useComboFrameMeterModel(
     : local.acknowledgedInspectionKey !== inspectionKey
       ? comboFrameMeterScopes.selectedMove
       : local.requestedScope;
-  const focusedSegmentId = firstMatchingSegmentId(options.segmentIds, local.focusedSegmentId);
+  const focusedSegmentId =
+    local.focusedSegmentId && options.segmentIds.includes(local.focusedSegmentId)
+      ? local.focusedSegmentId
+      : undefined;
   const details =
     local.details.state === comboFrameMeterDetailsStates.open &&
     options.segmentIds.includes(local.details.segmentId)
@@ -390,6 +417,16 @@ export function useComboFrameMeterModel(
     },
     [normalizeForCurrentInspection, options.segmentIds],
   );
+
+  const clearTimelineFocus = useCallback(() => {
+    setLocal((current) => {
+      const normalized = normalizeForCurrentInspection(current);
+      return normalized.details.state === comboFrameMeterDetailsStates.open ||
+        normalized.focusedSegmentId === undefined
+        ? normalized
+        : { ...normalized, focusedSegmentId: undefined };
+    });
+  }, [normalizeForCurrentInspection]);
 
   const openSegmentDetails = useCallback(
     (segmentId?: string) => {
@@ -479,6 +516,7 @@ export function useComboFrameMeterModel(
   );
   const methods = useMemo<ComboFrameMeterModelMethods>(
     () => ({
+      clearTimelineFocus,
       closeSegmentDetails,
       focusTimelineSegment,
       openSegmentDetails,
@@ -486,6 +524,7 @@ export function useComboFrameMeterModel(
       switchFrameScope,
     }),
     [
+      clearTimelineFocus,
       closeSegmentDetails,
       focusTimelineSegment,
       openSegmentDetails,
@@ -586,23 +625,44 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
     props.snapshot.grid.state === comboFrameMeterGridStates.unavailable
       ? props.snapshot.grid
       : undefined;
-  const segmentButtonRefs = useRef(new Map<string, HTMLButtonElement>());
+  const popoverId = useId();
+  const segmentAnchorRefs = useRef(new Map<string, HTMLElement>());
+  const segmentTriggerRefs = useRef(new Map<string, HTMLButtonElement>());
   const restoringFocus = useRef(false);
   const segments = useMemo(() => getSnapshotSegments(props.snapshot), [props.snapshot]);
+  const segmentTriggerIds = useMemo(
+    () =>
+      new Map(
+        segments.map((segment, index) => [segment.id, `${popoverId}-segment-${index}`] as const),
+      ),
+    [popoverId, segments],
+  );
+  const segmentIndexes = useMemo(
+    () => new Map(segments.map((segment, index) => [segment.id, index] as const)),
+    [segments],
+  );
   const legendGroups = useMemo(
     () => groupFrameMeterLegend(availableGrid?.legend ?? []),
     [availableGrid],
   );
-  const activeSegmentId =
+  const openSegmentId =
     props.model.state.details.state === comboFrameMeterDetailsStates.open
       ? props.model.state.details.segmentId
-      : props.model.state.focusedSegmentId;
-  const activeSegment = segments.find((segment) => segment.id === activeSegmentId);
+      : undefined;
+  const openSegment = segments.find((segment) => segment.id === openSegmentId);
+  const openTriggerId = openSegmentId ? segmentTriggerIds.get(openSegmentId) : undefined;
   const detailsId = `${props.snapshot.id}-segment-details`;
   const scopeLabel =
     props.model.state.scope === comboFrameMeterScopes.selectedMove
       ? props.labels.selectedMove
       : props.labels.wholeCombo;
+  const desktopTimelineAccessibility = compact
+    ? {}
+    : {
+        "aria-label": props.snapshot.timelineLabel,
+        "aria-orientation": "horizontal" as const,
+        role: "toolbar" as const,
+      };
 
   const emit = (intent: ComboFrameMeterRequestIntent) => {
     if (frozen) {
@@ -614,6 +674,7 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
     };
 
     switch (intent.action) {
+      case comboFrameMeterActions.clearTimelineFocus:
       case comboFrameMeterActions.closeSegmentDetails:
       case comboFrameMeterActions.focusTimelineSegment:
       case comboFrameMeterActions.openSegmentDetails:
@@ -652,6 +713,12 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
     if (frozen) {
       return;
     }
+    if (
+      props.model.state.details.state === comboFrameMeterDetailsStates.open &&
+      props.model.state.details.segmentId === segmentId
+    ) {
+      return;
+    }
     props.model.methods.openSegmentDetails(segmentId);
     emit({
       action: comboFrameMeterActions.openSegmentDetails,
@@ -673,7 +740,35 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
     if (!nextSegment) {
       return;
     }
-    segmentButtonRefs.current.get(nextSegment.id)?.focus();
+    segmentTriggerRefs.current.get(nextSegment.id)?.focus();
+  };
+
+  const handleSegmentKeyDown = (
+    event: ReactKeyboardEvent<HTMLButtonElement>,
+    segmentId: string,
+  ) => {
+    if (event.key === "Escape") {
+      if (frozen || openSegment) {
+        return;
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      props.model.methods.clearTimelineFocus();
+      event.currentTarget.blur();
+      emit({
+        action: comboFrameMeterActions.clearTimelineFocus,
+        reason: componentInteractionReasons.escapeKey,
+        segmentId,
+        sourceFocusTarget: props.sourceFocusTarget,
+        sourceSurface: props.sourceSurface,
+      });
+      return;
+    }
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+      return;
+    }
+    event.preventDefault();
+    moveSegmentFocus(segmentId, event.key === "ArrowLeft" ? -1 : 1);
   };
 
   const closeDetails = (segmentId: string, reason: ComboFrameMeterIntent["reason"]) => {
@@ -682,7 +777,7 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
     }
     props.model.methods.closeSegmentDetails();
     restoringFocus.current = true;
-    segmentButtonRefs.current.get(segmentId)?.focus();
+    segmentTriggerRefs.current.get(segmentId)?.focus();
     restoringFocus.current = false;
     emit({
       action: comboFrameMeterActions.closeSegmentDetails,
@@ -694,421 +789,506 @@ export function ComboFrameMeter(props: ComboFrameMeterProps) {
   };
 
   return (
-    <section
-      aria-busy={frozen || undefined}
-      aria-label={`${props.snapshot.label}: ${scopeLabel}`}
-      className="grid min-w-0 gap-4 rounded-[var(--ui-radius-surface)] border border-[var(--ui-frame-panel-border)] bg-[var(--ui-frame-surface)] p-4 text-[var(--ui-frame-surface-text)]"
-      data-details-state={props.model.state.details.state}
-      data-lifecycle={props.lifecycle}
-      data-scope={props.model.state.scope}
-      onKeyDown={(event) => {
-        if (
-          event.key !== "Escape" ||
-          props.model.state.details.state !== comboFrameMeterDetailsStates.open ||
-          !activeSegment
-        ) {
+    <PopoverRoot
+      modal={false}
+      onOpenChange={({ open, reason }) => {
+        if (frozen || open || reason === componentInteractionReasons.triggerPress || !openSegment) {
           return;
         }
-        event.preventDefault();
-        closeDetails(activeSegment.id, componentInteractionReasons.escapeKey);
+        closeDetails(openSegment.id, reason);
       }}
-      data-ui-component="UI-CMP-036"
-      data-ui-responsive={props.responsiveMode}
+      open={Boolean(openSegment)}
+      sourceFocusTarget={props.sourceFocusTarget}
+      triggerId={openTriggerId ?? null}
     >
-      <SegmentedControl
-        aria-label={props.labels.scope}
-        className={
-          compact
-            ? "[&_[data-ui-segmented-control-option]]:min-h-11 [&_[data-ui-segmented-control-option]]:min-w-11"
-            : undefined
-        }
-        disabled={frozen}
-        onValueChange={({ reason, value }) => {
-          props.model.methods.switchFrameScope(value);
-          emit({
-            action: comboFrameMeterActions.switchFrameScope,
-            nextScope: value,
-            reason,
-            sourceFocusTarget: props.sourceFocusTarget,
-            sourceSurface: props.sourceSurface,
-          });
-        }}
-        options={[
-          {
-            disabled: !props.model.state.inspectionTarget,
-            label: props.labels.selectedMove,
-            value: comboFrameMeterScopes.selectedMove,
-          },
-          { label: props.labels.wholeCombo, value: comboFrameMeterScopes.wholeCombo },
-        ]}
-        value={props.model.state.scope}
-      />
+      <section
+        aria-busy={frozen || undefined}
+        aria-label={`${props.snapshot.label}: ${scopeLabel}`}
+        className="grid min-w-0 gap-4 rounded-[var(--ui-radius-surface)] border border-[var(--ui-frame-panel-border)] bg-[var(--ui-frame-surface)] p-4 text-[var(--ui-frame-surface-text)]"
+        data-details-state={props.model.state.details.state}
+        data-lifecycle={props.lifecycle}
+        data-scope={props.model.state.scope}
+        data-ui-component="UI-CMP-036"
+        data-ui-responsive={props.responsiveMode}
+      >
+        <SegmentedControl
+          aria-label={props.labels.scope}
+          className={
+            compact
+              ? "[&_[data-ui-segmented-control-option]]:min-h-11 [&_[data-ui-segmented-control-option]]:min-w-11"
+              : undefined
+          }
+          disabled={frozen}
+          onValueChange={({ reason, value }) => {
+            props.model.methods.switchFrameScope(value);
+            emit({
+              action: comboFrameMeterActions.switchFrameScope,
+              nextScope: value,
+              reason,
+              sourceFocusTarget: props.sourceFocusTarget,
+              sourceSurface: props.sourceSurface,
+            });
+          }}
+          options={[
+            {
+              disabled: !props.model.state.inspectionTarget,
+              label: props.labels.selectedMove,
+              value: comboFrameMeterScopes.selectedMove,
+            },
+            { label: props.labels.wholeCombo, value: comboFrameMeterScopes.wholeCombo },
+          ]}
+          value={props.model.state.scope}
+        />
 
-      <StatusMessage tone={lifecycleTone[props.lifecycle]}>
-        {props.labels.lifecycle[props.lifecycle]}
-      </StatusMessage>
-
-      {props.snapshot.summary.length > 0 && (
-        <ul
-          aria-label={props.snapshot.summaryLabel}
-          className={cx(
-            "grid min-w-0 list-none gap-px overflow-hidden rounded-[var(--ui-radius-control)] border border-[var(--ui-frame-panel-border)] bg-[var(--ui-frame-panel-border)] p-0",
-            compact ? "grid-cols-3" : "grid-cols-[repeat(auto-fit,minmax(8rem,1fr))]",
-          )}
-        >
-          {props.snapshot.summary.map((item) => (
-            <li className="grid min-w-0 gap-1 bg-[var(--ui-frame-track)] p-3" key={item.id}>
-              <span className="text-xs uppercase tracking-wide text-[var(--ui-frame-muted-text)]">
-                {item.label}
-              </span>
-              <strong className="text-lg" data-frame-value={item.frameValue}>
-                {item.value}
-              </strong>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {unavailableGrid ? (
-        <StatusMessage tone={uiToneModes.warning}>
-          <strong>{unavailableGrid.label}:</strong> {unavailableGrid.reason}
+        <StatusMessage tone={lifecycleTone[props.lifecycle]}>
+          {props.labels.lifecycle[props.lifecycle]}
         </StatusMessage>
-      ) : availableGrid ? (
-        <fieldset className="grid min-w-0 gap-3 border-0 p-0">
-          <legend className="sr-only">{props.snapshot.timelineLabel}</legend>
-          <div
-            className="min-w-0 overflow-x-auto overflow-y-visible rounded-[var(--ui-radius-control)] border border-[var(--ui-frame-panel-border)] bg-[var(--ui-frame-track)] p-3"
-            data-frame-timeline
-          >
-            <div
-              className="grid min-w-max gap-2"
-              data-frame-timeline-grid
-              style={{ minWidth: getFrameGridMinWidth(availableGrid.cellCount) }}
-            >
-              {availableGrid.sections.length > 0 && (
-                <div className="grid grid-cols-[7rem_auto] items-end gap-0" data-frame-sections>
-                  <span aria-hidden="true" />
-                  <div className="grid" style={getFrameGridStyle(availableGrid.cellCount)}>
-                    {availableGrid.sections.map((section) => (
-                      <span
-                        className="truncate border-l border-[var(--ui-frame-boundary)] px-1 pb-1 text-xs font-semibold text-[var(--ui-frame-muted-text)]"
-                        data-cell-count={section.cellCount}
-                        data-matching-whiteboard-step-id={section.matchingWhiteboardStepId}
-                        data-section-id={section.id}
-                        data-start-cell={section.startCell}
-                        key={section.id}
-                        style={{
-                          gridColumn: `${section.startCell + 1} / span ${section.cellCount}`,
-                        }}
-                      >
-                        {section.label}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
 
-              {availableGrid.tracks.map((track) => (
-                <div className="grid gap-1" data-frame-track-group={track.id} key={track.id}>
-                  <div
-                    className="grid grid-cols-[7rem_auto] items-center gap-0"
-                    data-frame-track={track.id}
-                    data-track-kind={track.kind}
-                  >
-                    <strong
-                      className={cx(
-                        "sticky left-0 z-10 self-stretch bg-[var(--ui-frame-track)] pr-2",
-                        track.kind === comboFrameMeterTrackKinds.meta
-                          ? "py-0.5 text-xs uppercase tracking-wide text-[var(--ui-frame-muted-text)]"
-                          : "py-2 text-sm",
-                      )}
-                    >
-                      {track.label}
-                    </strong>
-                    <div
-                      aria-hidden="true"
-                      className={cx(
-                        "grid",
-                        track.kind === comboFrameMeterTrackKinds.meta ? "min-h-4" : "min-h-7",
-                      )}
-                      style={getFrameGridStyle(availableGrid.cellCount)}
-                    >
-                      {track.segments.map((segment) => (
+        {props.snapshot.summary.length > 0 && (
+          <ul
+            aria-label={props.snapshot.summaryLabel}
+            className={cx(
+              "grid min-w-0 list-none gap-px overflow-hidden rounded-[var(--ui-radius-control)] border border-[var(--ui-frame-panel-border)] bg-[var(--ui-frame-panel-border)] p-0",
+              compact ? "grid-cols-3" : "grid-cols-[repeat(auto-fit,minmax(8rem,1fr))]",
+            )}
+          >
+            {props.snapshot.summary.map((item) => (
+              <li className="grid min-w-0 gap-1 bg-[var(--ui-frame-track)] p-3" key={item.id}>
+                <span className="text-xs uppercase tracking-wide text-[var(--ui-frame-muted-text)]">
+                  {item.label}
+                </span>
+                <strong className="text-lg" data-frame-value={item.frameValue}>
+                  {item.value}
+                </strong>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {unavailableGrid ? (
+          <StatusMessage tone={uiToneModes.warning}>
+            <strong>{unavailableGrid.label}:</strong> {unavailableGrid.reason}
+          </StatusMessage>
+        ) : availableGrid ? (
+          <fieldset className="grid min-w-0 gap-3 border-0 p-0">
+            <legend className="sr-only">{props.snapshot.timelineLabel}</legend>
+            <div
+              {...desktopTimelineAccessibility}
+              className="min-w-0 overflow-x-auto overflow-y-visible rounded-[var(--ui-radius-control)] border border-[var(--ui-frame-panel-border)] bg-[var(--ui-frame-track)] p-3"
+              data-frame-timeline
+            >
+              <div
+                className="grid min-w-max gap-2"
+                data-frame-timeline-grid
+                style={{ minWidth: getFrameGridMinWidth(availableGrid.cellCount) }}
+              >
+                {availableGrid.sections.length > 0 && (
+                  <div className="grid grid-cols-[7rem_auto] items-end gap-0" data-frame-sections>
+                    <span aria-hidden="true" />
+                    <div className="grid" style={getFrameGridStyle(availableGrid.cellCount)}>
+                      {availableGrid.sections.map((section) => (
                         <span
-                          className={frameMeterCellRecipe({
-                            kind: segment.kind,
-                            trackKind: track.kind,
-                            validity: segment.validity,
-                          })}
-                          data-cell-count={segment.cellCount}
-                          data-frame-cell-run={segment.id}
-                          data-kind={segment.kind}
-                          data-start-cell={segment.startCell}
-                          data-validity={segment.validity}
-                          key={segment.id}
+                          className="truncate border-l border-[var(--ui-frame-boundary)] px-1 pb-1 text-xs font-semibold text-[var(--ui-frame-muted-text)]"
+                          data-cell-count={section.cellCount}
+                          data-matching-whiteboard-step-id={section.matchingWhiteboardStepId}
+                          data-section-id={section.id}
+                          data-start-cell={section.startCell}
+                          key={section.id}
                           style={{
-                            gridColumn: `${segment.startCell + 1} / span ${segment.cellCount}`,
+                            gridColumn: `${section.startCell + 1} / span ${section.cellCount}`,
                           }}
-                          title={`${segment.label}: ${segment.rangeLabel}`}
-                        />
+                        >
+                          {section.label}
+                        </span>
                       ))}
                     </div>
                   </div>
+                )}
 
-                  {track.kind === comboFrameMeterTrackKinds.primary &&
-                    availableGrid.sections.length > 0 && (
-                      <div className="grid grid-cols-[7rem_auto] gap-0" data-frame-section-counts>
-                        <span aria-hidden="true" />
-                        <div className="grid" style={getFrameGridStyle(availableGrid.cellCount)}>
-                          {track.segments.map((segment) => {
-                            const frameCountLabel =
-                              segment.frameCountLabel ?? `${segment.cellCount}f`;
+                {availableGrid.tracks.map((track) => (
+                  <div className="grid gap-1" data-frame-track-group={track.id} key={track.id}>
+                    <div
+                      className="grid grid-cols-[7rem_auto] items-center gap-0"
+                      data-frame-track={track.id}
+                      data-track-kind={track.kind}
+                    >
+                      <strong
+                        className={cx(
+                          "sticky left-0 z-10 self-stretch bg-[var(--ui-frame-track)] pr-2",
+                          track.kind === comboFrameMeterTrackKinds.meta
+                            ? "py-0.5 text-xs uppercase tracking-wide text-[var(--ui-frame-muted-text)]"
+                            : "py-2 text-sm",
+                        )}
+                      >
+                        {track.label}
+                      </strong>
+                      <div
+                        aria-hidden={compact ? "true" : undefined}
+                        className={cx(
+                          "grid",
+                          track.kind === comboFrameMeterTrackKinds.meta ? "min-h-4" : "min-h-7",
+                        )}
+                        style={getFrameGridStyle(availableGrid.cellCount)}
+                      >
+                        {track.segments.map((segment) => {
+                          const selected = openSegmentId === segment.id;
+                          const focused = props.model.state.focusedSegmentId === segment.id;
+                          const segmentIndex = segmentIndexes.get(segment.id) ?? 0;
+                          const triggerId = segmentTriggerIds.get(segment.id);
+                          const ariaLabel = `${segment.label}. ${segment.rangeLabel}. ${segment.validityLabel}${segment.reason ? `. ${segment.reason}` : ""}`;
+                          const style = {
+                            gridColumn: `${segment.startCell + 1} / span ${segment.cellCount}`,
+                          };
+                          const cellClassName = frameMeterCellRecipe({
+                            focused: !compact && focused,
+                            frozen,
+                            interactive: !compact,
+                            kind: segment.kind,
+                            selected,
+                            trackKind: track.kind,
+                            validity: segment.validity,
+                          });
 
+                          if (compact) {
                             return (
                               <span
-                                className="px-1 text-center text-[0.6875rem] font-semibold tabular-nums text-[var(--ui-frame-muted-text)]"
+                                className={cellClassName}
                                 data-cell-count={segment.cellCount}
-                                data-frame-count-label={frameCountLabel}
-                                data-segment-frame-count={segment.id}
+                                data-frame-cell-run={segment.id}
+                                data-focused={focused ? "true" : undefined}
+                                data-frozen={frozen ? "true" : undefined}
+                                data-kind={segment.kind}
+                                data-selected={selected ? "true" : undefined}
+                                data-start-cell={segment.startCell}
+                                data-validity={segment.validity}
                                 key={segment.id}
-                                style={{
-                                  gridColumn: `${segment.startCell + 1} / span ${segment.cellCount}`,
+                                ref={(element) => {
+                                  if (element) {
+                                    segmentAnchorRefs.current.set(segment.id, element);
+                                  } else {
+                                    segmentAnchorRefs.current.delete(segment.id);
+                                  }
                                 }}
-                              >
-                                <span className="sr-only">{segment.label}: </span>
-                                {frameCountLabel}
-                              </span>
+                                style={style}
+                                title={`${segment.label}: ${segment.rangeLabel}`}
+                              />
                             );
-                          })}
-                        </div>
+                          }
+
+                          return (
+                            <BasePopover.Trigger
+                              aria-describedby={
+                                segment.reason
+                                  ? `${props.snapshot.id}-${segment.id}-reason`
+                                  : undefined
+                              }
+                              aria-label={ariaLabel}
+                              aria-pressed={selected}
+                              className={cellClassName}
+                              data-cell-count={segment.cellCount}
+                              data-focused={focused ? "true" : undefined}
+                              data-frame-cell-run={segment.id}
+                              data-frozen={frozen ? "true" : undefined}
+                              data-kind={segment.kind}
+                              data-selected={selected ? "true" : undefined}
+                              data-start-cell={segment.startCell}
+                              data-validity={segment.validity}
+                              disabled={frozen}
+                              id={triggerId}
+                              key={segment.id}
+                              onClick={() => openDetails(segment.id)}
+                              onFocus={() => focusSegment(segment.id)}
+                              onKeyDown={(event) => handleSegmentKeyDown(event, segment.id)}
+                              ref={(element: HTMLButtonElement | null) => {
+                                if (element) {
+                                  segmentAnchorRefs.current.set(segment.id, element);
+                                  segmentTriggerRefs.current.set(segment.id, element);
+                                } else {
+                                  segmentAnchorRefs.current.delete(segment.id);
+                                  segmentTriggerRefs.current.delete(segment.id);
+                                }
+                              }}
+                              style={style}
+                              tabIndex={
+                                frozen
+                                  ? -1
+                                  : focused ||
+                                      (!props.model.state.focusedSegmentId && segmentIndex === 0)
+                                    ? 0
+                                    : -1
+                              }
+                              title={`${segment.label}: ${segment.rangeLabel}`}
+                              type="button"
+                            />
+                          );
+                        })}
                       </div>
-                    )}
-                </div>
-              ))}
+                    </div>
+
+                    {track.kind === comboFrameMeterTrackKinds.primary &&
+                      availableGrid.sections.length > 0 && (
+                        <div className="grid grid-cols-[7rem_auto] gap-0" data-frame-section-counts>
+                          <span aria-hidden="true" />
+                          <div className="grid" style={getFrameGridStyle(availableGrid.cellCount)}>
+                            {track.segments.map((segment) => {
+                              const frameCountLabel =
+                                segment.frameCountLabel ?? `${segment.cellCount}f`;
+
+                              return (
+                                <span
+                                  className="px-1 text-center text-[0.6875rem] font-semibold tabular-nums text-[var(--ui-frame-muted-text)]"
+                                  data-cell-count={segment.cellCount}
+                                  data-frame-count-label={frameCountLabel}
+                                  data-segment-frame-count={segment.id}
+                                  key={segment.id}
+                                  style={{
+                                    gridColumn: `${segment.startCell + 1} / span ${segment.cellCount}`,
+                                  }}
+                                >
+                                  <span className="sr-only">{segment.label}: </span>
+                                  {frameCountLabel}
+                                </span>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {segments.length > 0 && (
-            <div
-              aria-orientation="horizontal"
-              aria-label={props.snapshot.timelineLabel}
-              className="flex min-w-0 snap-x snap-proximity gap-1 overflow-x-auto pb-1"
-              data-frame-segment-navigation
-              role="toolbar"
-            >
-              {segments.map((segment, index) => {
-                const selected = activeSegmentId === segment.id;
-                const focused = props.model.state.focusedSegmentId === segment.id;
-                const describedBy = segment.reason
-                  ? `${props.snapshot.id}-${segment.id}-reason`
-                  : undefined;
+            {compact && segments.length > 0 && (
+              <div
+                aria-orientation="horizontal"
+                aria-label={props.snapshot.timelineLabel}
+                className="flex min-w-0 snap-x snap-proximity gap-1 overflow-x-auto pb-1"
+                data-frame-segment-navigation
+                role="toolbar"
+              >
+                {segments.map((segment, index) => {
+                  const selected = openSegmentId === segment.id;
+                  const focused = props.model.state.focusedSegmentId === segment.id;
+                  const describedBy = segment.reason
+                    ? `${props.snapshot.id}-${segment.id}-reason`
+                    : undefined;
+                  const triggerId = segmentTriggerIds.get(segment.id);
 
-                return (
-                  <button
-                    aria-controls={detailsId}
-                    aria-describedby={describedBy}
-                    aria-expanded={
-                      props.model.state.details.state === comboFrameMeterDetailsStates.open &&
-                      props.model.state.details.segmentId === segment.id
-                    }
-                    aria-label={`${segment.label}. ${segment.rangeLabel}. ${segment.validityLabel}${segment.reason ? `. ${segment.reason}` : ""}`}
-                    aria-pressed={selected}
-                    className={frameMeterSegmentRecipe({
-                      focused,
-                      frozen,
-                      kind: segment.kind,
-                      selected,
-                      validity: segment.validity,
-                    })}
-                    data-disabled={frozen ? "true" : undefined}
-                    data-focused={focused ? "true" : undefined}
-                    data-frozen={frozen ? "true" : undefined}
-                    data-kind={segment.kind}
-                    data-segment-id={segment.id}
-                    data-validity={segment.validity}
-                    disabled={frozen}
-                    key={segment.id}
-                    onClick={() => openDetails(segment.id)}
-                    onFocus={() => focusSegment(segment.id)}
-                    onKeyDown={(event) => {
-                      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
-                        return;
+                  return (
+                    <BasePopover.Trigger
+                      aria-controls={detailsId}
+                      aria-describedby={describedBy}
+                      aria-expanded={selected}
+                      aria-label={`${segment.label}. ${segment.rangeLabel}. ${segment.validityLabel}${segment.reason ? `. ${segment.reason}` : ""}`}
+                      aria-pressed={selected}
+                      className={frameMeterSegmentRecipe({
+                        focused,
+                        frozen,
+                        kind: segment.kind,
+                        selected,
+                        validity: segment.validity,
+                      })}
+                      data-disabled={frozen ? "true" : undefined}
+                      data-focused={focused ? "true" : undefined}
+                      data-frozen={frozen ? "true" : undefined}
+                      data-kind={segment.kind}
+                      data-segment-id={segment.id}
+                      data-validity={segment.validity}
+                      disabled={frozen}
+                      id={triggerId}
+                      key={segment.id}
+                      onClick={() => openDetails(segment.id)}
+                      onFocus={() => focusSegment(segment.id)}
+                      onKeyDown={(event) => handleSegmentKeyDown(event, segment.id)}
+                      ref={(element: HTMLButtonElement | null) => {
+                        if (element) {
+                          segmentTriggerRefs.current.set(segment.id, element);
+                        } else {
+                          segmentTriggerRefs.current.delete(segment.id);
+                        }
+                      }}
+                      tabIndex={
+                        frozen
+                          ? -1
+                          : focused || (!props.model.state.focusedSegmentId && index === 0)
+                            ? 0
+                            : -1
                       }
-                      event.preventDefault();
-                      moveSegmentFocus(segment.id, event.key === "ArrowLeft" ? -1 : 1);
-                    }}
-                    ref={(element) => {
-                      if (element) {
-                        segmentButtonRefs.current.set(segment.id, element);
-                      } else {
-                        segmentButtonRefs.current.delete(segment.id);
-                      }
-                    }}
-                    tabIndex={
-                      frozen
-                        ? -1
-                        : focused || (!props.model.state.focusedSegmentId && index === 0)
-                          ? 0
-                          : -1
-                    }
-                    type="button"
-                  >
-                    <span className="grid min-w-0 gap-1">
-                      <span className="inline-flex items-center gap-1">
-                        {segment.validity === comboFrameMeterSegmentValidities.invalid && (
-                          <span aria-hidden="true">!</span>
-                        )}
-                        {segment.validity === comboFrameMeterSegmentValidities.unavailable && (
-                          <span aria-hidden="true">?</span>
-                        )}
-                        <span className="truncate">{segment.label}</span>
-                      </span>
-                      <span className="truncate font-normal">{segment.rangeLabel}</span>
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {legendGroups.length > 0 && (
-            <section
-              aria-label={availableGrid.legendLabel}
-              className={cx(
-                "grid min-w-0 gap-3 text-xs",
-                compact || legendGroups.length === 1
-                  ? "grid-cols-1"
-                  : "grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]",
-              )}
-              data-frame-legend
-            >
-              {legendGroups.map((group) => (
-                <fieldset
-                  className="grid min-w-0 content-start gap-2 border-0 p-0"
-                  data-frame-legend-category={group.key}
-                  key={group.key}
-                >
-                  <legend
-                    className={cx(
-                      group.label
-                        ? "text-xs font-semibold uppercase tracking-wide text-[var(--ui-frame-muted-text)]"
-                        : "sr-only",
-                    )}
-                  >
-                    {group.label ?? availableGrid.legendLabel}
-                  </legend>
-                  <ul className="flex min-w-0 list-none flex-wrap gap-3 p-0">
-                    {group.items.map((item) => (
-                      <li className="inline-flex min-w-0 items-center gap-2" key={item.id}>
-                        <span
-                          aria-hidden="true"
-                          className={cx(
-                            frameMeterCellRecipe({
-                              kind: item.kind,
-                              validity: comboFrameMeterSegmentValidities.valid,
-                            }),
-                            "h-4 w-7 shrink-0 rounded-sm border-l",
+                      type="button"
+                    >
+                      <span className="grid min-w-0 gap-1">
+                        <span className="inline-flex items-center gap-1">
+                          {segment.validity === comboFrameMeterSegmentValidities.invalid && (
+                            <span aria-hidden="true">!</span>
                           )}
-                        />
-                        <span>
-                          <strong>{item.label}</strong>
-                          {item.description ? ` — ${item.description}` : ""}
+                          {segment.validity === comboFrameMeterSegmentValidities.unavailable && (
+                            <span aria-hidden="true">?</span>
+                          )}
+                          <span className="truncate">{segment.label}</span>
                         </span>
-                      </li>
-                    ))}
-                  </ul>
-                </fieldset>
-              ))}
-            </section>
-          )}
-        </fieldset>
-      ) : null}
+                        <span className="truncate font-normal">{segment.rangeLabel}</span>
+                      </span>
+                    </BasePopover.Trigger>
+                  );
+                })}
+              </div>
+            )}
 
-      {segments
-        .filter((segment) => segment.reason)
-        .map((segment) => (
-          <StatusMessage
-            id={`${props.snapshot.id}-${segment.id}-reason`}
-            key={segment.id}
-            tone={
-              segment.validity === comboFrameMeterSegmentValidities.invalid
-                ? uiToneModes.destructive
-                : uiToneModes.warning
-            }
-          >
-            <strong>{segment.validityLabel}:</strong> {segment.reason}
-          </StatusMessage>
-        ))}
+            {legendGroups.length > 0 && (
+              <section
+                aria-label={availableGrid.legendLabel}
+                className={cx(
+                  "grid min-w-0 gap-3 text-xs",
+                  compact || legendGroups.length === 1
+                    ? "grid-cols-1"
+                    : "grid-cols-[repeat(auto-fit,minmax(16rem,1fr))]",
+                )}
+                data-frame-legend
+              >
+                {legendGroups.map((group) => (
+                  <fieldset
+                    className="grid min-w-0 content-start gap-2 border-0 p-0"
+                    data-frame-legend-category={group.key}
+                    key={group.key}
+                  >
+                    <legend
+                      className={cx(
+                        group.label
+                          ? "text-xs font-semibold uppercase tracking-wide text-[var(--ui-frame-muted-text)]"
+                          : "sr-only",
+                      )}
+                    >
+                      {group.label ?? availableGrid.legendLabel}
+                    </legend>
+                    <ul className="flex min-w-0 list-none flex-wrap gap-3 p-0">
+                      {group.items.map((item) => (
+                        <li className="inline-flex min-w-0 items-center gap-2" key={item.id}>
+                          <span
+                            aria-hidden="true"
+                            className={cx(
+                              frameMeterCellRecipe({
+                                kind: item.kind,
+                                validity: comboFrameMeterSegmentValidities.valid,
+                              }),
+                              "h-4 w-7 shrink-0 rounded-sm border-l",
+                            )}
+                          />
+                          <span>
+                            <strong>{item.label}</strong>
+                            {item.description ? ` — ${item.description}` : ""}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </fieldset>
+                ))}
+              </section>
+            )}
+          </fieldset>
+        ) : null}
 
-      {props.model.state.details.state === comboFrameMeterDetailsStates.open && activeSegment && (
-        <section
-          aria-label={`${props.labels.details}: ${activeSegment.label}`}
-          aria-live="polite"
-          className={cx(
-            "grid min-w-0 gap-3 rounded-[var(--ui-radius-control)] border p-3",
-            activeSegment.validity === comboFrameMeterSegmentValidities.invalid
-              ? "border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)]"
-              : "border-[var(--ui-separator)] bg-[var(--ui-content)]",
-          )}
-          data-segment-details={activeSegment.id}
-          id={detailsId}
-        >
-          <Group justify="between">
-            <strong>{activeSegment.label}</strong>
-            <Badge tone={validityTone(activeSegment.validity)}>{activeSegment.validityLabel}</Badge>
-          </Group>
-          <p>{activeSegment.summary}</p>
-          <Stack role="list">
-            {activeSegment.details.map((item) => (
-              <Group justify="between" key={item.id} role="listitem" wrap={false}>
-                <span className="text-[var(--ui-muted-text)]">{item.label}</span>
-                <span data-frame-value={item.frameValue}>{item.value}</span>
-              </Group>
-            ))}
-          </Stack>
-          {activeSegment.reason && (
+        {segments
+          .filter((segment) => segment.reason)
+          .map((segment) => (
             <StatusMessage
+              id={`${props.snapshot.id}-${segment.id}-reason`}
+              key={segment.id}
               tone={
-                activeSegment.validity === comboFrameMeterSegmentValidities.invalid
+                segment.validity === comboFrameMeterSegmentValidities.invalid
                   ? uiToneModes.destructive
                   : uiToneModes.warning
               }
             >
-              {activeSegment.reason}
+              <strong>{segment.validityLabel}:</strong> {segment.reason}
             </StatusMessage>
-          )}
-          <Group>
-            {activeSegment.matchingWhiteboardStepId && (
-              <Button
-                className={compact ? "min-h-11 min-w-11" : undefined}
-                disabled={frozen}
-                onRequestPress={() =>
-                  emit({
-                    action: comboFrameMeterActions.focusMatchingWhiteboardStep,
-                    reason: componentInteractionReasons.press,
-                    segmentId: activeSegment.id,
-                    sourceFocusTarget: props.sourceFocusTarget,
-                    sourceSurface: props.sourceSurface,
-                    whiteboardStepId: activeSegment.matchingWhiteboardStepId ?? "",
-                  })
-                }
-              >
-                {props.labels.focusMatchingWhiteboardStep}
-              </Button>
-            )}
-            <Button
-              className={compact ? "min-h-11 min-w-11" : undefined}
-              disabled={frozen}
-              onRequestPress={() =>
-                closeDetails(activeSegment.id, componentInteractionReasons.press)
+          ))}
+      </section>
+
+      {openSegment && (
+        <PopoverPortal>
+          <PopoverPositioner
+            align={uiFloatingAlignments.center}
+            anchor={() => segmentAnchorRefs.current.get(openSegment.id) ?? null}
+            key={openSegment.id}
+            side={uiFloatingSides.top}
+            sideOffset={10}
+          >
+            <PopoverArrow
+              className={
+                openSegment.validity === comboFrameMeterSegmentValidities.invalid
+                  ? "border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)]"
+                  : undefined
               }
+            />
+            <PopoverPopup
+              aria-label={`${props.labels.details}: ${openSegment.label}`}
+              aria-live="polite"
+              className={cx(
+                "grid w-[min(22rem,calc(100vw-2rem))] min-w-0 gap-3 p-3",
+                openSegment.validity === comboFrameMeterSegmentValidities.invalid
+                  ? "border-[var(--ui-destructive)] bg-[var(--ui-destructive-soft)]"
+                  : undefined,
+              )}
+              data-segment-details={openSegment.id}
+              id={detailsId}
             >
-              {props.labels.closeDetails}
-            </Button>
-          </Group>
-        </section>
+              <Group justify="between">
+                <PopoverTitle>{openSegment.label}</PopoverTitle>
+                <Badge tone={validityTone(openSegment.validity)}>{openSegment.validityLabel}</Badge>
+              </Group>
+              <PopoverDescription className="text-sm text-[var(--ui-text)]">
+                {openSegment.summary}
+              </PopoverDescription>
+              <Stack role="list">
+                {openSegment.details.map((item) => (
+                  <Group justify="between" key={item.id} role="listitem" wrap={false}>
+                    <span className="text-[var(--ui-muted-text)]">{item.label}</span>
+                    <span data-frame-value={item.frameValue}>{item.value}</span>
+                  </Group>
+                ))}
+              </Stack>
+              {openSegment.reason && (
+                <StatusMessage
+                  tone={
+                    openSegment.validity === comboFrameMeterSegmentValidities.invalid
+                      ? uiToneModes.destructive
+                      : uiToneModes.warning
+                  }
+                >
+                  {openSegment.reason}
+                </StatusMessage>
+              )}
+              <Group>
+                {openSegment.matchingWhiteboardStepId && (
+                  <Button
+                    className={compact ? "min-h-11 min-w-11" : undefined}
+                    disabled={frozen}
+                    onRequestPress={() =>
+                      emit({
+                        action: comboFrameMeterActions.focusMatchingWhiteboardStep,
+                        reason: componentInteractionReasons.press,
+                        segmentId: openSegment.id,
+                        sourceFocusTarget: props.sourceFocusTarget,
+                        sourceSurface: props.sourceSurface,
+                        whiteboardStepId: openSegment.matchingWhiteboardStepId ?? "",
+                      })
+                    }
+                  >
+                    {props.labels.focusMatchingWhiteboardStep}
+                  </Button>
+                )}
+                <PopoverClose
+                  className={compact ? "min-h-11 min-w-11" : undefined}
+                  disabled={frozen}
+                >
+                  {props.labels.closeDetails}
+                </PopoverClose>
+              </Group>
+            </PopoverPopup>
+          </PopoverPositioner>
+        </PopoverPortal>
       )}
-    </section>
+    </PopoverRoot>
   );
 }
 

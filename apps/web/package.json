@@ -4,21 +4,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vite build",
-    "dev": "vite dev",
-    "preview": "vite preview",
+    "build": "bun --env-file=.env run vite build && bun --env-file=.env scripts/verify-static-build.ts",
+    "dev": "bun --env-file=.env run vite dev",
+    "preview": "bun --env-file=.env run vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@mk-combos/contracts": "workspace:*",
+    "@mk-combos/mk1-business": "workspace:*",
+    "@mk-combos/mkxl-business": "workspace:*",
     "@mk-combos/ui": "workspace:*",
     "@tanstack/react-router": "1.170.17",
     "@tanstack/react-start": "1.168.27",
     "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "react-dom": "19.2.7",
+    "zod": "4.4.3"
   },
   "devDependencies": {
-    "@mk-combos/contracts": "workspace:*",
     "@types/node": "25.6.2",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",

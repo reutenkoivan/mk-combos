@@ -20,6 +20,7 @@ describe("getMkCombosEnv", () => {
       isProduction: true,
       isCi: false,
       isTsdownVerbose: false,
+      viteBase: "./",
     });
 
     setProcessEnv({ NODE_ENV: "development" });
@@ -63,5 +64,16 @@ describe("getMkCombosEnv", () => {
 
     setProcessEnv({});
     expect(getMkCombosEnv().isCi).toBe(false);
+  });
+
+  it("resolves the Vite base from the environment with a relative fallback", () => {
+    setProcessEnv({});
+    expect(getMkCombosEnv().viteBase).toBe("./");
+
+    setProcessEnv({ VITE_BASE: "/" });
+    expect(getMkCombosEnv().viteBase).toBe("/");
+
+    setProcessEnv({ VITE_BASE: "/mk-combos/" });
+    expect(getMkCombosEnv().viteBase).toBe("/mk-combos/");
   });
 });

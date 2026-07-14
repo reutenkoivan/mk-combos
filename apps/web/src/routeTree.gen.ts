@@ -9,50 +9,278 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
-import { Route as IndexRouteImport } from "./routes/index";
+import { Route as AppRouteRouteImport } from "./routes/_app/route";
+import { Route as AppIndexRouteImport } from "./routes/_app/index";
+import { Route as AppSettingsRouteImport } from "./routes/_app/settings";
+import { Route as AppBackupRouteImport } from "./routes/_app/backup";
+import { Route as AppSplatRouteImport } from "./routes/_app/$";
+import { Route as AppGameIdRouteRouteImport } from "./routes/_app/$gameId/route";
+import { Route as AppGameIdIndexRouteImport } from "./routes/_app/$gameId/index";
+import { Route as AppGameIdListsRouteImport } from "./routes/_app/$gameId/lists";
+import { Route as AppGameIdCatalogRouteImport } from "./routes/_app/$gameId/catalog";
+import { Route as AppGameIdBuilderRouteImport } from "./routes/_app/$gameId/builder";
+import { Route as AppGameIdCombosSourceComboIdRouteImport } from "./routes/_app/$gameId/combos/$source/$comboId";
 
-const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: "/_app",
   getParentRoute: () => rootRouteImport,
 } as any);
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => AppRouteRoute,
+} as any);
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: "/settings",
+  path: "/settings",
+  getParentRoute: () => AppRouteRoute,
+} as any);
+const AppBackupRoute = AppBackupRouteImport.update({
+  id: "/backup",
+  path: "/backup",
+  getParentRoute: () => AppRouteRoute,
+} as any);
+const AppSplatRoute = AppSplatRouteImport.update({
+  id: "/$",
+  path: "/$",
+  getParentRoute: () => AppRouteRoute,
+} as any);
+const AppGameIdRouteRoute = AppGameIdRouteRouteImport.update({
+  id: "/$gameId",
+  path: "/$gameId",
+  getParentRoute: () => AppRouteRoute,
+} as any);
+const AppGameIdIndexRoute = AppGameIdIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => AppGameIdRouteRoute,
+} as any);
+const AppGameIdListsRoute = AppGameIdListsRouteImport.update({
+  id: "/lists",
+  path: "/lists",
+  getParentRoute: () => AppGameIdRouteRoute,
+} as any);
+const AppGameIdCatalogRoute = AppGameIdCatalogRouteImport.update({
+  id: "/catalog",
+  path: "/catalog",
+  getParentRoute: () => AppGameIdRouteRoute,
+} as any);
+const AppGameIdBuilderRoute = AppGameIdBuilderRouteImport.update({
+  id: "/builder",
+  path: "/builder",
+  getParentRoute: () => AppGameIdRouteRoute,
+} as any);
+const AppGameIdCombosSourceComboIdRoute =
+  AppGameIdCombosSourceComboIdRouteImport.update({
+    id: "/combos/$source/$comboId",
+    path: "/combos/$source/$comboId",
+    getParentRoute: () => AppGameIdRouteRoute,
+  } as any);
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
+  "/": typeof AppIndexRoute;
+  "/$gameId": typeof AppGameIdRouteRouteWithChildren;
+  "/$": typeof AppSplatRoute;
+  "/backup": typeof AppBackupRoute;
+  "/settings": typeof AppSettingsRoute;
+  "/$gameId/builder": typeof AppGameIdBuilderRoute;
+  "/$gameId/catalog": typeof AppGameIdCatalogRoute;
+  "/$gameId/lists": typeof AppGameIdListsRoute;
+  "/$gameId/": typeof AppGameIdIndexRoute;
+  "/$gameId/combos/$source/$comboId": typeof AppGameIdCombosSourceComboIdRoute;
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
+  "/$": typeof AppSplatRoute;
+  "/backup": typeof AppBackupRoute;
+  "/settings": typeof AppSettingsRoute;
+  "/": typeof AppIndexRoute;
+  "/$gameId/builder": typeof AppGameIdBuilderRoute;
+  "/$gameId/catalog": typeof AppGameIdCatalogRoute;
+  "/$gameId/lists": typeof AppGameIdListsRoute;
+  "/$gameId": typeof AppGameIdIndexRoute;
+  "/$gameId/combos/$source/$comboId": typeof AppGameIdCombosSourceComboIdRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
+  "/_app": typeof AppRouteRouteWithChildren;
+  "/_app/$gameId": typeof AppGameIdRouteRouteWithChildren;
+  "/_app/$": typeof AppSplatRoute;
+  "/_app/backup": typeof AppBackupRoute;
+  "/_app/settings": typeof AppSettingsRoute;
+  "/_app/": typeof AppIndexRoute;
+  "/_app/$gameId/builder": typeof AppGameIdBuilderRoute;
+  "/_app/$gameId/catalog": typeof AppGameIdCatalogRoute;
+  "/_app/$gameId/lists": typeof AppGameIdListsRoute;
+  "/_app/$gameId/": typeof AppGameIdIndexRoute;
+  "/_app/$gameId/combos/$source/$comboId": typeof AppGameIdCombosSourceComboIdRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/";
+  fullPaths:
+    | "/"
+    | "/$gameId"
+    | "/$"
+    | "/backup"
+    | "/settings"
+    | "/$gameId/builder"
+    | "/$gameId/catalog"
+    | "/$gameId/lists"
+    | "/$gameId/"
+    | "/$gameId/combos/$source/$comboId";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/";
-  id: "__root__" | "/";
+  to:
+    | "/$"
+    | "/backup"
+    | "/settings"
+    | "/"
+    | "/$gameId/builder"
+    | "/$gameId/catalog"
+    | "/$gameId/lists"
+    | "/$gameId"
+    | "/$gameId/combos/$source/$comboId";
+  id:
+    | "__root__"
+    | "/_app"
+    | "/_app/$gameId"
+    | "/_app/$"
+    | "/_app/backup"
+    | "/_app/settings"
+    | "/_app/"
+    | "/_app/$gameId/builder"
+    | "/_app/$gameId/catalog"
+    | "/_app/$gameId/lists"
+    | "/_app/$gameId/"
+    | "/_app/$gameId/combos/$source/$comboId";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
+  AppRouteRoute: typeof AppRouteRouteWithChildren;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
+    "/_app": {
+      id: "/_app";
+      path: "";
+      fullPath: "/";
+      preLoaderRoute: typeof AppRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_app/": {
+      id: "/_app/";
       path: "/";
       fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
+      preLoaderRoute: typeof AppIndexRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/_app/settings": {
+      id: "/_app/settings";
+      path: "/settings";
+      fullPath: "/settings";
+      preLoaderRoute: typeof AppSettingsRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/_app/backup": {
+      id: "/_app/backup";
+      path: "/backup";
+      fullPath: "/backup";
+      preLoaderRoute: typeof AppBackupRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/_app/$": {
+      id: "/_app/$";
+      path: "/$";
+      fullPath: "/$";
+      preLoaderRoute: typeof AppSplatRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/_app/$gameId": {
+      id: "/_app/$gameId";
+      path: "/$gameId";
+      fullPath: "/$gameId";
+      preLoaderRoute: typeof AppGameIdRouteRouteImport;
+      parentRoute: typeof AppRouteRoute;
+    };
+    "/_app/$gameId/": {
+      id: "/_app/$gameId/";
+      path: "/";
+      fullPath: "/$gameId/";
+      preLoaderRoute: typeof AppGameIdIndexRouteImport;
+      parentRoute: typeof AppGameIdRouteRoute;
+    };
+    "/_app/$gameId/lists": {
+      id: "/_app/$gameId/lists";
+      path: "/lists";
+      fullPath: "/$gameId/lists";
+      preLoaderRoute: typeof AppGameIdListsRouteImport;
+      parentRoute: typeof AppGameIdRouteRoute;
+    };
+    "/_app/$gameId/catalog": {
+      id: "/_app/$gameId/catalog";
+      path: "/catalog";
+      fullPath: "/$gameId/catalog";
+      preLoaderRoute: typeof AppGameIdCatalogRouteImport;
+      parentRoute: typeof AppGameIdRouteRoute;
+    };
+    "/_app/$gameId/builder": {
+      id: "/_app/$gameId/builder";
+      path: "/builder";
+      fullPath: "/$gameId/builder";
+      preLoaderRoute: typeof AppGameIdBuilderRouteImport;
+      parentRoute: typeof AppGameIdRouteRoute;
+    };
+    "/_app/$gameId/combos/$source/$comboId": {
+      id: "/_app/$gameId/combos/$source/$comboId";
+      path: "/combos/$source/$comboId";
+      fullPath: "/$gameId/combos/$source/$comboId";
+      preLoaderRoute: typeof AppGameIdCombosSourceComboIdRouteImport;
+      parentRoute: typeof AppGameIdRouteRoute;
     };
   }
 }
 
+interface AppGameIdRouteRouteChildren {
+  AppGameIdBuilderRoute: typeof AppGameIdBuilderRoute;
+  AppGameIdCatalogRoute: typeof AppGameIdCatalogRoute;
+  AppGameIdListsRoute: typeof AppGameIdListsRoute;
+  AppGameIdIndexRoute: typeof AppGameIdIndexRoute;
+  AppGameIdCombosSourceComboIdRoute: typeof AppGameIdCombosSourceComboIdRoute;
+}
+
+const AppGameIdRouteRouteChildren: AppGameIdRouteRouteChildren = {
+  AppGameIdBuilderRoute: AppGameIdBuilderRoute,
+  AppGameIdCatalogRoute: AppGameIdCatalogRoute,
+  AppGameIdListsRoute: AppGameIdListsRoute,
+  AppGameIdIndexRoute: AppGameIdIndexRoute,
+  AppGameIdCombosSourceComboIdRoute: AppGameIdCombosSourceComboIdRoute,
+};
+
+const AppGameIdRouteRouteWithChildren = AppGameIdRouteRoute._addFileChildren(
+  AppGameIdRouteRouteChildren,
+);
+
+interface AppRouteRouteChildren {
+  AppGameIdRouteRoute: typeof AppGameIdRouteRouteWithChildren;
+  AppSplatRoute: typeof AppSplatRoute;
+  AppBackupRoute: typeof AppBackupRoute;
+  AppSettingsRoute: typeof AppSettingsRoute;
+  AppIndexRoute: typeof AppIndexRoute;
+}
+
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppGameIdRouteRoute: AppGameIdRouteRouteWithChildren,
+  AppSplatRoute: AppSplatRoute,
+  AppBackupRoute: AppBackupRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppIndexRoute: AppIndexRoute,
+};
+
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+);
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

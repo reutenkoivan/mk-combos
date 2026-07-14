@@ -42,7 +42,8 @@
     "typecheck": "turbo run root:typecheck typecheck",
     "ui:storybook": "turbo run storybook --filter=@mk-combos/ui",
     "validate:data": "turbo run validate:data",
-    "validate:docs": "turbo run validate:docs"
+    "validate:docs": "turbo run validate:docs",
+    "web:dev": "turbo run dev --filter=@mk-combos/web -- --open"
   },
   "engines": {
     "bun": ">=1.3.5",

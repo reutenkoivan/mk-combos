@@ -11,7 +11,8 @@ The canonical architecture document is [ARCHITECTURE.md](./ARCHITECTURE.md). Thi
 - Provide one fast web app for all installed games.
 - Keep game-specific business logic inside game-owned root scopes.
 - Keep shared packages generic and reusable.
-- Support direct links with route prefixes such as `/mkxl/catalog` and `/mk1/catalog`.
+- Support GitHub Pages hash links such as `/mk-combos/#/mkxl/catalog` and
+  `/mk-combos/#/mk1/catalog`.
 - Support local settings, custom combos, named lists, full backup export/import, and stale combo recovery.
 - Support controller navigation through DualSense, Xbox-compatible, and Standard Gamepad API devices.
 - Render notation as `FGC`, `PlayStation`, or `Xbox` without changing the stored combo data.
@@ -144,7 +145,11 @@ The web app may select a business entry point by `gameId`. It must not import `m
 
 ## Routes
 
-Routes are generic and game-prefixed:
+GitHub Pages deployment uses hash history. The document lives at `/mk-combos/`, production assets
+use `/mk-combos/assets/`, and route patterns are logical paths inside the fragment; for example,
+logical `/mk1/catalog` is published as `/mk-combos/#/mk1/catalog`.
+
+Logical routes are generic and game-prefixed:
 
 ```text
 /:gameId/catalog
@@ -337,12 +342,13 @@ Acceptance:
   - `bun run validate:docs`
   - `bun run test`
   - `bun run build`
-- Deploy static artifact to GitHub Pages with correct base path and SPA fallback.
+- Deploy the static entry point and assets below `/mk-combos/` with hash history.
 
 Acceptance:
 
 - CI blocks deploy on data validation, docs validation, tests, or build failure.
-- GitHub Pages serves `/mk-combos/` and route-prefixed deep links.
+- GitHub Pages serves `/mk-combos/` and fragment-prefixed deep links such as
+  `/mk-combos/#/mk1/catalog` without server rewrites.
 
 ## Test Plan
 

@@ -1,11 +1,38 @@
-import { createRouter } from "@tanstack/react-router";
-import { webBasePath } from "./config/web-path";
+import { createHashHistory, createRouter, type RouterHistory } from "@tanstack/react-router";
+import { webBasePath, webRouterBasePath } from "./config/web-path";
 import { routeTree } from "./routeTree.gen";
 
-export function getRouter() {
+type GetRouterOptions = Readonly<{
+  history?: RouterHistory;
+}>;
+
+const webDocumentBasePath = webBasePath.slice(0, -1);
+export const webDocumentRewrite = {
+  input: ({ url }: { url: URL }) => {
+    if (url.pathname === webDocumentBasePath) {
+      url.pathname = "/";
+    } else if (url.pathname.startsWith(`${webDocumentBasePath}/`)) {
+      url.pathname = url.pathname.slice(webDocumentBasePath.length);
+    }
+
+    return url;
+  },
+  output: ({ url }: { url: URL }) => {
+    url.pathname = `${webDocumentBasePath}${url.pathname}`;
+
+    return url;
+  },
+};
+
+export function getRouter(options: GetRouterOptions = {}) {
   return createRouter({
-    basepath: webBasePath,
+    basepath: webRouterBasePath,
     defaultPreload: "intent",
+    history: options.history ?? (typeof window === "undefined" ? undefined : createHashHistory()),
+    rewrite:
+      typeof window === "undefined" && import.meta.env.BASE_URL === webBasePath
+        ? webDocumentRewrite
+        : undefined,
     routeTree,
     scrollRestoration: true,
   });
