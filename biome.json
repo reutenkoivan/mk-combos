@@ -62,19 +62,70 @@
       "includes": ["apps/web/**/*.ts", "apps/web/**/*.tsx"],
       "linter": {
         "rules": {
+          "suspicious": {
+            "noImportCycles": "error"
+          },
           "style": {
             "noRestrictedImports": {
               "level": "error",
               "options": {
+                "paths": {
+                  "lucide-react": {
+                    "message": "Import icons from @mk-combos/ui/icons instead."
+                  }
+                },
+                "patterns": [
+                  {
+                    "group": [
+                      "@mk-combos/mkxl-*",
+                      "@mk-combos/mkxl-*/**",
+                      "@mk-combos/mk1-*",
+                      "@mk-combos/mk1-*/**"
+                    ],
+                    "message": "Web modules may import game scopes only through game-business/installed-games/value.ts."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/game-business/installed-games/value.ts"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noImportCycles": "error"
+          },
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "lucide-react": {
+                    "message": "Import icons from @mk-combos/ui/icons instead."
+                  }
+                },
                 "patterns": [
                   {
                     "group": [
                       "@mk-combos/mkxl-data",
-                      "@mk-combos/mkxl-data/*",
+                      "@mk-combos/mkxl-data/**",
+                      "@mk-combos/mkxl-catalog",
+                      "@mk-combos/mkxl-catalog/**",
+                      "@mk-combos/mkxl-builder",
+                      "@mk-combos/mkxl-builder/**",
+                      "@mk-combos/mkxl-business/**",
                       "@mk-combos/mk1-data",
-                      "@mk-combos/mk1-data/*"
+                      "@mk-combos/mk1-data/**",
+                      "@mk-combos/mk1-catalog",
+                      "@mk-combos/mk1-catalog/**",
+                      "@mk-combos/mk1-builder",
+                      "@mk-combos/mk1-builder/**",
+                      "@mk-combos/mk1-business/**"
                     ],
-                    "message": "Web pages must use installed game business entry points instead of direct game data imports."
+                    "message": "The web installation point may import only the game business roots."
                   }
                 ]
               }

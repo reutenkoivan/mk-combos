@@ -23,7 +23,7 @@ App Shell є єдиним місцем, де route prefix перетворюєт
 
 Rules:
 
-- installed games приходять із `apps/web/src/game-business/installed-games.ts`;
+- installed games приходять із `apps/web/src/game-business/installed-games/value.ts`;
 - route prefix `/:gameId/...` є source of truth для active game на deep links;
 - App Shell вибирає active business entry point і передає page-level flows підготовлені game capabilities;
 - App Shell обробляє game-switch intent із `UI-CMP-002` у breadcrumbs або mobile і tablet menu і виконує analogous navigation;
@@ -80,7 +80,7 @@ App Shell не відповідає за:
 
 Бізнес-залежності:
 
-- installed game registry in `apps/web/src/game-business/installed-games.ts`;
+- installed game registry in `apps/web/src/game-business/installed-games/value.ts`;
 - app-level settings persistence and first-launch marker;
 - `@mk-combos/controller-bridge` semantic commands.
 

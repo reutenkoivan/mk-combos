@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RouteRecoveryPage } from "../../app/route-placeholder";
+import { RouteRecoveryPage } from "../../pages/route-recovery/page";
 
 export const Route = createFileRoute("/_app/$")({
   component: RouteRecoveryPage,

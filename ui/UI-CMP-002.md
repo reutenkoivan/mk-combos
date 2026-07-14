@@ -46,7 +46,7 @@
 
 ## Game Option Contract
 
-Game options приходять із `apps/web/src/game-business/installed-games.ts` через App Shell або First Launch flow.
+Game options приходять із `apps/web/src/game-business/installed-games/value.ts` через App Shell або First Launch flow.
 
 ```ts
 type GameSwitcherContext = "firstLaunch" | "breadcrumbs";

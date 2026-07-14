@@ -1,7 +1,8 @@
 import { render, screen } from "@mk-combos/contracts/test/unit/react";
 import { describe, expect, it, vi } from "vitest";
-import { type InstalledGameBusiness, installedGames } from "../game-business/installed-games";
-import { ActiveGameBusinessProvider, useActiveGameBusiness } from "./active-game";
+import type { InstalledGameBusiness } from "../installed-games/type";
+import { installedGames } from "../installed-games/value";
+import { ActiveGameBusinessProvider, useActiveGameBusiness } from "./provider";
 
 function ActiveGameConsumer(props: Readonly<{ onRead: (value: InstalledGameBusiness) => void }>) {
   const activeBusiness = useActiveGameBusiness();

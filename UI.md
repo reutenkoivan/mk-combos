@@ -180,7 +180,7 @@ UI-PAGE-001 App Shell
      -> UI-PAGE-008 Settings
 ```
 
-`apps/web/src/game-business/installed-games.ts` є єдиною installation point у web app для game business entry points. UI pages отримують active game behavior від resolved business entry point.
+`apps/web/src/game-business/installed-games/value.ts` є єдиною installation point у web app для game business entry points. UI pages отримують active game behavior від resolved business entry point.
 
 ## Page Ownership Summary
 

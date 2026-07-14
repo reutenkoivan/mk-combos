@@ -1,5 +1,6 @@
 import { createContext, type ReactNode, useContext } from "react";
-import type { InstalledGameBusiness } from "../game-business/installed-games";
+
+import type { InstalledGameBusiness } from "../installed-games/type";
 
 const ActiveGameBusinessContext = createContext<InstalledGameBusiness | undefined>(undefined);
 

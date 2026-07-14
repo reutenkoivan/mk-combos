@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { settingsSections } from "../../routing/settings-search/value";
+import { settingsSections } from "../../pages/settings/search/value";
 
 export const Route = createFileRoute("/_app/backup")({
   beforeLoad: () => {

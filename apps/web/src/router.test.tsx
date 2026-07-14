@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { webBasePath, webRouterBasePath } from "./config/web-path";
 import { getRouter } from "./router";
+import { webBasePath, webRouterBasePath } from "./routing/web-path/value";
 
 afterEach(() => {
   globalThis.window.history.replaceState({}, "", "/");

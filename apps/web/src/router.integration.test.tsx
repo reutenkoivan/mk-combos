@@ -1,7 +1,7 @@
 import { createMemoryHistory, type RouterHistory } from "@tanstack/react-router";
 import { describe, expect, it } from "vitest";
+import { SettingsSearchSchema } from "./pages/settings/search/schema";
 import { getRouter } from "./router";
-import { SettingsSearchSchema } from "./routing/settings-search/schema";
 
 async function loadRoute(path: string) {
   const history = createMemoryHistory({ initialEntries: [path] });

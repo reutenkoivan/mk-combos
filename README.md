@@ -125,10 +125,11 @@ MK1 owns main character + kameo context. `mk1/data` owns seeded facts, schemas, 
 
 ## Web App Integration
 
-`apps/web` installs supported games in one local file:
+`apps/web` installs supported games through one local module. Its direct business
+imports live only in the registry value file:
 
 ```text
-apps/web/src/game-business/installed-games.ts
+apps/web/src/game-business/installed-games/value.ts
 ```
 
 ```ts
@@ -294,7 +295,7 @@ Acceptance:
 
 - Configure TanStack Start in `apps/web`.
 - Add static output for GitHub Pages.
-- Add `apps/web/src/game-business/installed-games.ts`.
+- Add `apps/web/src/game-business/installed-games/value.ts`.
 - Implement route resolution for `/:gameId/...`.
 - Implement app shell, first-launch setup, settings, local persistence, backup import/export, and controller command routing.
 - Render shared pages through active business entry point.
@@ -363,7 +364,7 @@ Acceptance:
 
 ### Integration
 
-- `apps/web` resolves installed games from `installed-games.ts`.
+- `apps/web` resolves installed games through the `installed-games` module.
 - `/mkxl/catalog` uses `mkxlBusiness`.
 - `/mk1/catalog` uses `mk1Business`.
 - Combo detail delegates lookup and stale detection to active game business.
@@ -395,7 +396,7 @@ mk-new/
 Export one new business entry point, then register it in:
 
 ```text
-apps/web/src/game-business/installed-games.ts
+apps/web/src/game-business/installed-games/value.ts
 ```
 
 Shared packages and existing docs should not require broad rewrites for a normal new game. Only add shared primitives when the new game introduces a reusable platform concept.

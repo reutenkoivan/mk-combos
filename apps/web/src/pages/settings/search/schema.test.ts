@@ -1,5 +1,4 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
-
 import { SettingsSearchSchema, SettingsSectionSchema } from "./schema";
 import type { SettingsSearch, SettingsSection } from "./type";
 import { settingsSections } from "./value";

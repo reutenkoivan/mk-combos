@@ -19,6 +19,31 @@ This document is the canonical source for package ownership, import direction, r
   pure UI components;
 - public contracts мають бути стабільними, game-agnostic і forward-compatible.
 
+Для `apps/web` route tree і page-модулі мають окремих власників:
+
+- `apps/web/src/routes` містить тільки TanStack framework adapters. Route adapter
+  читає validated route input, готує props для сторінки та не володіє product UI або
+  business workflow;
+- кожна сторінка належить `apps/web/src/pages/<page-name>`. Її `page.tsx` є короткою
+  orchestration map: отримує prepared state, викликає page-level hooks і показує
+  верхньорівневу JSX-композицію;
+- view composition сторінки максимально лишається в `page.tsx`. Окремий
+  `<PageName>View` не створюється, якщо він лише приймає prepared model і переносить
+  всю JSX-структуру без власного атомарного UI-значення, контракту або lifecycle;
+- schemas, dictionaries, route-input parsing, persistence mechanics, algorithms і
+  великі helpers не живуть у `page.tsx`;
+- логічна частина сторінки отримує семантично названу child folder без
+  горизонтальних `components/`, `hooks/` або `utils/`. За потреби вона містить
+  `component.tsx`, `hook.ts`, `runtime.ts`, `schema.ts`, `type.ts`, `value.ts`,
+  colocated `*.test.ts[x]` і локальний `internal/`; порожні role-файли не створюються;
+- public filesystem contracts логічної частини лежать у корені її folder, а private
+  implementation helpers — у `internal/`;
+- logical parts можуть імпортувати одна одну тільки всередині власної сторінки й у
+  явному напрямі. Cross-page imports заборонені; справді спільна частина
+  перекласифіковується у `app/`, `game-business/` або окремий page-shared owner;
+- сторінка не імпортує route declaration назад. Route IDs, URL shape, redirects і
+  normalization залишаються відповідальністю route boundary.
+
 React-код максимально використовує stable API React 19.2 або новішої stable
 версії, якщо семантика API відповідає задачі та не порушує ownership. Це є
 архітектурною вимогою, а не вимогою формально використати кожен новий API:
@@ -510,10 +535,13 @@ Concrete context types stay inside the game scope.
 
 ## Web Installation Point
 
-The web app installs supported games in one file:
+The web app installs supported games in one module:
 
 ```text
-apps/web/src/game-business/installed-games.ts
+apps/web/src/game-business/installed-games/
+  value.ts
+  type.ts
+  runtime.ts
 ```
 
 Expected shape:
@@ -528,7 +556,9 @@ export const installedGames = [
 ] as const
 ```
 
-This is the only place in `apps/web` that imports game business entry points directly.
+Only `installed-games/value.ts` imports game business entry points directly. `type.ts`
+derives the installed business contract from the registry, while `runtime.ts` owns
+resolution by `GameId`.
 
 Pages may branch by `gameId` only to choose an installed business entry point. They must not reimplement MKXL or MK1 rules inline.
 
@@ -683,7 +713,7 @@ mk-new/
 Then update only:
 
 ```text
-apps/web/src/game-business/installed-games.ts
+apps/web/src/game-business/installed-games/value.ts
 ```
 
 Example:

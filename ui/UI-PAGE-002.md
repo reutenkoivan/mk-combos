@@ -29,7 +29,7 @@ Valid route-prefixed deep link не рендерить `UI-PAGE-002`. Якщо U
 
 ## Архітектурний контекст
 
-Game options у setup беруться з `apps/web/src/game-business/installed-games.ts`. Setup не хардкодить MKXL/MK1 як єдині можливі ігри, а рендерить installed games.
+Game options у setup беруться з `apps/web/src/game-business/installed-games/value.ts`. Setup не хардкодить MKXL/MK1 як єдині можливі ігри, а рендерить installed games.
 
 ## Контракт Стану Сторінки
 

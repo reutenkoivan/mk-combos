@@ -9,9 +9,9 @@ import {
 import { uiResponsiveModes } from "@mk-combos/ui/components/value";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { getRouter } from "../router";
+import { getRouter } from "./router";
 
-vi.mock("../styles.css?url", () => ({ default: "/styles.css" }));
+vi.mock("./styles.css?url", () => ({ default: "/styles.css" }));
 
 const originalMatchMedia = globalThis.window.matchMedia;
 

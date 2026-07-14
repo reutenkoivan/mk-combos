@@ -1,17 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { RoutePlaceholder } from "../../../app/route-placeholder";
+import { NamedListsPage } from "../../../pages/named-lists/page";
 
 export const Route = createFileRoute("/_app/$gameId/lists")({
-  component: ListsPlaceholder,
+  component: NamedListsPage,
 });
-
-function ListsPlaceholder() {
-  return (
-    <RoutePlaceholder
-      description="Named Lists routing is isolated by the active route GameId."
-      details="List persistence and editing are implemented in roadmap step 27."
-      pageCode="UI-PAGE-005"
-      title="Named Lists"
-    />
-  );
-}

@@ -2,8 +2,7 @@ import { act, render, screen } from "@mk-combos/contracts/test/unit/react";
 import { uiResponsiveModes } from "@mk-combos/ui/components/value";
 import { uiContrastModes, uiDensityModes, uiThemeModes } from "@mk-combos/ui/tokens/value";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { webBasePath } from "../config/web-path";
-import { AppProviders, useAppResponsiveMode } from "./providers";
+import { AppProviders, useAppResponsiveMode } from "./provider";
 
 type MockMediaQuery = ReturnType<typeof createMockMediaQuery>;
 
@@ -124,11 +123,5 @@ describe("AppProviders", () => {
     expect(() => render(<ResponsiveModeConsumer />)).toThrowError(
       "useAppResponsiveMode must be used within AppProviders",
     );
-  });
-});
-
-describe("web deployment path", () => {
-  it("keeps the GitHub Pages application base stable", () => {
-    expect(webBasePath).toBe("/mk-combos/");
   });
 });

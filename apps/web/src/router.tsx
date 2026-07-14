@@ -1,6 +1,6 @@
 import { createHashHistory, createRouter, type RouterHistory } from "@tanstack/react-router";
-import { webBasePath, webRouterBasePath } from "./config/web-path";
 import { routeTree } from "./routeTree.gen";
+import { webBasePath, webRouterBasePath } from "./routing/web-path/value";
 
 type GetRouterOptions = Readonly<{
   history?: RouterHistory;

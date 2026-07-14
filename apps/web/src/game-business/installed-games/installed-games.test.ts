@@ -1,10 +1,8 @@
 import type { GameId } from "@mk-combos/contracts/identity/type";
 import { describe, expect, it } from "vitest";
-import {
-  type InstalledGameBusiness,
-  installedGames,
-  resolveInstalledGame,
-} from "./installed-games";
+import { resolveInstalledGame } from "./runtime";
+import type { InstalledGameBusiness } from "./type";
+import { installedGames } from "./value";
 
 describe("installed game registry", () => {
   it("keeps the installed game order, ids, and labels stable", () => {

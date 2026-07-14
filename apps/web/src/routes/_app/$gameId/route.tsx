@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { RouteRecoveryPage } from "../../../app/route-placeholder";
-import { parseInstalledGamePathParams } from "../../../routing/route-params";
+import { parseInstalledGamePathParams } from "../../../pages/app-shell/installed-game-path/runtime";
+import { RouteRecoveryPage } from "../../../pages/route-recovery/page";
 
 export const Route = createFileRoute("/_app/$gameId")({
   component: InstalledGameLayout,
