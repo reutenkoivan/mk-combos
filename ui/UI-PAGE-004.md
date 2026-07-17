@@ -16,6 +16,10 @@
 
 `UI-PAGE-004 Combo Detail` є route-level сторінкою для повного read-only перегляду seeded або local custom combo.
 
+Roadmap step 26 активує лише return-to-Catalog action. Add-to-list, duplicate,
+edit і repair нижче описують цільовий contract для steps 27 і 28; до появи їхніх
+business mutation/handoff APIs ці controls не рендеряться.
+
 Сторінка підтримує:
 
 - перегляд canonical FGC notation і mapped notation для active display mode;
@@ -41,7 +45,7 @@ Combo Detail працює з already applied app-level settings:
 
 ## Архітектурний контекст
 
-Combo Detail є shared page. Route має форму `/:gameId/combos/:source/:comboId`. Сторінка делегує seeded/custom lookup, stale detection, detail model creation, duplicate/edit/repair context і source compatibility active game business entry point.
+Combo Detail є shared page. Route має форму `/:gameId/catalog/:character/:specification/:comboId`. Сторінка делегує source-neutral seeded/custom lookup, stale detection, detail model creation і duplicate/edit/repair context active game business entry point; `source` лишається частиною доменного `ComboRef`, але не URL.
 
 ## Володіння
 
@@ -49,7 +53,8 @@ Combo Detail є shared page. Route має форму `/:gameId/combos/:source/:c
 
 Сторінка відповідає за:
 
-- прийом route context із `gameId`, combo id, combo source type і optional source list context;
+- прийом route context із `gameId`, character slug, variation/kameo slug, combo id і optional source list context;
+- source-neutral resolution route context у єдиний доменний `ComboRef`; якщо однаковий combo id існує у кількох sources, detail не обирає source за неявним пріоритетом;
 - запит combo lookup в active game business entry point;
 - перевірку через active game business, що combo належить route `gameId`;
 - підготовку read-only combo detail model із game business output для header, notation, whiteboard, frame meter і metadata;
@@ -81,7 +86,7 @@ Combo Detail є shared page. Route має форму `/:gameId/combos/:source/:c
 
 Стан у власності сторінки:
 
-- detail route context, combo source type, combo id і previous source context;
+- detail route context (`gameId`, character slug, variation/kameo slug, combo id), resolved domain combo source type і previous source context;
 - read-only detail loading/error state, source disclosure state і actions menu state;
 - active add-to-list dialog state і source focus target;
 - frame meter inspection focus, whiteboard read-only focus sync і segment details state;
@@ -271,6 +276,11 @@ Inputs від сторінки:
 
 Rules:
 
+- page завжди готує model через `useComboFrameMeterModel`, навіть коли authored
+  frame data відсутні;
+- якщо authored segments відсутні, snapshot має state `unavailable` і коротко
+  пояснює, що покадрова шкала для цього комбо недоступна;
+- unavailable snapshot не містить синтетичних frame values або segments;
 - відсутність focused step показує `wholeCombo`;
 - focused whiteboard step показує `selectedMove`;
 - timeline segment може попросити сфокусувати matching whiteboard step;
@@ -294,18 +304,12 @@ Rules:
 
 `UI-CMP-017 Combo Metadata Grid` показує structured metadata active combo після description section.
 
-Grid має показувати доступні поля:
+Grid має показувати доступні поля з явною візуальною важливістю:
 
-- damage;
-- meter;
-- position;
-- starter;
-- route type;
-- difficulty;
-- tags;
-- character;
-- variation або kameo;
-- stage context, якщо combo stage-specific;
+- critical: damage;
+- primary: meter, position і difficulty;
+- secondary: starter, route type, tags, character, variation або kameo, stage
+  context, source і game version;
 - runtime summary, якщо parent передав його як detail metadata.
 
 Grid не має:
@@ -385,8 +389,8 @@ Error state має:
 Вхідні дані:
 
 - active app settings;
-- route combo id;
-- route combo source type: seeded або custom;
+- route character slug, variation/kameo slug і combo id;
+- resolved domain combo source type: seeded або custom;
 - optional previous list context;
 - seeded combo data;
 - local custom combos;
@@ -550,7 +554,7 @@ Detail має валідний combo context, але page-level action або ч
 1. Користувач фокусує combo card у [`UI-PAGE-003 Catalog`](./UI-PAGE-003.md).
 2. Combo card або list емітить open detail intent.
 3. Catalog передає `gameId`, combo id, active game context і previous list context у app-level routing.
-4. App Shell відкриває `/:gameId/combos/:source/:comboId`.
+4. App Shell відкриває `/:gameId/catalog/:character/:specification/:comboId`.
 5. Combo Detail просить active game business lookup-нути combo у seeded data або local custom combos.
 6. Якщо combo знайдено, сторінка показує `seededDetail` або `customDetail`.
 7. Return action повертає користувача до previous list context, якщо він валідний.
@@ -558,8 +562,8 @@ Detail має валідний combo context, але page-level action або ч
 ### Вхід із Named Lists
 
 1. Користувач відкриває combo item із `UI-PAGE-005 Named Lists`.
-2. Named Lists передає combo id, source list id і focus target у app-level routing.
-3. Combo Detail показує combo за source type.
+2. Named Lists передає combo id, source list id, character/specification context і focus target у app-level routing.
+3. Combo Detail source-neutral lookup-ом визначає єдиний доменний `ComboRef` і показує combo за resolved source type.
 4. Add-to-list або edit actions працюють із active combo, але list persistence виконується app-level flow.
 5. Return action повертає до list detail, якщо list context ще валідний.
 
@@ -567,9 +571,9 @@ Detail має валідний combo context, але page-level action або ч
 
 1. App Shell отримує route context для combo detail.
 2. Якщо first-launch marker відсутній, але URL містить installed `gameId`, App Shell застосовує URL-derived active game, default `notation display mode = FGC` і не показує `UI-PAGE-002`.
-3. Combo Detail просить active game business перевірити combo id і source type.
-4. Якщо combo існує, сторінка показує detail state.
-5. Якщо combo stale або відсутнє, сторінка показує `invalidCustomDetail` або `notFound`.
+3. Combo Detail просить active game business перевірити character/specification context і знайти combo id у seeded та custom sources.
+4. Якщо знайдено рівно один відповідний combo, сторінка показує detail state із resolved domain source type.
+5. Якщо combo відсутнє, context не збігається або combo id неоднозначний між sources, сторінка показує `notFound`; stale custom combo після однозначного resolution показується як `invalidCustomDetail`.
 
 ### Return до source context
 
@@ -624,7 +628,8 @@ Detail має валідний combo context, але page-level action або ч
 UI-PAGE-004 Combo Detail
   -> active app settings
   -> active game business entry point
-  -> route gameId + combo id + source type
+  -> route gameId + character slug + variation/kameo slug + combo id
+  -> source-neutral resolution у єдиний domain ComboRef
   -> game-owned seeded combo data або local custom combos
   -> read-only combo detail model
   -> UI-CMP-014 header title/chips/marker/action
@@ -642,33 +647,18 @@ UI-PAGE-004 Combo Detail
 
 App Shell передає semantic controller commands активній Combo Detail сторінці.
 
-`UI-PAGE-004` підтримує:
+Page graph містить Return action і ordered Whiteboard steps. У `mobile` граф
+є vertical-first; у `tablet`/`desktop` Return стоїть над step sequence, а
+`navLeft`/`navRight` рухаються між steps. Focus на step оновлює
+read-only inspection; step не відкриває порожнє actionless menu.
 
-- `navUp`, `navDown`, `navLeft`, `navRight`: рух між header actions, notation, whiteboard steps, frame timeline segments, metadata disclosures і actions;
-- `confirm`: активувати focused action, відкрити step details або segment details відповідно до focus zone;
-- `back`: закрити segment details, actions menu або add-to-list dialog; якщо локальних overlay немає, виконати return до source context;
-- `closeDetail`: виконати return до previous source context або Catalog fallback;
-- `openActions`: відкрити `UI-CMP-018 Combo Actions Menu` або segment details, якщо focus перебуває у Frame Meter;
-- `addToList`: відкрити page-level singleton `UI-CMP-021`, якщо active combo може бути додане у named list;
-- `openDetail`: не має додаткового ефекту, якщо detail уже відкритий;
-- `closePanel`: закрити actions menu, source disclosure або `UI-CMP-021` відповідно до active focus.
+`confirm` доступний лише на реальній Return або Error recovery action. `back`
+повертає до Catalog. Frame Meter не реєструє і не рекламує controller
+commands, доки `segmentIds` порожній. Page ribbon містить навігацію,
+conditional Confirm, Back і appended shell `Menu`.
 
-Focus-zone rules:
-
-- Whiteboard є окремою focus zone для step inspection;
-- Frame Meter є окремою focus zone для timeline inspection;
-- focus на Whiteboard step оновлює Frame Meter у `selectedMove`;
-- focus на Frame Meter segment може попросити Whiteboard сфокусувати matching step;
-- page-level dialog блокує background controller actions;
-- controller hints пояснюють active context, але не є єдиним способом зрозуміти доступні дії.
-
-Controller commands не мають:
-
-- змінювати global settings;
-- мутувати combo path;
-- виконувати add-to-list без active combo context;
-- запускати duplicate/edit/repair для disabled action;
-- читати Browser Gamepad API напряму.
+Semantic methods викликаються без synthetic events. Controller flow не мутує
+combo path, не змінює global settings і не читає Browser Gamepad API напряму.
 
 ## Доступність і поведінка вводу
 
@@ -697,6 +687,8 @@ Controller commands не мають:
 - [`UI-CMP-015`](./UI-CMP-015.md) показує canonical і mapped notation без зміни `movePath` або `cachedNotation`.
 - [`UI-CMP-035`](./UI-CMP-035.md) працює у `detailReadOnly` і не емітить mutation events.
 - [`UI-CMP-036`](./UI-CMP-036.md) показує selected move або whole combo frame inspection без mutation events.
+- Коли authored frame data відсутні, `UI-CMP-036` показує localized unavailable
+  snapshot без вигаданих values.
 - Add-to-list flow використовує один page-level singleton `UI-CMP-021`.
 - Duplicate seeded combo відкриває [`UI-PAGE-006 Custom Combo Builder`](./UI-PAGE-006.md) із source combo.
 - Edit custom combo відкриває [`UI-PAGE-006 Custom Combo Builder`](./UI-PAGE-006.md) у edit mode.
@@ -704,7 +696,7 @@ Controller commands не мають:
 - Return action веде до previous source context або Catalog fallback.
 - Display mode змінює тільки notation rendering.
 - Language змінює UI labels і localized notes без зміни combo path.
-- Controller commands покривають `openActions`, `addToList`, `closeDetail`, timeline/whiteboard focus і `back`.
+- Controller commands покривають Return/Error action, read-only Whiteboard step focus і `back` до Catalog.
 - Combo Detail не читає Browser Gamepad API напряму.
 - Invalid або stale route context відкриває `notFound` або recoverable state без показу first-launch setup, якщо settings уже застосовані або deep link auto-config був valid.
 
@@ -717,6 +709,8 @@ Controller commands не мають:
 - Deep link на custom combo відкриває custom detail, якщо local combo існує.
 - Missing combo id показує `UI-CMP-030 Error State` і Catalog fallback.
 - Seeded detail показує canonical FGC notation, mapped notation, metadata, notes, source і gameVersion.
+- Поточні seeded combos без authored frame data показують localized unavailable
+  Frame Meter snapshot без synthetic segments.
 - Custom detail показує local combo data read-only.
 - Перемикання display mode у Settings оновлює notation rendering без зміни `movePath` або `cachedNotation`.
 - Перемикання language у Settings оновлює labels і localized notes.
@@ -731,14 +725,14 @@ Controller commands не мають:
 - Edit custom combo відкриває builder edit flow.
 - Stale custom combo показує `UI-CMP-031`, original path, valid prefix і invalid boundary.
 - Repair stale custom combo відкриває builder repair flow без автоматичного обрізання у detail.
-- Controller `openActions` відкриває contextual actions menu.
-- Controller `addToList` відкриває page-level singleton dialog для active combo.
-- Controller `closeDetail` повертає до previous source context або Catalog fallback.
-- Controller `back` спершу закриває local overlay, а без overlay повертає зі сторінки.
+- Controller focus проходить Return і ordered Whiteboard steps у prepared responsive graph.
+- Confirm на inspection-only step не відкриває порожнє menu; Confirm на Return/Error виконує action.
+- Controller `back` повертає до Catalog.
+- Frame Meter із порожнім `segmentIds` не додає command до ribbon.
 
 ## Відкриті уточнення
 
-- Combo detail deep links використовують generic route `/:gameId/combos/:source/:comboId`; game-specific lookup і stale validation належать active game business entry point.
+- Combo detail deep links використовують generic source-neutral route `/:gameId/catalog/:character/:specification/:comboId`; game-specific source resolution, collision handling і stale validation належать active game business entry point.
 - Точний visual layout для detail workspace, metadata density і action placement буде узгоджено під час UI implementation pass.
 - `UI-CMP-014`, `UI-CMP-017` і `UI-CMP-018` лишаються component references у цьому pass; окремі specs для них можуть бути описані пізніше.
 - Policy для add-to-list stale custom combo може бути disabled або marked risky залежно від app-level product decision.

@@ -17,19 +17,22 @@
 
 `UI-CMP-009 Kameo Picker` є required game-specific context selector для `MK1`.
 
-Компонент показується після selected `MK1` main character і дає вибрати kameo у layout, який повторює in-game MK1 kameo select UI.
+Компонент показується після selected `MK1` main character і дає вибрати kameo з
+prepared game-owned options. У Catalog `commandDeck` presentation відображає їх як
+compact centered portrait cards; standalone `standard` presentation зберігає
+наявний horizontal/authored layout.
 
-Kameo не є optional filter facet. Він належить до required `contextRow` у `UI-CMP-012 Combo List Config Module` і визначає базову область combo list разом із selected main character.
+Kameo не є optional filter facet. Він є required context кроку `02 / Kameo` у `UI-CMP-012 Combo List Config Module` і визначає базову область combo list разом із path main character.
 
 ## Володіння
 
 `UI-PAGE-003 MK1 Catalog Variant` володіє selected main character і selected kameo. Available kameo data, disabled reasons, layout descriptors і combo availability приходять із `mk1/catalog` через `@mk-combos/mk1-business`.
 
-`UI-CMP-012 Combo List Config Module` отримує placement picker-а у `contextRow` і controlled focus handoff після main character selection від Catalog page model.
+`UI-CMP-012 Combo List Config Module` розміщує picker під locked character strip і отримує controlled focus handoff після pathname transition від Catalog page model.
 
 `UI-CMP-009` відповідає тільки за:
 
-- рендер full MK1 kameo layout;
+- рендер prepared MK1 kameo layout;
 - рендер controlled selected, focused, disabled і placeholder state kameo slots;
 - keyboard/controller navigation intent усередині kameo grid;
 - semantic selection intent для parent variant flow.
@@ -65,35 +68,28 @@ type PickerSlot = {
 
 `optionId` є stable kameo id із seeded/domain registry. Kameo layout не має використовувати main character roster coordinates.
 
-### Широке розміщення
+### Presentation policy
 
-Wide layout застосовується для viewport/device class від `13.6-inch` і більше.
-
-Rules:
-
-- використовувати exact `row` і `column` для in-game MK1 kameo select UI;
-- не reflow-ити kameo slots;
-- не сортувати kameos alphabetically;
-- зберігати disabled або placeholder positions.
-
-### Компактне розміщення
-
-Для менших екранів kameo grid може реорганізовуватись.
-
-Rules:
-
-- використовувати `responsiveOrder`, якщо він заданий;
-- якщо `responsiveOrder` відсутній, logical order виводиться з `row`, потім `column`;
-- selected/focused state зберігається під час переходу між layouts;
-- усі non-placeholder kameo slots лишаються reachable або readable.
+- `standard` зберігає наявний horizontal/authored layout і може застосовувати
+  `row`/`column` відповідно до standalone contract.
+- `commandDeck` на mobile, tablet і desktop ігнорує `row`/`column` для placement
+  та використовує `responsiveOrder ?? sourceIndex + 1` для visual і controller order.
+- Authored `row`/`column` не видаляються зі schema, types або prepared data: це
+  stable public compatibility facts для інших presentations і consumers.
+- Command Deck grid: `repeat(auto-fit, minmax(min(8rem, 100%), 10rem))`, `gap-4`,
+  centered placement і minimum card height `11rem`.
+- Disabled і placeholder slots не сортуються alphabetically; inert slots
+  пропускаються controller focus graph-ом.
 
 ## Анатомія
 
-Розміщення є picker surface після main character picker: context label стоїть над kameo grid, status region нижче grid.
+Розміщення є picker surface після locked character strip: `parentContextLabel`
+(`Selected fighter`) стоїть над kameo cards. Catalog guidance існує тільки у
+step header; lower status region та inline return control не передаються.
 
 ```jsx
 <KameoPicker ui="UI-CMP-009">
-  <KameoPickerSurface slot="UI-CMP-012 contextRow">
+  <KameoPickerSurface slot="UI-CMP-012 specification step">
     <Stack name="KameoPickerLayout">
       <PickerLabel />
       <SelectedMainCharacterContextLabel />
@@ -101,8 +97,9 @@ Rules:
       <KameoGrid>
         <KameoSlot>
           <Stack name="KameoSlotContent">
-            <KameoPortraitOrFallbackMark />
+            <KameoPortraitOrFallbackMark size="64×64" />
             <KameoLabel />
+            <NumericCountBadge position="top corner" />
           </Stack>
 
           <Show when={isSelectedOrFocused}>
@@ -115,7 +112,7 @@ Rules:
         </KameoSlot>
       </KameoGrid>
 
-      <Show when={hasStatusLiveRegion}>
+      <Show when={isStandaloneConsumer && hasStatusLiveRegion}>
         <StatusLiveRegion />
       </Show>
     </Stack>
@@ -125,8 +122,9 @@ Rules:
 
 Правила розміщення:
 
-- У `UI-CMP-012` компонент стоїть поруч із `UI-CMP-007` на `desktop` або нижче нього на `mobile` і `tablet`.
-- Kameo slots використовують prepared `MK1.kameo` layout і не додають власне сортування.
+- У `UI-CMP-012` component є єдиним picker-ом specification step; character grid
+  у цей момент не монтується.
+- Kameo slots використовують prepared `MK1.kameo` data і не додають alphabetical sorting.
 - Indicators і disabled state рендеряться всередині slot, не змінюючи геометрію сусідніх slots.
 
 ## Вхідні дані
@@ -144,21 +142,25 @@ Rules:
 - `responsiveMode`: `mobile`, `tablet` або `desktop`.
 - `focusedSlotId`: поточний focus target.
 - `activeLanguage`: `EN` або `UA`.
+- `presentation`: `standard | commandDeck`; `UI-CMP-012` примусово використовує
+  `commandDeck` без розширення public picker props.
+- `backLabel` і `message`: optional standalone copy; Catalog їх не передає.
 
 ## Вихідні події
 
 - `requestSelectKameo`: вибрати focused/selectable kameo.
 - `requestFocusKameoSlot`: змінити focused kameo slot.
-- `requestReturnToCharacterPicker`: optional focus handoff назад до `UI-CMP-007`.
+- `requestReturnToCharacterPicker`: optional standalone semantic back intent;
+  Catalog повертається через breadcrumb/drawer, browser або controller Back.
 - `requestClearKameo`: optional очистити selected kameo, якщо parent flow дозволяє.
 
 ## Межі відповідальності
 
 Компонент відповідає за:
 
-- full MK1 kameo layout;
-- exact wide `row`/`column` placement;
-- mobile і tablet adaptive order;
+- standard authored та Command Deck compact presentation;
+- Command Deck portrait placement і `responsiveOrder ?? sourceIndex + 1` на всіх
+  responsive modes;
 - disabled kameo slots без combo data;
 - selected/focused/hover/active states;
 - keyboard/controller navigation;
@@ -219,11 +221,11 @@ Selected `character + kameo` валідні.
 
 ### `disabledNoComboData`
 
-Kameo існує в in-game layout, але для selected `character + kameo` ще немає combo data.
+Kameo існує в prepared layout, але для selected `character + kameo` ще немає combo data.
 
 Очікуваний UI:
 
-- slot лишається видимим у correct in-game position;
+- slot лишається видимим у prepared order;
 - slot не емітить selection;
 - disabled reason readable і accessible.
 
@@ -247,19 +249,16 @@ Route або restored context містить kameo, якого немає у cur
 5. `UI-CMP-009` емітить `requestSelectKameo`.
 6. Catalog переходить до valid `character + kameo` context і оновлює combo list.
 
-### Wide And Compact Navigation
+### Presentation And Navigation
 
-На `desktop`:
+У Catalog `commandDeck` на mobile, tablet і desktop:
 
-- directional navigation рухається по `row`/`column`;
-- visual positions не reflow-яться;
-- disabled slots не selectable.
+- left/up переходить до попереднього, right/down — до наступного selectable slot
+  за `responsiveOrder ?? sourceIndex + 1`;
+- disabled і placeholder slots пропускаються, краї не цикляться;
+- wrapping не змінює logical order або selected/focused identity.
 
-На `mobile` і `tablet`:
-
-- navigation рухається за `responsiveOrder`;
-- wrapping не змінює logical order;
-- focus не губиться під час reflow.
+Standalone `standard` presentation зберігає authored placement contract.
 
 ### Clear Filters
 
@@ -287,8 +286,10 @@ Kameo очищається тільки якщо:
 
 - `UI-CMP-009` має окрему повну специфікацію.
 - `MK1.kameo` є explicit layout key.
-- Kameo layout після selected main character повторює in-game MK1 kameo select UI на `desktop`.
-- Compact layout може реорганізовуватись тільки через stable logical order.
+- Command Deck після selected main character використовує compact portrait grid на
+  mobile, tablet і desktop.
+- Visual і controller order на всіх viewport визначає
+  `responsiveOrder ?? sourceIndex + 1`.
 - Slot без combo data показується як `disabledNoComboData` і не selectable.
 - Selecting kameo завершує required MK1 context.
 - `UI-CMP-009` не показується в `MKXL` variant.
@@ -299,26 +300,45 @@ Kameo очищається тільки якщо:
 
 - Без selected main character picker перебуває у `waitingForMainCharacter`.
 - Вибір MK1 main character показує `MK1.kameo` layout.
-- Wide layout збігається з in-game MK1 kameo slot positions.
-- Compact layout не створює overlap і зберігає all non-placeholder slots.
+- Desktop, tablet і mobile Command Deck не створюють overlap або horizontal overflow
+  та зберігають усі non-placeholder slots.
 - Selectable kameo емітить `requestSelectKameo`.
 - Disabled kameo slot не емітить selection і має readable disabled reason.
 - Зміна main character скидає incompatible selected kameo.
 - `Clear filters` не очищає selected kameo.
-- Controller navigation у wide layout рухається по `row`/`column`.
-- Controller navigation у mobile і tablet layout рухається по `responsiveOrder`.
+- Controller navigation на desktop, tablet і mobile рухається лінійно по prepared
+  order, пропускає inert slots і clamp-иться на краях.
 
 ## Відкриті уточнення
 
-- Exact `row`/`column` coordinates для `MK1.kameo` мають бути заведені в layout registry під час data implementation.
 - Точний copy disabled reasons має відповідати shared empty/error state style.
+
+## Step 26 Readability Contract
+
+- `PickerOption.description` і localized `countLabel` є видимими частинами kameo option.
+- Long UA kameo labels, descriptions, counts і disabled reasons wrap-ляться; fixed slot height не може обрізати текст.
+- Text label лишається primary affordance навіть коли option має icon або portrait.
+
+## Command Deck Presentation
+
+- `presentation = standard | commandDeck`; `commandDeck` є full-workspace кроком `02 / Kameo` і використовує ту саму anatomy, що variation selector.
+- Locked fighter та pair availability є prepared inputs. Компонент не виконує MK1 branching і не перевіряє compatibility самостійно.
+- `focusedSlotId`, stable `slotId`, selected kameo та unavailable state мають незалежне visible/semantic wiring.
+- Count/countLabel описують prepared pair results; unavailable pair лишається видимою, inert і має readable reason.
+- Portrait kameo cards показують `64×64px` authored image або missing-asset fallback,
+  label під ним, numeric count badge, окремий selected/controller marker і readable
+  disabled reason; fixed-height truncation заборонена.
+- Catalog не передає `backLabel` або `message`; header description і selected-fighter
+  context збережені. Optional standalone `returnToCharacterPicker` лишається
+  semantic back intent, а `selectKameo` — confirm intent.
+- Prepared order не змінює authored identity, а reduced motion не впливає на доступність surface.
 
 ## Канонічний Responsive і Controller-only Contract
 
 Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
 
-- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `mobile`, `tablet` і `desktop` Command Deck використовують один compact portrait
+  grid та linear prepared order navigation;
+- left/up — previous, right/down — next; inert slots пропускаються, краї не цикляться;
 - `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
 - native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

@@ -2,16 +2,24 @@ export const mk1CatalogMultiSelectFilterIds = {
   difficulty: "difficulty",
   meter: "meter",
   position: "position",
-  routeType: "routeType",
-  starter: "starter",
-  tag: "tag",
-} as const;
-
-export const mk1CatalogRangeFilterIds = {
-  damage: "damage",
+  routeClass: "routeClass",
+  source: "source",
 } as const;
 
 export const mk1CatalogFilterIds = {
   ...mk1CatalogMultiSelectFilterIds,
-  ...mk1CatalogRangeFilterIds,
+} as const;
+
+export const mk1CatalogSources = {
+  curated: "curated",
+  community: "community",
+  personal: "personal",
+} as const;
+
+export const mk1CatalogFilterQueryKeys = {
+  difficulty: "difficulty",
+  meter: "meter",
+  position: "position",
+  routeClass: "routeClass",
+  source: "source",
 } as const;

@@ -4,8 +4,3 @@ export const gameRouteKinds = {
   comboDetail: "comboDetail",
   lists: "lists",
 } as const;
-
-export const appRouteKinds = {
-  ...gameRouteKinds,
-  settings: "settings",
-} as const;

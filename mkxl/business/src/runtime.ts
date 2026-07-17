@@ -1,10 +1,12 @@
 import { BuilderRuntimeSnapshotSchema } from "@mk-combos/builder-core/runtime/schema";
 import type { BuilderRuntimeSnapshot } from "@mk-combos/builder-core/runtime/type";
 import { builderComboStateStatuses } from "@mk-combos/builder-core/stale/value";
+import type { CatalogFilterChange } from "@mk-combos/contracts/catalog-filter/type";
 import type { ComboId } from "@mk-combos/contracts/identity/type";
 import { comboSources } from "@mk-combos/contracts/identity/value";
 import { err, ok } from "@mk-combos/contracts/result/runtime";
 import type { AppError, AppResult, ValidationMessage } from "@mk-combos/contracts/result/type";
+import { ComboDetailRouteParamsSchema } from "@mk-combos/contracts/routes/schema";
 import type { LocalizedText } from "@mk-combos/contracts/settings/type";
 import {
   composeMkxlBuilderGraph,
@@ -21,15 +23,18 @@ import {
 } from "@mk-combos/mkxl-builder/state/runtime";
 import {
   getMkxlCatalogContextOptions,
-  parseMkxlCatalogRouteQuery,
   recoverMkxlCatalogContext,
   selectMkxlCatalogCharacter,
   selectMkxlCatalogVariation,
-  serializeMkxlCatalogRouteQuery,
 } from "@mk-combos/mkxl-catalog/context/runtime";
 import { MkxlCatalogContextSchema } from "@mk-combos/mkxl-catalog/context/schema";
-import type { MkxlCatalogPlainRouteQuery } from "@mk-combos/mkxl-catalog/context/type";
-import { recoverMkxlCatalogFilters } from "@mk-combos/mkxl-catalog/filters/runtime";
+import type { MkxlCatalogRecovery } from "@mk-combos/mkxl-catalog/context/type";
+import {
+  applyMkxlCatalogFilterChange,
+  parseMkxlCatalogFilterQuery,
+  recoverMkxlCatalogFilters,
+  serializeMkxlCatalogFilterQuery,
+} from "@mk-combos/mkxl-catalog/filters/runtime";
 import type { MkxlCatalogFilters } from "@mk-combos/mkxl-catalog/filters/type";
 import {
   getMkxlCatalogComboSummary,
@@ -50,6 +55,7 @@ import {
   MkxlBusinessComboLookupSchema,
   MkxlBusinessComboRefSchema,
   MkxlBusinessCustomComboSummarySchema,
+  MkxlBusinessLastCatalogSchema,
   MkxlBusinessSliceSchema,
   MkxlBusinessValidationReportSchema,
   MkxlNamedListSchema,
@@ -73,6 +79,9 @@ type ZodIssueLike = {
 };
 
 const MoveIdListSchema = z.array(z.string().min(1)).readonly();
+const MkxlComboDetailRouteParamsSchema = ComboDetailRouteParamsSchema.extend({
+  gameId: z.literal("mkxl"),
+});
 
 const charactersById = new Map<string, (typeof mkxlCharacters)[number]>();
 
@@ -185,6 +194,78 @@ const parseMkxlBusinessSlice = (input: unknown): AppResult<MkxlBusinessSlice> =>
 
 const parseSliceOrEmpty = (input: unknown | undefined): AppResult<MkxlBusinessSlice> =>
   input === undefined ? ok(createEmptyMkxlBusinessSlice()) : parseMkxlBusinessSlice(input);
+
+const applyMkxlBusinessCatalogFilterChange = (input: {
+  context: unknown;
+  filters: unknown;
+  change: CatalogFilterChange;
+}): MkxlCatalogRecovery => {
+  const context = MkxlCatalogContextSchema.safeParse(input.context);
+  const changed = applyMkxlCatalogFilterChange(input.filters, input.change);
+  const recovered = recoverMkxlCatalogContext(context.success ? context.data : {}, changed.filters);
+  const contextMessages = context.success
+    ? []
+    : zodMessages(context.error.issues, "mkxl.business.invalid_catalog_context");
+
+  return {
+    ...recovered,
+    messages: [...contextMessages, ...changed.messages, ...recovered.messages],
+  };
+};
+
+const restoreLastMkxlBusinessCatalog = (sliceInput: unknown): AppResult<MkxlCatalogRecovery> => {
+  const slice = parseMkxlBusinessSlice(sliceInput);
+
+  if (!slice.ok) {
+    return slice;
+  }
+
+  const lastCatalog = slice.value.lastCatalog;
+
+  return ok(
+    lastCatalog
+      ? recoverMkxlCatalogContext(lastCatalog.context, lastCatalog.filters)
+      : recoverMkxlCatalogContext({}, {}),
+  );
+};
+
+const saveLastMkxlBusinessCatalog = (input: {
+  slice: unknown;
+  context: unknown;
+  filters: unknown;
+}): AppResult<MkxlBusinessSlice> => {
+  const slice = parseMkxlBusinessSlice(input.slice);
+
+  if (!slice.ok) {
+    return slice;
+  }
+
+  const lastCatalog = MkxlBusinessLastCatalogSchema.safeParse({
+    context: input.context,
+    filters: input.filters,
+  });
+
+  if (!lastCatalog.success) {
+    return err(
+      appError(
+        "mkxl.business.invalid_last_catalog",
+        "MKXL catalog state is malformed.",
+        zodMessages(lastCatalog.error.issues, "mkxl.business.invalid_last_catalog"),
+        lastCatalog.error,
+      ),
+    );
+  }
+
+  const recovered = recoverMkxlCatalogContext(lastCatalog.data.context, lastCatalog.data.filters);
+
+  return parseMkxlBusinessSlice({
+    ...slice.value,
+    lastCatalog: {
+      context: recovered.context,
+      filters: recovered.filters,
+    },
+  });
+};
 
 const customCombosById = (slice: MkxlBusinessSlice): ReadonlyMap<string, MkxlBusinessCustomCombo> =>
   new Map(slice.customCombos.map((combo) => [combo.id, combo]));
@@ -656,28 +737,38 @@ const validateMkxlBusinessSlice = (input: unknown): AppResult<MkxlBusinessValida
 const serializeMkxlBusinessSlice = (input: unknown): AppResult<MkxlBusinessSlice> =>
   parseMkxlBusinessSlice(input);
 
-const routeRef = (ref: unknown): AppResult<MkxlBusinessComboRef> => parseComboRef(ref);
-
 const mkxlBusinessRoutes = {
   catalog: () => "/mkxl/catalog",
-  comboDetail: (refInput: unknown): AppResult<string> => {
-    const ref = routeRef(refInput);
+  comboDetail: (input: unknown): AppResult<string> => {
+    const params = MkxlComboDetailRouteParamsSchema.safeParse(input);
 
-    if (!ref.ok) {
-      return ref;
+    if (!params.success) {
+      return err(
+        appError(
+          "mkxl.business.invalid_combo_detail_route",
+          "MKXL combo detail route parameters are malformed.",
+          zodMessages(params.error.issues, "mkxl.business.invalid_combo_detail_route"),
+          params.error,
+        ),
+      );
     }
 
-    return ok(`/mkxl/combos/${ref.value.source}/${ref.value.comboId}`);
+    return ok(
+      `/mkxl/catalog/${params.data.characterSlug}/${params.data.specificationSlug}/${params.data.comboId}`,
+    );
   },
   lists: () => "/mkxl/lists",
   builder: () => "/mkxl/builder",
 } as const;
 
 const mkxlBusinessCatalog = {
-  parseRouteQuery: (query: MkxlCatalogPlainRouteQuery) => parseMkxlCatalogRouteQuery(query),
-  serializeRouteQuery: serializeMkxlCatalogRouteQuery,
+  parseFilterQuery: parseMkxlCatalogFilterQuery,
+  serializeFilterQuery: serializeMkxlCatalogFilterQuery,
+  applyFilterChange: applyMkxlBusinessCatalogFilterChange,
   recoverContext: recoverMkxlCatalogContext,
   recoverFilters: recoverMkxlCatalogFilters,
+  restoreLastCatalog: restoreLastMkxlBusinessCatalog,
+  saveLastCatalog: saveLastMkxlBusinessCatalog,
   getContextOptions: getMkxlCatalogContextOptions,
   selectCharacter: selectMkxlCatalogCharacter,
   selectVariation: selectMkxlCatalogVariation,

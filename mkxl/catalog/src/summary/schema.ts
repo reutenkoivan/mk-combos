@@ -8,6 +8,9 @@ import {
 import { MkxlInputNotationValueSchema } from "@mk-combos/mkxl-data/movelists/schema";
 import { z } from "zod/v4";
 
+import { MkxlCatalogSourceSchema } from "../filters/schema";
+import { mkxlCatalogRouteStepEmphases, mkxlCatalogRouteStepKinds } from "./value";
+
 const MkxlCatalogIdSchema = z.string().min(1);
 
 export const MkxlCatalogEntityLabelSchema = z
@@ -17,11 +20,25 @@ export const MkxlCatalogEntityLabelSchema = z
   })
   .strict();
 
+export const MkxlCatalogRouteStepKindSchema = z.enum(mkxlCatalogRouteStepKinds);
+export const MkxlCatalogRouteStepEmphasisSchema = z.enum(mkxlCatalogRouteStepEmphases);
+
+export const MkxlCatalogRouteStepSchema = z
+  .object({
+    kind: MkxlCatalogRouteStepKindSchema,
+    notation: z.array(MkxlInputNotationValueSchema).min(1).readonly(),
+    repetitionCount: z.number().int().positive(),
+    emphasis: MkxlCatalogRouteStepEmphasisSchema,
+  })
+  .strict();
+
 export const MkxlCatalogComboSummarySchema = z
   .object({
     ref: ComboRefSchema,
     gameId: z.literal("mkxl"),
     source: z.literal(comboSources.seeded),
+    provenance: MkxlCatalogSourceSchema,
+    sourceIds: z.array(z.string().min(1)).min(1).readonly(),
     title: LocalizedTextSchema,
     character: MkxlCatalogEntityLabelSchema.extend({
       shortLabel: LocalizedTextSchema.optional(),
@@ -37,6 +54,7 @@ export const MkxlCatalogComboSummarySchema = z
       .array(z.array(MkxlInputNotationValueSchema).min(1).readonly())
       .min(1)
       .readonly(),
+    routeSteps: z.array(MkxlCatalogRouteStepSchema).min(1).readonly(),
     metadata: MkxlComboMetadataSchema,
     tags: z.array(z.string().min(1)).readonly(),
     notes: LocalizedTextSchema,

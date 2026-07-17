@@ -1,10 +1,11 @@
 import { Gamepad2Icon } from "../icons/gamepad-2";
+import { Present, type PresentContentProps, Show } from "../primitives/conditional";
 import { LoadingIndicator, StatusMessage } from "../primitives/state";
 import { uiToneModes } from "../tokens/value";
 import type { ControllerAccessState, UiResponsiveMode } from "./type";
 import { controllerAccessStates } from "./value";
 
-export type ControllerAccessGateProps = {
+type ControllerAccessGateProps = {
   description: string;
   hints?: readonly { inputLabel: string; label: string }[];
   layoutMode: UiResponsiveMode;
@@ -15,34 +16,53 @@ export type ControllerAccessGateProps = {
   title: string;
 };
 
-export function ControllerAccessGate(props: ControllerAccessGateProps) {
-  if (
-    props.state === controllerAccessStates.ready ||
-    props.state === controllerAccessStates.suspended
-  ) {
-    return null;
+type ControllerAccessPresentation = Readonly<{
+  blockingError: boolean;
+  waiting: boolean;
+}>;
+
+function resolveControllerAccessPresentation(
+  state: ControllerAccessState,
+): ControllerAccessPresentation | undefined {
+  switch (state) {
+    case controllerAccessStates.ready:
+    case controllerAccessStates.suspended:
+      return undefined;
+    case controllerAccessStates.blocked:
+    case controllerAccessStates.unsupported:
+      return { blockingError: true, waiting: false };
+    case controllerAccessStates.awaitingGesture:
+    case controllerAccessStates.awaitingNeutral:
+    case controllerAccessStates.checking:
+    case controllerAccessStates.disconnected:
+      return { blockingError: false, waiting: true };
   }
 
-  const blockingError =
-    props.state === controllerAccessStates.unsupported ||
-    props.state === controllerAccessStates.blocked;
-  const waiting =
-    props.state === controllerAccessStates.checking ||
-    props.state === controllerAccessStates.awaitingGesture ||
-    props.state === controllerAccessStates.awaitingNeutral ||
-    props.state === controllerAccessStates.disconnected;
+  const unhandledState: never = state;
+  return unhandledState;
+}
+
+type ControllerAccessGateContentValue = Readonly<{
+  presentation: ControllerAccessPresentation;
+  props: ControllerAccessGateProps;
+}>;
+
+function ControllerAccessGateContent({
+  value: { presentation, props },
+}: PresentContentProps<ControllerAccessGateContentValue>) {
+  const { blockingError, waiting } = presentation;
 
   return (
     <div
-      aria-describedby="controller-access-description"
-      aria-labelledby="controller-access-title"
-      aria-modal="true"
-      className="fixed inset-0 z-[100] grid min-h-dvh place-items-center bg-[color-mix(in_srgb,var(--ui-window)_94%,black)] p-4"
-      data-layout={props.layoutMode}
-      data-resume-focus-target={props.resumeFocusTarget}
-      data-state={props.state}
-      data-ui-component="UI-CMP-038"
       role="dialog"
+      aria-modal="true"
+      data-state={props.state}
+      data-layout={props.layoutMode}
+      data-ui-component="UI-CMP-038"
+      aria-labelledby="controller-access-title"
+      aria-describedby="controller-access-description"
+      data-resume-focus-target={props.resumeFocusTarget}
+      className="fixed inset-0 z-[100] grid min-h-dvh place-items-center bg-[color-mix(in_srgb,var(--ui-window)_94%,black)] p-4"
     >
       <section className="grid w-full max-w-xl gap-5 p-1 sm:p-4">
         <div className="grid grid-cols-[auto_1fr] items-start gap-4">
@@ -54,14 +74,14 @@ export function ControllerAccessGate(props: ControllerAccessGateProps) {
               Controller-only access
             </span>
             <h1
-              className="font-(--ui-font-display) text-2xl font-semibold tracking-[-0.01em]"
               id="controller-access-title"
+              className="font-(--ui-font-display) text-2xl font-semibold tracking-[-0.01em]"
             >
               {props.title}
             </h1>
             <p
-              className="text-sm leading-relaxed text-(--ui-muted-text)"
               id="controller-access-description"
+              className="text-sm leading-relaxed text-(--ui-muted-text)"
             >
               {props.description}
             </p>
@@ -80,33 +100,46 @@ export function ControllerAccessGate(props: ControllerAccessGateProps) {
           }
         >
           <span className="inline-flex items-center gap-2">
-            {waiting && <LoadingIndicator label={props.statusLabel} tone={uiToneModes.warning} />}
+            <Show when={waiting}>
+              {() => <LoadingIndicator label={props.statusLabel} tone={uiToneModes.warning} />}
+            </Show>
             <span>{props.statusLabel}</span>
           </span>
         </StatusMessage>
 
-        {props.profileLabel && (
-          <p className="text-xs text-(--ui-muted-text)">{props.profileLabel}</p>
-        )}
+        <Show when={Boolean(props.profileLabel)}>
+          {() => <p className="text-xs text-(--ui-muted-text)">{props.profileLabel}</p>}
+        </Show>
 
-        {props.hints && props.hints.length > 0 && (
-          <ul className="grid list-none divide-y divide-(--ui-separator) border-y border-(--ui-separator) p-0 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
-            {props.hints.map((hint) => (
-              <li
-                className="grid grid-cols-[auto_1fr] items-center gap-2 py-3 sm:px-3"
-                key={`${hint.inputLabel}-${hint.label}`}
-              >
-                <span className="grid min-h-8 min-w-8 place-items-center bg-(--ui-control) px-2 font-bold text-(--ui-accent-strong)">
-                  {hint.inputLabel}
-                </span>
-                <span className="text-sm">{hint.label}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+        <Show when={Boolean(props.hints?.length)}>
+          {() => (
+            <ul className="grid list-none divide-y divide-(--ui-separator) border-y border-(--ui-separator) p-0 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+              {props.hints?.map((hint) => (
+                <li
+                  key={`${hint.inputLabel}-${hint.label}`}
+                  className="grid grid-cols-[auto_1fr] items-center gap-2 py-3 sm:px-3"
+                >
+                  <span className="grid min-h-8 min-w-8 place-items-center bg-(--ui-control) px-2 font-bold text-(--ui-accent-strong)">
+                    {hint.inputLabel}
+                  </span>
+                  <span className="text-sm">{hint.label}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </Show>
       </section>
     </div>
   );
 }
+
+function ControllerAccessGate(props: ControllerAccessGateProps) {
+  const presentation = resolveControllerAccessPresentation(props.state);
+  const contentValue = presentation ? { presentation, props } : undefined;
+
+  return <Present value={contentValue}>{ControllerAccessGateContent}</Present>;
+}
+
+export { ControllerAccessGate };
 
 ControllerAccessGate.displayName = "ControllerAccessGate";

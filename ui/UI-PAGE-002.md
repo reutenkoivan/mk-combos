@@ -404,6 +404,21 @@ UI-CMP-006 First-Launch Setup Form
 
 `UI-PAGE-002` не є source of truth після completion. Він збирає initial values і передає confirmation event у app-level state.
 
+## Поведінка controller
+
+First Launch реєструє page focus graph `game → language row → display-mode row →
+submit`. `navUp`/`navDown` рухаються між rows, а `navLeft`/`navRight` — між
+options активного segmented control. `confirm` відкриває game menu,
+застосовує focused option або запускає актуальну confirmation action. Root
+`back` не обробляється.
+
+Game menu є окремим overlay scope: D-Pad рухається між installed games,
+`confirm` вирає option, `back` закриває menu й повертає focus до trigger.
+Під час `saving` logical focus зберігається, але controller actions блокуються.
+
+Ribbon model передає draft notation display mode override, тому перемикання
+FGC/PlayStation/Xbox одразу змінює його glyphs до confirmation.
+
 ## Доступність і поведінка вводу
 
 - Capabilities summary має бути readable text і не має бути єдиним місцем для важливої form instruction.
@@ -431,6 +446,8 @@ UI-CMP-006 First-Launch Setup Form
 - Deep-link first launch застосовує URL-derived `gameId`, `FGC` і completion marker без confirmation.
 - Після first launch ручна зміна game відбувається через `UI-CMP-002` у breadcrumbs, а language/display mode - через `UI-PAGE-008 Settings`.
 - `UI-PAGE-002` не рендерить робочі catalog, list, builder або backup controls.
+- Controller-only flow дозволяє змінити game/language/display mode і завершити setup.
+- Connected ribbon використовує draft display mode, а не ще не застосоване persisted value.
 
 ## Тестові сценарії
 
@@ -447,6 +464,9 @@ UI-CMP-006 First-Launch Setup Form
 - Valid deep link застосовує URL-derived `gameId` і `FGC` без confirmation.
 - Після valid deep link auto-config наступний root launch не показує setup, якщо completion marker збережено.
 - Controller connected не блокує setup і не забирає focus із form controls.
+- D-Pad/Confirm проходять setup без synthetic click; root Back не виконує action.
+- Game-menu Back закриває overlay і повертає controller focus до game trigger.
+- Перемикання draft display mode негайно оновлює ribbon glyphs.
 
 ## Відкриті уточнення
 

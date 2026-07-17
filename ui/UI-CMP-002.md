@@ -22,7 +22,10 @@
 - `firstLaunch`: pending initial game choice у `UI-PAGE-002 First-Launch Setup`;
 - `breadcrumbs`: перший interactive crumb у global breadcrumbs після завершення first launch або valid deep-link auto-config.
 
-У `breadcrumbs` context switcher є primary global спосіб перейти між installed games. Він замінює standalone active game label у Top Bar і не дублюється у `UI-PAGE-008 Settings`.
+У `breadcrumbs` context switcher є primary global спосіб перейти між installed games.
+Він замінює standalone active game label у Top Bar і не дублюється у
+`UI-PAGE-008 Settings`. Коли Settings modal open, underlying breadcrumbs і switcher
+лишаються mounted, але inert.
 
 `UI-CMP-002` не знає game-specific правил. Він показує installed games, отримані від parent flow, і емітить selection intent. Route prefix лишається source of truth для active game на deep links.
 
@@ -207,6 +210,7 @@ Options готові, selected game валідний.
 
 - current game показаний перед `Catalog` або surface crumbs;
 - option selection емітить game-switch intent;
+- trigger використовує ghost presentation (`subtle` emphasis) без filled або outlined chrome;
 - control лишається compact і не перекриває breadcrumbs або right-pinned menu.
 
 ### `switchingGame`
@@ -269,9 +273,11 @@ Navigation strategy:
 | `UI-PAGE-005 Named Lists` | Відкрити `/:targetGameId/lists`. |
 | `UI-PAGE-006 Custom Combo Builder` | Відкрити `/:targetGameId/builder` без перенесення game-specific builder path. |
 | `UI-PAGE-004 Combo Detail` | Fallback до `/:targetGameId/catalog`, бо combo ids/context не cross-game. |
-| `UI-PAGE-008 Settings` | Лишитися на `/settings`, але оновити `lastActiveGameId`, не змінюючи `defaultGameId`. |
 
 Game switch не видаляє local user data іншої гри.
+
+Settings не є navigation surface у цій таблиці: modal зберігає underlying working
+route, а його inert state не дозволяє активувати breadcrumb game switcher до close.
 
 ### Deep Links
 
@@ -291,12 +297,14 @@ Valid route-prefixed deep link перемагає saved/default game.
 - Breadcrumbs context має не ламати navigation semantics `UI-CMP-032`.
 - Busy state під час game switch має бути оголошений assistive technologies.
 - Long game labels мають truncate або wrap-итися без overlap із breadcrumbs і right-pinned dropdown menu.
+- У breadcrumbs context trigger зберігає повну compact control geometry, не стискається й вертикально центрується без clipping rounded corners або focus ring.
 
 ## Критерії приймання
 
 - `UI-CMP-002` має окрему повну специфікацію.
 - `UI.md` посилається на `ui/UI-CMP-002.md`.
 - Після first launch `UI-CMP-002` рендериться як перший item у [`UI-CMP-032 Breadcrumbs`](./UI-CMP-032.md).
+- У `breadcrumbs` context trigger має ghost presentation через semantic `subtle` emphasis; `firstLaunch` context зберігає звичайний form-control presentation.
 - `UI-PAGE-002` лишає `UI-CMP-002` у setup form як pending initial game choice.
 - `UI-PAGE-008 Settings` не рендерить page-owned `UI-CMP-002 Game Switcher`.
 - Game options приходять із installed games і не є hardcoded closed union.
@@ -306,7 +314,8 @@ Valid route-prefixed deep link перемагає saved/default game.
 - Lists game switch відкриває target game Lists.
 - Builder game switch відкриває target game Builder без перенесення path.
 - Detail game switch fallback-ить до target game Catalog.
-- Settings game switch лишає route `/settings`, оновлює `lastActiveGameId` і не змінює `defaultGameId`.
+- Відкритий Settings modal не додає окремої game-switch strategy: underlying
+  `UI-CMP-002` inert до dismissal.
 - Game switch не видаляє named lists, custom combos або local game slices іншої гри.
 
 ## Тестові сценарії
@@ -317,8 +326,9 @@ Valid route-prefixed deep link перемагає saved/default game.
 - Вибір `MK1` із breadcrumbs на `/mkxl/catalog` відкриває `/mk1/catalog`.
 - Вибір `MK1` із breadcrumbs на `/mkxl/lists` відкриває `/mk1/lists` і не показує `mkxl` lists.
 - Вибір `MK1` із breadcrumbs на `/mkxl/builder` відкриває `/mk1/builder` без перенесення current builder path.
-- Вибір `MK1` із breadcrumbs на `/mkxl/combos/seeded/...` відкриває `/mk1/catalog`.
-- Вибір `MK1` із breadcrumbs на `/settings` лишає `/settings`, оновлює `lastActiveGameId` і не змінює `defaultGameId`.
+- Вибір `MK1` із breadcrumbs на `/mkxl/catalog/kotal-kahn/war-god/kotal-kahn-war-god-starter-001` відкриває `/mk1/catalog`.
+- На `/mkxl/catalog?settings=interface` underlying `UI-CMP-002` не отримує focus або
+  controller/pointer activation, доки Settings modal не закрито.
 - Direct link `/mk1/catalog` у fresh browser bypass-ить setup і breadcrumbs показують `MK1`.
 - Disabled game option не емітить selection і має readable disabled reason.
 - Invalid selected game показує recoverable message і не auto-select-ить іншу game без parent decision.

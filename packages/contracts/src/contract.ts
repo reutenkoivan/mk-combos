@@ -1,9 +1,11 @@
+import { catalogFilterChangeKinds } from "./catalog-filter/value";
 import { comboSources } from "./identity/value";
 import { validationSeverities } from "./result/value";
-import { appRouteKinds, gameRouteKinds } from "./routes/value";
-import { languageCodes, notationDisplayModes } from "./settings/value";
+import { gameRouteKinds } from "./routes/value";
+import { languageCodes, notationDisplayModes, themePreferences } from "./settings/value";
 
 export type { GameBackupEnvelope } from "./backup/type";
+export type { CatalogFilterChange, CatalogFilterChangeKind } from "./catalog-filter/type";
 export type { ComboId, ComboRef, ComboSource, GameId, RouteComboSource } from "./identity/type";
 export type {
   AppErr,
@@ -14,8 +16,6 @@ export type {
   ValidationSeverity,
 } from "./result/type";
 export type {
-  AppRoute,
-  AppRouteKind,
   BuilderRoute,
   BuilderRouteParams,
   CatalogRoute,
@@ -26,9 +26,6 @@ export type {
   GameRouteKind,
   ListsRoute,
   ListsRouteParams,
-  RouteParamsByKind,
-  SettingsRoute,
-  SettingsRouteParams,
 } from "./routes/type";
 export type {
   AppSettings,
@@ -37,6 +34,7 @@ export type {
   LocalAppState,
   LocalizedText,
   NotationDisplayMode,
+  ThemePreference,
 } from "./settings/type";
 
 export const contractGroups = {
@@ -48,6 +46,11 @@ export const contractGroups = {
     tsdown: "@mk-combos/contracts/build/tsdown/config",
     vite: "@mk-combos/contracts/build/vite/config",
     viteStorybook: "@mk-combos/contracts/build/vite/storybook",
+  },
+  catalogFilter: {
+    schema: "@mk-combos/contracts/catalog-filter/schema",
+    type: "@mk-combos/contracts/catalog-filter/type",
+    value: "@mk-combos/contracts/catalog-filter/value",
   },
   env: {
     runtime: "@mk-combos/contracts/env/runtime",
@@ -88,11 +91,12 @@ export const mkCombosContract = {
   packageName: "@mk-combos/contracts",
   groups: contractGroups,
   valueSets: {
-    appRouteKinds,
+    catalogFilterChangeKinds,
     comboSources,
     gameRouteKinds,
     languageCodes,
     notationDisplayModes,
+    themePreferences,
     validationSeverities,
   },
 } as const;

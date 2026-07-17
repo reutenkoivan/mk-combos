@@ -5,9 +5,12 @@ import {
 } from "./context/value";
 import {
   mkxlCatalogFilterIds,
+  mkxlCatalogFilterQueryKeys,
   mkxlCatalogMultiSelectFilterIds,
-  mkxlCatalogRangeFilterIds,
+  mkxlCatalogSingleSelectFilterIds,
+  mkxlCatalogSources,
 } from "./filters/value";
+import { mkxlCatalogRouteStepEmphases, mkxlCatalogRouteStepKinds } from "./summary/value";
 
 export const mkxlCatalogContractGroups = {
   context: {
@@ -28,6 +31,7 @@ export const mkxlCatalogContractGroups = {
   summary: {
     schema: "@mk-combos/mkxl-catalog/summary/schema",
     type: "@mk-combos/mkxl-catalog/summary/type",
+    value: "@mk-combos/mkxl-catalog/summary/value",
   },
 } as const;
 
@@ -37,9 +41,13 @@ export const mkCombosMkxlCatalog = {
   valueSets: {
     mkxlCatalogContextStatuses,
     mkxlCatalogFilterIds,
+    mkxlCatalogFilterQueryKeys,
     mkxlCatalogMultiSelectFilterIds,
     mkxlCatalogOptionAvailabilities,
-    mkxlCatalogRangeFilterIds,
     mkxlCatalogRecoveryCodes,
+    mkxlCatalogRouteStepEmphases,
+    mkxlCatalogRouteStepKinds,
+    mkxlCatalogSingleSelectFilterIds,
+    mkxlCatalogSources,
   },
 } as const;

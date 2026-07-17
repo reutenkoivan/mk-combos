@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
 
+import { Present, type PresentContentProps } from "../primitives/conditional";
 import { cx } from "../recipes/class-name";
 import { indicatorRecipe } from "../recipes/indicator";
 import type { UiNotationIconDescriptor } from "./type";
 
 export type NotationIconProps = {
+  commandAccent?: boolean;
   descriptor: UiNotationIconDescriptor;
   tone?: "accent" | "neutral";
 };
@@ -197,11 +199,11 @@ const platformGlyphs: Record<string, PlatformGlyph> = {
 
 const SvgFrame = (props: SvgGlyphProps & { children: ReactNode }) => (
   <svg
-    aria-hidden="true"
-    className="h-4 w-4 overflow-visible"
-    data-ui-notation-svg={props.name}
     focusable="false"
+    aria-hidden="true"
     viewBox="0 0 100 100"
+    data-ui-notation-svg={props.name}
+    className="h-4 w-4 overflow-visible"
   >
     {props.children}
   </svg>
@@ -223,15 +225,15 @@ const renderPlayStationGlyph = (platformGlyph: PlatformGlyph, iconName: string) 
     return (
       <SvgFrame name="playstation-square">
         <rect
-          data-ui-notation-svg-color={color}
-          fill="none"
-          height="55"
           rx="2.5"
-          stroke={color}
-          strokeWidth="8"
-          width="55"
           x="22.5"
           y="22.5"
+          width="55"
+          fill="none"
+          height="55"
+          stroke={color}
+          strokeWidth="8"
+          data-ui-notation-svg-color={color}
         />
       </SvgFrame>
     );
@@ -241,12 +243,12 @@ const renderPlayStationGlyph = (platformGlyph: PlatformGlyph, iconName: string) 
     return (
       <SvgFrame name="playstation-triangle">
         <path
-          d="M50 18 82 76H18Z"
-          data-ui-notation-svg-color={color}
           fill="none"
           stroke={color}
-          strokeLinejoin="round"
           strokeWidth="8"
+          d="M50 18 82 76H18Z"
+          strokeLinejoin="round"
+          data-ui-notation-svg-color={color}
         />
       </SvgFrame>
     );
@@ -256,12 +258,12 @@ const renderPlayStationGlyph = (platformGlyph: PlatformGlyph, iconName: string) 
     return (
       <SvgFrame name="playstation-cross">
         <path
-          d="M27 27 73 73M73 27 27 73"
-          data-ui-notation-svg-color={color}
           fill="none"
           stroke={color}
-          strokeLinecap="round"
           strokeWidth="9"
+          strokeLinecap="round"
+          d="M27 27 73 73M73 27 27 73"
+          data-ui-notation-svg-color={color}
         />
       </SvgFrame>
     );
@@ -271,13 +273,13 @@ const renderPlayStationGlyph = (platformGlyph: PlatformGlyph, iconName: string) 
     return (
       <SvgFrame name="playstation-circle">
         <circle
+          r="31"
           cx="50"
           cy="50"
-          data-ui-notation-svg-color={color}
           fill="none"
-          r="31"
           stroke={color}
           strokeWidth="8"
+          data-ui-notation-svg-color={color}
         />
       </SvgFrame>
     );
@@ -290,12 +292,12 @@ const renderXboxLetter = (glyph: string, color: string) => {
   if (glyph === "A") {
     return (
       <path
-        d="M26 76 50 24 74 76M36 59H64"
         fill="none"
         stroke={color}
+        strokeWidth="10"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="10"
+        d="M26 76 50 24 74 76M36 59H64"
       />
     );
   }
@@ -303,12 +305,12 @@ const renderXboxLetter = (glyph: string, color: string) => {
   if (glyph === "B") {
     return (
       <path
-        d="M32 24V76M32 27H53C64 27 71 33 71 42C71 50 64 55 53 55H32M32 55H56C67 55 74 60 74 68C74 75 67 80 55 80H32"
         fill="none"
         stroke={color}
+        strokeWidth="10"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="10"
+        d="M32 24V76M32 27H53C64 27 71 33 71 42C71 50 64 55 53 55H32M32 55H56C67 55 74 60 74 68C74 75 67 80 55 80H32"
       />
     );
   }
@@ -316,23 +318,23 @@ const renderXboxLetter = (glyph: string, color: string) => {
   if (glyph === "Y") {
     return (
       <path
-        d="M25 25 50 52M75 25 50 52M50 52V77"
         fill="none"
         stroke={color}
+        strokeWidth="10"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="10"
+        d="M25 25 50 52M75 25 50 52M50 52V77"
       />
     );
   }
 
   return (
     <path
-      d="M27 27 73 73M73 27 27 73"
       fill="none"
       stroke={color}
-      strokeLinecap="round"
       strokeWidth="11"
+      strokeLinecap="round"
+      d="M27 27 73 73M73 27 27 73"
     />
   );
 };
@@ -361,19 +363,19 @@ const renderDpadGlyph = (name: string, direction: Direction) => (
 
       return (
         <rect
-          data-ui-notation-svg-active={isActive ? "true" : undefined}
-          data-ui-notation-svg-color="currentColor"
-          data-ui-notation-svg-direction={isCenter ? "center" : segment.direction}
-          fill={isActive ? "currentColor" : "none"}
-          height={segment.height}
-          key={segment.id}
-          opacity={isCenter || isActive ? 1 : 0.45}
           rx="5"
-          stroke="currentColor"
-          strokeWidth={isActive ? 9 : 7}
-          width={segment.width}
           x={segment.x}
           y={segment.y}
+          key={segment.id}
+          stroke="currentColor"
+          width={segment.width}
+          height={segment.height}
+          strokeWidth={isActive ? 9 : 7}
+          opacity={isCenter || isActive ? 1 : 0.45}
+          fill={isActive ? "currentColor" : "none"}
+          data-ui-notation-svg-color="currentColor"
+          data-ui-notation-svg-active={isActive ? "true" : undefined}
+          data-ui-notation-svg-direction={isCenter ? "center" : segment.direction}
         />
       );
     })}
@@ -389,35 +391,35 @@ const renderStickGlyph = (name: string, side: "left" | "right", direction: Direc
   return (
     <SvgFrame name={name}>
       <circle
+        r="30"
         cx="50"
         cy="50"
-        data-ui-notation-svg-color="currentColor"
         fill="none"
         opacity="0.55"
-        r="30"
-        stroke="currentColor"
         strokeWidth="7"
+        stroke="currentColor"
+        data-ui-notation-svg-color="currentColor"
       />
       <path
+        fill="none"
+        strokeWidth="9"
+        stroke="currentColor"
+        strokeLinecap="round"
         d={`M50 50 L${targetX} ${targetY}`}
         data-ui-notation-svg-active="true"
         data-ui-notation-svg-direction={direction}
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeWidth="9"
       />
       <circle cx={targetX} cy={targetY} fill="currentColor" r="9" />
       <text
-        data-ui-notation-svg-stick={side}
-        dominantBaseline="middle"
-        fill="currentColor"
-        fontFamily="system-ui, sans-serif"
-        fontSize="28"
-        fontWeight="800"
-        textAnchor="middle"
         x="27"
         y="29"
+        fontSize="28"
+        fontWeight="800"
+        fill="currentColor"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        data-ui-notation-svg-stick={side}
+        fontFamily="system-ui, sans-serif"
       >
         {sideLabel}
       </text>
@@ -428,8 +430,8 @@ const renderStickGlyph = (name: string, side: "left" | "right", direction: Direc
 const renderControllerBadge = (glyph: string) => (
   <span
     aria-hidden="true"
-    className="px-0.5 text-[11px] font-bold leading-none tracking-normal"
     data-ui-notation-badge={glyph}
+    className="px-0.5 text-[11px] font-bold leading-none tracking-normal"
   >
     {glyph}
   </span>
@@ -438,32 +440,53 @@ const renderControllerBadge = (glyph: string) => (
 const renderControllerSymbol = (platformGlyph: PlatformGlyph, iconName: string) => {
   const { symbol } = platformGlyph;
 
-  if (symbol?.kind === "dpad") {
-    return renderDpadGlyph(createRegistrySvgName(iconName), symbol.direction);
+  if (!symbol) {
+    return renderControllerBadge(platformGlyph.glyph);
   }
 
-  if (symbol?.kind === "stick") {
-    return renderStickGlyph(createRegistrySvgName(iconName), symbol.side, symbol.direction);
+  switch (symbol.kind) {
+    case "badge":
+      return renderControllerBadge(platformGlyph.glyph);
+    case "dpad":
+      return renderDpadGlyph(createRegistrySvgName(iconName), symbol.direction);
+    case "stick":
+      return renderStickGlyph(createRegistrySvgName(iconName), symbol.side, symbol.direction);
   }
 
-  return renderControllerBadge(platformGlyph.glyph);
+  const unhandledSymbol: never = symbol;
+  return unhandledSymbol;
 };
 
 const renderPlatformGlyph = (platformGlyph: PlatformGlyph, iconName: string) => {
-  if (platformGlyph.platform === "playstation") {
-    return renderPlayStationGlyph(platformGlyph, iconName);
+  const { platform } = platformGlyph;
+
+  switch (platform) {
+    case "fgc":
+      return (
+        <span aria-hidden="true" data-ui-notation-glyph-shape="fgc">
+          {platformGlyph.glyph}
+        </span>
+      );
+    case "playstation":
+      return renderPlayStationGlyph(platformGlyph, iconName);
+    case "xbox":
+      return renderXboxGlyph(platformGlyph, iconName);
   }
 
-  if (platformGlyph.platform === "xbox") {
-    return renderXboxGlyph(platformGlyph, iconName);
-  }
-
-  return (
-    <span aria-hidden="true" data-ui-notation-glyph-shape="fgc">
-      {platformGlyph.glyph}
-    </span>
-  );
+  const unhandledPlatform: never = platform;
+  return unhandledPlatform;
 };
+
+type PlatformGlyphContentValue = Readonly<{
+  iconName: string;
+  platformGlyph: PlatformGlyph;
+}>;
+
+function PlatformGlyphContent({ value }: PresentContentProps<PlatformGlyphContentValue>) {
+  return renderPlatformGlyph(value.platformGlyph, value.iconName);
+}
+
+PlatformGlyphContent.displayName = "PlatformGlyphContent";
 
 const getTextGlyph = (descriptor: UiNotationIconDescriptor) =>
   directionGlyphs[descriptor.iconName] ??
@@ -471,33 +494,45 @@ const getTextGlyph = (descriptor: UiNotationIconDescriptor) =>
   compactTokenLabels[descriptor.iconName] ??
   descriptor.displayLabel;
 
+function TextGlyphFallback({ descriptor }: Readonly<{ descriptor: UiNotationIconDescriptor }>) {
+  return <span aria-hidden="true">{getTextGlyph(descriptor)}</span>;
+}
+
+TextGlyphFallback.displayName = "TextGlyphFallback";
+
 export const NotationIcon = (props: NotationIconProps) => {
   const { descriptor, tone = "neutral" } = props;
   const platformGlyph = platformGlyphs[descriptor.iconName];
   const isInvalid = descriptor.iconName === "notation-unknown" || descriptor.state === "invalid";
+  const commandAccent = Boolean(props.commandAccent && !isInvalid);
+  const platformGlyphContent: PlatformGlyphContentValue | undefined = platformGlyph
+    ? { iconName: descriptor.iconName, platformGlyph }
+    : undefined;
 
   return (
     <span
+      role="img"
       aria-label={descriptor.accessibleLabel}
+      data-ui-notation-kind={descriptor.kind}
+      data-ui-notation-mode={descriptor.mode}
+      data-ui-notation-icon={descriptor.iconName}
+      data-ui-notation-glyph={platformGlyph?.glyph ?? getTextGlyph(descriptor)}
+      data-ui-notation-platform={platformGlyph?.platform ?? descriptor.mode.toLowerCase()}
       className={cx(
         indicatorRecipe({
           state: isInvalid ? "invalid" : "idle",
           tone: isInvalid ? "destructive" : tone,
         }),
         "h-6 min-w-6 px-1.5",
+        commandAccent && "border-(--ui-command-accent)",
       )}
-      data-ui-notation-glyph={platformGlyph?.glyph ?? getTextGlyph(descriptor)}
-      data-ui-notation-icon={descriptor.iconName}
-      data-ui-notation-kind={descriptor.kind}
-      data-ui-notation-mode={descriptor.mode}
-      data-ui-notation-platform={platformGlyph?.platform ?? descriptor.mode.toLowerCase()}
-      role="img"
     >
-      {platformGlyph ? (
-        renderPlatformGlyph(platformGlyph, descriptor.iconName)
-      ) : (
-        <span aria-hidden="true">{getTextGlyph(descriptor)}</span>
-      )}
+      <Present
+        value={platformGlyphContent}
+        fallback={<TextGlyphFallback descriptor={descriptor} />}
+      >
+        {PlatformGlyphContent}
+      </Present>
     </span>
   );
 };

@@ -1,18 +1,23 @@
-import { gameRouteKinds } from "@mk-combos/contracts/routes/value";
-import { languageCodes, notationDisplayModes } from "@mk-combos/contracts/settings/value";
+import {
+  languageCodes,
+  notationDisplayModes,
+  themePreferences,
+} from "@mk-combos/contracts/settings/value";
 import { describe, expect, it, vi } from "vitest";
 
 import { installedGames } from "../../game-business/installed-games/value";
 import { createDefaultLocalAppState } from "./runtime";
-import { PersistedLocalStateSchema } from "./schema";
+import { PersistedLocalStateSchema, PersistedLocalStateV1Schema } from "./schema";
 import { createLocalStateStore } from "./store";
 import type { LocalStateStorage } from "./type";
 import {
+  legacyLocalStateStorageVersion,
   localGameSliceStatuses,
   localStateErrorCodes,
   localStateHydrationStatuses,
   localStatePersistenceStatuses,
   localStateStorageKey,
+  localStateStorageVersion,
 } from "./value";
 
 function createMemoryStorage(initialValue: string | null = null) {
@@ -64,6 +69,7 @@ describe("local-state store", () => {
       defaultGameId: "mkxl",
       language: languageCodes.UA,
       notationDisplayMode: notationDisplayModes.FGC,
+      themePreference: themePreferences.system,
     });
     expect(memory.storage.setItem).not.toHaveBeenCalled();
   });
@@ -90,6 +96,7 @@ describe("local-state store", () => {
       defaultGameId: "mk1",
       language: languageCodes.UA,
       notationDisplayMode: notationDisplayModes.Xbox,
+      themePreference: themePreferences.dark,
     });
     const persisted = parseStoredValue(memory.read);
 
@@ -103,6 +110,7 @@ describe("local-state store", () => {
       language: languageCodes.UA,
       lastActiveGameId: "mk1",
       notationDisplayMode: notationDisplayModes.Xbox,
+      themePreference: themePreferences.dark,
     });
     expect(Object.keys(persisted.state.games)).toEqual(installedGames.map((game) => game.id));
   });
@@ -127,6 +135,7 @@ describe("local-state store", () => {
       language: languageCodes.UA,
       lastActiveGameId: "mk1",
       notationDisplayMode: notationDisplayModes.FGC,
+      themePreference: themePreferences.system,
     });
     expect(observable.resolvedActiveGameId).toBe("mk1");
   });
@@ -139,11 +148,13 @@ describe("local-state store", () => {
       defaultGameId: "mkxl",
       language: languageCodes.EN,
       notationDisplayMode: notationDisplayModes.FGC,
+      themePreference: themePreferences.system,
     });
 
     store.getState().source.updateSettings({
       language: languageCodes.UA,
       notationDisplayMode: notationDisplayModes.PlayStation,
+      themePreference: themePreferences.light,
     });
     store.getState().source.rememberLastActiveGame("mk1");
 
@@ -152,6 +163,7 @@ describe("local-state store", () => {
       language: languageCodes.UA,
       lastActiveGameId: "mk1",
       notationDisplayMode: notationDisplayModes.PlayStation,
+      themePreference: themePreferences.light,
     });
     expect(store.getState().observable.resolvedActiveGameId).toBe("mk1");
     expect(parseStoredValue(memory.read).state.settings.defaultGameId).toBe("mkxl");
@@ -192,6 +204,7 @@ describe("local-state store", () => {
       defaultGameId: "mk1",
       language: languageCodes.UA,
       notationDisplayMode: notationDisplayModes.Xbox,
+      themePreference: themePreferences.dark,
     } as const;
 
     const failedPersistence = store.getState().source.completeFirstLaunch(settings);
@@ -246,9 +259,10 @@ describe("local-state store", () => {
           defaultGameId: "mkxl",
           language: languageCodes.EN,
           notationDisplayMode: notationDisplayModes.FGC,
+          themePreference: themePreferences.system,
         },
       },
-      version: 1,
+      version: localStateStorageVersion,
     });
     const memory = createMemoryStorage(JSON.stringify(stored));
     const store = createLocalStateStore({ environment: { storage: memory.storage } });
@@ -277,9 +291,10 @@ describe("local-state store", () => {
           language: languageCodes.UA,
           lastActiveGameId: "mk1",
           notationDisplayMode: notationDisplayModes.Xbox,
+          themePreference: themePreferences.dark,
         },
       },
-      version: 1,
+      version: localStateStorageVersion,
     });
     const memory = createMemoryStorage(JSON.stringify(stored));
     const store = createLocalStateStore({ environment: { storage: memory.storage } });
@@ -307,20 +322,6 @@ describe("local-state store", () => {
     );
   });
 
-  it("keeps the Settings return target ephemeral and clearable", () => {
-    const memory = createMemoryStorage();
-    const store = createLocalStateStore({ environment: { storage: memory.storage } });
-    store.getState().hydrate();
-    const target = { gameId: "mk1", kind: gameRouteKinds.catalog } as const;
-
-    expect(store.getState().source.setSettingsReturnTarget(target).ok).toBe(true);
-    expect(store.getState().observable.settingsReturnTarget).toEqual(target);
-    expect(memory.storage.setItem).not.toHaveBeenCalled();
-
-    store.getState().source.clearSettingsReturnTarget();
-    expect(store.getState().observable.settingsReturnTarget).toBeUndefined();
-  });
-
   it("uses the first installed game when stored active and default ids are unavailable", () => {
     const defaultState = createDefaultLocalAppState(languageCodes.EN).state;
     const stored = PersistedLocalStateSchema.parse({
@@ -332,9 +333,10 @@ describe("local-state store", () => {
           language: languageCodes.EN,
           lastActiveGameId: "future-last",
           notationDisplayMode: notationDisplayModes.FGC,
+          themePreference: themePreferences.system,
         },
       },
-      version: 1,
+      version: localStateStorageVersion,
     });
     const store = createLocalStateStore({
       environment: { storage: createMemoryStorage(JSON.stringify(stored)).storage },
@@ -343,5 +345,39 @@ describe("local-state store", () => {
     store.getState().hydrate();
 
     expect(store.getState().observable.resolvedActiveGameId).toBe(installedGames[0].id);
+  });
+
+  it("writes a lossless v2 snapshot after hydrating legacy v1 state", () => {
+    const legacy = PersistedLocalStateV1Schema.parse({
+      firstLaunchCompleted: true,
+      state: {
+        games: {
+          "future-game": { retained: [1, 2, 3] },
+          mk1: installedGames[1].backup.createEmptySlice(),
+          mkxl: installedGames[0].backup.createEmptySlice(),
+        },
+        settings: {
+          defaultGameId: "mk1",
+          language: languageCodes.UA,
+          lastActiveGameId: "mk1",
+          notationDisplayMode: notationDisplayModes.Xbox,
+        },
+      },
+      version: legacyLocalStateStorageVersion,
+    });
+    const memory = createMemoryStorage(JSON.stringify(legacy));
+    const store = createLocalStateStore({ environment: { storage: memory.storage } });
+
+    store.getState().hydrate();
+
+    const persisted = parseStoredValue(memory.read);
+    expect(memory.storage.setItem).toHaveBeenCalledTimes(1);
+    expect(persisted.version).toBe(localStateStorageVersion);
+    expect(persisted.firstLaunchCompleted).toBe(legacy.firstLaunchCompleted);
+    expect(persisted.state.games).toEqual(legacy.state.games);
+    expect(persisted.state.settings).toEqual({
+      ...legacy.state.settings,
+      themePreference: themePreferences.system,
+    });
   });
 });

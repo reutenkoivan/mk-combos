@@ -1,106 +1,90 @@
 import {
-  parseMk1CatalogRouteQuery,
+  getMk1CatalogContextOptions,
   recoverMk1CatalogContext,
-  selectMk1CatalogCharacter,
-  selectMk1CatalogKameo,
-  serializeMk1CatalogRouteQuery,
 } from "@mk-combos/mk1-catalog/context/runtime";
-import { Mk1CatalogPlainRouteQuerySchema } from "@mk-combos/mk1-catalog/context/schema";
-import { comboMatchesMk1CatalogFilters } from "@mk-combos/mk1-catalog/filters/runtime";
+import { mk1CatalogSources } from "@mk-combos/mk1-catalog/filters/value";
 import {
-  getMk1CatalogComboSummary,
+  getMk1CatalogFilterFacets,
   selectMk1CatalogComboSummaries,
   selectMk1CatalogSeededCombos,
 } from "@mk-combos/mk1-catalog/selectors/runtime";
-import { mk1SeededCombos } from "@mk-combos/mk1-data/combos/value";
 import { describe, expect, it } from "vitest";
 
-describe("@mk-combos/mk1-catalog selectors", () => {
-  it("recovers invalid route context without leaking variation semantics", () => {
-    const parsed = Mk1CatalogPlainRouteQuerySchema.safeParse({
-      character: "scorpion",
-      kameo: "cyrax",
-      variation: "scorpion:ninjutsu",
-    });
-    const invalidCharacter = recoverMk1CatalogContext({
-      characterId: "missing",
-      kameoId: "cyrax",
-    });
-    const invalidKameo = recoverMk1CatalogContext({
-      characterId: "scorpion",
-      kameoId: "missing",
-    });
+const context = { characterId: "scorpion", kameoId: "cyrax" } as const;
 
-    expect(parsed.success).toBe(false);
-    expect(invalidCharacter.status).toBe("empty");
-    expect(invalidKameo.status).toBe("characterSelected");
-    expect(invalidKameo.context).toEqual({ characterId: "scorpion" });
-  });
-
-  it("parses and serializes route query with character, kameo, and shared filters", () => {
-    const parsed = parseMk1CatalogRouteQuery({
-      character: ["scorpion", "ignored"],
-      kameo: "cyrax",
-      meter: ["1"],
-      tag: ["pair-coverage", "pair-coverage"],
-    });
-    const serialized = serializeMk1CatalogRouteQuery(parsed.context, parsed.filters);
-
-    expect(parsed.status).toBe("ready");
-    expect(parsed.context).toEqual({
-      characterId: "scorpion",
-      kameoId: "cyrax",
-    });
-    expect(serialized).toEqual({
-      character: "scorpion",
-      kameo: "cyrax",
-      meter: ["1"],
-      tag: ["pair-coverage"],
-    });
-  });
-
-  it("selects character and kameo as required MK1 context", () => {
-    const selectedCharacter = selectMk1CatalogCharacter("scorpion");
-    const selectedKameo = selectMk1CatalogKameo(selectedCharacter.context, "cyrax");
-
-    expect(selectedCharacter.status).toBe("characterSelected");
-    expect(selectedKameo.status).toBe("ready");
-    expect(selectedKameo.context).toEqual({
-      characterId: "scorpion",
-      kameoId: "cyrax",
-    });
-  });
-
-  it("returns summaries and filters for selected character + kameo only", () => {
-    const context = {
-      characterId: "scorpion",
-      kameoId: "cyrax",
-    };
-    const seeded = selectMk1CatalogSeededCombos({
+describe("MK1 catalog selectors", () => {
+  it("prepares context options and filters seeded combos with the public taxonomy", () => {
+    const options = getMk1CatalogContextOptions({ characterId: "scorpion" });
+    const combos = selectMk1CatalogSeededCombos({
       context,
       filters: {
+        positions: ["midscreen"],
         meter: [1],
-        tags: ["pair-coverage"],
+        difficulties: ["easy"],
+        routeClasses: ["kameo"],
+        sources: [mk1CatalogSources.curated],
       },
     });
-    const summaries = selectMk1CatalogComboSummaries({ context });
-    const firstSummary = summaries[0];
-
-    expect(seeded).toHaveLength(1);
-    expect(summaries).toHaveLength(1);
-    expect(firstSummary?.character.id).toBe("scorpion");
-    expect(firstSummary?.kameo.id).toBe("cyrax");
-    expect(getMk1CatalogComboSummary("scorpion-cyrax-seed-001")?.kameo.id).toBe("cyrax");
+    expect(options.characters.length).toBeGreaterThan(0);
+    expect(options.kameos.length).toBeGreaterThan(0);
+    expect(options.characters.find((option) => option.id === "ashrah")?.pickerSlot).toEqual({
+      slotId: "character-slot-1",
+      optionId: "ashrah",
+      row: 1,
+      column: 1,
+      compactOrder: 1,
+      status: "selectable",
+    });
+    expect(options.kameos.find((option) => option.id === "cyrax")?.pickerSlot).toEqual({
+      slotId: "kameo-slot-1",
+      optionId: "cyrax",
+      row: 1,
+      column: 1,
+      compactOrder: 1,
+      status: "selectable",
+    });
+    expect(combos.length).toBeGreaterThan(0);
+    expect(combos.every((combo) => combo.sourceIds.includes("curated-route-seed"))).toBe(true);
   });
 
-  it("applies optional filters without treating kameo as optional facet", () => {
-    const combo = mk1SeededCombos[0];
+  it("prepares provenance and semantic route steps without exposing game rules to web", () => {
+    const summary = selectMk1CatalogComboSummaries({ context })[0];
+    expect(summary).toBeDefined();
+    if (!summary) throw new Error("Expected MK1 summary.");
+    expect(summary.provenance).toBe(mk1CatalogSources.curated);
+    expect(summary.sourceIds.length).toBeGreaterThan(0);
+    expect(summary.routeSteps).toHaveLength(summary.movePath.length);
+    expect(summary.routeSteps[0]).toMatchObject({
+      kind: "starter",
+      repetitionCount: 1,
+      emphasis: "standard",
+    });
+    expect(summary.routeSteps.at(-1)).toMatchObject({ kind: "finish", emphasis: "strong" });
+  });
 
-    expect(combo).toBeDefined();
-    if (!combo) {
-      throw new Error("MK1 combo should be present.");
-    }
-    expect(comboMatchesMk1CatalogFilters(combo, { tags: ["pair-coverage"] })).toBe(true);
-    expect(comboMatchesMk1CatalogFilters(combo, { tags: ["missing"] })).toBe(false);
+  it("returns five ordered facets and keeps Personal visible but disabled", () => {
+    const facets = getMk1CatalogFilterFacets(context);
+    expect(facets.map((facet) => facet.id)).toEqual([
+      "position",
+      "meter",
+      "difficulty",
+      "routeClass",
+      "source",
+    ]);
+    const sourceFacet = facets.find((facet) => facet.id === "source");
+    expect(sourceFacet?.kind).toBe("multiSelect");
+    if (sourceFacet?.kind !== "multiSelect") throw new Error("Expected source facet.");
+    expect(sourceFacet.options.find((option) => option.id === "personal")).toMatchObject({
+      count: 0,
+      selected: false,
+      disabled: true,
+    });
+  });
+
+  it("recovers invalid pathname-owned context without any query fallback", () => {
+    expect(recoverMk1CatalogContext({ characterId: "missing", kameoId: "cyrax" })).toMatchObject({
+      status: "empty",
+      context: {},
+    });
   });
 });

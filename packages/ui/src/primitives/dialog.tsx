@@ -51,11 +51,11 @@ export function DialogRoot(props: DialogRootProps) {
 
   return (
     <BaseDialog.Root
-      defaultOpen={defaultOpen}
-      disablePointerDismissal={disablePointerDismissal}
-      modal={modal}
-      onOpenChange={handleOpenChange}
       open={open}
+      modal={modal}
+      defaultOpen={defaultOpen}
+      onOpenChange={handleOpenChange}
+      disablePointerDismissal={disablePointerDismissal}
     >
       {children}
     </BaseDialog.Root>
@@ -92,12 +92,12 @@ export function DialogTrigger(props: DialogTriggerProps) {
   return (
     <BaseDialog.Trigger
       {...triggerProps}
-      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-dialog-trigger
-      disabled={disabled}
       ref={ref}
       type={type}
+      disabled={disabled}
+      data-ui-dialog-trigger
+      data-disabled={disabled ? "true" : undefined}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
     >
       {children}
     </BaseDialog.Trigger>
@@ -110,22 +110,23 @@ export type DialogPortalProps = ComponentPropsWithRef<typeof BaseDialog.Portal>;
 
 export function DialogPortal(props: DialogPortalProps) {
   const { className, ...portalProps } = props;
-  const { contrast, density, responsiveMode, theme } = useUiRootContext();
+  const { contrast, controllerFocusVisible, density, responsiveMode, theme } = useUiRootContext();
 
   return (
     <BaseDialog.Portal
       {...portalProps}
+      data-ui-theme={theme}
+      data-ui-portal="dialog"
+      data-ui-density={density}
+      data-ui-contrast={contrast}
+      data-ui-responsive={responsiveMode}
+      data-ui-controller-focus-visible={controllerFocusVisible ? "true" : "false"}
       className={(state) =>
         cx(
           "mk-combos-ui-root mk-combos-ui-portal-root",
           typeof className === "function" ? className(state) : className,
         )
       }
-      data-ui-contrast={contrast}
-      data-ui-density={density}
-      data-ui-portal="dialog"
-      data-ui-responsive={responsiveMode}
-      data-ui-theme={theme}
     />
   );
 }
@@ -140,12 +141,12 @@ export function DialogBackdrop(props: DialogBackdropProps) {
   return (
     <BaseDialog.Backdrop
       {...backdropProps}
+      ref={ref}
+      data-ui-dialog-backdrop
       className={cx(
         "fixed inset-0 z-40 bg-black/40 backdrop-blur-[3px] transition-opacity duration-200 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 motion-reduce:transition-none",
         className,
       )}
-      data-ui-dialog-backdrop
-      ref={ref}
     />
   );
 }
@@ -170,14 +171,14 @@ export function DialogViewport(props: DialogViewportProps) {
   return (
     <BaseDialog.Viewport
       {...viewportProps}
+      ref={ref}
+      data-ui-dialog-viewport
+      data-ui-dialog-placement={responsiveMode}
       className={cx(
         "pointer-events-none fixed inset-0 z-50 grid min-h-dvh w-full overflow-hidden overscroll-contain",
         dialogViewportClasses[responsiveMode],
         className,
       )}
-      data-ui-dialog-placement={responsiveMode}
-      data-ui-dialog-viewport
-      ref={ref}
     >
       {children}
     </BaseDialog.Viewport>
@@ -197,6 +198,7 @@ const dialogPopupClasses = {
 
 export type DialogPopupProps = UiPrimitiveProps<HTMLDivElement> & {
   density?: UiDensityMode;
+  finalFocus?: ComponentPropsWithRef<typeof BaseDialog.Popup>["finalFocus"];
   material?: UiMaterialMode;
   shape?: UiShapeMode;
 };
@@ -206,6 +208,7 @@ export function DialogPopup(props: DialogPopupProps) {
     children,
     className,
     density = uiDensityModes.medium,
+    finalFocus,
     material = uiMaterialModes.elevated,
     ref,
     shape = uiShapeModes.fixed,
@@ -216,6 +219,10 @@ export function DialogPopup(props: DialogPopupProps) {
   return (
     <BaseDialog.Popup
       {...popupProps}
+      ref={ref}
+      finalFocus={finalFocus}
+      data-ui-dialog-popup
+      data-ui-dialog-placement={responsiveMode}
       className={cx(
         popupRecipe({ density, material, shape }),
         surfaceRecipe({ density, material, shape }),
@@ -223,9 +230,6 @@ export function DialogPopup(props: DialogPopupProps) {
         dialogPopupClasses[responsiveMode],
         className,
       )}
-      data-ui-dialog-placement={responsiveMode}
-      data-ui-dialog-popup
-      ref={ref}
     >
       {children}
     </BaseDialog.Popup>
@@ -242,9 +246,9 @@ export function DialogTitle(props: DialogTitleProps) {
   return (
     <BaseDialog.Title
       {...titleProps}
-      className={cx("text-base font-semibold tracking-[-0.01em] text-(--ui-text)", className)}
-      data-ui-dialog-title
       ref={ref}
+      data-ui-dialog-title
+      className={cx("text-base font-semibold tracking-[-0.01em] text-(--ui-text)", className)}
     >
       {children}
     </BaseDialog.Title>
@@ -261,9 +265,9 @@ export function DialogDescription(props: DialogDescriptionProps) {
   return (
     <BaseDialog.Description
       {...descriptionProps}
-      className={cx("text-sm leading-relaxed text-(--ui-muted-text)", className)}
-      data-ui-dialog-description
       ref={ref}
+      data-ui-dialog-description
+      className={cx("text-sm leading-relaxed text-(--ui-muted-text)", className)}
     >
       {children}
     </BaseDialog.Description>
@@ -300,12 +304,12 @@ export function DialogClose(props: DialogCloseProps) {
   return (
     <BaseDialog.Close
       {...closeProps}
-      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-dialog-close
-      disabled={disabled}
       ref={ref}
       type={type}
+      disabled={disabled}
+      data-ui-dialog-close
+      data-disabled={disabled ? "true" : undefined}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
     >
       {children}
     </BaseDialog.Close>

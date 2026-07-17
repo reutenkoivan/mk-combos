@@ -1,13 +1,15 @@
 import { z } from "zod/v4";
 
 import { GameIdSchema } from "../identity/schema";
-import { languageCodes, notationDisplayModes } from "./value";
+import { languageCodes, notationDisplayModes, themePreferences } from "./value";
 
-export { languageCodes, notationDisplayModes } from "./value";
+export { languageCodes, notationDisplayModes, themePreferences } from "./value";
 
 export const LanguageCodeSchema = z.enum(languageCodes);
 
 export const NotationDisplayModeSchema = z.enum(notationDisplayModes);
+
+export const ThemePreferenceSchema = z.enum(themePreferences);
 
 export const LocalizedTextSchema = z
   .object({
@@ -23,6 +25,7 @@ export const AppSettingsSchema = z
     language: LanguageCodeSchema,
     defaultGameId: GameIdSchema,
     notationDisplayMode: NotationDisplayModeSchema,
+    themePreference: ThemePreferenceSchema,
     lastActiveGameId: GameIdSchema.optional(),
   })
   .strict();

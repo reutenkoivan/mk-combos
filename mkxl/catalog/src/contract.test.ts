@@ -1,258 +1,220 @@
 import * as contextRuntime from "@mk-combos/mkxl-catalog/context/runtime";
 import {
-  mkxlCatalogRecoveryCodes as contextSchemaRecoveryCodes,
-  mkxlCatalogRouteQueryKeys as contextSchemaRouteQueryKeys,
-  mkxlCatalogContextStatuses as contextSchemaStatuses,
   MkxlCatalogContextSchema,
+  MkxlCatalogContextStatusSchema,
   MkxlCatalogOptionAvailabilitySchema,
+  MkxlCatalogRecoveryCodeSchema,
 } from "@mk-combos/mkxl-catalog/context/schema";
 import type {
   MkxlCatalogContext,
+  MkxlCatalogContextStatus,
   MkxlCatalogOptionAvailability,
   MkxlCatalogRecoveryCode,
-  MkxlCatalogRequiredContext,
-  MkxlCatalogRouteQueryKey,
-} from "@mk-combos/mkxl-catalog/context/type";
-import {
-  mkxlCatalogRecoveryCodes as contextTypeRecoveryCodes,
-  mkxlCatalogRouteQueryKeys as contextTypeRouteQueryKeys,
-  mkxlCatalogContextStatuses as contextTypeStatuses,
 } from "@mk-combos/mkxl-catalog/context/type";
 import {
   mkxlCatalogContextStatuses,
   mkxlCatalogOptionAvailabilities,
   mkxlCatalogRecoveryCodes,
-  mkxlCatalogRouteQueryKeys,
 } from "@mk-combos/mkxl-catalog/context/value";
 import * as contractEntry from "@mk-combos/mkxl-catalog/contract";
 import { mkCombosMkxlCatalog, mkxlCatalogContractGroups } from "@mk-combos/mkxl-catalog/contract";
 import * as filterRuntime from "@mk-combos/mkxl-catalog/filters/runtime";
 import {
-  mkxlCatalogFilterIds as filterSchemaIds,
-  mkxlCatalogMultiSelectFilterIds as filterSchemaMultiSelectIds,
-  mkxlCatalogRangeFilterIds as filterSchemaRangeIds,
+  MkxlCatalogFilterIdSchema,
+  MkxlCatalogFilterQueryKeySchema,
+  MkxlCatalogFilterQuerySchema,
   MkxlCatalogFiltersSchema,
+  MkxlCatalogMultiSelectFilterIdSchema,
+  MkxlCatalogSingleSelectFilterIdSchema,
+  MkxlCatalogSourceSchema,
 } from "@mk-combos/mkxl-catalog/filters/schema";
 import type {
-  MkxlCatalogDamageRange,
+  MkxlCatalogFilterFacet,
   MkxlCatalogFilterId,
+  MkxlCatalogFilterQuery,
+  MkxlCatalogFilterQueryKey,
   MkxlCatalogFilters,
-  MkxlCatalogMultiSelectFacet,
   MkxlCatalogMultiSelectFilterId,
-  MkxlCatalogRangeFacet,
-  MkxlCatalogRangeFilterId,
-} from "@mk-combos/mkxl-catalog/filters/type";
-import {
-  mkxlCatalogFilterIds as filterTypeIds,
-  mkxlCatalogMultiSelectFilterIds as filterTypeMultiSelectIds,
-  mkxlCatalogRangeFilterIds as filterTypeRangeIds,
+  MkxlCatalogSingleSelectFilterId,
+  MkxlCatalogSource,
 } from "@mk-combos/mkxl-catalog/filters/type";
 import {
   mkxlCatalogFilterIds,
+  mkxlCatalogFilterQueryKeys,
   mkxlCatalogMultiSelectFilterIds,
-  mkxlCatalogRangeFilterIds,
+  mkxlCatalogSingleSelectFilterIds,
+  mkxlCatalogSources,
 } from "@mk-combos/mkxl-catalog/filters/value";
-import * as selectorRuntime from "@mk-combos/mkxl-catalog/selectors/runtime";
-import { MkxlCatalogComboSummarySchema } from "@mk-combos/mkxl-catalog/summary/schema";
-import type { MkxlCatalogComboSummary } from "@mk-combos/mkxl-catalog/summary/type";
+import * as selectors from "@mk-combos/mkxl-catalog/selectors/runtime";
+import {
+  MkxlCatalogComboSummarySchema,
+  MkxlCatalogRouteStepEmphasisSchema,
+  MkxlCatalogRouteStepKindSchema,
+} from "@mk-combos/mkxl-catalog/summary/schema";
+import type {
+  MkxlCatalogComboSummary,
+  MkxlCatalogRouteStep,
+  MkxlCatalogRouteStepEmphasis,
+  MkxlCatalogRouteStepKind,
+} from "@mk-combos/mkxl-catalog/summary/type";
+import {
+  mkxlCatalogRouteStepEmphases,
+  mkxlCatalogRouteStepKinds,
+} from "@mk-combos/mkxl-catalog/summary/value";
 import { describe, expect, it } from "vitest";
 
-const acceptsPublicTypes = (_contract: {
-  damageRange: MkxlCatalogDamageRange;
+const acceptsPublicTypes = (_value: {
   context: MkxlCatalogContext;
-  filterId: MkxlCatalogFilterId;
-  filters: MkxlCatalogFilters;
-  multiSelectFacet: MkxlCatalogMultiSelectFacet;
-  multiSelectFilterId: MkxlCatalogMultiSelectFilterId;
-  optionAvailability: MkxlCatalogOptionAvailability;
-  rangeFacet: MkxlCatalogRangeFacet;
-  rangeFilterId: MkxlCatalogRangeFilterId;
+  contextStatus: MkxlCatalogContextStatus;
   recoveryCode: MkxlCatalogRecoveryCode;
-  requiredContext: MkxlCatalogRequiredContext;
-  routeQueryKey: MkxlCatalogRouteQueryKey;
+  optionAvailability: MkxlCatalogOptionAvailability;
+  filters: MkxlCatalogFilters;
+  query: MkxlCatalogFilterQuery;
+  filterId: MkxlCatalogFilterId;
+  multiSelectFilterId: MkxlCatalogMultiSelectFilterId;
+  singleSelectFilterId: MkxlCatalogSingleSelectFilterId;
+  filterQueryKey: MkxlCatalogFilterQueryKey;
+  facet: MkxlCatalogFilterFacet;
+  source: MkxlCatalogSource;
   summary: MkxlCatalogComboSummary;
+  routeStep: MkxlCatalogRouteStep;
+  routeStepKind: MkxlCatalogRouteStepKind;
+  routeStepEmphasis: MkxlCatalogRouteStepEmphasis;
 }) => true;
 
 describe("@mk-combos/mkxl-catalog contract", () => {
-  it("keeps the contract entrypoint limited to contract metadata", () => {
+  it("documents all public subpaths and the summary value module", () => {
     expect(Object.keys(contractEntry).sort()).toEqual([
       "mkCombosMkxlCatalog",
       "mkxlCatalogContractGroups",
     ]);
-    expect(mkCombosMkxlCatalog.packageName).toBe("@mk-combos/mkxl-catalog");
-    expect(mkCombosMkxlCatalog.groups).toBe(mkxlCatalogContractGroups);
-    expect(mkCombosMkxlCatalog.valueSets.mkxlCatalogContextStatuses).toBe(
-      mkxlCatalogContextStatuses,
-    );
-    expect(mkCombosMkxlCatalog.valueSets.mkxlCatalogFilterIds).toBe(mkxlCatalogFilterIds);
-  });
-
-  it("documents every public subpath group", () => {
-    expect(mkxlCatalogContractGroups.context).toEqual({
-      runtime: "@mk-combos/mkxl-catalog/context/runtime",
-      schema: "@mk-combos/mkxl-catalog/context/schema",
-      type: "@mk-combos/mkxl-catalog/context/type",
-      value: "@mk-combos/mkxl-catalog/context/value",
-    });
-    expect(mkxlCatalogContractGroups.filters).toEqual({
-      runtime: "@mk-combos/mkxl-catalog/filters/runtime",
-      schema: "@mk-combos/mkxl-catalog/filters/schema",
-      type: "@mk-combos/mkxl-catalog/filters/type",
-      value: "@mk-combos/mkxl-catalog/filters/value",
-    });
-    expect(mkxlCatalogContractGroups.selectors).toEqual({
-      runtime: "@mk-combos/mkxl-catalog/selectors/runtime",
-    });
     expect(mkxlCatalogContractGroups.summary).toEqual({
       schema: "@mk-combos/mkxl-catalog/summary/schema",
       type: "@mk-combos/mkxl-catalog/summary/type",
+      value: "@mk-combos/mkxl-catalog/summary/value",
     });
+    expect(mkCombosMkxlCatalog.packageName).toBe("@mk-combos/mkxl-catalog");
   });
 
-  it("keeps public subpaths importable", () => {
-    const context = MkxlCatalogContextSchema.parse({
-      characterId: "scorpion",
-      variationId: "scorpion:ninjutsu",
+  it("uses filter-only search contracts with no character or variation compatibility API", () => {
+    const query = filterRuntime.serializeMkxlCatalogFilterQuery({
+      positions: ["midscreen"],
+      routeClasses: ["bnb"],
+      sources: [mkxlCatalogSources.community],
     });
-    const filters = MkxlCatalogFiltersSchema.parse({
-      meter: [0],
-      tags: ["community", "beginner"],
+    expect(MkxlCatalogFilterQuerySchema.parse(query)).toEqual(query);
+    expect(filterRuntime.parseMkxlCatalogFilterQuery(query).filters).toEqual({
+      positions: ["midscreen"],
+      routeClasses: ["bnb"],
+      sources: ["community"],
     });
-    const [summary] = selectorRuntime.selectMkxlCatalogComboSummaries({
-      context,
-      filters,
-    });
-    const options = contextRuntime.getMkxlCatalogContextOptions({
-      characterId: "scorpion",
-    });
-    const selectedVariation = contextRuntime.selectMkxlCatalogVariation(
-      {
-        characterId: "scorpion",
-      },
-      "scorpion:ninjutsu",
-    );
-    const facets = selectorRuntime.getMkxlCatalogFilterFacets(context, filters);
-
-    expect(contextRuntime.getMkxlCatalogContextStatus(context)).toBe("ready");
-    expect(options.variations.some((option) => option.id === "scorpion:ninjutsu")).toBe(true);
-    expect(selectedVariation.status).toBe("ready");
-    expect(filterRuntime.emptyMkxlCatalogFilters).toEqual({});
-    expect(filterRuntime.comboMatchesMkxlCatalogFilters).toBeTypeOf("function");
-    expect(summary).toBeDefined();
-    const parsedSummary = MkxlCatalogComboSummarySchema.parse(summary);
-    expect(parsedSummary).toEqual(summary);
     expect(
-      acceptsPublicTypes({
-        damageRange: { min: 1, max: 2 },
-        context,
-        filterId: "starter",
-        filters,
-        multiSelectFacet: facets.find(
-          (facet): facet is MkxlCatalogMultiSelectFacet => facet.kind === "multiSelect",
-        ) ?? {
-          kind: "multiSelect",
-          id: "starter",
-          options: [],
-        },
-        multiSelectFilterId: "starter",
-        optionAvailability: mkxlCatalogOptionAvailabilities.available,
-        rangeFacet: facets.find(
-          (facet): facet is MkxlCatalogRangeFacet => facet.kind === "range",
-        ) ?? {
-          kind: "range",
-          id: "damage",
-          min: 0,
-          max: 0,
-        },
-        rangeFilterId: "damage",
-        recoveryCode: "invalidCharacter",
-        requiredContext: {
-          characterId: "scorpion",
-          variationId: "scorpion:ninjutsu",
-        },
-        routeQueryKey: "character",
-        summary: parsedSummary,
-      }),
-    ).toBe(true);
+      filterRuntime.parseMkxlCatalogFilterQuery({ variation: "scorpion:ninjutsu" }).filters,
+    ).toEqual({});
+    expect(Object.values(mkxlCatalogFilterQueryKeys)).not.toContain("character");
+    expect(Object.values(mkxlCatalogFilterQueryKeys)).not.toContain("variation");
+    expect(contextRuntime).not.toHaveProperty("parseMkxlCatalogRouteQuery");
   });
 
-  it("keeps value-set re-exports intentional", () => {
-    expect(mkxlCatalogContextStatuses).toEqual({
-      characterSelected: "characterSelected",
-      empty: "empty",
-      ready: "ready",
-    });
-    expect(mkxlCatalogRecoveryCodes).toEqual({
-      incompatibleInteractable: "incompatibleInteractable",
-      invalidCharacter: "invalidCharacter",
-      invalidDamageRange: "invalidDamageRange",
-      invalidInteractable: "invalidInteractable",
-      invalidStage: "invalidStage",
-      invalidVariation: "invalidVariation",
-    });
-    expect(mkxlCatalogRouteQueryKeys).toEqual({
-      character: "character",
-      damageMax: "damageMax",
-      damageMin: "damageMin",
-      difficulty: "difficulty",
-      interactable: "interactable",
-      meter: "meter",
-      position: "position",
-      routeType: "routeType",
-      stage: "stage",
-      starter: "starter",
-      tag: "tag",
-      variation: "variation",
-    });
-    expect(mkxlCatalogOptionAvailabilities).toEqual({
-      available: "available",
-      disabledNoComboData: "disabledNoComboData",
-    });
-    expect(
-      MkxlCatalogOptionAvailabilitySchema.safeParse(mkxlCatalogOptionAvailabilities.available)
-        .success,
-    ).toBe(true);
-    expect(MkxlCatalogOptionAvailabilitySchema.safeParse("hidden").success).toBe(false);
-    expect(contextSchemaStatuses).toBe(mkxlCatalogContextStatuses);
-    expect(contextTypeStatuses).toBe(mkxlCatalogContextStatuses);
-    expect(contextSchemaRecoveryCodes).toBe(mkCombosMkxlCatalog.valueSets.mkxlCatalogRecoveryCodes);
-    expect(contextTypeRecoveryCodes).toBe(mkCombosMkxlCatalog.valueSets.mkxlCatalogRecoveryCodes);
-    expect(contextSchemaRouteQueryKeys).toBe(mkxlCatalogRouteQueryKeys);
-    expect(contextTypeRouteQueryKeys).toBe(contextSchemaRouteQueryKeys);
+  it("publishes exact filter, source, and route-step value sets", () => {
     expect(mkxlCatalogMultiSelectFilterIds).toEqual({
       difficulty: "difficulty",
       interactable: "interactable",
       meter: "meter",
       position: "position",
-      routeType: "routeType",
-      stage: "stage",
-      starter: "starter",
-      tags: "tags",
+      routeClass: "routeClass",
+      source: "source",
     });
-    expect(mkxlCatalogRangeFilterIds).toEqual({ damage: "damage" });
+    expect(mkxlCatalogSingleSelectFilterIds).toEqual({ stage: "stage" });
     expect(mkxlCatalogFilterIds).toEqual({
-      damage: "damage",
       difficulty: "difficulty",
       interactable: "interactable",
       meter: "meter",
       position: "position",
-      routeType: "routeType",
+      routeClass: "routeClass",
+      source: "source",
       stage: "stage",
-      starter: "starter",
-      tags: "tags",
     });
-    expect(filterSchemaIds).toBe(mkxlCatalogFilterIds);
-    expect(filterTypeIds).toBe(mkxlCatalogFilterIds);
-    expect(filterSchemaMultiSelectIds).toBe(
-      mkCombosMkxlCatalog.valueSets.mkxlCatalogMultiSelectFilterIds,
+    expect(mkxlCatalogFilterQueryKeys).toEqual({
+      difficulty: "difficulty",
+      interactable: "interactable",
+      meter: "meter",
+      position: "position",
+      routeClass: "routeClass",
+      source: "source",
+      stage: "stage",
+    });
+    expect(MkxlCatalogSourceSchema.safeParse("personal").success).toBe(true);
+    expect(MkxlCatalogSourceSchema.safeParse("seeded").success).toBe(false);
+    expect(MkxlCatalogContextStatusSchema.parse(mkxlCatalogContextStatuses.ready)).toBe("ready");
+    expect(MkxlCatalogRecoveryCodeSchema.parse(mkxlCatalogRecoveryCodes.invalidVariation)).toBe(
+      "invalidVariation",
     );
-    expect(filterTypeMultiSelectIds).toBe(
-      mkCombosMkxlCatalog.valueSets.mkxlCatalogMultiSelectFilterIds,
+    expect(
+      MkxlCatalogOptionAvailabilitySchema.parse(
+        mkxlCatalogOptionAvailabilities.disabledNoComboData,
+      ),
+    ).toBe("disabledNoComboData");
+    expect(MkxlCatalogFilterIdSchema.parse(mkxlCatalogFilterIds.source)).toBe("source");
+    expect(MkxlCatalogMultiSelectFilterIdSchema.parse(mkxlCatalogMultiSelectFilterIds.source)).toBe(
+      "source",
     );
-    expect(filterSchemaRangeIds).toBe(mkCombosMkxlCatalog.valueSets.mkxlCatalogRangeFilterIds);
-    expect(filterTypeRangeIds).toBe(mkCombosMkxlCatalog.valueSets.mkxlCatalogRangeFilterIds);
-    expect(mkCombosMkxlCatalog.valueSets.mkxlCatalogOptionAvailabilities).toBe(
-      mkxlCatalogOptionAvailabilities,
+    expect(
+      MkxlCatalogSingleSelectFilterIdSchema.parse(mkxlCatalogSingleSelectFilterIds.stage),
+    ).toBe("stage");
+    expect(MkxlCatalogFilterQueryKeySchema.parse(mkxlCatalogFilterQueryKeys.source)).toBe("source");
+    expect(MkxlCatalogRouteStepKindSchema.parse(mkxlCatalogRouteStepKinds.starter)).toBe("starter");
+    expect(MkxlCatalogRouteStepEmphasisSchema.parse(mkxlCatalogRouteStepEmphases.standard)).toBe(
+      "standard",
     );
+    expect(mkCombosMkxlCatalog.valueSets.mkxlCatalogSources).toBe(mkxlCatalogSources);
+    expect(mkCombosMkxlCatalog.valueSets.mkxlCatalogSingleSelectFilterIds).toBe(
+      mkxlCatalogSingleSelectFilterIds,
+    );
+    expect(mkCombosMkxlCatalog.valueSets.mkxlCatalogRouteStepKinds).toBe(mkxlCatalogRouteStepKinds);
+    expect(mkCombosMkxlCatalog.valueSets.mkxlCatalogRouteStepEmphases).toBe(
+      mkxlCatalogRouteStepEmphases,
+    );
+    expect(mkxlCatalogContextStatuses.ready).toBe("ready");
+    expect(mkxlCatalogRecoveryCodes.invalidVariation).toBe("invalidVariation");
+    expect(mkxlCatalogOptionAvailabilities.disabledNoComboData).toBe("disabledNoComboData");
+  });
+
+  it("keeps prepared summary and facet contracts importable", () => {
+    const context = MkxlCatalogContextSchema.parse({
+      characterId: "scorpion",
+      variationId: "scorpion:ninjutsu",
+    });
+    const filters = MkxlCatalogFiltersSchema.parse({ sources: [mkxlCatalogSources.community] });
+    const summary = selectors.selectMkxlCatalogComboSummaries({ context, filters })[0];
+    const facets = selectors.getMkxlCatalogFilterFacets(context, filters);
+    expect(summary).toBeDefined();
+    if (!summary) throw new Error("Expected MKXL summary.");
+    expect(MkxlCatalogComboSummarySchema.parse(summary)).toEqual(summary);
+    expect(
+      acceptsPublicTypes({
+        context,
+        contextStatus: mkxlCatalogContextStatuses.ready,
+        recoveryCode: mkxlCatalogRecoveryCodes.invalidVariation,
+        optionAvailability: mkxlCatalogOptionAvailabilities.available,
+        filters,
+        query: {},
+        filterId: mkxlCatalogFilterIds.source,
+        multiSelectFilterId: mkxlCatalogMultiSelectFilterIds.source,
+        singleSelectFilterId: mkxlCatalogSingleSelectFilterIds.stage,
+        filterQueryKey: mkxlCatalogFilterQueryKeys.source,
+        facet: facets[0] ?? { kind: "multiSelect", id: "source", options: [] },
+        source: summary.provenance,
+        summary,
+        routeStep: summary.routeSteps[0] ?? {
+          kind: "starter",
+          notation: ["1"],
+          repetitionCount: 1,
+          emphasis: "standard",
+        },
+        routeStepKind: mkxlCatalogRouteStepKinds.starter,
+        routeStepEmphasis: mkxlCatalogRouteStepEmphases.standard,
+      }),
+    ).toBe(true);
   });
 });

@@ -7,6 +7,7 @@ import { uiContrastModes, uiDensityModes, uiThemeModes } from "../tokens/value";
 
 export type UiRootContextValue = {
   contrast: UiContrastMode;
+  controllerFocusVisible: boolean;
   density: UiDensityMode;
   responsiveMode: UiResponsiveMode;
   theme: UiThemeMode;
@@ -14,6 +15,7 @@ export type UiRootContextValue = {
 
 const defaultUiRootContextValue: UiRootContextValue = {
   contrast: uiContrastModes.standard,
+  controllerFocusVisible: true,
   density: uiDensityModes.small,
   responsiveMode: uiResponsiveModes.desktop,
   theme: uiThemeModes.dark,

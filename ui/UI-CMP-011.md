@@ -34,7 +34,8 @@ Card не імпортує game data напряму і не має game-specific
 - рендер combo summary у компактній card presentation;
 - показ notation через [`UI-CMP-015 Notation Renderer`](./UI-CMP-015.md);
 - показ character і active game-specific context summary;
-- показ metadata badges: damage, meter, position, starter, route type, difficulty і tags;
+- показ metadata: damage, meter, position, starter, route type, difficulty і tags; prepared
+  semantic tone виділяє value кольором тексту, а не фоном контейнера;
 - показ localized notes snippet, якщо parent surface передав його для list UX;
 - показ current named-list membership або availability hint, якщо доступний;
 - рендер controlled focus state для card і card actions;
@@ -67,17 +68,14 @@ Card не імпортує game data напряму і не має game-specific
         </Stack>
       </PrimarySummary>
 
-      <MetadataBadges>
-        <Group name="MetadataBadgeList">
-          <DamageBadge />
-          <MeterBadge />
-          <PositionBadge />
-          <StarterBadge />
-          <RouteTypeBadge />
-          <DifficultyBadge />
-          <TagsBadge />
+      <MetadataItems>
+        <Group name="MetadataList">
+          <MetadataItem>
+            <MetadataLabel />
+            <MetadataValue />
+          </MetadataItem>
         </Group>
-      </MetadataBadges>
+      </MetadataItems>
 
       <Show when={hasOptionalNotesSnippet}>
         <OptionalNotesSnippet />
@@ -132,9 +130,9 @@ Context summary показує:
 - `MK1` kameo, якщо card належить MK1 context;
 - optional stage/interactable summary для MKXL stage-specific combos.
 
-### `metadataBadges`
+### `metadataItems`
 
-Metadata badges дають швидко порівняти combos у list.
+Metadata items дають швидко порівняти combos у list.
 
 Card може показувати:
 
@@ -146,7 +144,10 @@ Card може показувати:
 - difficulty;
 - tags.
 
-Badges мають лишатися display-only. Вони не є filter controls і не змінюють selected optional filters напряму.
+Metadata лишається display-only. Untoned item може використовувати neutral badge presentation.
+Якщо item має prepared `tone`, label лишається neutral/muted, а value отримує semantic
+text color без background, border, badge padding або прямокутного tone-container. Toned
+metadata не є filter control і не змінює selected optional filters напряму.
 
 ### `actionTargets`
 
@@ -310,7 +311,8 @@ Guard rails:
 - Card має semantic item structure усередині list або group.
 - CardSurface і action targets мають visible focus у light, dark, standard contrast і increased contrast.
 - Accessible name card має включати character/context і readable notation або combo label.
-- Metadata badges мають readable text, а не тільки icon або color.
+- Metadata label/value мають readable text, а не тільки icon або color; semantic tone доповнює
+  visible label і не створює єдиного сигналу значення.
 - Difficulty, tags, stage/interactable state і membership hint не мають покладатися тільки на колір.
 - Action targets мають visible label або accessible name.
 - Disabled actions мають readable reason, якщо вони показані.
@@ -324,6 +326,8 @@ Guard rails:
 - Combo Card є repeated item у `UI-CMP-010 Combo List`.
 - Card показує notation через `UI-CMP-015 Notation Renderer`.
 - Card показує character, game-specific context і combo metadata.
+- Toned metadata у `standard` і `commandDeck` виділяє value semantic
+  text color-ом без colored badge/container; untoned metadata і context badges не змінюються.
 - MKXL card показує variation і optional stage/interactable badges для stage-specific combos.
 - MK1 card показує kameo і не показує variation/stage/interactable controls.
 - Add-to-list action відкриває page-level singleton `UI-CMP-021` через parent/page request.
@@ -344,6 +348,8 @@ Guard rails:
 - Close add-to-list dialog повертає focus до source card/action.
 - Duplicate seeded combo відкриває builder duplicate flow і не змінює seeded combo.
 - Disabled card action не виконує route або persistence mutation.
+- Кожен metadata tone (`neutral`, `accent`, `success`, `warning`, `destructive`) у всіх
+  presentations має muted label, text-only value та `data-combo-metadata-tone` на value node.
 - Якщо hover недоступний, touch/controller input все одно дає доступ до actions.
 
 ## Припущення
@@ -351,6 +357,32 @@ Guard rails:
 - Pixel-level card layout буде визначено під час UI реалізації.
 - Card може використовувати різні density presets, але behavioral contract лишається однаковим.
 - Named-list membership hints є presentation hints; source of truth лишається у page/app-level user data.
+
+## Step 26 Readability And Actions
+
+- У `standard` presentation title, context badges і metadata не truncate-яться. Untoned badges
+  використовують content-driven height, можуть shrink-итись і wrap-лять long UA text; toned
+  metadata лишається text-only label/value pair без badge container.
+- Недоступна action лишається inert, а її `disabledReason` показується видимим текстом після action group, не лише в accessible-only copy.
+- У `standard` presentation known actions використовують shared icon facade (`view-detail`, `add-to-list`, `duplicate`, `return`) і visible localized text label. У flat list presentations `open detail` label стає accessible name цілого row target, тому окрема icon/text detail-кнопка не дублюється.
+
+## Command Deck Presentations
+
+- `presentation = standard | commandDeck`; value може бути задане list owner-ом або prepared card model-ом.
+- `commandDeck` є flat row без повної outer card frame, nested-card shadow або radius; single row separator належить parent `<ol>`, selected state має structural start marker, controlled focus — окремий cool-blue inset outline.
+- `commandDeck` не рендерить окрему detail-action cell: native row target охоплює index, route і metadata, а внутрішній separator лишається тільки між route та metadata. Інші prepared actions зберігаються як окремі controls поверх row target.
+- Flat mode автоматично використовує `NotationRenderer density = command`, flat
+  metadata values і wrapping action labels.
+- `metadataItems` лишається generic prepared contract: card рендерить отримані items у переданому порядку та не створює placeholders для відсутніх значень. Catalog command projection готує `damage`, `meter`, `routeType`, `position`, `difficulty`; `source` не входить до цієї presentation.
+- В усіх трьох presentations optional prepared `tone` застосовується тільки до value-тексту:
+  `neutral` використовує `--ui-text`, а `accent`, `success`, `warning` і `destructive` —
+  `color-mix` із 90% відповідного semantic token та 10% `--ui-text`. Label лишається muted;
+  toned value має `data-combo-metadata-tone` і не отримує background, border, badge padding або
+  rectangular container. Untoned metadata, context badges і global Badge recipes не змінюються.
+  Catalog готує однаковий raw-value tone для `routeType` і matching `routeClass` chip, а також
+  для `difficulty`; readable label/value завжди лишаються поруч із color.
+- Flat mode не дублює visible combo title; prepared `accessibleLabel` продовжує називати card і notation для assistive technology.
+- `data-combo-presentation`, `data-controller-focused`, `aria-current`, `aria-disabled`, `data-combo-row-action` та native disabled actions відображають кожен підтриманий state без synthetic events. Flat `CardSurface` є display region усередині list-owned semantic row target; controller `A` використовує той самий prepared combo identity.
 
 ## Канонічний Responsive і Controller-only Contract
 

@@ -1,6 +1,6 @@
 import type { GameId } from "@mk-combos/contracts/identity/type";
-import { appRouteKinds } from "@mk-combos/contracts/routes/value";
-import { useNavigate } from "@tanstack/react-router";
+import { gameRouteKinds } from "@mk-combos/contracts/routes/value";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 
 import {
@@ -12,6 +12,8 @@ import { resolveInstalledGame } from "../../../game-business/installed-games/run
 import { installedGames } from "../../../game-business/installed-games/value";
 import type { AppShellRoute } from "../route-state/type";
 import { appShellOnlyRouteKinds } from "../route-state/value";
+import { withSettingsTabSearch } from "../settings-modal/navigation/runtime";
+import { settingsTabs } from "../settings-modal/navigation/value";
 import { getRouteGameId } from "./runtime";
 import type { AppShellNavigationRequest, AppShellSource } from "./type";
 import { breadcrumbActionPrefix, shellActionIds } from "./value";
@@ -19,6 +21,7 @@ import { breadcrumbActionPrefix, shellActionIds } from "./value";
 export function useAppShellSource(route: AppShellRoute): AppShellSource {
   const responsiveMode = useAppResponsiveMode();
   const navigate = useNavigate();
+  const router = useRouter();
   const localState = useLocalStateObservableState();
   const localStateSource = useLocalStateSource();
   const routeGameId = getRouteGameId(route);
@@ -80,6 +83,34 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
     [closeMenus, navigate, requestNavigation],
   );
 
+  const navigateToCatalogCharacter = useCallback(
+    (gameId: GameId, character: string) => {
+      closeMenus();
+      requestNavigation(() =>
+        navigate({
+          params: { character, gameId },
+          search: {},
+          to: "/$gameId/catalog/$character",
+        }),
+      );
+    },
+    [closeMenus, navigate, requestNavigation],
+  );
+
+  const navigateToCatalogResult = useCallback(
+    (gameId: GameId, character: string, specification: string) => {
+      closeMenus();
+      requestNavigation(() =>
+        navigate({
+          params: { character, gameId, specification },
+          search: {},
+          to: "/$gameId/catalog/$character/$specification",
+        }),
+      );
+    },
+    [closeMenus, navigate, requestNavigation],
+  );
+
   const navigateToLists = useCallback(
     (gameId: GameId) => {
       closeMenus();
@@ -97,22 +128,16 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
   );
 
   const navigateToSettings = useCallback(() => {
-    switch (route.kind) {
-      case appRouteKinds.builder:
-      case appRouteKinds.catalog:
-      case appRouteKinds.comboDetail:
-      case appRouteKinds.lists:
-        localStateSource.setSettingsReturnTarget(route);
-        break;
-      case appRouteKinds.settings:
-      case appShellOnlyRouteKinds.recovery:
-      case appShellOnlyRouteKinds.root:
-        localStateSource.clearSettingsReturnTarget();
-    }
     localStateSource.rememberLastActiveGame(activeBusiness.id);
     closeMenus();
-    requestNavigation(() => navigate({ search: {}, to: "/settings" }));
-  }, [activeBusiness.id, closeMenus, localStateSource, navigate, requestNavigation, route]);
+    requestNavigation(() =>
+      navigate({
+        href: withSettingsTabSearch(router.state.location.href, settingsTabs.interface),
+        resetScroll: false,
+        state: (state) => ({ ...state, settingsModalEntry: true }),
+      }),
+    );
+  }, [activeBusiness.id, closeMenus, localStateSource, navigate, requestNavigation, router]);
 
   const requestSelectGame = useCallback(
     (gameId: string) => {
@@ -122,13 +147,13 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
 
       const selectedBusiness = resolveInstalledGame(gameId);
 
-      if (selectedBusiness === undefined) {
+      if (selectedBusiness === undefined || selectedBusiness.id === activeBusiness.id) {
         return;
       }
 
       requestedGameIdRef.current = selectedBusiness.id;
     },
-    [localState.firstLaunchCompleted],
+    [activeBusiness.id, localState.firstLaunchCompleted],
   );
 
   useEffect(() => {
@@ -151,33 +176,22 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
     setQueuedGameId(undefined);
 
     switch (route.kind) {
-      case appRouteKinds.catalog:
+      case gameRouteKinds.catalog:
         navigateToCatalog(queuedGameId);
         return;
-      case appRouteKinds.lists:
+      case gameRouteKinds.lists:
         navigateToLists(queuedGameId);
         return;
-      case appRouteKinds.builder:
+      case gameRouteKinds.builder:
         navigateToBuilder(queuedGameId);
         return;
-      case appRouteKinds.comboDetail:
+      case gameRouteKinds.comboDetail:
       case appShellOnlyRouteKinds.recovery:
       case appShellOnlyRouteKinds.root:
         navigateToCatalog(queuedGameId);
         return;
-      case appRouteKinds.settings:
-        localStateSource.rememberLastActiveGame(queuedGameId);
-        closeMenus();
     }
-  }, [
-    closeMenus,
-    localStateSource,
-    navigateToBuilder,
-    navigateToCatalog,
-    navigateToLists,
-    queuedGameId,
-    route.kind,
-  ]);
+  }, [navigateToBuilder, navigateToCatalog, navigateToLists, queuedGameId, route.kind]);
 
   const requestNavigateAction = useCallback(
     (action: string) => {
@@ -189,6 +203,24 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
         case shellActionIds.catalog:
           navigateToCatalog(activeBusiness.id);
           return;
+        case shellActionIds.catalogCharacter:
+          if (route.kind === gameRouteKinds.catalog && route.characterSlug) {
+            navigateToCatalogCharacter(activeBusiness.id, route.characterSlug);
+            return;
+          }
+          if (route.kind === gameRouteKinds.comboDetail) {
+            navigateToCatalogCharacter(activeBusiness.id, route.characterSlug);
+          }
+          return;
+        case shellActionIds.catalogSpecification:
+          if (route.kind === gameRouteKinds.comboDetail) {
+            navigateToCatalogResult(
+              activeBusiness.id,
+              route.characterSlug,
+              route.specificationSlug,
+            );
+          }
+          return;
         case shellActionIds.lists:
           navigateToLists(activeBusiness.id);
           return;
@@ -199,7 +231,16 @@ export function useAppShellSource(route: AppShellRoute): AppShellSource {
           navigateToSettings();
       }
     },
-    [activeBusiness.id, navigateToBuilder, navigateToCatalog, navigateToLists, navigateToSettings],
+    [
+      activeBusiness.id,
+      navigateToBuilder,
+      navigateToCatalog,
+      navigateToCatalogCharacter,
+      navigateToCatalogResult,
+      navigateToLists,
+      navigateToSettings,
+      route,
+    ],
   );
 
   return {

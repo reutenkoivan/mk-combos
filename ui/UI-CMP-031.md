@@ -87,6 +87,13 @@ Payload містить combo ref, affected move/edge id, reason, source surface 
 - Critical invalid state не dismiss-иться без альтернативного сигналу.
 - Repair/edit actions емітять semantic payload.
 
+## Step 26 Localized State Contract
+
+- `state` лишається stable machine token у `data-marker-state`, а required `stateLabel` є localized visible copy.
+- Raw tokens на кштал `repairAvailable` не показуються користувачеві як status text.
+- Unavailable recovery action показує visible `disabledReason`.
+- Edit, view-detail, repair, remove і dismiss actions використовують shared icon facade разом із visible localized labels.
+
 ## Канонічний Responsive і Controller-only Contract
 
 Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.

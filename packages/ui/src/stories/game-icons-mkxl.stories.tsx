@@ -53,8 +53,8 @@ const ShapeAuditGrid = ({ assets }: { assets: readonly GameIconAsset[] }) => (
   <div className="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-3">
     {assets.map((asset) => (
       <article
-        className="grid min-w-0 justify-items-center gap-3 rounded-(--ui-radius-control) border border-(--ui-separator) bg-(--ui-content) p-3"
         key={asset.id}
+        className="grid min-w-0 justify-items-center gap-3 rounded-(--ui-radius-control) border border-(--ui-separator) bg-(--ui-content) p-3"
       >
         <div className="flex min-h-16 items-end justify-center gap-3">
           <GameIcon asset={asset} className="h-16 w-16 grayscale contrast-200" decorative />
@@ -105,9 +105,9 @@ export const Characters: Story = {
   render: () => (
     <StoryFrame>
       <PageHeader
+        title="Characters"
         count={mkxlCharacterIcons.length}
         description="Complete character-select icon set. Every tile lists the public entity ID and package-relative SVG path."
-        title="Characters"
       />
       <IconGrid assets={mkxlCharacterIcons} />
     </StoryFrame>
@@ -118,9 +118,9 @@ export const CharacterShapeAudit: Story = {
   render: () => (
     <StoryFrame>
       <PageHeader
+        title="Character shape audit"
         count={mkxlCharacterIcons.length}
         description="Grayscale 64 px and 32 px previews verify that each fighter remains recognizable through the portrait silhouette and signature equipment without relying on color."
-        title="Character shape audit"
       />
       <ShapeAuditGrid assets={mkxlCharacterIcons} />
     </StoryFrame>
@@ -131,14 +131,14 @@ export const Variations: Story = {
   render: () => (
     <StoryFrame>
       <PageHeader
+        title="Variations"
         count={mkxlVariationIcons.length}
         description="Variation artwork is grouped by its parent character. Triborg includes the hidden Cyber Sub-Zero variation."
-        title="Variations"
       />
       {variationsByCharacter.map(({ character, variations }) => (
         <GroupSection
-          count={variations.length}
           key={character.id}
+          count={variations.length}
           title={character.accessibleLabel}
         >
           <IconGrid assets={variations} />
@@ -152,14 +152,14 @@ export const VariationShapeAudit: Story = {
   render: () => (
     <StoryFrame>
       <PageHeader
+        title="Variation shape audit"
         count={mkxlVariationIcons.length}
         description="Grayscale 64 px and 32 px previews remove color as an identifier. Every variation must remain distinguishable through its frame and signature silhouette."
-        title="Variation shape audit"
       />
       {variationsByCharacter.map(({ character, variations }) => (
         <GroupSection
-          count={variations.length}
           key={character.id}
+          count={variations.length}
           title={character.accessibleLabel}
         >
           <ShapeAuditGrid assets={variations} />
@@ -173,9 +173,9 @@ export const StageAndInteractableShapeAudit: Story = {
   render: () => (
     <StoryFrame>
       <PageHeader
+        title="Stage & interactable shape audit"
         count={mkxlStageIcons.length + mkxlInteractableIcons.length}
         description="Every arena landmark and usable object is shown without color at 64 px and 32 px. Stage context groups related objects while their silhouettes remain individually identifiable."
-        title="Stage & interactable shape audit"
       />
       {interactablesByStage.map(({ interactables, stage }) => (
         <GroupSection count={1 + interactables.length} key={stage.id} title={stage.accessibleLabel}>
@@ -190,9 +190,9 @@ export const StagesAndInteractables: Story = {
   render: () => (
     <StoryFrame>
       <PageHeader
+        title="Stages & interactables"
         count={mkxlStageIcons.length + mkxlInteractableIcons.length}
         description="Each arena is followed by its unique interactable artwork in registry order. Mirrored or repeated uses share one SVG; Training Room has no unique interactables."
-        title="Stages & interactables"
       />
       {interactablesByStage.map(({ interactables, stage }) => (
         <GroupSection count={1 + interactables.length} key={stage.id} title={stage.accessibleLabel}>
@@ -223,9 +223,9 @@ export const Shared: Story = {
   render: () => (
     <StoryFrame>
       <PageHeader
+        title="Shared game icons"
         count={sharedGroups.reduce((count, group) => count + group.assets.length, 0)}
         description="Reusable badges and classification glyphs for selection state, arena interaction, realm, and faction presentation."
-        title="Shared game icons"
       />
       {sharedGroups.map((group) => (
         <GroupSection count={group.assets.length} key={group.title} title={group.title}>
@@ -240,9 +240,9 @@ export const SharedShapeAudit: Story = {
   render: () => (
     <StoryFrame>
       <PageHeader
+        title="Shared icon shape audit"
         count={sharedGroups.reduce((count, group) => count + group.assets.length, 0)}
         description="State, interaction, realm, and faction glyphs are reviewed in grayscale at 64 px and 32 px so category meaning cannot depend on palette alone."
-        title="Shared icon shape audit"
       />
       {sharedGroups.map((group) => (
         <GroupSection count={group.assets.length} key={group.title} title={group.title}>

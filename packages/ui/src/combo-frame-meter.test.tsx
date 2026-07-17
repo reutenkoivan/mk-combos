@@ -17,6 +17,7 @@ import {
   useComboFrameMeterModel,
 } from "@mk-combos/ui/components/combo-frame-meter";
 import { uiResponsiveModes } from "@mk-combos/ui/components/value";
+import { UiRoot } from "@mk-combos/ui/primitives/layout";
 import type { ComponentProps } from "react";
 import { describe, expect, it, vi } from "vitest";
 
@@ -387,19 +388,35 @@ function MeterHarness(props: MeterHarnessProps) {
 
   return (
     <ComboFrameMeter
-      labels={labels}
-      lifecycle={props.lifecycle}
       model={model}
+      labels={labels}
+      sourceSurface="builder"
+      lifecycle={props.lifecycle}
+      sourceFocusTarget="frame-zone"
+      snapshot={props.snapshot ?? snapshot}
       onRequestAction={props.onRequestAction}
       responsiveMode={props.responsiveMode ?? uiResponsiveModes.desktop}
-      snapshot={props.snapshot ?? snapshot}
-      sourceFocusTarget="frame-zone"
-      sourceSurface="builder"
     />
   );
 }
 
 describe("ComboFrameMeter", () => {
+  it("retains the roving target without controller presentation when globally hidden", () => {
+    render(
+      <UiRoot controllerFocusVisible={false}>
+        <MeterHarness lifecycle={comboFrameMeterLifecycles.ready} />
+      </UiRoot>,
+    );
+
+    const startup = screen.getByRole("button", {
+      name: /Startup move\. Frames 1–8\. Valid/,
+    });
+
+    expect(startup.tabIndex).toBe(0);
+    expect(startup.getAttribute("data-focused")).toBeNull();
+    expect(startup.className.split(" ")).not.toContain("shadow-(--ui-focus-ring)");
+  });
+
   it("renders every lifecycle as one explicit accessible state", () => {
     const view = render(<MeterHarness lifecycle={comboFrameMeterLifecycles.ready} />);
 
@@ -417,8 +434,8 @@ describe("ComboFrameMeter", () => {
   it("keeps the three headline metrics aligned in compact modes", () => {
     const view = render(
       <MeterHarness
-        lifecycle={comboFrameMeterLifecycles.ready}
         responsiveMode={uiResponsiveModes.tablet}
+        lifecycle={comboFrameMeterLifecycles.ready}
       />,
     );
 
@@ -435,8 +452,8 @@ describe("ComboFrameMeter", () => {
     const onRequestAction = vi.fn();
     const view = render(
       <MeterHarness
-        lifecycle={comboFrameMeterLifecycles.ready}
         onRequestAction={onRequestAction}
+        lifecycle={comboFrameMeterLifecycles.ready}
       />,
     );
 
@@ -546,8 +563,8 @@ describe("ComboFrameMeter", () => {
     const onRequestAction = vi.fn();
     const view = render(
       <MeterHarness
-        lifecycle={comboFrameMeterLifecycles.pendingTruncate}
         onRequestAction={onRequestAction}
+        lifecycle={comboFrameMeterLifecycles.pendingTruncate}
       />,
     );
 
@@ -702,8 +719,8 @@ describe("ComboFrameMeter", () => {
     render(
       <MeterHarness
         initialDetailsSegmentId="startup"
-        lifecycle={comboFrameMeterLifecycles.ready}
         onRequestAction={onRequestAction}
+        lifecycle={comboFrameMeterLifecycles.ready}
       />,
     );
 
@@ -725,8 +742,8 @@ describe("ComboFrameMeter", () => {
     const view = render(
       <MeterHarness
         initialDetailsSegmentId="startup"
-        lifecycle={comboFrameMeterLifecycles.savingFrozen}
         onRequestAction={onRequestAction}
+        lifecycle={comboFrameMeterLifecycles.savingFrozen}
       />,
     );
 
@@ -761,8 +778,8 @@ describe("ComboFrameMeter", () => {
     const view = render(
       <MeterHarness
         initialDetailsSegmentId="startup"
-        lifecycle={comboFrameMeterLifecycles.ready}
         responsiveMode={uiResponsiveModes.mobile}
+        lifecycle={comboFrameMeterLifecycles.ready}
       />,
     );
 
@@ -795,9 +812,9 @@ describe("ComboFrameMeter", () => {
     const onRequestAction = vi.fn();
     render(
       <MeterHarness
-        lifecycle={comboFrameMeterLifecycles.ready}
         onRequestAction={onRequestAction}
         responsiveMode={uiResponsiveModes.mobile}
+        lifecycle={comboFrameMeterLifecycles.ready}
       />,
     );
     const startup = screen.getByRole("button", {

@@ -1,6 +1,5 @@
 import type { LanguageCode } from "@mk-combos/contracts/settings/type";
 import type { UiResponsiveMode } from "@mk-combos/ui/components/type";
-
 import type { InstalledGameBusiness } from "../../../game-business/installed-games/type";
 import type { AppShellRoute } from "../route-state/type";
 

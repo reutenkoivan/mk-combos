@@ -391,7 +391,7 @@ describe("@mk-combos/mkxl-data contract", () => {
         moveTree: firstMovelist.moves,
         id: firstCharacter.id,
         label: firstCharacter.label,
-        pickerSlot: firstVariation.pickerSlot,
+        pickerSlot: firstCharacter.pickerSlot,
         pickerSlotStatus: mkxlPickerSlotStatuses.selectable,
         sourceId: firstSourceId,
         sourceIdList: firstCharacter.sourceIds,

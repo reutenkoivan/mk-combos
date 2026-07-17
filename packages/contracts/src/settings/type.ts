@@ -7,13 +7,16 @@ import type {
   LocalAppStateSchema,
   LocalizedTextSchema,
   NotationDisplayModeSchema,
+  ThemePreferenceSchema,
 } from "./schema";
 
-export { languageCodes, notationDisplayModes } from "./value";
+export { languageCodes, notationDisplayModes, themePreferences } from "./value";
 
 export type LanguageCode = z.output<typeof LanguageCodeSchema>;
 
 export type NotationDisplayMode = z.output<typeof NotationDisplayModeSchema>;
+
+export type ThemePreference = z.output<typeof ThemePreferenceSchema>;
 
 export type LocalizedText = z.output<typeof LocalizedTextSchema>;
 

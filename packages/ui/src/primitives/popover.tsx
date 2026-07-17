@@ -54,11 +54,11 @@ export function PopoverRoot(props: PopoverRootProps) {
 
   return (
     <BasePopover.Root
-      defaultOpen={defaultOpen}
-      modal={modal}
-      onOpenChange={handleOpenChange}
       open={open}
+      modal={modal}
       triggerId={triggerId}
+      defaultOpen={defaultOpen}
+      onOpenChange={handleOpenChange}
     >
       {children}
     </BasePopover.Root>
@@ -95,12 +95,12 @@ export function PopoverTrigger(props: PopoverTriggerProps) {
   return (
     <BasePopover.Trigger
       {...triggerProps}
-      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-popover-trigger
-      disabled={disabled}
       ref={ref}
       type={type}
+      disabled={disabled}
+      data-ui-popover-trigger
+      data-disabled={disabled ? "true" : undefined}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
     >
       {children}
     </BasePopover.Trigger>
@@ -113,22 +113,23 @@ export type PopoverPortalProps = ComponentPropsWithRef<typeof BasePopover.Portal
 
 export function PopoverPortal(props: PopoverPortalProps) {
   const { className, ...portalProps } = props;
-  const { contrast, density, responsiveMode, theme } = useUiRootContext();
+  const { contrast, controllerFocusVisible, density, responsiveMode, theme } = useUiRootContext();
 
   return (
     <BasePopover.Portal
       {...portalProps}
+      data-ui-theme={theme}
+      data-ui-portal="popover"
+      data-ui-density={density}
+      data-ui-contrast={contrast}
+      data-ui-responsive={responsiveMode}
+      data-ui-controller-focus-visible={controllerFocusVisible ? "true" : "false"}
       className={(state) =>
         cx(
           "mk-combos-ui-root mk-combos-ui-portal-root",
           typeof className === "function" ? className(state) : className,
         )
       }
-      data-ui-contrast={contrast}
-      data-ui-density={density}
-      data-ui-portal="popover"
-      data-ui-responsive={responsiveMode}
-      data-ui-theme={theme}
     />
   );
 }
@@ -157,13 +158,13 @@ export function PopoverPositioner(props: PopoverPositionerProps) {
   return (
     <BasePopover.Positioner
       {...positionerProps}
-      align={align}
-      anchor={anchor}
-      className={cx("z-50", className)}
-      data-ui-popover-positioner
       ref={ref}
       side={side}
+      align={align}
+      anchor={anchor}
       sideOffset={sideOffset}
+      data-ui-popover-positioner
+      className={cx("z-50", className)}
     >
       {children}
     </BasePopover.Positioner>
@@ -180,6 +181,8 @@ export function PopoverArrow(props: PopoverArrowProps) {
   return (
     <BasePopover.Arrow
       {...arrowProps}
+      ref={ref}
+      data-ui-popover-arrow
       className={cx(
         [
           "h-2.5 w-2.5 rotate-45 border border-[color-mix(in_srgb,var(--ui-separator)_88%,transparent)] bg-(--ui-popover)",
@@ -188,8 +191,6 @@ export function PopoverArrow(props: PopoverArrowProps) {
         ].join(" "),
         className,
       )}
-      data-ui-popover-arrow
-      ref={ref}
     >
       {children}
     </BasePopover.Arrow>
@@ -218,9 +219,9 @@ export function PopoverPopup(props: PopoverPopupProps) {
   return (
     <BasePopover.Popup
       {...popupProps}
-      className={cx(popupRecipe({ density, material, shape }), className)}
-      data-ui-popover-popup
       ref={ref}
+      data-ui-popover-popup
+      className={cx(popupRecipe({ density, material, shape }), className)}
     >
       {children}
     </BasePopover.Popup>
@@ -237,9 +238,9 @@ export function PopoverTitle(props: PopoverTitleProps) {
   return (
     <BasePopover.Title
       {...titleProps}
-      className={cx("text-sm font-semibold text-(--ui-text)", className)}
-      data-ui-popover-title
       ref={ref}
+      data-ui-popover-title
+      className={cx("text-sm font-semibold text-(--ui-text)", className)}
     >
       {children}
     </BasePopover.Title>
@@ -256,9 +257,9 @@ export function PopoverDescription(props: PopoverDescriptionProps) {
   return (
     <BasePopover.Description
       {...descriptionProps}
-      className={cx("text-[13px] leading-snug text-(--ui-muted-text)", className)}
-      data-ui-popover-description
       ref={ref}
+      data-ui-popover-description
+      className={cx("text-[13px] leading-snug text-(--ui-muted-text)", className)}
     >
       {children}
     </BasePopover.Description>
@@ -295,12 +296,12 @@ export function PopoverClose(props: PopoverCloseProps) {
   return (
     <BasePopover.Close
       {...closeProps}
-      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-popover-close
-      disabled={disabled}
       ref={ref}
       type={type}
+      disabled={disabled}
+      data-ui-popover-close
+      data-disabled={disabled ? "true" : undefined}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
     >
       {children}
     </BasePopover.Close>

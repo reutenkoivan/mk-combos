@@ -13,7 +13,7 @@
 
 ## Призначення
 
-`UI-CMP-005 Controller Hint Strip` є controller status та contextual command surface у межах `UI-CMP-001 Global Top Bar`.
+`UI-CMP-005 Controller Hint Strip` є controller status та optional contextual hint panel у межах `UI-CMP-001 Global Top Bar`.
 
 За замовчуванням компонент показує тільки indicator:
 
@@ -23,7 +23,9 @@
 
 Closed trigger не показує status dot, profile label або інший visible text. Його accessible name надходить через localized `label`.
 
-Найважливіші доступні commands показуються автоматично: як bottom ribbon у `mobile` та inline ribbon у `tablet`/`desktop`. Повний hint panel відкривається через focused indicator або `openControllerHelp`; pointer і keyboard лишаються secondary inputs, але не є вимогою.
+Компонент не рендерить нижню command ribbon на жодному viewport. Єдина
+connected-only ribbon є окремою третьою in-flow row `UI-PAGE-001 App Shell`.
+Повний hint panel відкривається через indicator або optional `openControllerHelp`.
 
 ## Володіння
 
@@ -38,6 +40,7 @@ Closed trigger не показує status dot, profile label або інший v
 - relationship із navigation actions Top Bar.
 
 `UI-CMP-005` не позиціонується самостійно в shell layout і не є direct child `UI-PAGE-001 App Shell`.
+Він не володіє visibility, command resolution, notation mode або placement App Shell ribbon.
 
 ## Анатомія
 
@@ -115,6 +118,8 @@ Closed trigger не показує status dot, profile label або інший v
 - зміну app routing;
 - зміну state активної сторінки;
 - persistence open або closed state hint panel.
+- рендер або позиціонування App Shell command ribbon;
+- вибір ribbon glyphs за settings notation display mode.
 
 ## Мапа станів
 
@@ -279,6 +284,7 @@ Hover сам по собі не відкриває hint panel.
 - Hint panel відкривається через click, tap, `Enter` або `Space` на indicator.
 - Open trigger не змінює геометрію та має selected/open treatment.
 - Open panel показує profile header, visible connection status і ordered contextual hints у surface шириною не більше `20rem`.
+- Component не рендерить bottom/inline command ribbon і не резервує для неї layout space.
 - `Escape` закриває hint panel і повертає focus на indicator.
 - Component не читає Browser Gamepad API напряму, не мапить physical input і не виконує controller commands.
 
@@ -298,6 +304,7 @@ Hover сам по собі не відкриває hint panel.
 - Reconnect до завершення 1 хв одразу повертає `success` tone і normal stroke.
 - Hover на indicator не відкриває hint panel.
 - Перехід із catalog до combo detail оновлює hints тільки в panel content, не відкриваючи panel автоматично.
+- Connected App Shell ribbon і `UI-CMP-005` можуть бути видимі одночасно, але мають різних owners і layout slots.
 
 ## Відкриті уточнення
 
@@ -306,13 +313,9 @@ Hover сам по собі не відкриває hint panel.
 
 ## Канонічний Responsive і Controller-only Contract
 
-Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
-
-- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повну workstation composition і spatial row/column navigation;
-- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
-- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+Ця Top Bar surface адаптує indicator і anchored hint panel до
+`UiResponsiveMode = mobile | tablet | desktop`. Вона не володіє page focus graph,
+global menu або lower ribbon і не виконує controller commands.
 
 ## Flat Workspace Visual Contract
 

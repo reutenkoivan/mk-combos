@@ -39,7 +39,24 @@ describe("getRouter", () => {
     }
   });
 
-  it("replace-redirects the deprecated hash URL to backup settings", async () => {
+  it("loads the trailing-slash catalog index from hash history", async () => {
+    globalThis.window.history.replaceState({}, "", `${webBasePath}#/mk1/catalog/`);
+    const router = getRouter();
+
+    try {
+      await router.load();
+
+      expect(router.state.location.pathname).toBe("/mk1/catalog/");
+      expect(router.state.matches.at(-1)).toMatchObject({
+        fullPath: "/$gameId/catalog/",
+        status: "success",
+      });
+    } finally {
+      router.history.destroy();
+    }
+  });
+
+  it("keeps the removed backup hash URL on the recovery route without compatibility redirect", async () => {
     globalThis.window.history.replaceState({}, "", `${webBasePath}#/backup`);
     const router = getRouter();
 
@@ -47,10 +64,11 @@ describe("getRouter", () => {
       await router.load();
       router.history.flush();
 
-      expect(router.state.location.pathname).toBe("/settings");
-      expect(router.state.location.search).toEqual({ section: "backup" });
+      expect(router.state.location.pathname).toBe("/backup");
+      expect(router.state.location.search).toEqual({});
+      expect(router.state.matches.at(-1)?.fullPath).toBe("/$");
       expect(globalThis.window.location.pathname).toBe("/mk-combos/");
-      expect(globalThis.window.location.hash).toBe("#/settings?section=backup");
+      expect(globalThis.window.location.hash).toBe("#/backup");
     } finally {
       router.history.destroy();
     }

@@ -40,7 +40,11 @@ export function InternalButton(props: InternalButtonProps) {
   return (
     <BaseButton
       {...buttonProps}
+      ref={ref}
+      disabled={disabled || loading}
       aria-busy={loading || undefined}
+      data-loading={loading ? "true" : undefined}
+      data-disabled={disabled ? "true" : undefined}
       className={cx(
         controlRecipe({
           appearance,
@@ -53,10 +57,6 @@ export function InternalButton(props: InternalButtonProps) {
         }),
         className,
       )}
-      data-disabled={disabled ? "true" : undefined}
-      data-loading={loading ? "true" : undefined}
-      disabled={disabled || loading}
-      ref={ref}
     />
   );
 }

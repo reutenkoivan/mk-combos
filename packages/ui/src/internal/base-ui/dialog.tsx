@@ -20,8 +20,8 @@ export function InternalDialogBackdrop(props: InternalDialogBackdropProps) {
   return (
     <BaseDialog.Backdrop
       {...backdropProps}
-      className={cx("fixed inset-0 bg-black/30 backdrop-blur-[2px]", className)}
       ref={ref}
+      className={cx("fixed inset-0 bg-black/30 backdrop-blur-[2px]", className)}
     />
   );
 }
@@ -47,13 +47,13 @@ export function InternalDialogPopup(props: InternalDialogPopupProps) {
   return (
     <BaseDialog.Popup
       {...popupProps}
+      ref={ref}
       className={cx(
         popupRecipe({ density, material, shape }),
         surfaceRecipe({ density, material, shape }),
         "fixed left-1/2 top-1/2 w-[min(32rem,calc(100vw-2rem))] -translate-x-1/2 -translate-y-1/2",
         className,
       )}
-      ref={ref}
     />
   );
 }

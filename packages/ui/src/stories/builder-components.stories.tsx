@@ -902,40 +902,40 @@ function BuilderComponentsStoryContent(props: BuilderComponentsStoryArgs) {
         }
       >
         <ComboWhiteboard
+          source={source}
           model={whiteboard}
+          sourceSurface="builder-story"
           notationDisplayMode={notationDisplayModes.FGC}
           onRequestAction={(intent) => setActivity(`Whiteboard: ${intent.action}`)}
-          source={source}
-          sourceSurface="builder-story"
         />
         <ComboFrameMeter
+          model={frameMeter}
           labels={frameLabels}
           lifecycle={lifecycle}
-          model={frameMeter}
+          snapshot={frameSnapshot}
+          sourceSurface="builder-story"
+          responsiveMode={props.responsiveMode}
           onRequestAction={(intent) => {
             if (intent.action === comboFrameMeterActions.focusMatchingWhiteboardStep) {
               whiteboard.methods.focusStep(intent.whiteboardStepId);
             }
             setActivity(`Frame Meter: ${intent.action}`);
           }}
-          responsiveMode={props.responsiveMode}
-          snapshot={frameSnapshot}
-          sourceSurface="builder-story"
         />
         <div
-          className="sticky bottom-0 z-20 min-w-0 bg-(--ui-window) pt-2 [padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]"
           data-page-owned-builder-dock
+          className="sticky bottom-0 z-20 min-w-0 bg-(--ui-window) pt-2 [padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]"
         >
           <BuilderActionBar
-            actions={actionDescriptors}
-            dirty={source.steps.length > 0 && actionState !== builderActionBarStates.saved}
-            label="Builder actions"
-            onRequestAction={(intent) => setActivity(`Action Bar: ${intent.action}`)}
-            responsiveMode={props.responsiveMode}
-            savedComboId={savedComboId}
-            sourceSurface="builder-story"
             state={actionState}
             status={actionStatus}
+            label="Builder actions"
+            actions={actionDescriptors}
+            savedComboId={savedComboId}
+            sourceSurface="builder-story"
+            responsiveMode={props.responsiveMode}
+            onRequestAction={(intent) => setActivity(`Action Bar: ${intent.action}`)}
+            dirty={source.steps.length > 0 && actionState !== builderActionBarStates.saved}
           />
         </div>
       </Panel>

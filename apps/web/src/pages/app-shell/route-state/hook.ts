@@ -13,9 +13,10 @@ export function useAppShellRoute(): AppShellRoute {
     select: (state) =>
       `${state.location.href}\u0000${state.resolvedLocation?.href ?? ""}\u0000${state.status}`,
   });
+  const routePathname = useRouterState({ select: (state) => state.location.pathname });
 
   return useMemo(
-    () => resolveAppShellRoute(matchRoute, leafRouteHasError, routeRevision),
-    [leafRouteHasError, matchRoute, routeRevision],
+    () => resolveAppShellRoute(matchRoute, leafRouteHasError, routeRevision, routePathname),
+    [leafRouteHasError, matchRoute, routePathname, routeRevision],
   );
 }

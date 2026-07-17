@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { useComponentActionEmitter, useComponentOpenChangeEmitter } from "../hooks/intents";
 import { MenuIcon } from "../icons/menu";
 import { XIcon } from "../icons/x";
+import { useUiRootContext } from "../internal/ui-root-context";
+import { Present, type PresentContentProps, Show } from "../primitives/conditional";
 import {
   DrawerBackdrop,
   DrawerClose,
@@ -35,7 +37,8 @@ import {
   uiSelectionStates,
   uiToneModes,
 } from "../tokens/value";
-import { GameSwitcher, type GameSwitcherProps } from "./game-switcher";
+import { GameSwitcher, type GameSwitcherProps, gameSwitcherContexts } from "./game-switcher";
+import { BreadcrumbItemContent } from "./internal/breadcrumb-item-content";
 import type { BreadcrumbItem, ComponentActionIntent, UiResponsiveMode } from "./type";
 import { componentInteractionReasons, uiResponsiveModes } from "./value";
 
@@ -70,6 +73,7 @@ export type TopBarDropdownMenuProps = {
   responsiveGameSwitcher?: GameSwitcherProps;
   responsiveNavigationLabel?: string;
   disabled?: boolean;
+  controllerFocusedActionId?: string;
   label: string;
   layoutMode: UiResponsiveMode;
   navigationPending?: boolean;
@@ -85,6 +89,7 @@ type DrawerActionProps = {
   ariaLabel: string;
   children: ReactNode;
   current?: boolean;
+  controllerFocused?: boolean;
   disabled: boolean;
   onRequestAction: (action: string) => void;
   sourceFocusTarget?: string;
@@ -107,27 +112,32 @@ function DrawerAction(props: DrawerActionProps) {
     "h-auto w-full justify-start border-transparent bg-transparent text-left font-normal normal-case tracking-normal shadow-none",
   );
 
-  if (props.current) {
-    return (
-      <div aria-current="page" className={className}>
-        {props.children}
-      </div>
-    );
-  }
-
   return (
-    <DrawerClose
-      aria-label={props.ariaLabel}
-      className={className}
-      disabled={props.disabled}
-      emphasis={uiEmphasisModes.subtle}
-      onRequestPress={() => props.onRequestAction(props.action)}
-      placement={uiPlacementModes.sidebar}
-      sourceFocusTarget={props.sourceFocusTarget}
-      tone={props.tone}
+    <Show
+      when={props.current === true}
+      fallback={() => (
+        <DrawerClose
+          tone={props.tone}
+          className={className}
+          disabled={props.disabled}
+          aria-label={props.ariaLabel}
+          emphasis={uiEmphasisModes.subtle}
+          data-ui-focus-target={props.action}
+          placement={uiPlacementModes.sidebar}
+          sourceFocusTarget={props.sourceFocusTarget}
+          onRequestPress={() => props.onRequestAction(props.action)}
+          data-controller-focused={props.controllerFocused ? "true" : undefined}
+        >
+          {props.children}
+        </DrawerClose>
+      )}
     >
-      {props.children}
-    </DrawerClose>
+      {() => (
+        <div aria-current="page" className={className}>
+          {props.children}
+        </div>
+      )}
+    </Show>
   );
 }
 
@@ -137,7 +147,17 @@ const getBreadcrumbAriaLabel = (item: BreadcrumbItem) =>
 const getActionAriaLabel = (action: TopBarMenuAction) =>
   action.disabledReason ? `${action.label}: ${action.disabledReason}` : action.label;
 
+function ResponsiveGameSwitcherContent({ value }: PresentContentProps<GameSwitcherProps>) {
+  return (
+    <section className="grid gap-1">
+      <h2 className="px-2 text-xs font-semibold text-(--ui-muted-text)">{value.label}</h2>
+      <GameSwitcher {...value} context={gameSwitcherContexts.breadcrumbs} />
+    </section>
+  );
+}
+
 function DesktopTopBarMenu(props: TopBarDropdownMenuProps & { blocked: boolean }) {
+  const { controllerFocusVisible } = useUiRootContext();
   const actionEmitter = useComponentActionEmitter<string>({
     defaultReason: componentInteractionReasons.itemPress,
     onRequest: props.onRequestAction,
@@ -154,15 +174,16 @@ function DesktopTopBarMenu(props: TopBarDropdownMenuProps & { blocked: boolean }
 
   return (
     <MenuRoot
-      disabled={props.blocked}
-      onOpenChange={menuChangeEmitter.methods.handleOpenChange}
       open={props.open}
+      disabled={props.blocked}
       sourceFocusTarget={props.sourceFocusTarget}
+      onOpenChange={menuChangeEmitter.methods.handleOpenChange}
     >
       <MenuTrigger
-        appearance={uiControlPresentationModes.icon}
         aria-label={props.label}
         disabled={props.blocked}
+        appearance={uiControlPresentationModes.icon}
+        data-ui-focus-target={props.sourceFocusTarget}
       >
         <MenuIcon aria-hidden="true" size="small" />
       </MenuTrigger>
@@ -172,12 +193,18 @@ function DesktopTopBarMenu(props: TopBarDropdownMenuProps & { blocked: boolean }
             <MenuGroup>
               {props.actions.map((action) => (
                 <MenuItem
+                  key={action.id}
+                  value={action.id}
+                  tone={action.tone}
+                  data-ui-focus-target={action.id}
                   aria-label={getActionAriaLabel(action)}
                   disabled={!action.available || props.blocked}
-                  key={action.id}
                   onRequestSelect={() => actionEmitter.methods.emitAction(action.id)}
-                  tone={action.tone}
-                  value={action.id}
+                  data-controller-focused={
+                    controllerFocusVisible && props.controllerFocusedActionId === action.id
+                      ? "true"
+                      : undefined
+                  }
                 >
                   {action.label}
                 </MenuItem>
@@ -191,6 +218,7 @@ function DesktopTopBarMenu(props: TopBarDropdownMenuProps & { blocked: boolean }
 }
 
 function ResponsiveTopBarDrawer(props: TopBarDropdownMenuProps & { blocked: boolean }) {
+  const { controllerFocusVisible } = useUiRootContext();
   const actionEmitter = useComponentActionEmitter<string>({
     defaultReason: componentInteractionReasons.itemPress,
     onRequest: props.onRequestAction,
@@ -207,18 +235,20 @@ function ResponsiveTopBarDrawer(props: TopBarDropdownMenuProps & { blocked: bool
   const breadcrumbIds = new Set(props.breadcrumbs?.map((item) => item.id));
   const actions = props.actions.filter((action) => !breadcrumbIds.has(action.id));
   const navigationLabel = props.responsiveNavigationLabel ?? props.label;
+  const showResponsiveNavigation = props.layoutMode === uiResponsiveModes.mobile;
 
   return (
     <DrawerRoot
-      onOpenChange={menuChangeEmitter.methods.handleOpenChange}
       open={props.open}
       sourceFocusTarget={props.sourceFocusTarget}
       swipeDirection={drawerSwipeDirections.right}
+      onOpenChange={menuChangeEmitter.methods.handleOpenChange}
     >
       <DrawerTrigger
-        appearance={uiControlPresentationModes.icon}
         aria-label={props.label}
         disabled={props.blocked}
+        appearance={uiControlPresentationModes.icon}
+        data-ui-focus-target={props.sourceFocusTarget}
       >
         <MenuIcon aria-hidden="true" size="small" />
       </DrawerTrigger>
@@ -236,44 +266,52 @@ function ResponsiveTopBarDrawer(props: TopBarDropdownMenuProps & { blocked: bool
                   <XIcon aria-hidden="true" size="small" />
                 </DrawerClose>
               </header>
-              {props.responsiveGameSwitcher && (
-                <section className="grid gap-1">
-                  <h2 className="px-2 text-xs font-semibold text-(--ui-muted-text)">
-                    {props.responsiveGameSwitcher.label}
-                  </h2>
-                  <GameSwitcher {...props.responsiveGameSwitcher} context="breadcrumbs" />
-                </section>
-              )}
-              {props.breadcrumbs && props.breadcrumbs.length > 0 && (
-                <section className="grid gap-1">
-                  <h2 className="px-2 text-xs font-semibold text-(--ui-muted-text)">
-                    {navigationLabel}
-                  </h2>
-                  {props.breadcrumbs.map((item) => (
-                    <DrawerAction
-                      action={`breadcrumb:${item.id}`}
-                      ariaLabel={getBreadcrumbAriaLabel(item)}
-                      current={item.current}
-                      disabled={item.disabled || !item.target || props.blocked}
-                      key={item.id}
-                      onRequestAction={actionEmitter.methods.emitAction}
-                      sourceFocusTarget={props.sourceFocusTarget}
-                    >
-                      <span className="min-w-0 truncate">{item.label}</span>
-                    </DrawerAction>
-                  ))}
-                </section>
-              )}
+              <Show when={showResponsiveNavigation}>
+                {() => (
+                  <Present value={props.responsiveGameSwitcher}>
+                    {ResponsiveGameSwitcherContent}
+                  </Present>
+                )}
+              </Show>
+              <Show when={showResponsiveNavigation && Boolean(props.breadcrumbs?.length)}>
+                {() => (
+                  <section className="grid gap-1">
+                    <h2 className="px-2 text-xs font-semibold text-(--ui-muted-text)">
+                      {navigationLabel}
+                    </h2>
+                    {props.breadcrumbs?.map((item) => (
+                      <DrawerAction
+                        key={item.id}
+                        current={item.current}
+                        action={`breadcrumb:${item.id}`}
+                        ariaLabel={getBreadcrumbAriaLabel(item)}
+                        sourceFocusTarget={props.sourceFocusTarget}
+                        onRequestAction={actionEmitter.methods.emitAction}
+                        disabled={item.disabled || !item.target || props.blocked}
+                        controllerFocused={
+                          controllerFocusVisible &&
+                          props.controllerFocusedActionId === `breadcrumb:${item.id}`
+                        }
+                      >
+                        <BreadcrumbItemContent item={item} />
+                      </DrawerAction>
+                    ))}
+                  </section>
+                )}
+              </Show>
               <section className="grid gap-1 border-t border-(--ui-separator) pt-2">
                 {actions.map((action) => (
                   <DrawerAction
+                    key={action.id}
                     action={action.id}
+                    tone={action.tone}
                     ariaLabel={getActionAriaLabel(action)}
                     disabled={!action.available || props.blocked}
-                    key={action.id}
-                    onRequestAction={actionEmitter.methods.emitAction}
                     sourceFocusTarget={props.sourceFocusTarget}
-                    tone={action.tone}
+                    onRequestAction={actionEmitter.methods.emitAction}
+                    controllerFocused={
+                      controllerFocusVisible && props.controllerFocusedActionId === action.id
+                    }
                   >
                     {action.label}
                   </DrawerAction>
@@ -292,11 +330,12 @@ export function TopBarDropdownMenu(props: TopBarDropdownMenuProps) {
 
   return (
     <div className="shrink-0" data-ui-component="UI-CMP-033">
-      {props.layoutMode === uiResponsiveModes.desktop ? (
-        <DesktopTopBarMenu {...props} blocked={blocked} />
-      ) : (
-        <ResponsiveTopBarDrawer {...props} blocked={blocked} />
-      )}
+      <Show
+        when={props.layoutMode === uiResponsiveModes.desktop}
+        fallback={() => <ResponsiveTopBarDrawer {...props} blocked={blocked} />}
+      >
+        {() => <DesktopTopBarMenu {...props} blocked={blocked} />}
+      </Show>
     </div>
   );
 }

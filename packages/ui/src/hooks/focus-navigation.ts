@@ -8,6 +8,7 @@ import {
 import { UiFocusNavigationScopeSchema } from "../focus-navigation/schema";
 import type { UiFocusDirection, UiFocusNavigationScope } from "../focus-navigation/type";
 import { uiFocusDirections } from "../focus-navigation/value";
+import { useUiRootContext } from "../internal/ui-root-context";
 
 /** Strict navigation scope and optional initial semantic target for one focus owner. */
 export type UseFocusNavigationOptions = {
@@ -46,6 +47,7 @@ export type UseFocusNavigationResult = {
  * Movement skips disabled targets and never reads geometry or calls DOM focus methods.
  */
 export function useFocusNavigation(options: UseFocusNavigationOptions): UseFocusNavigationResult {
+  const { controllerFocusVisible } = useUiRootContext();
   const scope = useMemo(() => UiFocusNavigationScopeSchema.parse(options.scope), [options.scope]);
   const [requestedTargetId, setRequestedTargetId] = useState(options.initialTargetId);
   const focusedTargetId = useMemo(
@@ -104,8 +106,8 @@ export function useFocusNavigation(options: UseFocusNavigationOptions): UseFocus
     [scope],
   );
   const isFocused = useCallback(
-    (targetId: string) => focusedTargetId === targetId,
-    [focusedTargetId],
+    (targetId: string) => controllerFocusVisible && focusedTargetId === targetId,
+    [controllerFocusVisible, focusedTargetId],
   );
   const canMoveFocus = useCallback(
     (direction: UiFocusDirection) => canMoveByDirection[direction],
@@ -117,8 +119,11 @@ export function useFocusNavigation(options: UseFocusNavigationOptions): UseFocus
   );
   const getTargetAttributes = useCallback(
     (targetId: string) =>
-      getControllerFocusAttributes({ focused: focusedTargetId === targetId, targetId }),
-    [focusedTargetId],
+      getControllerFocusAttributes({
+        focused: controllerFocusVisible && focusedTargetId === targetId,
+        targetId,
+      }),
+    [controllerFocusVisible, focusedTargetId],
   );
   const state = useMemo<FocusNavigationState>(
     () => ({

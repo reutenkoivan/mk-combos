@@ -15,6 +15,7 @@ import { moveFocus as moveFocusInScope } from "../focus-navigation/runtime";
 import type { UiFocusDirection, UiFocusNavigationScope } from "../focus-navigation/type";
 import { useUiRootContext } from "../internal/ui-root-context";
 import { Button } from "../primitives/button";
+import { Present, type PresentContentProps, Show } from "../primitives/conditional";
 import { Group } from "../primitives/layout";
 import { Badge, StatusMessage } from "../primitives/state";
 import { cx } from "../recipes/class-name";
@@ -1342,21 +1343,23 @@ function WhiteboardMetaBadge(props: { item: ComboWhiteboardMetaItem }) {
 
   return (
     <Badge
+      tone={props.item.tone}
+      data-meta-status={props.item.status}
       className={cx(
         "h-auto min-h-5.5 max-w-full items-start gap-1 break-words py-1 text-start leading-tight",
         reason && "border-dashed",
       )}
-      data-meta-status={props.item.status}
-      tone={props.item.tone}
     >
-      {reason && (
-        <span aria-hidden="true" className="font-black">
-          ?
-        </span>
-      )}
+      <Show when={Boolean(reason)}>
+        {() => (
+          <span aria-hidden="true" className="font-black">
+            ?
+          </span>
+        )}
+      </Show>
       <span className="font-semibold">{props.item.label}</span>
-      {props.item.value && <span>{props.item.value}</span>}
-      {reason && <span>{reason}</span>}
+      <Show when={Boolean(props.item.value)}>{() => <span>{props.item.value}</span>}</Show>
+      <Show when={Boolean(reason)}>{() => <span>{reason}</span>}</Show>
     </Badge>
   );
 }
@@ -1380,6 +1383,8 @@ WhiteboardMetaList.displayName = "WhiteboardMetaList";
 
 function WhiteboardStepNodeView(props: NodeProps<WhiteboardStepNode>) {
   const { data } = props;
+  const { controllerFocusVisible } = useUiRootContext();
+  const controllerFocused = controllerFocusVisible && data.focused;
   const accessibleLabelParts = [
     data.step.accessibleLabel ?? `${data.positionLabel}. ${data.step.label}`,
   ];
@@ -1390,83 +1395,89 @@ function WhiteboardStepNodeView(props: NodeProps<WhiteboardStepNode>) {
 
   return (
     <div
+      data-ui-focus-target={data.focusTargetId}
+      data-invalid={data.invalid ? "true" : undefined}
+      data-ui-combo-whiteboard-step={data.step.id}
+      data-picked-up={data.pickedUp ? "true" : undefined}
+      data-focused={controllerFocused ? "true" : undefined}
+      data-controller-focused={controllerFocused ? "true" : undefined}
       className={comboWhiteboardTargetRecipe({
-        focused: data.focused,
+        focused: controllerFocused,
         invalid: data.invalid,
         kind: comboWhiteboardTargetKinds.step,
         pickedUp: data.pickedUp,
         state: data.state,
       })}
-      data-controller-focused={data.focused ? "true" : undefined}
-      data-focused={data.focused ? "true" : undefined}
-      data-invalid={data.invalid ? "true" : undefined}
-      data-picked-up={data.pickedUp ? "true" : undefined}
-      data-ui-combo-whiteboard-step={data.step.id}
-      data-ui-focus-target={data.focusTargetId}
     >
       <Handle
+        type="target"
         aria-hidden="true"
-        className={hiddenHandleClassName}
         isConnectable={false}
         position={Position.Left}
-        type="target"
+        className={hiddenHandleClassName}
       />
       <SelectableItem
-        accessibleLabel={accessibleLabelParts.join(". ")}
         busy={data.busy}
-        className="nodrag nopan h-full min-h-11 grid-cols-[minmax(0,1fr)] p-2 text-start"
-        current={data.focused}
+        ref={data.controlRef}
         disabled={data.disabled}
+        current={controllerFocused}
         onRequestFocus={data.onFocus}
         onRequestPress={data.onOpenMenu}
-        ref={data.controlRef}
         value={`combo-step-${data.step.id}`}
+        accessibleLabel={accessibleLabelParts.join(". ")}
+        className="nodrag nopan h-full min-h-11 grid-cols-[minmax(0,1fr)] p-2 text-start"
       >
         <span className="grid min-w-0 content-start gap-1.5">
           <span className="flex min-w-0 items-start justify-between gap-2">
             <span className="text-xs font-black tabular-nums text-(--ui-muted-text)">
               {data.positionLabel}
             </span>
-            {data.continuesToNextRow && (
-              <span
-                aria-label={data.continuationLabel}
-                className="inline-flex items-center gap-1 text-xs font-black text-(--ui-accent-strong)"
-                data-row-continuation="outgoing"
-                role="img"
-              >
-                <span aria-hidden="true">&#8594;</span>
-              </span>
-            )}
+            <Show when={data.continuesToNextRow}>
+              {() => (
+                <span
+                  role="img"
+                  data-row-continuation="outgoing"
+                  aria-label={data.continuationLabel}
+                  className="inline-flex items-center gap-1 text-xs font-black text-(--ui-accent-strong)"
+                >
+                  <span aria-hidden="true">&#8594;</span>
+                </span>
+              )}
+            </Show>
           </span>
           <span className="break-words font-semibold leading-snug">{data.step.label}</span>
           <span className="min-w-0 max-w-full [&_[data-ui-notation-step]]:min-w-0 [&_[data-ui-notation-step]]:flex-wrap">
             <NotationRenderer
+              notation={data.step.notation}
               accessibleLabel={data.step.notationLabel}
               density={notationRendererDensities.whiteboard}
-              notation={data.step.notation}
               notationDisplayMode={data.notationDisplayMode}
             />
           </span>
           <WhiteboardMetaList items={data.step.metaItems} />
-          {data.step.disabledReason && (
-            <span className="text-xs text-(--ui-destructive)">{data.step.disabledReason}</span>
-          )}
+          <Show when={Boolean(data.step.disabledReason)}>
+            {() => (
+              <span className="text-xs text-(--ui-destructive)">{data.step.disabledReason}</span>
+            )}
+          </Show>
         </span>
       </SelectableItem>
-      {data.pickedUp && (
-        <Badge
-          className="pointer-events-none absolute bottom-1 right-1 z-20"
-          tone={uiToneModes.accent}
-        >
-          {data.positionLabel}
-        </Badge>
-      )}
+      <Show when={data.pickedUp}>
+        {() => (
+          <Badge
+            tone={uiToneModes.accent}
+            className="pointer-events-none absolute bottom-1 right-1 z-20"
+          >
+            {data.positionLabel}
+          </Badge>
+        )}
+      </Show>
       <Handle
+        type="source"
         aria-hidden="true"
-        className={hiddenHandleClassName}
         isConnectable={false}
         position={Position.Right}
-        type="source"
+        className={hiddenHandleClassName}
       />
     </div>
   );
@@ -1474,71 +1485,88 @@ function WhiteboardStepNodeView(props: NodeProps<WhiteboardStepNode>) {
 
 WhiteboardStepNodeView.displayName = "WhiteboardStepNodeView";
 
+type WhiteboardGapControlContentValue = Readonly<{
+  controllerFocused: boolean;
+  data: WhiteboardConnectorNodeData;
+  gap: ComboWhiteboardGap;
+}>;
+
+function WhiteboardGapControlContent({
+  value: { controllerFocused, data, gap },
+}: PresentContentProps<WhiteboardGapControlContentValue>) {
+  return (
+    <SelectableItem
+      busy={data.busy}
+      ref={data.controlRef}
+      disabled={data.disabled}
+      current={controllerFocused}
+      selected={data.pickupActive}
+      onRequestFocus={data.onFocus}
+      value={`combo-gap-${gap.id}`}
+      onRequestPress={data.onOpenMenu}
+      data-ui-combo-whiteboard-gap={gap.id}
+      accessibleLabel={
+        gap.disabledReason
+          ? `${gap.accessibleLabel ?? gap.label}: ${gap.disabledReason}`
+          : (gap.accessibleLabel ?? gap.label)
+      }
+      className="nodrag nopan h-11 min-h-11 w-11 min-w-11 grid-cols-[1fr] border border-dashed border-(--ui-control-border) p-0 text-center text-xl font-semibold"
+    >
+      <span className="grid place-items-center gap-1">
+        <span aria-hidden="true">+</span>
+        <span className="sr-only">{gap.label}</span>
+        <Show when={Boolean(gap.disabledReason)}>
+          {() => (
+            <span className="sr-only text-xs text-(--ui-destructive)">{gap.disabledReason}</span>
+          )}
+        </Show>
+      </span>
+    </SelectableItem>
+  );
+}
+
 function WhiteboardConnectorNodeView(props: NodeProps<WhiteboardConnectorNode>) {
   const { data } = props;
+  const { controllerFocusVisible } = useUiRootContext();
+  const controllerFocused = controllerFocusVisible && data.focused;
+  const gapControlValue = data.gap ? { controllerFocused, data, gap: data.gap } : undefined;
 
   return (
     <div
+      data-ui-combo-whiteboard-connector
+      data-ui-focus-target={data.focusTargetId}
+      data-focused={controllerFocused ? "true" : undefined}
+      data-invalid-boundary={data.boundary ? "true" : undefined}
+      data-controller-focused={controllerFocused ? "true" : undefined}
       className={comboWhiteboardTargetRecipe({
-        focused: data.focused,
+        focused: controllerFocused,
         invalid: data.boundary,
         kind: comboWhiteboardTargetKinds.gap,
         pickedUp: data.pickupActive,
         state: data.state,
       })}
-      data-controller-focused={data.focused ? "true" : undefined}
-      data-focused={data.focused ? "true" : undefined}
-      data-invalid-boundary={data.boundary ? "true" : undefined}
-      data-ui-combo-whiteboard-connector
-      data-ui-focus-target={data.focusTargetId}
     >
       <Handle
+        type="target"
         aria-hidden="true"
-        className={hiddenHandleClassName}
         isConnectable={false}
         position={Position.Left}
-        type="target"
-      />
-      {data.boundary && (
-        <span className="sr-only" role="note">
-          {data.boundaryLabel}
-        </span>
-      )}
-      {data.gap && (
-        <SelectableItem
-          accessibleLabel={
-            data.gap.disabledReason
-              ? `${data.gap.accessibleLabel ?? data.gap.label}: ${data.gap.disabledReason}`
-              : (data.gap.accessibleLabel ?? data.gap.label)
-          }
-          busy={data.busy}
-          className="nodrag nopan h-11 min-h-11 w-11 min-w-11 grid-cols-[1fr] border border-dashed border-(--ui-control-border) p-0 text-center text-xl font-semibold"
-          current={data.focused}
-          disabled={data.disabled}
-          onRequestFocus={data.onFocus}
-          onRequestPress={data.onOpenMenu}
-          ref={data.controlRef}
-          selected={data.pickupActive}
-          data-ui-combo-whiteboard-gap={data.gap.id}
-          value={`combo-gap-${data.gap.id}`}
-        >
-          <span className="grid place-items-center gap-1">
-            <span aria-hidden="true">+</span>
-            <span className="sr-only">{data.gap.label}</span>
-            {data.gap.disabledReason && (
-              <span className="sr-only text-xs text-(--ui-destructive)">
-                {data.gap.disabledReason}
-              </span>
-            )}
-          </span>
-        </SelectableItem>
-      )}
-      <Handle
-        aria-hidden="true"
         className={hiddenHandleClassName}
+      />
+      <Show when={data.boundary}>
+        {() => (
+          <span className="sr-only" role="note">
+            {data.boundaryLabel}
+          </span>
+        )}
+      </Show>
+      <Present value={gapControlValue}>{WhiteboardGapControlContent}</Present>
+      <Handle
+        type="source"
+        aria-hidden="true"
         isConnectable={false}
         position={Position.Right}
-        type="source"
+        className={hiddenHandleClassName}
       />
     </div>
   );
@@ -1546,9 +1574,10 @@ function WhiteboardConnectorNodeView(props: NodeProps<WhiteboardConnectorNode>) 
 
 WhiteboardConnectorNodeView.displayName = "WhiteboardConnectorNodeView";
 
-function WhiteboardTransitionNodeView(props: NodeProps<WhiteboardTransitionNode>) {
-  const { data } = props;
-  const transitionLabel = data.transition?.metaItems
+function WhiteboardTransitionContent({
+  value: transition,
+}: PresentContentProps<ComboWhiteboardTransition>) {
+  const transitionLabel = transition.metaItems
     .map((item) =>
       "reason" in item
         ? `${item.label}: ${item.reason}`
@@ -1557,33 +1586,41 @@ function WhiteboardTransitionNodeView(props: NodeProps<WhiteboardTransitionNode>
     .join(", ");
 
   return (
-    <div
-      className="pointer-events-none flex h-full w-full content-start items-start gap-1 overflow-visible"
-      data-ui-combo-whiteboard-transition-lane
+    <ul
+      aria-label={transitionLabel}
+      className="flex min-w-0 flex-1 list-none flex-wrap items-start gap-1 p-0"
+      data-ui-combo-whiteboard-transition={`${transition.fromStepId}:${transition.toStepId}`}
     >
-      {data.continuesFromPreviousRow && (
-        <span
-          aria-label={data.continuationLabel}
-          className="inline-flex min-h-5.5 shrink-0 items-center text-xs font-black text-(--ui-accent-strong)"
-          data-row-continuation="incoming"
-          role="img"
-        >
-          <span aria-hidden="true">&#8627;</span>
-        </span>
-      )}
-      {data.transition && (
-        <ul
-          aria-label={transitionLabel}
-          className="flex min-w-0 flex-1 list-none flex-wrap items-start gap-1 p-0"
-          data-ui-combo-whiteboard-transition={`${data.transition.fromStepId}:${data.transition.toStepId}`}
-        >
-          {data.transition.metaItems.map((item) => (
-            <li className="min-w-0 max-w-full" key={item.id}>
-              <WhiteboardMetaBadge item={item} />
-            </li>
-          ))}
-        </ul>
-      )}
+      {transition.metaItems.map((item) => (
+        <li className="min-w-0 max-w-full" key={item.id}>
+          <WhiteboardMetaBadge item={item} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function WhiteboardTransitionNodeView(props: NodeProps<WhiteboardTransitionNode>) {
+  const { data } = props;
+
+  return (
+    <div
+      data-ui-combo-whiteboard-transition-lane
+      className="pointer-events-none flex h-full w-full content-start items-start gap-1 overflow-visible"
+    >
+      <Show when={data.continuesFromPreviousRow}>
+        {() => (
+          <span
+            role="img"
+            data-row-continuation="incoming"
+            aria-label={data.continuationLabel}
+            className="inline-flex min-h-5.5 shrink-0 items-center text-xs font-black text-(--ui-accent-strong)"
+          >
+            <span aria-hidden="true">&#8627;</span>
+          </span>
+        )}
+      </Show>
+      <Present value={data.transition}>{WhiteboardTransitionContent}</Present>
     </div>
   );
 }
@@ -2032,10 +2069,10 @@ function SummaryStrip(props: { items: readonly ComboWhiteboardSummary[]; label: 
   return (
     <ul aria-label={props.label} className="flex min-w-0 list-none flex-wrap gap-2 p-0">
       {props.items.map((item) => (
-        <li key={item.id}>
-          <Badge>
-            <span className="text-(--ui-muted-text)">{item.label}</span>
-            <span>{item.value}</span>
+        <li className="min-w-0 max-w-full" key={item.id}>
+          <Badge className="h-auto max-w-full flex-wrap gap-1 whitespace-normal break-words py-1 text-start leading-snug">
+            <span className="break-words text-(--ui-muted-text)">{item.label}</span>
+            <span className="min-w-0 break-words">{item.value}</span>
           </Badge>
         </li>
       ))}
@@ -2078,29 +2115,65 @@ const getPickerInsertionContext = (
   }
 };
 
+type PickerContextMoveNotationValue = Readonly<{
+  notationDisplayMode: NotationDisplayMode;
+  step: ComboWhiteboardStep;
+}>;
+
+function PickerContextMoveNotation({
+  value: { notationDisplayMode, step },
+}: PresentContentProps<PickerContextMoveNotationValue>) {
+  return (
+    <NotationRenderer
+      notation={step.notation}
+      accessibleLabel={step.notationLabel}
+      notationDisplayMode={notationDisplayMode}
+      density={notationRendererDensities.compact}
+    />
+  );
+}
+
 function PickerContextMove(props: {
   boundaryLabel: string;
   label: string;
   notationDisplayMode: NotationDisplayMode;
   step?: ComboWhiteboardStep;
 }) {
+  const notationValue = props.step
+    ? { notationDisplayMode: props.notationDisplayMode, step: props.step }
+    : undefined;
+
   return (
     <span className="grid min-w-0 content-start gap-1" data-ui-combo-whiteboard-picker-context-move>
       <span className="text-xs font-semibold text-(--ui-muted-text)">{props.label}</span>
       <span className="break-words font-semibold">{props.step?.label ?? props.boundaryLabel}</span>
-      {props.step && (
-        <NotationRenderer
-          accessibleLabel={props.step.notationLabel}
-          density={notationRendererDensities.compact}
-          notation={props.step.notation}
-          notationDisplayMode={props.notationDisplayMode}
-        />
-      )}
+      <Present value={notationValue}>{PickerContextMoveNotation}</Present>
     </span>
   );
 }
 
 PickerContextMove.displayName = "PickerContextMove";
+
+type PickerContextActiveStepValue = Readonly<{
+  notationDisplayMode: NotationDisplayMode;
+  step: ComboWhiteboardStep;
+}>;
+
+function PickerContextActiveStep({
+  value: { notationDisplayMode, step },
+}: PresentContentProps<PickerContextActiveStepValue>) {
+  return (
+    <>
+      <span className="break-words font-semibold">{step.label}</span>
+      <NotationRenderer
+        notation={step.notation}
+        accessibleLabel={step.notationLabel}
+        notationDisplayMode={notationDisplayMode}
+        density={notationRendererDensities.compact}
+      />
+    </>
+  );
+}
 
 function PickerInsertionContextStrip(props: {
   editTarget: ComboWhiteboardEditTarget;
@@ -2112,52 +2185,46 @@ function PickerInsertionContextStrip(props: {
 }) {
   const context = getPickerInsertionContext(props.source, props.editTarget);
   const vertical = props.responsiveMode === uiResponsiveModes.mobile;
+  const directionGlyph = vertical ? "↓" : "→";
+  const activeStepValue = context.activeStep
+    ? { notationDisplayMode: props.notationDisplayMode, step: context.activeStep }
+    : undefined;
 
   return (
     <section
       aria-label={props.editTargetLabel}
+      data-ui-combo-whiteboard-picker-context
       className={cx(
         "grid min-w-0 items-stretch gap-2 rounded-(--ui-radius-control) border border-(--ui-separator) bg-(--ui-content) p-3",
         vertical
           ? "grid-cols-1"
           : "grid-cols-[minmax(0,1fr)_auto_minmax(10rem,1fr)_auto_minmax(0,1fr)]",
       )}
-      data-ui-combo-whiteboard-picker-context
     >
       <PickerContextMove
-        boundaryLabel={props.labels.comboStart}
-        label={props.labels.beforeTarget}
-        notationDisplayMode={props.notationDisplayMode}
         step={context.beforeStep}
+        label={props.labels.beforeTarget}
+        boundaryLabel={props.labels.comboStart}
+        notationDisplayMode={props.notationDisplayMode}
       />
       <span aria-hidden="true" className="self-center text-xl text-(--ui-muted-text)">
-        {vertical ? "↓" : "→"}
+        {directionGlyph}
       </span>
       <span
-        className="grid min-w-0 content-center gap-1 rounded-(--ui-radius-control) border border-(--ui-accent) bg-(--ui-selection-muted) p-3 text-center"
         data-ui-combo-whiteboard-picker-context-target
+        className="grid min-w-0 content-center gap-1 rounded-(--ui-radius-control) border border-(--ui-accent) bg-(--ui-selection-muted) p-3 text-center"
       >
         <span className="font-semibold text-(--ui-accent-strong)">{props.editTargetLabel}</span>
-        {context.activeStep && (
-          <>
-            <span className="break-words font-semibold">{context.activeStep.label}</span>
-            <NotationRenderer
-              accessibleLabel={context.activeStep.notationLabel}
-              density={notationRendererDensities.compact}
-              notation={context.activeStep.notation}
-              notationDisplayMode={props.notationDisplayMode}
-            />
-          </>
-        )}
+        <Present value={activeStepValue}>{PickerContextActiveStep}</Present>
       </span>
       <span aria-hidden="true" className="self-center text-xl text-(--ui-muted-text)">
-        {vertical ? "↓" : "→"}
+        {directionGlyph}
       </span>
       <PickerContextMove
-        boundaryLabel={props.labels.comboEnd}
-        label={props.labels.afterTarget}
-        notationDisplayMode={props.notationDisplayMode}
         step={context.afterStep}
+        label={props.labels.afterTarget}
+        boundaryLabel={props.labels.comboEnd}
+        notationDisplayMode={props.notationDisplayMode}
       />
     </section>
   );
@@ -2172,8 +2239,65 @@ type MovePickerComposerLayerProps = {
   onRequestClose: () => void;
 };
 
+type MovePickerPortalContentValue = Readonly<{
+  closeButtonRef: { current: HTMLButtonElement | null };
+  handleKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  panelRef: { current: HTMLDivElement | null };
+  portalHost: HTMLElement;
+  props: MovePickerComposerLayerProps;
+  root: Pick<
+    ReturnType<typeof useUiRootContext>,
+    "contrast" | "controllerFocusVisible" | "density" | "responsiveMode" | "theme"
+  >;
+}>;
+
+function MovePickerPortalContent({ value }: PresentContentProps<MovePickerPortalContentValue>) {
+  const { closeButtonRef, handleKeyDown, panelRef, portalHost, props, root } = value;
+
+  return createPortal(
+    <div
+      data-ui-theme={root.theme}
+      data-ui-density={root.density}
+      data-ui-contrast={root.contrast}
+      data-ui-portal="combo-whiteboard-picker"
+      data-ui-responsive={root.responsiveMode}
+      className="mk-combos-ui-root mk-combos-ui-portal-root contents"
+      data-ui-controller-focus-visible={root.controllerFocusVisible ? "true" : "false"}
+    >
+      <div
+        data-ui-combo-whiteboard-picker-backdrop
+        className="fixed inset-0 z-50 grid place-items-center overflow-hidden overscroll-contain bg-black/55 p-4 backdrop-blur-[2px]"
+      >
+        <div
+          role="dialog"
+          ref={panelRef}
+          aria-modal="true"
+          aria-label={props.label}
+          onKeyDown={handleKeyDown}
+          data-ui-combo-whiteboard-picker-window
+          className="grid max-h-[calc(100dvh-2rem)] w-[min(72rem,calc(100vw-2rem))] min-w-0 gap-3 overflow-y-auto overscroll-contain rounded-(--ui-radius-surface) border border-(--ui-separator) bg-(--ui-popover) p-4 shadow-(--ui-shadow)"
+        >
+          <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-(--ui-separator) bg-(--ui-popover) pb-3">
+            <span className="text-lg font-semibold">{props.label}</span>
+            <Button
+              ref={closeButtonRef}
+              aria-label={props.closeLabel}
+              className="min-h-11 min-w-11"
+              onRequestPress={props.onRequestClose}
+            >
+              {props.closeLabel}
+            </Button>
+          </header>
+          {props.children}
+        </div>
+      </div>
+    </div>,
+    portalHost,
+  );
+}
+
 function MovePickerComposerLayer(props: MovePickerComposerLayerProps) {
-  const { contrast, density, responsiveMode: rootResponsiveMode, theme } = useUiRootContext();
+  const root = useUiRootContext();
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
@@ -2200,8 +2324,6 @@ function MovePickerComposerLayer(props: MovePickerComposerLayerProps) {
     return () => document.removeEventListener("keydown", closeOnEscape);
   }, [portalHost, props.onRequestClose]);
 
-  if (!portalHost) return null;
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key !== "Tab") return;
 
@@ -2222,50 +2344,16 @@ function MovePickerComposerLayer(props: MovePickerComposerLayerProps) {
     }
   };
 
-  return createPortal(
-    <div
-      className="mk-combos-ui-root mk-combos-ui-portal-root contents"
-      data-ui-contrast={contrast}
-      data-ui-density={density}
-      data-ui-portal="combo-whiteboard-picker"
-      data-ui-responsive={rootResponsiveMode}
-      data-ui-theme={theme}
-    >
-      <div
-        className="fixed inset-0 z-50 grid place-items-center overflow-hidden overscroll-contain bg-black/55 p-4 backdrop-blur-[2px]"
-        data-ui-combo-whiteboard-picker-backdrop
-      >
-        <div
-          aria-label={props.label}
-          aria-modal="true"
-          className="grid max-h-[calc(100dvh-2rem)] w-[min(72rem,calc(100vw-2rem))] min-w-0 gap-3 overflow-y-auto overscroll-contain rounded-(--ui-radius-surface) border border-(--ui-separator) bg-(--ui-popover) p-4 shadow-(--ui-shadow)"
-          data-ui-combo-whiteboard-picker-window
-          onKeyDown={handleKeyDown}
-          ref={panelRef}
-          role="dialog"
-        >
-          <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-(--ui-separator) bg-(--ui-popover) pb-3">
-            <span className="text-lg font-semibold">{props.label}</span>
-            <Button
-              aria-label={props.closeLabel}
-              className="min-h-11 min-w-11"
-              onRequestPress={props.onRequestClose}
-              ref={closeButtonRef}
-            >
-              {props.closeLabel}
-            </Button>
-          </header>
-          {props.children}
-        </div>
-      </div>
-    </div>,
-    portalHost,
-  );
+  const portalContentValue = portalHost
+    ? { closeButtonRef, handleKeyDown, panelRef, portalHost, props, root }
+    : undefined;
+
+  return <Present value={portalContentValue}>{MovePickerPortalContent}</Present>;
 }
 
 MovePickerComposerLayer.displayName = "MovePickerComposerLayer";
 
-function PreparedActionButton(props: {
+type PreparedActionButtonProps = {
   action: ComboWhiteboardPreparedAction;
   disabled?: boolean;
   menuItem?: boolean;
@@ -2275,30 +2363,243 @@ function PreparedActionButton(props: {
     | typeof uiToneModes.destructive
     | typeof uiToneModes.neutral
     | typeof uiToneModes.warning;
-}) {
+};
+
+function PreparedActionButton(props: PreparedActionButtonProps) {
   return (
     <span className="grid gap-1">
       <Button
+        tone={props.tone}
+        onRequestPress={props.onPress}
+        disabled={props.disabled || !props.action.available}
+        role={props.menuItem === false ? undefined : "menuitem"}
         aria-label={
           props.action.disabledReason
             ? `${props.action.label}: ${props.action.disabledReason}`
             : props.action.label
         }
-        disabled={props.disabled || !props.action.available}
-        onRequestPress={props.onPress}
-        role={props.menuItem === false ? undefined : "menuitem"}
-        tone={props.tone}
       >
         {props.action.label}
       </Button>
-      {props.action.disabledReason && (
-        <span className="text-xs text-(--ui-destructive)">{props.action.disabledReason}</span>
-      )}
+      <Show when={Boolean(props.action.disabledReason)}>
+        {() => (
+          <span className="text-xs text-(--ui-destructive)">{props.action.disabledReason}</span>
+        )}
+      </Show>
     </span>
   );
 }
 
 PreparedActionButton.displayName = "PreparedActionButton";
+
+function PreparedActionButtonContent({ value }: PresentContentProps<PreparedActionButtonProps>) {
+  return <PreparedActionButton {...value} />;
+}
+
+type PickedUpStatusContentValue = Readonly<{
+  blocked: boolean;
+  cancelLabel: string;
+  onCancel: (stepId: string) => void;
+  statusLabel: string;
+  stepId: string;
+}>;
+
+function PickedUpStatusContent({ value }: PresentContentProps<PickedUpStatusContentValue>) {
+  return (
+    <Group>
+      <StatusMessage>{value.statusLabel}</StatusMessage>
+      <Button disabled={value.blocked} onRequestPress={() => value.onCancel(value.stepId)}>
+        {value.cancelLabel}
+      </Button>
+    </Group>
+  );
+}
+
+type TruncateConfirmationContentValue = Readonly<{
+  busy: boolean;
+  confirmation: ComboWhiteboardTruncateConfirmation;
+  onCancel: (confirmationId: string) => void;
+  onConfirm: (confirmationId: string) => void;
+}>;
+
+function TruncateConfirmationContent({
+  value,
+}: PresentContentProps<TruncateConfirmationContentValue>) {
+  const { busy, confirmation, onCancel, onConfirm } = value;
+
+  return (
+    <section
+      role="alert"
+      aria-label={confirmation.message}
+      data-ui-combo-whiteboard-truncate
+      className="grid gap-2 border-l-4 border-(--ui-warning) bg-(--ui-warning-soft) p-3"
+    >
+      <span className="font-semibold">{confirmation.message}</span>
+      <Show when={Boolean(confirmation.reason)}>
+        {() => <span className="text-sm">{confirmation.reason}</span>}
+      </Show>
+      <Group>
+        <PreparedActionButton
+          disabled={busy}
+          menuItem={false}
+          tone={uiToneModes.warning}
+          action={confirmation.confirmAction}
+          onPress={() => onConfirm(confirmation.id)}
+        />
+        <PreparedActionButton
+          disabled={busy}
+          menuItem={false}
+          action={confirmation.cancelAction}
+          onPress={() => onCancel(confirmation.id)}
+        />
+      </Group>
+    </section>
+  );
+}
+
+type DetailActionsContentValue = Readonly<{
+  actions: ComboWhiteboardDetailActions;
+  busy: boolean;
+  onDuplicate: (actionId: string) => void;
+  onEdit: (actionId: string) => void;
+}>;
+
+function DetailActionsContent({ value }: PresentContentProps<DetailActionsContentValue>) {
+  return (
+    <Group>
+      <Present
+        value={
+          value.actions.editCustomCombo
+            ? {
+                action: value.actions.editCustomCombo,
+                disabled: value.busy,
+                menuItem: false,
+                onPress: () => value.onEdit(value.actions.editCustomCombo?.id ?? ""),
+              }
+            : undefined
+        }
+      >
+        {PreparedActionButtonContent}
+      </Present>
+      <Present
+        value={
+          value.actions.duplicateSeededCombo
+            ? {
+                action: value.actions.duplicateSeededCombo,
+                disabled: value.busy,
+                menuItem: false,
+                onPress: () => value.onDuplicate(value.actions.duplicateSeededCombo?.id ?? ""),
+              }
+            : undefined
+        }
+      >
+        {PreparedActionButtonContent}
+      </Present>
+    </Group>
+  );
+}
+
+type ComboWhiteboardModeSurfaceProps = Readonly<{
+  busy: boolean;
+  onCancelTruncate: (confirmationId: string) => void;
+  onConfirmTruncate: (confirmationId: string) => void;
+  onDuplicateSeededCombo: (actionId: string) => void;
+  onEditCustomCombo: (actionId: string) => void;
+  onRepair: (boundaryIndex: number) => void;
+  source: ComboWhiteboardSource;
+}>;
+
+function WhiteboardDisabledReason(props: { source: ComboWhiteboardSource }) {
+  return (
+    <Show when={Boolean(props.source.disabledReason)}>
+      {() => (
+        <StatusMessage tone={uiToneModes.warning}>{props.source.disabledReason}</StatusMessage>
+      )}
+    </Show>
+  );
+}
+
+function ComboWhiteboardModeSurface(props: ComboWhiteboardModeSurfaceProps) {
+  const { source } = props;
+
+  switch (source.mode) {
+    case comboWhiteboardModes.builderEditable:
+    case comboWhiteboardModes.emptyActive:
+    case comboWhiteboardModes.lockedPreview:
+      return <WhiteboardDisabledReason source={source} />;
+    case comboWhiteboardModes.pendingTruncate:
+      return (
+        <>
+          <Present
+            value={
+              source.truncateConfirmation
+                ? {
+                    busy: props.busy,
+                    confirmation: source.truncateConfirmation,
+                    onCancel: props.onCancelTruncate,
+                    onConfirm: props.onConfirmTruncate,
+                  }
+                : undefined
+            }
+          >
+            {TruncateConfirmationContent}
+          </Present>
+          <WhiteboardDisabledReason source={source} />
+        </>
+      );
+    case comboWhiteboardModes.repairReview:
+      return (
+        <>
+          <Present
+            value={
+              source.repairAction && source.boundaryIndex !== undefined
+                ? {
+                    action: source.repairAction,
+                    disabled: props.busy,
+                    menuItem: false,
+                    onPress: () => props.onRepair(source.boundaryIndex ?? 0),
+                    tone: uiToneModes.warning,
+                  }
+                : undefined
+            }
+          >
+            {PreparedActionButtonContent}
+          </Present>
+          <WhiteboardDisabledReason source={source} />
+        </>
+      );
+    case comboWhiteboardModes.detailReadOnly:
+      return (
+        <>
+          <Present
+            value={
+              source.detailActions
+                ? {
+                    actions: source.detailActions,
+                    busy: props.busy,
+                    onDuplicate: props.onDuplicateSeededCombo,
+                    onEdit: props.onEditCustomCombo,
+                  }
+                : undefined
+            }
+          >
+            {DetailActionsContent}
+          </Present>
+          <WhiteboardDisabledReason source={source} />
+        </>
+      );
+    case comboWhiteboardModes.savingFrozen:
+      return (
+        <>
+          <WhiteboardDisabledReason source={source} />
+          <StatusMessage>{source.labels.saving}</StatusMessage>
+        </>
+      );
+  }
+
+  const unhandledMode: never = source.mode;
+  return unhandledMode;
+}
 
 export function ComboWhiteboard(props: ComboWhiteboardProps) {
   const { model, source } = props;
@@ -2379,6 +2680,10 @@ export function ComboWhiteboard(props: ComboWhiteboardProps) {
   );
   const openStepMenu = useCallback(
     (step: ComboWhiteboardStep) => {
+      if (!Object.values(step.actions ?? {}).some((action) => action?.available)) {
+        return;
+      }
+
       emitIntent({
         ...intentBase(getStepFocusTargetId(step), componentInteractionReasons.press),
         action: comboWhiteboardActions.openLocalMenu,
@@ -2631,404 +2936,396 @@ export function ComboWhiteboard(props: ComboWhiteboardProps) {
 
   return (
     <section
-      aria-busy={busy || undefined}
       aria-label={source.label}
+      aria-busy={busy || undefined}
+      data-ui-component="UI-CMP-035"
+      data-ui-combo-whiteboard-mode={source.mode}
+      data-ui-combo-whiteboard-compact-targets={compact ? "true" : undefined}
       className={cx(
         "grid min-w-0 gap-4",
         compact && "[&_[data-ui-button]]:min-h-11 [&_[data-ui-button]]:min-w-11",
       )}
-      data-ui-combo-whiteboard-compact-targets={compact ? "true" : undefined}
-      data-ui-combo-whiteboard-mode={source.mode}
-      data-ui-component="UI-CMP-035"
     >
-      {source.runtimeSummary && source.runtimeSummary.length > 0 && (
-        <SummaryStrip items={source.runtimeSummary} label={source.labels.runtimeSummary} />
-      )}
-      {source.contextSummary && source.contextSummary.length > 0 && (
-        <SummaryStrip items={source.contextSummary} label={source.labels.contextSummary} />
-      )}
+      <Show when={Boolean(source.runtimeSummary && source.runtimeSummary.length > 0)}>
+        {() => (
+          <SummaryStrip items={source.runtimeSummary ?? []} label={source.labels.runtimeSummary} />
+        )}
+      </Show>
+      <Show when={Boolean(source.contextSummary && source.contextSummary.length > 0)}>
+        {() => (
+          <SummaryStrip items={source.contextSummary ?? []} label={source.labels.contextSummary} />
+        )}
+      </Show>
       <section
-        aria-label={source.labels.board}
-        className="grid min-w-0 gap-2"
-        data-ui-combo-whiteboard-cards-per-row={flow.cardsPerRow}
-        data-ui-combo-whiteboard-row-count={flow.rowCount}
         ref={boardRegionRef}
+        className="grid min-w-0 gap-2"
+        aria-label={source.labels.board}
+        data-ui-combo-whiteboard-row-count={flow.rowCount}
+        data-ui-combo-whiteboard-cards-per-row={flow.cardsPerRow}
       >
-        {source.steps.length === 0 && <StatusMessage>{source.labels.emptyPath}</StatusMessage>}
+        <Show when={source.steps.length === 0}>
+          {() => <StatusMessage>{source.labels.emptyPath}</StatusMessage>}
+        </Show>
         <div
+          style={{ height: flow.height }}
           className="min-w-0 bg-(--ui-content)"
           data-ui-combo-whiteboard-canvas-height={flow.height}
-          style={{ height: flow.height }}
         >
           <ReactFlow<WhiteboardNode, Edge>
-            aria-label={source.labels.board}
-            autoPanOnNodeFocus={false}
-            className="overflow-visible"
-            data-ui-combo-whiteboard-canvas-zoom="fixed"
-            defaultViewport={whiteboardDefaultViewport}
-            deleteKeyCode={null}
-            edges={flow.edges}
-            edgesFocusable={false}
-            edgesReconnectable={false}
-            elementsSelectable={false}
             maxZoom={1}
             minZoom={1}
-            multiSelectionKeyCode={null}
+            panOnDrag={false}
+            edges={flow.edges}
             nodes={flow.nodes}
-            nodesConnectable={false}
+            panOnScroll={false}
+            zoomOnPinch={false}
+            deleteKeyCode={null}
+            zoomOnScroll={false}
+            edgesFocusable={false}
             nodesDraggable={false}
             nodesFocusable={false}
-            nodeTypes={comboWhiteboardNodeTypes}
-            panActivationKeyCode={null}
-            panOnDrag={false}
-            panOnScroll={false}
-            preventScrolling={false}
-            proOptions={whiteboardProOptions}
             selectionKeyCode={null}
             selectionOnDrag={false}
+            nodesConnectable={false}
+            preventScrolling={false}
             selectNodesOnDrag={false}
-            zoomActivationKeyCode={null}
             zoomOnDoubleClick={false}
-            zoomOnPinch={false}
-            zoomOnScroll={false}
+            autoPanOnNodeFocus={false}
+            edgesReconnectable={false}
+            elementsSelectable={false}
+            panActivationKeyCode={null}
+            className="overflow-visible"
+            multiSelectionKeyCode={null}
+            zoomActivationKeyCode={null}
+            aria-label={source.labels.board}
+            proOptions={whiteboardProOptions}
+            nodeTypes={comboWhiteboardNodeTypes}
+            defaultViewport={whiteboardDefaultViewport}
+            data-ui-combo-whiteboard-canvas-zoom="fixed"
           />
         </div>
       </section>
 
-      {pickerSupported && pickerOpen && !menuTarget && (
-        <MovePickerComposerLayer
-          closeLabel={source.labels.closePicker}
-          label={source.labels.picker}
-          onRequestClose={closePicker}
-        >
-          <PickerInsertionContextStrip
-            editTarget={model.state.editTarget}
-            editTargetLabel={getEditTargetLabel(model.state.editTarget, source.labels)}
-            labels={source.labels}
-            notationDisplayMode={props.notationDisplayMode}
-            responsiveMode={model.state.responsiveMode}
-            source={source}
-          />
-          <MovePicker
-            busy={Boolean(source.loading)}
-            canMoveToNextGroup={Boolean(nextGroupId)}
-            canMoveToPreviousGroup={Boolean(previousGroupId)}
-            candidates={visibleCandidates}
-            disabled={pickerDisabled}
-            editTarget={model.state.editTarget}
-            editTargetLabel={getEditTargetLabel(model.state.editTarget, source.labels)}
-            focusedCandidateId={focusedCandidateId}
-            groups={source.groups}
-            labels={source.labels}
-            notationDisplayMode={props.notationDisplayMode}
-            onFocusCandidate={(candidateId, focusTargetId) =>
-              emitIntent({
-                ...intentBase(
-                  focusTargetId ?? `combo-candidate-${candidateId}`,
-                  componentInteractionReasons.triggerFocus,
-                ),
-                action: comboWhiteboardActions.focusMoveCandidate,
-                candidateId,
-              })
-            }
-            onMoveToNextGroup={() => {
-              if (nextGroupId) {
-                emitIntent({
-                  ...intentBase(undefined, componentInteractionReasons.listNavigation),
-                  action: comboWhiteboardActions.moveToNextGroup,
-                  groupId: nextGroupId,
-                });
-              }
-            }}
-            onMoveToPreviousGroup={() => {
-              if (previousGroupId) {
-                emitIntent({
-                  ...intentBase(undefined, componentInteractionReasons.listNavigation),
-                  action: comboWhiteboardActions.moveToPreviousGroup,
-                  groupId: previousGroupId,
-                });
-              }
-            }}
-            onOpenCandidateDetails={(candidateId, focusTargetId) =>
-              emitIntent({
-                ...intentBase(
-                  focusTargetId ?? `combo-candidate-${candidateId}`,
-                  componentInteractionReasons.press,
-                ),
-                action: comboWhiteboardActions.openCandidateDetails,
-                candidateId,
-              })
-            }
-            onSelectCandidate={(candidateId, focusTargetId) => {
-              const emitted = emitIntent({
-                ...intentBase(
-                  focusTargetId ?? `combo-candidate-${candidateId}`,
-                  componentInteractionReasons.itemPress,
-                ),
-                action: comboWhiteboardActions.selectMoveCandidate,
-                candidateId,
-                editTarget: model.state.editTarget,
-              });
-              if (emitted) closePicker();
-            }}
-            onSelectGroup={(groupId) =>
-              emitIntent({
-                ...intentBase(`move-group-${groupId}`, componentInteractionReasons.itemPress),
-                action: comboWhiteboardActions.selectMoveGroup,
-                groupId,
-              })
-            }
-            onUseAppendTarget={() =>
-              setEditTarget(appendEditTarget, getFocusTargetId(source, model.state.focusTarget))
-            }
-            responsiveMode={model.state.responsiveMode}
-            selectedGroupId={model.state.selectedGroupId}
-            statusMessage={source.pickerMessage}
-          />
-        </MovePickerComposerLayer>
-      )}
-
-      {menuTarget && source.mode !== comboWhiteboardModes.savingFrozen && (
-        <div
-          aria-label={source.labels.menu}
-          className="z-50 grid w-60 max-w-[calc(100vw-1rem)] justify-items-stretch gap-2 border border-(--ui-separator) bg-(--ui-popover) p-3 shadow-(--ui-shadow)"
-          data-ui-combo-whiteboard-local-menu-anchor={menuFocusTargetId}
-          data-ui-combo-whiteboard-local-menu
-          onKeyDown={handleMenuKeyDown}
-          ref={localMenuRef}
-          role="menu"
-          style={{
-            left: menuAnchorPosition?.left ?? 8,
-            opacity: menuAnchorPosition ? undefined : 0,
-            pointerEvents: menuAnchorPosition ? undefined : "none",
-            position: "fixed",
-            top: menuAnchorPosition?.top ?? 8,
-          }}
-          tabIndex={-1}
-        >
-          {menuStep?.actions?.details && (
-            <PreparedActionButton
-              action={menuStep.actions.details}
-              onPress={() =>
-                completeMenuAction(
-                  emitIntent({
-                    ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
-                    action: comboWhiteboardActions.openStepDetails,
-                    stepId: menuStep.id,
-                  }),
-                )
-              }
-            />
-          )}
-          {menuStep?.actions?.replace && (
-            <PreparedActionButton
-              action={menuStep.actions.replace}
-              disabled={!editingEnabled || busy}
-              onPress={() =>
-                openPickerForEditTarget(
-                  { operation: comboWhiteboardEditOperations.replace, stepId: menuStep.id },
-                  menuFocusTargetId,
-                )
-              }
-            />
-          )}
-          {menuStep?.actions?.remove && (
-            <PreparedActionButton
-              action={menuStep.actions.remove}
-              disabled={!editingEnabled || busy}
-              onPress={() =>
-                completeMenuAction(
-                  emitIntent({
-                    ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
-                    action: comboWhiteboardActions.removeStep,
-                    stepId: menuStep.id,
-                  }),
-                )
-              }
-              tone={uiToneModes.destructive}
-            />
-          )}
-          {menuStep?.actions?.undo && (
-            <PreparedActionButton
-              action={menuStep.actions.undo}
-              disabled={!editingEnabled || busy}
-              onPress={() =>
-                completeMenuAction(
-                  emitIntent({
-                    ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
-                    action: comboWhiteboardActions.undoToStep,
-                    stepId: menuStep.id,
-                  }),
-                )
-              }
-            />
-          )}
-          {menuStep?.actions?.pickUp && (
-            <PreparedActionButton
-              action={menuStep.actions.pickUp}
-              disabled={!editingEnabled || busy}
-              onPress={() =>
-                completeMenuAction(
-                  emitIntent({
-                    ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
-                    action: comboWhiteboardActions.pickUpStep,
-                    stepId: menuStep.id,
-                  }),
-                )
-              }
-            />
-          )}
-          {menuGap?.actions?.insert && (
-            <PreparedActionButton
-              action={menuGap.actions.insert}
-              disabled={!editingEnabled || busy}
-              onPress={() =>
-                openPickerForEditTarget(getGapEditTarget(source, menuGap), menuFocusTargetId)
-              }
-            />
-          )}
-          {menuGap?.actions?.drop && pickedUpStepId && (
-            <PreparedActionButton
-              action={menuGap.actions.drop}
-              disabled={!editingEnabled || busy}
-              onPress={() =>
-                completeMenuAction(
-                  emitIntent({
-                    ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
-                    action: comboWhiteboardActions.dropPickedStep,
-                    gapId: menuGap.id,
-                    operation: comboWhiteboardEditOperations.reorder,
-                    stepId: pickedUpStepId,
-                  }),
-                )
-              }
-            />
-          )}
-          <Button onRequestPress={closeMenu} role="menuitem">
-            {source.labels.closeMenu}
-          </Button>
-        </div>
-      )}
-
-      {pickedUpStepId && (
-        <Group>
-          <StatusMessage>{source.labels.reorderTarget}</StatusMessage>
-          <Button
-            disabled={!editingEnabled || busy}
-            onRequestPress={() =>
-              emitIntent({
-                ...intentBase(
-                  getFocusTargetId(source, model.state.focusTarget),
-                  componentInteractionReasons.press,
-                ),
-                action: comboWhiteboardActions.cancelPickUp,
-                stepId: pickedUpStepId,
-              })
-            }
+      <Show when={pickerSupported && pickerOpen && !menuTarget}>
+        {() => (
+          <MovePickerComposerLayer
+            label={source.labels.picker}
+            onRequestClose={closePicker}
+            closeLabel={source.labels.closePicker}
           >
-            {source.labels.cancelPickUp}
-          </Button>
-        </Group>
-      )}
-
-      {source.mode === comboWhiteboardModes.pendingTruncate && source.truncateConfirmation && (
-        <section
-          aria-label={source.truncateConfirmation.message}
-          className="grid gap-2 border-l-4 border-(--ui-warning) bg-(--ui-warning-soft) p-3"
-          data-ui-combo-whiteboard-truncate
-          role="alert"
-        >
-          <span className="font-semibold">{source.truncateConfirmation.message}</span>
-          {source.truncateConfirmation.reason && (
-            <span className="text-sm">{source.truncateConfirmation.reason}</span>
-          )}
-          <Group>
-            <PreparedActionButton
-              action={source.truncateConfirmation.confirmAction}
-              disabled={busy}
-              menuItem={false}
-              onPress={() =>
+            <PickerInsertionContextStrip
+              source={source}
+              labels={source.labels}
+              editTarget={model.state.editTarget}
+              responsiveMode={model.state.responsiveMode}
+              notationDisplayMode={props.notationDisplayMode}
+              editTargetLabel={getEditTargetLabel(model.state.editTarget, source.labels)}
+            />
+            <MovePicker
+              groups={source.groups}
+              labels={source.labels}
+              disabled={pickerDisabled}
+              busy={Boolean(source.loading)}
+              candidates={visibleCandidates}
+              editTarget={model.state.editTarget}
+              statusMessage={source.pickerMessage}
+              focusedCandidateId={focusedCandidateId}
+              canMoveToNextGroup={Boolean(nextGroupId)}
+              responsiveMode={model.state.responsiveMode}
+              selectedGroupId={model.state.selectedGroupId}
+              notationDisplayMode={props.notationDisplayMode}
+              canMoveToPreviousGroup={Boolean(previousGroupId)}
+              editTargetLabel={getEditTargetLabel(model.state.editTarget, source.labels)}
+              onUseAppendTarget={() =>
+                setEditTarget(appendEditTarget, getFocusTargetId(source, model.state.focusTarget))
+              }
+              onMoveToNextGroup={() => {
+                if (nextGroupId) {
+                  emitIntent({
+                    ...intentBase(undefined, componentInteractionReasons.listNavigation),
+                    action: comboWhiteboardActions.moveToNextGroup,
+                    groupId: nextGroupId,
+                  });
+                }
+              }}
+              onMoveToPreviousGroup={() => {
+                if (previousGroupId) {
+                  emitIntent({
+                    ...intentBase(undefined, componentInteractionReasons.listNavigation),
+                    action: comboWhiteboardActions.moveToPreviousGroup,
+                    groupId: previousGroupId,
+                  });
+                }
+              }}
+              onSelectGroup={(groupId) =>
                 emitIntent({
-                  ...intentBase(undefined, componentInteractionReasons.press),
-                  action: comboWhiteboardActions.confirmTruncate,
-                  confirmationId: source.truncateConfirmation?.id ?? "",
+                  ...intentBase(`move-group-${groupId}`, componentInteractionReasons.itemPress),
+                  action: comboWhiteboardActions.selectMoveGroup,
+                  groupId,
                 })
               }
-              tone={uiToneModes.warning}
-            />
-            <PreparedActionButton
-              action={source.truncateConfirmation.cancelAction}
-              disabled={busy}
-              menuItem={false}
-              onPress={() =>
+              onFocusCandidate={(candidateId, focusTargetId) =>
                 emitIntent({
-                  ...intentBase(undefined, componentInteractionReasons.press),
-                  action: comboWhiteboardActions.cancelTruncate,
-                  confirmationId: source.truncateConfirmation?.id ?? "",
+                  ...intentBase(
+                    focusTargetId ?? `combo-candidate-${candidateId}`,
+                    componentInteractionReasons.triggerFocus,
+                  ),
+                  action: comboWhiteboardActions.focusMoveCandidate,
+                  candidateId,
                 })
               }
+              onOpenCandidateDetails={(candidateId, focusTargetId) =>
+                emitIntent({
+                  ...intentBase(
+                    focusTargetId ?? `combo-candidate-${candidateId}`,
+                    componentInteractionReasons.press,
+                  ),
+                  action: comboWhiteboardActions.openCandidateDetails,
+                  candidateId,
+                })
+              }
+              onSelectCandidate={(candidateId, focusTargetId) => {
+                const emitted = emitIntent({
+                  ...intentBase(
+                    focusTargetId ?? `combo-candidate-${candidateId}`,
+                    componentInteractionReasons.itemPress,
+                  ),
+                  action: comboWhiteboardActions.selectMoveCandidate,
+                  candidateId,
+                  editTarget: model.state.editTarget,
+                });
+                if (emitted) closePicker();
+              }}
             />
-          </Group>
-        </section>
-      )}
-
-      {source.mode === comboWhiteboardModes.repairReview &&
-        source.repairAction &&
-        source.boundaryIndex !== undefined && (
-          <PreparedActionButton
-            action={source.repairAction}
-            disabled={busy}
-            menuItem={false}
-            onPress={() =>
-              emitIntent({
-                ...intentBase(undefined, componentInteractionReasons.press),
-                action: comboWhiteboardActions.repairFromValidPrefix,
-                boundaryIndex: source.boundaryIndex ?? 0,
-              })
-            }
-            tone={uiToneModes.warning}
-          />
+          </MovePickerComposerLayer>
         )}
+      </Show>
 
-      {source.mode === comboWhiteboardModes.detailReadOnly && source.detailActions && (
-        <Group>
-          {source.detailActions.editCustomCombo && (
-            <PreparedActionButton
-              action={source.detailActions.editCustomCombo}
-              disabled={busy}
-              menuItem={false}
-              onPress={() =>
-                emitIntent({
-                  ...intentBase(undefined, componentInteractionReasons.press),
-                  action: comboWhiteboardActions.editCustomCombo,
-                  actionId: source.detailActions?.editCustomCombo?.id ?? "",
-                })
+      <Show when={Boolean(menuTarget) && source.mode !== comboWhiteboardModes.savingFrozen}>
+        {() => (
+          <div
+            role="menu"
+            tabIndex={-1}
+            ref={localMenuRef}
+            onKeyDown={handleMenuKeyDown}
+            aria-label={source.labels.menu}
+            data-ui-combo-whiteboard-local-menu
+            data-ui-combo-whiteboard-local-menu-anchor={menuFocusTargetId}
+            className="z-50 grid w-60 max-w-[calc(100vw-1rem)] justify-items-stretch gap-2 border border-(--ui-separator) bg-(--ui-popover) p-3 shadow-(--ui-shadow)"
+            style={{
+              left: menuAnchorPosition?.left ?? 8,
+              opacity: menuAnchorPosition ? undefined : 0,
+              pointerEvents: menuAnchorPosition ? undefined : "none",
+              position: "fixed",
+              top: menuAnchorPosition?.top ?? 8,
+            }}
+          >
+            <Present
+              value={
+                menuStep?.actions?.details
+                  ? {
+                      action: menuStep.actions.details,
+                      onPress: () =>
+                        completeMenuAction(
+                          emitIntent({
+                            ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
+                            action: comboWhiteboardActions.openStepDetails,
+                            stepId: menuStep.id,
+                          }),
+                        ),
+                    }
+                  : undefined
               }
-            />
-          )}
-          {source.detailActions.duplicateSeededCombo && (
-            <PreparedActionButton
-              action={source.detailActions.duplicateSeededCombo}
-              disabled={busy}
-              menuItem={false}
-              onPress={() =>
-                emitIntent({
-                  ...intentBase(undefined, componentInteractionReasons.press),
-                  action: comboWhiteboardActions.duplicateSeededCombo,
-                  actionId: source.detailActions?.duplicateSeededCombo?.id ?? "",
-                })
+            >
+              {PreparedActionButtonContent}
+            </Present>
+            <Present
+              value={
+                menuStep?.actions?.replace
+                  ? {
+                      action: menuStep.actions.replace,
+                      disabled: !editingEnabled || busy,
+                      onPress: () =>
+                        openPickerForEditTarget(
+                          { operation: comboWhiteboardEditOperations.replace, stepId: menuStep.id },
+                          menuFocusTargetId,
+                        ),
+                    }
+                  : undefined
               }
-            />
-          )}
-        </Group>
-      )}
+            >
+              {PreparedActionButtonContent}
+            </Present>
+            <Present
+              value={
+                menuStep?.actions?.remove
+                  ? {
+                      action: menuStep.actions.remove,
+                      disabled: !editingEnabled || busy,
+                      onPress: () =>
+                        completeMenuAction(
+                          emitIntent({
+                            ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
+                            action: comboWhiteboardActions.removeStep,
+                            stepId: menuStep.id,
+                          }),
+                        ),
+                      tone: uiToneModes.destructive,
+                    }
+                  : undefined
+              }
+            >
+              {PreparedActionButtonContent}
+            </Present>
+            <Present
+              value={
+                menuStep?.actions?.undo
+                  ? {
+                      action: menuStep.actions.undo,
+                      disabled: !editingEnabled || busy,
+                      onPress: () =>
+                        completeMenuAction(
+                          emitIntent({
+                            ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
+                            action: comboWhiteboardActions.undoToStep,
+                            stepId: menuStep.id,
+                          }),
+                        ),
+                    }
+                  : undefined
+              }
+            >
+              {PreparedActionButtonContent}
+            </Present>
+            <Present
+              value={
+                menuStep?.actions?.pickUp
+                  ? {
+                      action: menuStep.actions.pickUp,
+                      disabled: !editingEnabled || busy,
+                      onPress: () =>
+                        completeMenuAction(
+                          emitIntent({
+                            ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
+                            action: comboWhiteboardActions.pickUpStep,
+                            stepId: menuStep.id,
+                          }),
+                        ),
+                    }
+                  : undefined
+              }
+            >
+              {PreparedActionButtonContent}
+            </Present>
+            <Present
+              value={
+                menuGap?.actions?.insert
+                  ? {
+                      action: menuGap.actions.insert,
+                      disabled: !editingEnabled || busy,
+                      onPress: () =>
+                        openPickerForEditTarget(
+                          getGapEditTarget(source, menuGap),
+                          menuFocusTargetId,
+                        ),
+                    }
+                  : undefined
+              }
+            >
+              {PreparedActionButtonContent}
+            </Present>
+            <Present
+              value={
+                menuGap?.actions?.drop && pickedUpStepId
+                  ? {
+                      action: menuGap.actions.drop,
+                      disabled: !editingEnabled || busy,
+                      onPress: () =>
+                        completeMenuAction(
+                          emitIntent({
+                            ...intentBase(menuFocusTargetId, componentInteractionReasons.itemPress),
+                            action: comboWhiteboardActions.dropPickedStep,
+                            gapId: menuGap.id,
+                            operation: comboWhiteboardEditOperations.reorder,
+                            stepId: pickedUpStepId,
+                          }),
+                        ),
+                    }
+                  : undefined
+              }
+            >
+              {PreparedActionButtonContent}
+            </Present>
+            <Button onRequestPress={closeMenu} role="menuitem">
+              {source.labels.closeMenu}
+            </Button>
+          </div>
+        )}
+      </Show>
 
-      {source.disabledReason && (
-        <StatusMessage tone={uiToneModes.warning}>{source.disabledReason}</StatusMessage>
-      )}
-      {source.mode === comboWhiteboardModes.savingFrozen && (
-        <StatusMessage>{source.labels.saving}</StatusMessage>
-      )}
+      <Present
+        value={
+          pickedUpStepId
+            ? {
+                blocked: !editingEnabled || busy,
+                cancelLabel: source.labels.cancelPickUp,
+                onCancel: (stepId: string) =>
+                  emitIntent({
+                    ...intentBase(
+                      getFocusTargetId(source, model.state.focusTarget),
+                      componentInteractionReasons.press,
+                    ),
+                    action: comboWhiteboardActions.cancelPickUp,
+                    stepId,
+                  }),
+                statusLabel: source.labels.reorderTarget,
+                stepId: pickedUpStepId,
+              }
+            : undefined
+        }
+      >
+        {PickedUpStatusContent}
+      </Present>
+
+      <ComboWhiteboardModeSurface
+        busy={busy}
+        source={source}
+        onEditCustomCombo={(actionId) =>
+          emitIntent({
+            ...intentBase(undefined, componentInteractionReasons.press),
+            action: comboWhiteboardActions.editCustomCombo,
+            actionId,
+          })
+        }
+        onRepair={(boundaryIndex) =>
+          emitIntent({
+            ...intentBase(undefined, componentInteractionReasons.press),
+            action: comboWhiteboardActions.repairFromValidPrefix,
+            boundaryIndex,
+          })
+        }
+        onCancelTruncate={(confirmationId) =>
+          emitIntent({
+            ...intentBase(undefined, componentInteractionReasons.press),
+            action: comboWhiteboardActions.cancelTruncate,
+            confirmationId,
+          })
+        }
+        onDuplicateSeededCombo={(actionId) =>
+          emitIntent({
+            ...intentBase(undefined, componentInteractionReasons.press),
+            action: comboWhiteboardActions.duplicateSeededCombo,
+            actionId,
+          })
+        }
+        onConfirmTruncate={(confirmationId) =>
+          emitIntent({
+            ...intentBase(undefined, componentInteractionReasons.press),
+            action: comboWhiteboardActions.confirmTruncate,
+            confirmationId,
+          })
+        }
+      />
     </section>
   );
 }

@@ -8,44 +8,54 @@ import { z } from "zod/v4";
 
 import {
   mkxlCatalogFilterIds,
+  mkxlCatalogFilterQueryKeys,
   mkxlCatalogMultiSelectFilterIds,
-  mkxlCatalogRangeFilterIds,
-} from "./value";
-
-export {
-  mkxlCatalogFilterIds,
-  mkxlCatalogMultiSelectFilterIds,
-  mkxlCatalogRangeFilterIds,
+  mkxlCatalogSingleSelectFilterIds,
+  mkxlCatalogSources,
 } from "./value";
 
 const MkxlCatalogIdSchema = z.string().min(1);
-
-const MkxlCatalogTagSchema = z.string().min(1);
+const PlainFilterValueSchema = z.union([z.string(), z.array(z.string()).readonly()]);
 
 export const MkxlCatalogFilterIdSchema = z.enum(mkxlCatalogFilterIds);
-
 export const MkxlCatalogMultiSelectFilterIdSchema = z.enum(mkxlCatalogMultiSelectFilterIds);
-
-export const MkxlCatalogRangeFilterIdSchema = z.enum(mkxlCatalogRangeFilterIds);
-
-export const MkxlCatalogDamageRangeSchema = z
-  .object({
-    min: z.number().min(0).optional(),
-    max: z.number().min(0).optional(),
-  })
-  .strict();
+export const MkxlCatalogSingleSelectFilterIdSchema = z.enum(mkxlCatalogSingleSelectFilterIds);
+export const MkxlCatalogSourceSchema = z.enum(mkxlCatalogSources);
+export const MkxlCatalogFilterQueryKeySchema = z.enum(mkxlCatalogFilterQueryKeys);
 
 export const MkxlCatalogFiltersSchema = z
   .object({
-    starters: z.array(z.string().min(1)).min(1).readonly().optional(),
     positions: z.array(MkxlComboPositionSchema).min(1).readonly().optional(),
     meter: z.array(z.number().int().min(0)).min(1).readonly().optional(),
-    damage: MkxlCatalogDamageRangeSchema.optional(),
     difficulties: z.array(MkxlComboDifficultySchema).min(1).readonly().optional(),
-    routeTypes: z.array(MkxlComboRouteTypeSchema).min(1).readonly().optional(),
-    tags: z.array(MkxlCatalogTagSchema).min(1).readonly().optional(),
+    routeClasses: z.array(MkxlComboRouteTypeSchema).min(1).readonly().optional(),
+    sources: z.array(MkxlCatalogSourceSchema).min(1).readonly().optional(),
     stageId: MkxlCatalogIdSchema.optional(),
     interactableIds: z.array(MkxlCatalogIdSchema).min(1).readonly().optional(),
+  })
+  .strict();
+
+export const MkxlCatalogPlainFilterQuerySchema = z
+  .object({
+    position: PlainFilterValueSchema.optional(),
+    meter: PlainFilterValueSchema.optional(),
+    difficulty: PlainFilterValueSchema.optional(),
+    routeClass: PlainFilterValueSchema.optional(),
+    source: PlainFilterValueSchema.optional(),
+    stage: PlainFilterValueSchema.optional(),
+    interactable: PlainFilterValueSchema.optional(),
+  })
+  .strict();
+
+export const MkxlCatalogFilterQuerySchema = z
+  .object({
+    position: z.array(MkxlComboPositionSchema).min(1).readonly().optional(),
+    meter: z.array(z.string().regex(/^\d+$/u)).min(1).readonly().optional(),
+    difficulty: z.array(MkxlComboDifficultySchema).min(1).readonly().optional(),
+    routeClass: z.array(MkxlComboRouteTypeSchema).min(1).readonly().optional(),
+    source: z.array(MkxlCatalogSourceSchema).min(1).readonly().optional(),
+    stage: MkxlCatalogIdSchema.optional(),
+    interactable: z.array(MkxlCatalogIdSchema).min(1).readonly().optional(),
   })
   .strict();
 
@@ -55,10 +65,12 @@ export const MkxlCatalogFilterOptionSchema = z
     label: LocalizedTextSchema,
     count: z.number().int().min(0),
     selected: z.boolean(),
+    disabled: z.boolean(),
+    disabledReason: LocalizedTextSchema.optional(),
   })
   .strict();
 
-export const MkxlCatalogMultiSelectFacetSchema = z
+const MkxlCatalogMultiSelectFacetSchema = z
   .object({
     kind: z.literal("multiSelect"),
     id: MkxlCatalogMultiSelectFilterIdSchema,
@@ -66,18 +78,15 @@ export const MkxlCatalogMultiSelectFacetSchema = z
   })
   .strict();
 
-export const MkxlCatalogRangeFacetSchema = z
+const MkxlCatalogSingleSelectFacetSchema = z
   .object({
-    kind: z.literal("range"),
-    id: MkxlCatalogRangeFilterIdSchema,
-    min: z.number().min(0),
-    max: z.number().min(0),
-    selectedMin: z.number().min(0).optional(),
-    selectedMax: z.number().min(0).optional(),
+    kind: z.literal("singleSelect"),
+    id: MkxlCatalogSingleSelectFilterIdSchema,
+    options: z.array(MkxlCatalogFilterOptionSchema).readonly(),
   })
   .strict();
 
 export const MkxlCatalogFilterFacetSchema = z.discriminatedUnion("kind", [
   MkxlCatalogMultiSelectFacetSchema,
-  MkxlCatalogRangeFacetSchema,
+  MkxlCatalogSingleSelectFacetSchema,
 ]);

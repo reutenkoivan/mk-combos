@@ -6,14 +6,22 @@ import type {
   LanguageCode,
   LocalAppState,
 } from "@mk-combos/contracts/settings/type";
-import { languageCodes, notationDisplayModes } from "@mk-combos/contracts/settings/value";
+import {
+  languageCodes,
+  notationDisplayModes,
+  themePreferences,
+} from "@mk-combos/contracts/settings/value";
 
 import { resolveInstalledGame } from "../../game-business/installed-games/runtime";
 import type { InstalledGameBusiness } from "../../game-business/installed-games/type";
 import { installedGames } from "../../game-business/installed-games/value";
-import { BrowserLocalePreferencesSchema, PersistedLocalStateSchema } from "./schema";
+import {
+  BrowserLocalePreferencesSchema,
+  PersistedLocalStateSchema,
+  PersistedLocalStateV1Schema,
+} from "./schema";
 import type { LocalStateError, LocalStateInstalledGameSlice, PersistedLocalState } from "./type";
-import { localGameSliceStatuses, localStateErrorCodes } from "./value";
+import { localGameSliceStatuses, localStateErrorCodes, localStateStorageVersion } from "./value";
 
 export type PreparedLocalAppState = Readonly<{
   installedGameSlices: Readonly<Record<GameId, LocalStateInstalledGameSlice>>;
@@ -22,7 +30,7 @@ export type PreparedLocalAppState = Readonly<{
 }>;
 
 export type PersistedLocalStateParseResult =
-  | Readonly<{ ok: true; value: PersistedLocalState }>
+  | Readonly<{ migrationApplied: boolean; ok: true; value: PersistedLocalState }>
   | Readonly<{ error: LocalStateError; ok: false }>;
 
 export function createLocalStateError(
@@ -166,6 +174,7 @@ export function createDefaultLocalAppState(language: LanguageCode): PreparedLoca
         defaultGameId: installedGames[0].id,
         language,
         notationDisplayMode: notationDisplayModes.FGC,
+        themePreference: themePreferences.system,
       },
     }),
   };
@@ -223,7 +232,13 @@ export function parsePersistedLocalStateText(input: string): PersistedLocalState
 
   const persisted = PersistedLocalStateSchema.safeParse(parsedJson);
 
-  if (!persisted.success) {
+  if (persisted.success) {
+    return { migrationApplied: false, ok: true, value: persisted.data };
+  }
+
+  const legacy = PersistedLocalStateV1Schema.safeParse(parsedJson);
+
+  if (!legacy.success) {
     return {
       error: createLocalStateError(
         localStateErrorCodes.malformedStorage,
@@ -233,7 +248,21 @@ export function parsePersistedLocalStateText(input: string): PersistedLocalState
     };
   }
 
-  return { ok: true, value: persisted.data };
+  return {
+    migrationApplied: true,
+    ok: true,
+    value: PersistedLocalStateSchema.parse({
+      ...legacy.data,
+      state: {
+        ...legacy.data.state,
+        settings: {
+          ...legacy.data.state.settings,
+          themePreference: themePreferences.system,
+        },
+      },
+      version: localStateStorageVersion,
+    }),
+  };
 }
 
 export function validateReplacementGameSlice(

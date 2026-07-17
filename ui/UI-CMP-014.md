@@ -84,6 +84,12 @@ Payload містить combo id, source type, source surface і source focus tar
 - Stale/invalid marker не приховує critical state.
 - Keyboard і controller activation емітять semantic payload.
 
+## Step 26 Readability And Actions
+
+- Title, source і context badges wrap-ляться та не мають fixed content height для long UA copy.
+- Недоступні primary actions показують visible `label: disabledReason` після action group.
+- Return, add-to-list, duplicate, edit і repair використовують shared icon facade; localized visible labels лишаються обов'язковими.
+
 ## Канонічний Responsive і Controller-only Contract
 
 Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.

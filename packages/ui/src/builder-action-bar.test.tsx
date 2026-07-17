@@ -74,8 +74,8 @@ describe("BuilderActionBar", () => {
       <BuilderActionBar
         {...baseProps}
         dirty
-        onRequestAction={onRequestAction}
         savedComboId="saved-combo-7"
+        onRequestAction={onRequestAction}
       />,
     );
 
@@ -87,8 +87,8 @@ describe("BuilderActionBar", () => {
       <BuilderActionBar
         {...baseProps}
         dirty
-        onRequestAction={onRequestAction}
         savedComboId="saved-combo-7"
+        onRequestAction={onRequestAction}
         state={builderActionBarStates.saved}
       />,
     );
@@ -175,10 +175,10 @@ describe("BuilderActionBar", () => {
     const view = render(
       <BuilderActionBar
         {...baseProps}
-        onRequestAction={onRequestAction}
-        savedComboId="saved-combo-7"
-        state={builderActionBarStates.saving}
         status="Saving combo"
+        savedComboId="saved-combo-7"
+        onRequestAction={onRequestAction}
+        state={builderActionBarStates.saving}
       />,
     );
 
@@ -300,8 +300,8 @@ describe("BuilderActionBar", () => {
       <BuilderActionBar
         {...baseProps}
         actions={[]}
-        state={builderActionBarStates.saveError}
         status="Combo could not be saved"
+        state={builderActionBarStates.saveError}
       />,
     );
 

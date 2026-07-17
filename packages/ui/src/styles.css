@@ -63,6 +63,20 @@ body {
   --ui-frame-transition: #d39a3d;
   --ui-frame-transition-soft: #faedcf;
   --ui-frame-transition-border: #a87525;
+  --ui-command-surface: #f2efdf;
+  --ui-command-locked: #e9e5d4;
+  --ui-command-chrome: #151a16;
+  --ui-command-chrome-text: #f6f5e9;
+  --ui-command-muted-text: #b8bcae;
+  --ui-command-border: #565b55;
+  --ui-command-grid: rgb(36 82 237 / 9%);
+  --ui-command-focus: #2452ed;
+  --ui-command-accent: #3d5a00;
+  --ui-command-accent-fill: #b9ef19;
+  --ui-command-selection-text: #151a16;
+  --ui-command-row: #fffdf3;
+  --ui-command-link: #7250b5;
+  --ui-command-cool: #2452ed;
   --ui-radius-control: 6px;
   --ui-radius-surface: 12px;
   --ui-focus-ring: 0 0 0 2px var(--ui-window), 0 0 0 4px var(--ui-accent);
@@ -145,6 +159,20 @@ body {
   --ui-frame-transition: #dca54b;
   --ui-frame-transition-soft: #3d311d;
   --ui-frame-transition-border: #f2c36c;
+  --ui-command-surface: #121516;
+  --ui-command-locked: #181c1d;
+  --ui-command-chrome: #0d0f10;
+  --ui-command-chrome-text: #f3f0e7;
+  --ui-command-muted-text: #aaa99f;
+  --ui-command-border: #60686a;
+  --ui-command-grid: rgb(255 255 255 / 5%);
+  --ui-command-focus: #7dbac1;
+  --ui-command-accent: #f0a52b;
+  --ui-command-accent-fill: #f0a52b;
+  --ui-command-selection-text: #0d0f10;
+  --ui-command-row: #131617;
+  --ui-command-link: #b9a5d7;
+  --ui-command-cool: #7dbac1;
 }
 
 .mk-combos-ui-root[data-ui-contrast="increased"],
@@ -156,6 +184,7 @@ body {
   --ui-separator: color-mix(in srgb, var(--ui-text) 34%, var(--ui-window));
   --ui-destructive-border: color-mix(in srgb, var(--ui-destructive) 74%, var(--ui-text));
   --ui-success-border: color-mix(in srgb, var(--ui-success) 70%, var(--ui-text));
+  --ui-command-border: color-mix(in srgb, var(--ui-text) 62%, var(--ui-command-surface));
   --ui-warning-border: color-mix(in srgb, var(--ui-warning) 70%, var(--ui-text));
 }
 
@@ -164,14 +193,94 @@ body {
   box-shadow: var(--ui-focus-ring);
 }
 
-.mk-combos-ui-root [data-controller-focused="true"] {
+.mk-combos-ui-root[data-ui-controller-focus-visible="true"] [data-controller-focused="true"] {
   position: relative;
   z-index: 1;
   box-shadow: var(--ui-focus-ring);
 }
 
-.mk-combos-ui-root [data-ui-combo-whiteboard-step][data-controller-focused="true"],
-.mk-combos-ui-root [data-ui-combo-whiteboard-connector][data-controller-focused="true"] {
+.mk-combos-ui-root [data-command-deck-selector] {
+  background-color: var(--ui-command-surface);
+  background-image:
+    linear-gradient(var(--ui-command-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ui-command-grid) 1px, transparent 1px);
+  background-size: 1.5rem 1.5rem;
+}
+
+.mk-combos-ui-root
+  :is([data-picker-presentation="commandDeck"], [data-filter-drawer])
+  [data-ui-selectable-item][aria-pressed="true"] {
+  color: var(--ui-command-selection-text);
+  background: color-mix(in srgb, var(--ui-command-accent-fill) 34%, var(--ui-command-surface));
+  box-shadow: inset 0 0 0 2px var(--ui-command-accent);
+}
+
+.mk-combos-ui-root[data-ui-controller-focus-visible="true"]
+  [data-combo-presentation="commandDeck"][data-controller-focused="true"] {
+  position: relative;
+  z-index: 2;
+  box-shadow:
+    inset 0 0 0 2px var(--ui-command-focus),
+    inset 0 0 0 4px var(--ui-command-surface),
+    0 0 0 1px var(--ui-command-focus);
+}
+
+.mk-combos-ui-root[data-ui-controller-focus-visible="true"]
+  [data-filter-drawer]
+  [data-controller-focused="true"] {
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    inset 0 0 0 2px var(--ui-command-focus),
+    0 0 0 1px var(--ui-command-focus);
+}
+
+.mk-combos-ui-root[data-ui-controller-focus-visible="true"]
+  [data-picker-presentation="commandDeck"]
+  [data-ui-selectable-item][data-controller-focused="true"] {
+  position: relative;
+  z-index: 1;
+  box-shadow:
+    inset 0 0 0 2px var(--ui-command-focus),
+    0 0 0 1px var(--ui-command-focus);
+}
+
+.mk-combos-ui-root[data-ui-controller-focus-visible="true"]
+  [data-picker-presentation="commandDeck"]
+  [data-ui-selectable-item][aria-pressed="true"][data-controller-focused="true"] {
+  box-shadow:
+    inset 0 0 0 2px var(--ui-command-accent-fill),
+    inset 0 0 0 4px var(--ui-command-surface),
+    inset 0 0 0 6px var(--ui-command-focus);
+}
+
+.mk-combos-ui-root
+  [data-picker-presentation="commandDeck"]
+  [data-ui-selectable-item][data-disabled="true"] {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0,
+    transparent 0.45rem,
+    var(--ui-command-grid) 0.45rem,
+    var(--ui-command-grid) 0.55rem
+  );
+}
+
+@keyframes ui-command-step-enter {
+  from {
+    opacity: 0;
+    transform: translateX(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.mk-combos-ui-root[data-ui-controller-focus-visible="true"]
+  [data-ui-combo-whiteboard-step][data-controller-focused="true"],
+.mk-combos-ui-root[data-ui-controller-focus-visible="true"]
+  [data-ui-combo-whiteboard-connector][data-controller-focused="true"] {
   box-shadow:
     inset 0 0 0 2px var(--ui-window),
     inset 0 0 0 4px var(--ui-accent);
@@ -191,8 +300,8 @@ body {
   );
 }
 
-.mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-button],
-.mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-button],
+.mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-button]:not([data-filter-chip-remove]),
+.mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-button]:not([data-filter-chip-remove]),
 .mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-dialog-trigger],
 .mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-dialog-trigger],
 .mk-combos-ui-root[data-ui-responsive="mobile"] [data-ui-segmented-control-option],
@@ -207,6 +316,13 @@ body {
 .mk-combos-ui-root[data-ui-responsive="tablet"] [data-ui-popover-trigger] {
   min-height: 2.75rem;
   min-width: 2.75rem;
+}
+
+.mk-combos-ui-root[data-ui-responsive="tablet"]
+  [data-breadcrumb-compact-controls]
+  :is([data-ui-button], [data-ui-menu-trigger]) {
+  min-height: 1.75rem;
+  min-width: 1.75rem;
 }
 
 .mk-combos-ui-root[data-ui-responsive="mobile"] {

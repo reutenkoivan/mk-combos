@@ -5,6 +5,7 @@ import { ChevronDownIcon } from "../icons/chevron-down";
 import { ChevronUpIcon } from "../icons/chevron-up";
 import { Trash2Icon } from "../icons/trash-2";
 import { IconButton } from "../primitives/button";
+import { Present, type PresentContentProps, Show } from "../primitives/conditional";
 import { Group, Stack } from "../primitives/layout";
 import {
   ComboCard,
@@ -73,6 +74,44 @@ const cardActionMap = {
   openDetail: namedListDetailActions.openComboDetail,
 } as const satisfies Partial<Record<ComboCardAction, NamedListDetailAction>>;
 
+type NamedListEmptyStateContentValue = Readonly<{
+  emitEmpty: (intent: EmptyStateIntent) => void;
+  model: EmptyStateModel;
+  sourceFocusTarget: string | undefined;
+  sourceSurface: string;
+}>;
+
+function NamedListEmptyStateContent({
+  value,
+}: PresentContentProps<NamedListEmptyStateContentValue>) {
+  return (
+    <EmptyState
+      {...value.model}
+      onRequestAction={value.emitEmpty}
+      sourceSurface={value.sourceSurface}
+      sourceFocusTarget={value.sourceFocusTarget}
+    />
+  );
+}
+
+type NamedListMarkerContentValue = Readonly<{
+  marker: StaleInvalidComboMarkerModel;
+  onRequestAction: NamedListDetailProps["onRequestMarkerAction"];
+  sourceFocusTarget: string | undefined;
+  sourceSurface: string;
+}>;
+
+function NamedListMarkerContent({ value }: PresentContentProps<NamedListMarkerContentValue>) {
+  return (
+    <StaleInvalidComboMarker
+      {...value.marker}
+      sourceSurface={value.sourceSurface}
+      onRequestAction={value.onRequestAction}
+      sourceFocusTarget={value.sourceFocusTarget}
+    />
+  );
+}
+
 export function NamedListDetail(props: NamedListDetailProps) {
   const emitCard = (item: NamedListDetailItem, intent: ComboCardIntent) => {
     const action = cardActionMap[intent.action as keyof typeof cardActionMap];
@@ -99,102 +138,112 @@ export function NamedListDetail(props: NamedListDetailProps) {
       sourceFocusTarget: intent.sourceFocusTarget,
       sourceSurface: intent.sourceSurface,
     });
+  const emptyStateContentValue =
+    props.items.length === 0 && props.emptyState
+      ? {
+          emitEmpty,
+          model: props.emptyState,
+          sourceFocusTarget: props.sourceFocusTarget,
+          sourceSurface: props.sourceSurface,
+        }
+      : undefined;
 
   return (
     <section className="grid min-w-0 gap-3" data-ui-component="UI-CMP-020">
       <Stack>
         <h2 className="text-lg font-semibold">{props.list.name}</h2>
         <span className="text-sm text-(--ui-muted-text)">{props.list.itemCount}</span>
-        {props.statusMessage && (
-          <p className="text-sm text-(--ui-muted-text)">{props.statusMessage}</p>
-        )}
+        <Show when={Boolean(props.statusMessage)}>
+          {() => <p className="text-sm text-(--ui-muted-text)">{props.statusMessage}</p>}
+        </Show>
       </Stack>
-      {props.items.length === 0 && props.emptyState && (
-        <EmptyState
-          {...props.emptyState}
-          onRequestAction={emitEmpty}
-          sourceFocusTarget={props.sourceFocusTarget}
-          sourceSurface={props.sourceSurface}
-        />
-      )}
-      {props.items.length > 0 && (
-        <ul className="grid min-w-0 list-none gap-3 p-0">
-          {props.items.map((item, index) => (
-            <li className="grid min-w-0 gap-2" key={item.id}>
-              <ComboCard
-                {...item.card}
-                focused={item.id === props.focusedItemId}
-                notationDisplayMode={props.notationDisplayMode}
-                onRequestAction={(intent) => emitCard(item, intent)}
-                sourceFocusTarget={props.sourceFocusTarget}
-                sourceSurface={props.sourceSurface}
-              />
-              <Group>
-                <IconButton
-                  disabled={index === 0}
-                  label={item.reorderUpLabel}
-                  onRequestPress={() =>
-                    props.onRequestAction?.({
-                      action: namedListDetailActions.reorderListItem,
-                      comboRef: item.card.summary.ref,
-                      itemId: item.id,
-                      listId: props.list.id,
-                      reason: componentInteractionReasons.press,
-                      sourceFocusTarget: props.sourceFocusTarget,
-                      sourceSurface: props.sourceSurface,
-                      targetIndex: index - 1,
-                    })
-                  }
-                >
-                  <ChevronUpIcon aria-hidden="true" size="small" />
-                </IconButton>
-                <IconButton
-                  disabled={index === props.items.length - 1}
-                  label={item.reorderDownLabel}
-                  onRequestPress={() =>
-                    props.onRequestAction?.({
-                      action: namedListDetailActions.reorderListItem,
-                      comboRef: item.card.summary.ref,
-                      itemId: item.id,
-                      listId: props.list.id,
-                      reason: componentInteractionReasons.press,
-                      sourceFocusTarget: props.sourceFocusTarget,
-                      sourceSurface: props.sourceSurface,
-                      targetIndex: index + 1,
-                    })
-                  }
-                >
-                  <ChevronDownIcon aria-hidden="true" size="small" />
-                </IconButton>
-                <IconButton
-                  label={item.removeLabel}
-                  onRequestPress={() =>
-                    props.onRequestAction?.({
-                      action: namedListDetailActions.removeFromList,
-                      comboRef: item.card.summary.ref,
-                      itemId: item.id,
-                      listId: props.list.id,
-                      reason: componentInteractionReasons.press,
-                      sourceFocusTarget: props.sourceFocusTarget,
-                      sourceSurface: props.sourceSurface,
-                    })
-                  }
-                >
-                  <Trash2Icon aria-hidden="true" size="small" />
-                </IconButton>
-              </Group>
-              {item.marker && (
-                <StaleInvalidComboMarker
-                  {...item.marker}
-                  onRequestAction={props.onRequestMarkerAction}
-                  sourceFocusTarget={props.sourceFocusTarget}
+      <Present value={emptyStateContentValue}>{NamedListEmptyStateContent}</Present>
+      <Show when={props.items.length > 0}>
+        {() => (
+          <ul className="grid min-w-0 list-none gap-3 p-0">
+            {props.items.map((item, index) => (
+              <li className="grid min-w-0 gap-2" key={item.id}>
+                <ComboCard
+                  {...item.card}
                   sourceSurface={props.sourceSurface}
+                  focused={item.id === props.focusedItemId}
+                  sourceFocusTarget={props.sourceFocusTarget}
+                  notationDisplayMode={props.notationDisplayMode}
+                  onRequestAction={(intent) => emitCard(item, intent)}
                 />
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+                <Group>
+                  <IconButton
+                    disabled={index === 0}
+                    label={item.reorderUpLabel}
+                    onRequestPress={() =>
+                      props.onRequestAction?.({
+                        action: namedListDetailActions.reorderListItem,
+                        comboRef: item.card.summary.ref,
+                        itemId: item.id,
+                        listId: props.list.id,
+                        reason: componentInteractionReasons.press,
+                        sourceFocusTarget: props.sourceFocusTarget,
+                        sourceSurface: props.sourceSurface,
+                        targetIndex: index - 1,
+                      })
+                    }
+                  >
+                    <ChevronUpIcon aria-hidden="true" size="small" />
+                  </IconButton>
+                  <IconButton
+                    label={item.reorderDownLabel}
+                    disabled={index === props.items.length - 1}
+                    onRequestPress={() =>
+                      props.onRequestAction?.({
+                        action: namedListDetailActions.reorderListItem,
+                        comboRef: item.card.summary.ref,
+                        itemId: item.id,
+                        listId: props.list.id,
+                        reason: componentInteractionReasons.press,
+                        sourceFocusTarget: props.sourceFocusTarget,
+                        sourceSurface: props.sourceSurface,
+                        targetIndex: index + 1,
+                      })
+                    }
+                  >
+                    <ChevronDownIcon aria-hidden="true" size="small" />
+                  </IconButton>
+                  <IconButton
+                    label={item.removeLabel}
+                    onRequestPress={() =>
+                      props.onRequestAction?.({
+                        action: namedListDetailActions.removeFromList,
+                        comboRef: item.card.summary.ref,
+                        itemId: item.id,
+                        listId: props.list.id,
+                        reason: componentInteractionReasons.press,
+                        sourceFocusTarget: props.sourceFocusTarget,
+                        sourceSurface: props.sourceSurface,
+                      })
+                    }
+                  >
+                    <Trash2Icon aria-hidden="true" size="small" />
+                  </IconButton>
+                </Group>
+                <Present
+                  value={
+                    item.marker
+                      ? {
+                          marker: item.marker,
+                          onRequestAction: props.onRequestMarkerAction,
+                          sourceFocusTarget: props.sourceFocusTarget,
+                          sourceSurface: props.sourceSurface,
+                        }
+                      : undefined
+                  }
+                >
+                  {NamedListMarkerContent}
+                </Present>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Show>
     </section>
   );
 }

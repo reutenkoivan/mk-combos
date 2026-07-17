@@ -1,4 +1,3 @@
-import { comboSources } from "@mk-combos/contracts/identity/value";
 import { describe, expect, it } from "vitest";
 import { parseComboDetailPathParams } from "./runtime";
 
@@ -6,22 +5,32 @@ describe("combo detail path boundary", () => {
   it("normalizes supported params and strips parent params", () => {
     expect(
       parseComboDetailPathParams({
+        character: "scorpion",
         comboId: "scorpion-bnb-001",
         gameId: "mkxl",
-        source: comboSources.seeded,
+        specification: "ninjutsu",
       }),
-    ).toEqual({ comboId: "scorpion-bnb-001", source: comboSources.seeded });
+    ).toEqual({
+      character: "scorpion",
+      comboId: "scorpion-bnb-001",
+      specification: "ninjutsu",
+    });
     expect(
       parseComboDetailPathParams({
+        character: "scorpion",
         comboId: "local-1729",
         gameId: "mk1",
-        source: comboSources.custom,
+        specification: "cyrax",
       }),
-    ).toEqual({ comboId: "local-1729", source: comboSources.custom });
+    ).toEqual({ character: "scorpion", comboId: "local-1729", specification: "cyrax" });
   });
 
-  it("rejects unsupported sources and empty combo ids", () => {
-    expect(parseComboDetailPathParams({ comboId: "combo", source: "future" })).toBe(false);
-    expect(parseComboDetailPathParams({ comboId: "", source: comboSources.seeded })).toBe(false);
+  it("rejects empty catalog context and combo ids", () => {
+    expect(
+      parseComboDetailPathParams({ character: "", comboId: "combo", specification: "cyrax" }),
+    ).toBe(false);
+    expect(
+      parseComboDetailPathParams({ character: "scorpion", comboId: "", specification: "cyrax" }),
+    ).toBe(false);
   });
 });

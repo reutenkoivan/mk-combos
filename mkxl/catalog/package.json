@@ -21,6 +21,7 @@
     "./selectors/runtime": "./src/selectors/runtime.ts",
     "./summary/schema": "./src/summary/schema.ts",
     "./summary/type": "./src/summary/type.ts",
+    "./summary/value": "./src/summary/value.ts",
     "./package.json": "./package.json"
   },
   "files": [
@@ -40,6 +41,7 @@
       "./selectors/runtime": "./dist/selectors/runtime.mjs",
       "./summary/schema": "./dist/summary/schema.mjs",
       "./summary/type": "./dist/summary/type.mjs",
+      "./summary/value": "./dist/summary/value.mjs",
       "./package.json": "./package.json"
     }
   },

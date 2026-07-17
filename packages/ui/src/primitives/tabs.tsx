@@ -28,8 +28,11 @@ export function TabsRoot(props: TabsRootProps) {
   return (
     <BaseTabs.Root
       {...rootProps}
-      className={cx("grid min-w-0 gap-4", className)}
+      ref={ref}
       data-ui-tabs
+      value={value}
+      orientation={orientation}
+      className={cx("grid min-w-0 gap-4", className)}
       onValueChange={(nextValue, eventDetails) => {
         if (typeof nextValue === "string") {
           onValueChange?.({
@@ -38,9 +41,6 @@ export function TabsRoot(props: TabsRootProps) {
           });
         }
       }}
-      orientation={orientation}
-      ref={ref}
-      value={value}
     >
       {children}
     </BaseTabs.Root>
@@ -67,6 +67,9 @@ export function TabsList(props: TabsListProps) {
   return (
     <BaseTabs.List
       {...listProps}
+      ref={ref}
+      data-ui-tabs-list
+      loopFocus={loopFocus}
       activateOnFocus={activateOnFocus}
       className={cx(
         "relative flex min-w-0 overflow-x-auto border-(--ui-separator)",
@@ -74,9 +77,6 @@ export function TabsList(props: TabsListProps) {
         "data-[orientation=vertical]:flex-col data-[orientation=vertical]:border-r",
         className,
       )}
-      data-ui-tabs-list
-      loopFocus={loopFocus}
-      ref={ref}
     >
       {children}
       <BaseTabs.Indicator className={tabsIndicatorRecipe()} data-ui-tabs-indicator />
@@ -97,12 +97,12 @@ export function TabsTab(props: TabsTabProps) {
   return (
     <BaseTabs.Tab
       {...tabProps}
-      className={cx(tabsTabRecipe(), className)}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-tabs-tab={value}
-      disabled={disabled}
       ref={ref}
       value={value}
+      disabled={disabled}
+      data-ui-tabs-tab={value}
+      className={cx(tabsTabRecipe(), className)}
+      data-disabled={disabled ? "true" : undefined}
     >
       {children}
     </BaseTabs.Tab>
@@ -122,11 +122,11 @@ export function TabsPanel(props: TabsPanelProps) {
   return (
     <BaseTabs.Panel
       {...panelProps}
-      className={cx("min-w-0 outline-none focus-visible:shadow-(--ui-focus-ring)", className)}
-      data-ui-tabs-panel={value}
-      keepMounted={keepMounted}
       ref={ref}
       value={value}
+      keepMounted={keepMounted}
+      data-ui-tabs-panel={value}
+      className={cx("min-w-0 outline-none focus-visible:shadow-(--ui-focus-ring)", className)}
     >
       {children}
     </BaseTabs.Panel>

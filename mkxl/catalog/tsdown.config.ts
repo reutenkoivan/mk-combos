@@ -14,5 +14,6 @@ export default createTsdownConfig({
     "selectors/runtime": "src/selectors/runtime.ts",
     "summary/schema": "src/summary/schema.ts",
     "summary/type": "src/summary/type.ts",
+    "summary/value": "src/summary/value.ts",
   },
 });

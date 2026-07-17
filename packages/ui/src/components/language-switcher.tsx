@@ -2,6 +2,7 @@ import type { LanguageCode } from "@mk-combos/contracts/settings/type";
 
 import { useFieldMessage } from "../hooks/field-message";
 import { useComponentValueEmitter } from "../hooks/intents";
+import { Show } from "../primitives/conditional";
 import { Field, FieldLabel, FieldMessage } from "../primitives/field";
 import { SegmentedControl } from "../primitives/segmented-control";
 import { uiToneModes } from "../tokens/value";
@@ -12,6 +13,7 @@ export type LanguageSwitcherProps = {
   ariaLabel?: string;
   availableLanguages: readonly LanguageSwitcherOption[];
   busy?: boolean;
+  controllerFocusedLanguage?: LanguageCode;
   disabled?: boolean;
   invalidSelectedLanguage?: boolean;
   label?: string;
@@ -36,30 +38,34 @@ export function LanguageSwitcher(props: LanguageSwitcherProps) {
 
   return (
     <Field
+      data-ui-component="UI-CMP-003"
       aria-busy={props.busy || undefined}
       className="border-t border-(--ui-separator) py-4 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-center"
-      data-ui-component="UI-CMP-003"
     >
-      {props.label && <FieldLabel>{props.label}</FieldLabel>}
+      <Show when={Boolean(props.label)}>{() => <FieldLabel>{props.label}</FieldLabel>}</Show>
       <SegmentedControl
         {...fieldMessage.methods.getControlProps()}
-        aria-label={props.ariaLabel ?? props.label}
         disabled={blocked}
+        value={props.selectedLanguage}
+        aria-label={props.ariaLabel ?? props.label}
+        focusTargetIdPrefix={props.sourceFocusTarget}
+        controllerFocusedValue={props.controllerFocusedLanguage}
         onValueChange={({ reason, value }) => valueEmitter.methods.emitValue(value, reason)}
+        tone={props.invalidSelectedLanguage ? uiToneModes.destructive : uiToneModes.neutral}
         options={props.availableLanguages.map((option) => ({
           accessibleLabel: option.label,
           disabled: option.status === componentOptionStatuses.disabledUnavailable,
           label: option.shortLabel ?? option.label,
           value: option.language,
         }))}
-        tone={props.invalidSelectedLanguage ? uiToneModes.destructive : uiToneModes.neutral}
-        value={props.selectedLanguage}
       />
-      {props.validationMessage && (
-        <FieldMessage {...fieldMessage.methods.getMessageProps()}>
-          {props.validationMessage}
-        </FieldMessage>
-      )}
+      <Show when={Boolean(props.validationMessage)}>
+        {() => (
+          <FieldMessage {...fieldMessage.methods.getMessageProps()}>
+            {props.validationMessage}
+          </FieldMessage>
+        )}
+      </Show>
     </Field>
   );
 }

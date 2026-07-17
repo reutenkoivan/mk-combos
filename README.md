@@ -154,13 +154,17 @@ Logical routes are generic and game-prefixed:
 
 ```text
 /:gameId/catalog
-/:gameId/combos/:source/:comboId
+/:gameId/catalog/:character/:specification/:comboId
 /:gameId/lists
 /:gameId/builder
-/settings
 ```
 
 The route prefix is the source of truth for active game on deep links. Settings store the default or last active game, but a valid route such as `/mk1/catalog` opens MK1 even in a fresh browser session.
+
+Settings is an App Shell modal over the current working route, not a route of its own. The current
+route query controls it: `?settings=interface` or `?settings=backup` means open, while absence means
+closed. Opening preserves the path, params, unrelated validated search values, and mounted working
+page state. `/settings` and `/backup` have no routes or compatibility redirects.
 
 ## Local State And Backup
 
@@ -196,7 +200,17 @@ The opaque slice must be JSON-safe. The file does not contain global settings or
 
 Root first launch shows required setup for default language, default game, and notation display mode. Browser locale `uk` or `uk-*` defaults to `UA`; every other locale defaults to `EN`. A valid route-prefixed deep link bypasses setup, derives active game from the URL, uses the same language fallback and `FGC` display mode, and creates the first-launch marker or session-only equivalent.
 
-Language and notation changes in Settings autosave immediately. If persistent storage fails, the selected value remains applied for the session and Settings shows a recoverable warning. Backup controls are an accordion with one `UI-CMP-034` item per installed game; every export/import operates only on that item’s game slice.
+### Settings
+
+Language and notation changes in Settings autosave immediately. If persistent storage fails, the
+selected value remains applied for the session and Settings shows a recoverable warning. Backup
+controls are an accordion with one `UI-CMP-034` item per installed game; every export/import
+operates only on that item's game slice.
+
+The modal is full-screen on mobile and tablet and a tall, wide centered dialog on desktop. Close,
+`Escape`, backdrop interaction, browser Back, and semantic controller `Back` dismiss it by removing
+the query. A nested backup dialog handles dismissal before Settings, and a busy backup operation
+blocks Settings dismissal until it is safe to close.
 
 ### Catalog
 
@@ -383,7 +397,9 @@ Acceptance:
 - User switches games and each game restores its own last catalog context.
 - User creates a custom combo through valid transitions only.
 - User exports and imports one game backup without changing settings or another game slice.
-- Controller navigation works across catalog, detail, lists, builder, and settings.
+- Settings opens over the current working route through `?settings=interface|backup`, and every
+  supported dismissal restores that route without losing its state.
+- Controller navigation works across catalog, detail, lists, builder, and the Settings modal.
 
 ## Adding Another Game
 

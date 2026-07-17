@@ -4,284 +4,231 @@
 
 - Код: `UI-CMP-013`
 - Назва: `Filter Control Group`
-- Тип: `component / catalog filters`
+- Тип: `controlled result filters`
 - Статус деталізації: `Описано`
-- Батьківська мапа: [UI.md](../UI.md)
 - Батьківська сторінка: [UI-PAGE-003 Catalog](./UI-PAGE-003.md)
-- Батьківський компонент: [`UI-CMP-012 Combo List Config Module`](./UI-CMP-012.md)
-- Variant docs: [MKXL](./UI-PAGE-003-MKXL.md), [MK1](./UI-PAGE-003-MK1.md)
-- Пов'язані UX сценарії: `US-006`, `US-019`
+- Sibling result components: [`UI-CMP-010`](./UI-CMP-010.md), [`UI-CMP-011`](./UI-CMP-011.md)
 
 ## Призначення
 
-`UI-CMP-013 Filter Control Group` є єдиним collapsible компонентом optional filters у Catalog.
+`UI-CMP-013` є одним controlled composite: постійно mounted compact applied-filter
+summary містить trigger, а modal drawer містить controlled draft editor і live
+preview telemetry. Summary та editor більше не є окремими presentation modes.
 
-Компонент об'єднує:
+Component не володіє applied/draft state, не серіалізує search і не виконує
+filtering. Catalog page передає окремі prepared applied/draft models, open/busy
+state, focus та semantic handlers.
 
-- header із expand/collapse trigger, result count, active optional-filter chips і `Clear filters`;
-- body із controls для optional filter facets.
+## Taxonomy
 
-За замовчуванням `UI-CMP-013` рендериться у стані `expanded` під час fresh Catalog entry і context-ready render. Якщо користувач collapse-ить компонент, це діє тільки в межах поточної Catalog surface session і не змінює selected filters.
+Prepared facets можуть містити:
 
-Optional filters застосовуються live. Explicit `Apply` не є частиною основного UX.
+- Position;
+- Meter;
+- Difficulty;
+- Route class;
+- Source;
+- MKXL only: Arena;
+- MKXL only: Interactables.
 
-Available facets, result count і compatibility messages приходять із active game catalog business. Компонент не обчислює game-specific filter semantics.
+Character, variation і kameo є pathname context та ніколи не дублюються як facets.
+Source `personal` може бути видимим disabled із readable reason.
 
-## Роль і межі
+## Summary presentation
 
-`UI-CMP-013` відповідає за:
+Summary показує:
 
-- показ result count для current required context і selected optional filters;
-- показ active optional-filter chips у header;
-- remove control для кожного active chip;
-- `Clear filters` для optional filters;
-- рендер controlled collapsible state filter group;
-- показ optional facet controls у body;
-- передачу semantic filter update intents у `UI-CMP-012` або Catalog.
+- назву filters;
+- applied result count;
+- active chips;
+- remove action для кожного chip;
+- Clear action;
+- Open Filters action.
 
-`UI-CMP-013` не відповідає за:
+Summary показує лише фактично застосовані chips: inactive facets і placeholder tiles
+на кшталт `—` у цій області відсутні. Summary не показує draft controls і не
+змінює search напряму; page owner одразу commit-ить remove/Clear intent у canonical
+result URL.
 
-- вибір character, variation або kameo;
-- зміну app-level `game`, `language` або `notation display mode`;
-- читання game-owned combo data напряму;
-- обчислення visible combo list самостійно; active game business володіє selectors;
-- відкриття combo detail;
-- запис route state, localStorage або user data напряму.
+Active chips використовують однакову `Refined Capsule` presentation у summary та
+drawer: `rounded-full`, мінімальна висота `32px` і один видимий `16px` remove icon.
+Уся capsule є remove target та focus surface, тому button, focus ring і видимий chip
+мають однакову геометрію без nested або overflow ring. Label показується повністю,
+переноситься за словами й не має truncation. Chip container використовує `flex-wrap`
+і `4px` gap по обох осях; inter-chip spacing не створюється padding/margin самих
+items. Горизонтальний chip scroller і приховані за ним значення заборонені.
 
-`UI-CMP-013` не володіє expanded/collapsed source of truth. Якщо filter mechanics винесені в custom hook, hook викликається в Catalog page flow, а компонент отримує prepared filter model і handlers як props.
+Видимий chip показує лише prepared природну назву значення без category prefix та
+двокрапки. Category лишається у remove action accessible name, щоб однакові значення
+різних facets були однозначними для assistive technology.
 
-## Анатомія
+Prepared `tone` доповнює текст значення: `difficulty` та `routeClass` використовують
+той самий raw-value tone, що й відповідні `difficulty` та `routeType` metadata у
+combo row. Unknown values і Source лишаються neutral; color ніколи не замінює label.
+Enabled `hover` і `active`, внутрішній `focus-visible` ring та `disabled` feedback
+застосовуються до всієї capsule, не виходять за її візуальну геометрію і не
+приховують tone.
 
-Розміщення є collapsible filter block: header завжди зверху і видимий, body розташований під ним тільки коли parent передав expanded model.
+Open Filters і Clear обрамляють compact center cell, у якому result count та chips
+утворюють одну wrapping group. Наступні рядки chips залишаються всередині цієї group
+без clipping або horizontal scroll. Result count є пасивною `aria-live` telemetry
+поза Open control. Summary не має component outer border, nested framed cards або
+`divide-x`; page-level filter/result separator лишається єдиною структурною межею.
 
-```jsx
-<FilterControlGroup ui="UI-CMP-013">
-  <FilterControlRegion slot="UI-CMP-012">
-    <Stack name="FilterLayout">
-      <FilterHeader>
-        <Stack name="FilterHeaderLayout">
-          <Group name="FilterHeaderMainRow">
-            <ExpandCollapseTrigger />
-            <ResultCount />
-            <ClearFiltersControl />
-          </Group>
+## Drawer presentation
 
-          <ActiveOptionalFilterChips />
-        </Stack>
-      </FilterHeader>
+Filter drawer є modal overlay поверх result list та містить:
 
-      <Show when={filterGroupExpanded}>
-        <FilterBody>
-          <OptionalFacetControls>
-            <Stack name="OptionalFacetList">
-              <StarterFacet />
-              <PositionFacet />
-              <MeterFacet />
-              <DamageFacet />
-              <DifficultyFacet />
-              <RouteTypeFacet />
-              <TagsFacet />
-
-              <Show when={activeGame === "MKXL"}>
-                <StageFacet />
-                <InteractableFacet />
-              </Show>
-            </Stack>
-          </OptionalFacetControls>
-        </FilterBody>
-      </Show>
-    </Stack>
-  </FilterControlRegion>
-</FilterControlGroup>
+```text
+FilterDrawer
+├── header
+│   ├── title + live result telemetry
+│   └── icon Discard + icon Reset + labeled Apply
+├── wrapped draft chips, лише коли draft не порожній
+└── scrollable prepared facet rows
+    ├── compact choice rows
+    └── full-width visual choice grids
 ```
 
-Правила розміщення:
+Drawer вирівняний до лівого краю, має full viewport height, повну ширину на mobile
+та maximum width `42rem` на tablet/desktop. Header і chip band лежать поза єдиним
+facet scroller. Backdrop, focus trap та inert background належать modal primitive;
+result list лишається змонтованим під overlay як live preview, але не інтерактивним.
 
-- Header лишається над body у `expanded` і `collapsed` states.
-- Active chips стоять у header, щоб applied filters лишалися видимими навіть коли body collapsed.
-- Facets у body читаються у prepared order; game-specific facets стоять після shared facets.
+Drawer має лише одну end-edge межу на tablet/desktop і жодного outer frame на
+mobile. Header/chip tone, gaps і selected fills групують контент без repeated
+`border-top`, `border-bottom`, `divide-*` або framed facet rows. Compact choices є
+пласкими rows, visual choices — subtle filled tiles; focus ring і selected Check
+зберігаються.
 
-### `filterHeader`
+Draft active-filter chips повторно використовують ту саму `Refined Capsule`
+presentation, geometry та interaction feedback, що й applied chips у summary.
 
-`filterHeader` лишається видимим у `expanded` і `collapsed` states.
+## Public behavior
 
-Header містить:
+- `applied` і `draft` models завжди controlled.
+- Single- і multi-choice selection емітять спільний semantic `toggleOption` intent.
+- Reset filters очищує лише draft і не змінює required pathname context або URL.
+- Discard, Escape, backdrop dismiss і swipe close емітять discard; page owner
+  відкидає draft.
+- Apply filters емітить `applyFilters`; page owner canonicalize-ить result search.
+- Applied chip remove/Clear одразу змінюють canonical result search.
+- Disabled/busy state блокує зміни й Apply, але discard лишається доступним.
 
-- expand/collapse trigger із readable expanded/collapsed state;
-- result count для combos, які відповідають current required context і selected optional filters;
-- chips для active optional filter values;
-- `Clear filters`, якщо один або більше optional filters застосовані.
+Optional changes одразу оновлюють preview model. Це live preview, а не автоматичний
+commit: applied search змінюється тільки після Apply. Background preview не може
+відкрити detail, доки modal drawer активний.
 
-Кожен active chip має:
+## Applied/draft lifecycle
 
-- readable label;
-- remove control;
-- accessible name на кшталт `Remove meter filter`;
-- stable size, щоб список не стрибав під час hover або focus.
+```text
+Open:    applied → draft
+Edit:    draft → live preview
+Reset:   empty draft → live preview
+Discard: discard draft → applied result
+Apply:   draft → canonical search + persistence
+Summary remove/Clear: applied → canonical search + persistence
+Detail:  доступний після Apply або Discard
+```
 
-Removing chip прибирає тільки відповідний optional filter value і не скидає required context.
+Цей lifecycle належить Catalog page. `UI-CMP-013` залишається pure controlled view.
 
-### `filterBody`
+## Semantic intents
 
-`filterBody` показується тільки у `expanded` state.
+- `openFilterGroup` / `discardDraftFilters`;
+- `toggleDraftOption`;
+- `removeAppliedFilter` / `removeDraftFilter`;
+- `clearAppliedFilters` / `resetDraftFilters`;
+- `applyFilters`.
 
-Body містить optional facets:
+Intent payload містить filter/control IDs, value та interaction reason, але не
+browser event object.
 
-- starter;
-- position;
-- meter;
-- damage;
-- difficulty;
-- route type;
-- tags;
-- `MKXL` only: stage;
-- `MKXL` only: interactable.
+## Controlled focus
 
-`MK1` не показує `variation`, stage або interactable controls у `UI-CMP-013`. `MKXL` не показує `kameo`.
+Filter drawer приймає stable focus IDs для:
 
-`character`, `variation` і `kameo` не дублюються як optional filter facets. Вони належать `contextRow` у `UI-CMP-012`.
+- facet options;
+- Discard;
+- Reset;
+- Apply filters.
 
-## Interface Contract
+`controllerFocusedControlId` керує окремим visual focus state. Component не читає
+DOM geometry і не створює synthetic click/keyboard events.
 
-### Inputs
+Controller mapping:
 
-- selected optional filters;
-- available optional facets;
-- result count;
-- expanded або collapsed state, default `expanded`;
-- loading або disabled state;
-- validation або compatibility message;
-- controller focus state.
+- D-pad — рух по prepared semantic graph;
+- `A` — toggle/select option або activate focused action;
+- `B` або `Y` — discard;
+- `X` — reset draft.
 
-### Outputs
+DOM focus на open переходить до named dialog, trap-иться всередині drawer і після
+close повертається до постійно mounted summary trigger. Controller header actions
+займають logical row `0`, а facet rows починаються з row `1`.
 
-- `requestUpdateOptionalFilter(payload)`;
-- `requestRemoveActiveFilter(payload)`;
-- `requestClearFilters(payload)`;
-- `requestToggleFilterGroup(payload)`;
-- `requestCloseFilterGroup(payload)`;
-- `requestReturnFocusToCatalog(payload)`.
+Поки filter drawer active, background combo rows не отримують semantic commands.
 
-Output payloads містять filter id/value/reason/source focus target і не містять browser event objects.
+## Dependent facets
 
-### State Tokens
+MKXL Arena → Interactables cascade готується game business owner-ом. Arena є visual
+optional single-choice, а Interactables — visual multi-choice. Component лише:
 
-- `filterGroupExpanded`: filter body показаний; default state для fresh Catalog entry і context-ready render.
-- `filterGroupCollapsed`: показаний тільки header; selected filters лишаються active.
-- `filterActive`: один або більше optional filters застосовані.
-- `loadingFacets`: optional facets або counts ще готуються.
-- `noFilterResults`: selected optional filters не повернули combo для current required context.
-- `invalidDependentFilter`: selected stage/interactable або інший dependent filter більше не сумісний з upstream filter.
+- не рендерить Interactables до вибору Arena;
+- рендерить available/current Arena та available/current Interactables;
+- показує локалізований empty message, коли selected Arena не має Interactables;
+- показує recovered draft;
+- емітить вибір доступного value.
 
-Deprecated для основного v1 UX:
+Зміна або очищення Arena прибирає incompatible Interactables у game-owned recovery.
 
-- `dirty`;
-- explicit `apply filters`;
-- draft/applied split для ordinary optional filter changes.
+MK1 не отримує Arena або Interactables facets.
 
-## UI Behavior
+## Responsive
 
-### Default Expanded
-
-`UI-CMP-013` відкривається expanded за замовчуванням:
-
-- після fresh Catalog entry;
-- після valid context-ready render;
-- після route або page transition у Catalog, якщо немає surface-session collapse state.
-
-User collapse не очищає filters і не зберігається як app-level setting.
-
-### Live Filtering
-
-Optional filters застосовуються live:
-
-1. Користувач змінює optional filter.
-2. `UI-CMP-013` емітить update event.
-3. Catalog перераховує visible combo list.
-4. Result count і active chips оновлюються.
-5. Якщо result count дорівнює `0`, Catalog переходить у `noFilterResults`.
-
-### Clear Filters
-
-`Clear filters` очищає:
-
-- starter;
-- position;
-- meter;
-- damage;
-- difficulty;
-- route type;
-- tags;
-- `MKXL` stage/interactable filters.
-
-`Clear filters` не очищає:
-
-- selected character;
-- selected `MKXL` variation;
-- selected `MK1` kameo;
-- app-level settings;
-- route context.
-
-## Controller Behavior
-
-`UI-CMP-013` отримує semantic commands через `UI-CMP-012` або Catalog і не читає Browser Gamepad API напряму.
-
-Commands:
-
-- `openFilters`: фокусує `UI-CMP-013`, лишає або переводить group у `filterGroupExpanded`, ставить focus на перший active або available filter.
-- `navLeft` / `navRight`: рух між header controls або options у focused filter group.
-- `navUp` / `navDown`: рух між header, filter body controls, `contextRow` і `UI-CMP-010 Combo List`.
-- `confirm`: toggles focused filter value або expand/collapse trigger; зміна filter value застосовується live.
-- `back`: якщо focus у body, collapse-ить group і повертає focus на header trigger.
-- `closePanel`: collapse-ить group і повертає focus на header trigger.
-- contextual `clearFilters`: очищає optional filters без скидання selected context.
-
-Guard rails:
-
-- Поки focus у expanded filter body або picker/listbox open, combo list не отримує `confirm`, `openDetail` або `addToList`.
-- Controller commands не мають вибирати filters, яких немає у current options.
-- `openFilters` не створює modal focus trap.
+- Prepared `responsiveMode` однаково керує UI grid і controller graph.
+- Compact facets утворюють дві колонки на tablet/desktop і одну на mobile.
+- Visual facets займають повний ряд: `2` option-колонки на mobile, `3` на tablet,
+  `4` на desktop. Кожен square track має fluid width до `12rem`, тому неповний ряд
+  вирівнюється зліва й не розриває Arena → Interactables надмірною висотою.
+- На tablet/desktop title/telemetry та header actions лежать в одному row. На mobile
+  actions переходять у другий header row без horizontal overflow.
+- Facet labels і disabled reasons wrap-ляться без overlap. Видимий count badge містить
+  лише число; повний localized count лишається в accessible name.
+- Facet та header action targets не менші за `44×44px`; active chip remove target
+  займає всю capsule з мінімальною висотою `32px`.
+- Icon-only Discard/Reset мають `44×44px`; labeled Apply не стискає localized text.
+- Зовнішній horizontal overflow заборонений.
 
 ## Accessibility
 
-- Expand/collapse trigger має `aria-expanded`, що відповідає `filterGroupExpanded` або `filterGroupCollapsed`.
-- Result count оголошується через polite live region, якщо зміна впливає на task completion.
-- Filter groups мають semantic grouping і readable labels.
-- Кожен chip remove control має accessible name.
-- `Clear filters` має visible label або accessible name.
-- Invalid dependent filter має видимий і програмний invalid/error relationship.
-- Focus-visible має бути помітний у light, dark, standard contrast і increased contrast.
-- Розміщення має лишатися usable на mobile/narrow viewport: header, chips, result count, body controls і combo list не overlap-яться.
+- Facets мають semantic group labels.
+- Choice state передається через native/ARIA selected semantics.
+- Visual tile має `48px` asset або readable fallback, label, count і distinct selected marker.
+- Disabled reason доступний програмно й візуально.
+- Drawer має named modal dialog semantics; background content є inert.
+- Active chip remove має конкретне category-qualified accessible name.
+- Візуальний chip і remove target мають однакову capsule geometry; повний label
+  завжди залишається видимим і може переноситися на кілька рядків.
+- Єдиний видимий remove icon належить capsule-wide remove control; decorative
+  duplicate icon і окремий круглий focus ring не рендеряться.
+- Hover, active, focus-visible і disabled feedback охоплюють всю capsule, тоді як
+  native disabled semantics лишають remove action inert.
+- Live result count використовує polite announcement без шуму на кожному focus move.
+- Focus-visible відрізняється від selected state у dark/light themes.
 
-## Acceptance Criteria
+## Acceptance
 
-- `UI-CMP-013` має окремий повний spec.
-- `UI-CMP-012` рендерить `UI-CMP-013` як єдиний optional filter component.
-- `UI-CMP-013` default state є `filterGroupExpanded`.
-- Header містить expand/collapse trigger, result count, active optional-filter chips і `Clear filters`.
-- Body містить optional facet controls.
-- Clear filters не скидає character + variation/kameo.
-- Optional filters застосовуються live без `Apply`.
-- `openFilters`, `back` і `closePanel` працюють з collapsible group і не тригерять combo card actions у background.
-
-## Test Scenarios
-
-- Fresh Catalog із valid context показує `UI-CMP-013` expanded.
-- Collapse приховує body, але лишає header, chips і result count видимими.
-- Optional filters live-фільтрують combo list.
-- Result count оновлюється після зміни optional filters.
-- Active chip remove прибирає тільки відповідний filter.
-- `Clear filters` прибирає optional filters і зберігає selected character + variation/kameo.
-- Stage change у MKXL прибирає incompatible interactable.
-- No-results показує recovery action.
-- Controller `openFilters`, `back`, `closePanel` не тригерять combo card actions у background.
-
-## Канонічний Responsive і Controller-only Contract
-
-Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
-
-- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повну workstation composition і spatial row/column navigation;
-- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
-- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+- Один controlled composite рендерить mounted applied summary та portal drawer.
+- Summary і drawer показують однакову rounded active-filter capsule з одним видимим
+  icon, capsule-wide remove target з мінімальною висотою `32px` і повним
+  interaction-state feedback.
+- Усі chip labels видимі, category-free, wrapped і не мають horizontal scroller.
+- Summary містить лише applied chips без inactive facet placeholders; remove/Clear
+  одразу оновлюють canonical result URL.
+- Drawer не має internal applied/draft source of truth.
+- Reset змінює preview, Discard відновлює applied, Apply записує canonical search.
+- Background preview inert; detail відкривається лише після Apply або Discard.
+- Personal source disabled; unsupported starter/tags facets відсутні.
+- Arena/Interactables cascade зберігає валідний draft.
+- Controller focus IDs стабільні, background commands ізольовані.

@@ -7,5 +7,4 @@ export const shellBreadcrumbIds = {
   lists: "lists",
   recovery: "recovery",
   root: "root",
-  settings: "settings",
 } as const;

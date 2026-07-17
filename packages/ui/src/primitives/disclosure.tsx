@@ -45,13 +45,13 @@ export function DisclosureRoot(props: DisclosureRootProps) {
   return (
     <BaseCollapsible.Root
       {...rootProps}
-      className={cx("grid min-w-0 gap-2", className)}
-      data-ui-disclosure
-      defaultOpen={defaultOpen}
-      disabled={disabled}
-      onOpenChange={handleOpenChange}
-      open={open}
       ref={ref}
+      open={open}
+      data-ui-disclosure
+      disabled={disabled}
+      defaultOpen={defaultOpen}
+      onOpenChange={handleOpenChange}
+      className={cx("grid min-w-0 gap-2", className)}
     >
       {children}
     </BaseCollapsible.Root>
@@ -86,12 +86,12 @@ export function DisclosureTrigger(props: DisclosureTriggerProps) {
   return (
     <BaseCollapsible.Trigger
       {...triggerProps}
-      className={cx(controlRecipe({ density, emphasis, shape, tone }), className)}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-disclosure-trigger
-      disabled={disabled}
       ref={ref}
       type={type}
+      disabled={disabled}
+      data-ui-disclosure-trigger
+      data-disabled={disabled ? "true" : undefined}
+      className={cx(controlRecipe({ density, emphasis, shape, tone }), className)}
     >
       {children}
     </BaseCollapsible.Trigger>
@@ -124,14 +124,14 @@ export function DisclosurePanel(props: DisclosurePanelProps) {
   return (
     <BaseCollapsible.Panel
       {...panelProps}
+      ref={ref}
+      data-ui-disclosure-panel
+      keepMounted={keepMounted}
       className={cx(
         surfaceRecipe({ density, material, shape, tone }),
         "box-border h-(--collapsible-panel-height) overflow-hidden opacity-100 transition-[height,opacity] duration-200 ease-out [&[hidden]:not([hidden='until-found'])]:hidden data-ending-style:h-0 data-ending-style:opacity-0 data-starting-style:h-0 data-starting-style:opacity-0 motion-reduce:transition-none",
         className,
       )}
-      data-ui-disclosure-panel
-      keepMounted={keepMounted}
-      ref={ref}
     >
       {children}
     </BaseCollapsible.Panel>

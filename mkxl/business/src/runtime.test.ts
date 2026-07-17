@@ -1,5 +1,7 @@
+import { catalogFilterChangeKinds } from "@mk-combos/contracts/catalog-filter/value";
 import { mkxlBusiness } from "@mk-combos/mkxl-business";
 import type { MkxlBusinessCustomCombo, MkxlBusinessSlice } from "@mk-combos/mkxl-business/type";
+import { mkxlCatalogMultiSelectFilterIds } from "@mk-combos/mkxl-catalog/filters/value";
 import { describe, expect, it } from "vitest";
 
 const now = "2026-07-11T00:00:00.000Z";
@@ -84,29 +86,125 @@ const sliceWithCustom = (customCombo = customComboFromSeeded()): MkxlBusinessSli
 });
 
 describe("@mk-combos/mkxl-business runtime", () => {
-  it("delegates catalog route recovery, options, facets, and summaries", () => {
-    const parsed = mkxlBusiness.catalog.parseRouteQuery({
-      character: "scorpion",
-      variation: "scorpion:ninjutsu",
-      meter: "1",
-    });
-    const routeQuery = mkxlBusiness.catalog.serializeRouteQuery(parsed.context, parsed.filters);
-    const options = mkxlBusiness.catalog.getContextOptions(parsed.context);
+  it("delegates filter-only search, explicit context options, facets, and summaries", () => {
+    const parsed = mkxlBusiness.catalog.parseFilterQuery({ meter: "1", source: "curated" });
+    const filterQuery = mkxlBusiness.catalog.serializeFilterQuery(parsed.filters);
+    const options = mkxlBusiness.catalog.getContextOptions(scorpionNinjutsuContext);
     const summaries = mkxlBusiness.catalog.selectSeededSummaries({
-      context: parsed.context,
+      context: scorpionNinjutsuContext,
       filters: parsed.filters,
     });
-    const facets = mkxlBusiness.catalog.getFilterFacets(parsed.context, parsed.filters);
+    const facets = mkxlBusiness.catalog.getFilterFacets(scorpionNinjutsuContext, parsed.filters);
 
-    expect(parsed.status).toBe("ready");
-    expect(routeQuery).toMatchObject({
-      character: "scorpion",
-      variation: "scorpion:ninjutsu",
+    expect(filterQuery).toEqual({
       meter: ["1"],
+      source: ["curated"],
     });
     expect(options.variations.some((option) => option.id === "scorpion:ninjutsu")).toBe(true);
     expect(summaries.some((summary) => summary.ref.comboId === seededRef.comboId)).toBe(true);
     expect(facets.length).toBeGreaterThan(0);
+  });
+
+  it("applies semantic filter changes and returns the full recovered catalog state", () => {
+    const changed = mkxlBusiness.catalog.applyFilterChange({
+      context: scorpionNinjutsuContext,
+      filters: {},
+      change: {
+        kind: catalogFilterChangeKinds.toggleOption,
+        filterId: mkxlCatalogMultiSelectFilterIds.source,
+        value: "curated",
+        selected: true,
+      },
+    });
+
+    expect(changed).toEqual({
+      status: "ready",
+      context: scorpionNinjutsuContext,
+      filters: { sources: ["curated"] },
+      messages: [],
+    });
+  });
+
+  it("saves and restores a canonical last catalog without changing other slice data", () => {
+    const slice = sliceWithCustom();
+    const saved = mkxlBusiness.catalog.saveLastCatalog({
+      slice,
+      context: scorpionNinjutsuContext,
+      filters: { sources: ["curated"] },
+    });
+
+    expect(saved.ok).toBe(true);
+    if (!saved.ok) {
+      throw new Error("MKXL last catalog should be saved.");
+    }
+    expect(saved.value.customCombos).toEqual(slice.customCombos);
+    expect(saved.value.namedLists).toEqual(slice.namedLists);
+    expect(saved.value.lastCatalog).toEqual({
+      context: scorpionNinjutsuContext,
+      filters: { sources: ["curated"] },
+    });
+
+    const restored = mkxlBusiness.catalog.restoreLastCatalog(saved.value);
+
+    expect(restored).toEqual({
+      ok: true,
+      value: {
+        status: "ready",
+        context: scorpionNinjutsuContext,
+        filters: { sources: ["curated"] },
+        messages: [],
+      },
+    });
+  });
+
+  it("validates the whole slice before saving or restoring catalog state", () => {
+    const malformedSlice = {
+      version: 1,
+      customCombos: "invalid",
+      namedLists: [],
+    };
+    const save = mkxlBusiness.catalog.saveLastCatalog({
+      slice: malformedSlice,
+      context: scorpionNinjutsuContext,
+      filters: {},
+    });
+    const restore = mkxlBusiness.catalog.restoreLastCatalog(malformedSlice);
+    const missing = mkxlBusiness.catalog.restoreLastCatalog(mkxlBusiness.backup.createEmptySlice());
+    const malformedCatalog = mkxlBusiness.catalog.saveLastCatalog({
+      slice: mkxlBusiness.backup.createEmptySlice(),
+      context: { unexpected: true },
+      filters: {},
+    });
+
+    expect(save.ok).toBe(false);
+    expect(restore.ok).toBe(false);
+    expect(malformedCatalog.ok).toBe(false);
+    if (malformedCatalog.ok) {
+      throw new Error("Malformed MKXL catalog state should be rejected.");
+    }
+    expect(malformedCatalog.error.code).toBe("mkxl.business.invalid_last_catalog");
+    expect(missing).toEqual({
+      ok: true,
+      value: { status: "empty", context: {}, filters: {}, messages: [] },
+    });
+  });
+
+  it("canonicalizes stale game ids before persisting last catalog", () => {
+    const saved = mkxlBusiness.catalog.saveLastCatalog({
+      slice: mkxlBusiness.backup.createEmptySlice(),
+      context: { characterId: "missing", variationId: "missing:variation" },
+      filters: { stageId: "missing-stage" },
+    });
+
+    expect(saved).toEqual({
+      ok: true,
+      value: {
+        version: 1,
+        customCombos: [],
+        namedLists: [],
+        lastCatalog: { context: {}, filters: {} },
+      },
+    });
   });
 
   it("resolves seeded detail and returns notFound for missing combo refs", () => {

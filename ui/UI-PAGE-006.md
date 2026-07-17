@@ -15,6 +15,10 @@
 
 `UI-PAGE-006 Custom Combo Builder` є маршрутною сторінкою для створення і редагування локальних custom combos через керований процес.
 
+Поточна route implementation лишається placeholder. Builder flow нижче є target
+product contract; до його реалізації route не реєструє page controller scope і
+показує в connected App Shell ribbon лише global `Menu`.
+
 Сторінка підтримує:
 
 - створення custom combo з нуля;
@@ -48,7 +52,7 @@
 - отримання `movePath`, `cachedNotation`, `stageContext` і runtime summary після завершення процесу конструктора;
 - запис custom combo у local state через app-level persistence;
 - показ saved combo summary/card після збереження і відкриття page-level singleton `UI-CMP-021 Add-To-List Dialog`, якщо користувач хоче додати combo у named list;
-- передачу команд контролера у дії конструктора.
+- передачу команд контролера у дії конструктора після реалізації target surface.
 
 Сторінка не відповідає за:
 
@@ -845,44 +849,10 @@ Active game builder adapter і builder presentation components із `@mk-combos/
 
 ## Поведінка controller
 
-App Shell передає semantic builder commands активній сторінці.
-
-`UI-PAGE-006` підтримує:
-
-- `builderSelectMove`: вибрати focused valid Whiteboard candidate;
-- `builderUndoMove`: відкотити останній move;
-- `builderFinish`: завершити combo, якщо path можна зберегти;
-- `builderCancel`: відкрити cancel flow або вийти без змін, якщо path clean;
-- `builderNextGroup`: перейти до наступної internal Whiteboard move group;
-- `builderPreviousGroup`: перейти до попередньої internal Whiteboard move group.
-
-Коли focus у `UI-CMP-035 Combo Whiteboard`:
-
-- `navLeft` і `navRight` рухають focus між candidates, steps або gaps залежно від active Whiteboard subregion;
-- `navUp` і `navDown` переводять focus між Whiteboard, Frame Meter і Action Bar відповідно до layout;
-- `builderNextGroup` і `builderPreviousGroup` перемикають internal move groups без зміни `movePath`;
-- `confirm` на focused valid candidate створює append, insert або replace proposal;
-- `confirm` або `openActions` відкриває local step/gap menu;
-- `back` закриває menu, cancel pick up/drop або повертає focus до safe builder control;
-- pick up/drop reorder має controller equivalent і не залежить тільки від pointer drag.
-
-Коли focus у `UI-CMP-036 Combo Frame Meter`:
-
-- `navLeft` і `navRight` рухають focus між timeline segments;
-- `navUp` і `navDown` переводять focus між Whiteboard, Frame Meter і Action Bar відповідно до layout;
-- `confirm` на segment відкриває readable segment details;
-- `openActions` відкриває той самий anchored segment-details popover;
-- `back` закриває details і повертає focus на source segment;
-- якщо details закриті, `back` повертає focus до safe builder control;
-- keyboard `Escape` працює локально у два етапи: спочатку закриває details, а наступним натисканням прибирає segment focus ring і DOM focus; це не замінює controller `back` для переходу до safe builder control;
-- controller hints пояснюють ці дії без додавання нових semantic commands.
-
-Controller commands не мають:
-
-- вибирати invalid move;
-- виконувати save без valid finish state;
-- змінювати route без page-level handling;
-- читати Browser Gamepad API напряму.
+Поточний placeholder не має page focus graph або contextual builder command scope.
+App Shell обробляє лише `openGlobalMenu`, а connected ribbon містить одну
+команду `Menu`. Whiteboard, Frame Meter, save/cancel і builder mutation controller flows
+лишаються поза поточним implementation scope.
 
 ## Доступність і поведінка вводу
 
@@ -945,7 +915,7 @@ Controller commands не мають:
 - Seeded combo лишається read-only під час duplicate flow.
 - Stale або invalid custom combo не видаляється автоматично.
 - `UI-CMP-031` показує invalid reason і дає шлях до repair/edit flow.
-- Controller commands працюють тільки через semantic builder actions.
+- Поточний placeholder не реєструє page controller scope; connected ribbon показує лише `Menu`.
 - Active game builder adapter не відповідає за localStorage, named lists або routing.
 - Add-to-list flow використовує один page-level singleton `UI-CMP-021` після створення або оновлення combo.
 
@@ -973,9 +943,7 @@ Controller commands не мають:
 - Builder без selected `MKXL` stage не показує interactable moves.
 - Builder із selected `MKXL` stage показує тільки interactables поточної карти, zone, segment і distance band.
 - Edge, який не проходить verified timing contract active game builder adapter-а, не доступний у valid next moves.
-- `builderUndoMove` відкочує останній move.
-- `builderNextGroup` і `builderPreviousGroup` перемикають internal Whiteboard move groups.
-- Controller focus переходить у Frame Meter і між timeline segments.
+- Connected placeholder рендерить рівно одну shell-owned ribbon із `Menu`; disconnected state її приховує.
 - Frame Meter створює один tab stop на prepared segment, а не на кожен frame.
 - Selected-move grid вирівнює primary та optional comparison tracks за спільними cells.
 - Whole-combo grid показує один continuous timeline зі step boundaries і transition spans.
@@ -999,10 +967,6 @@ Controller commands не мають:
 
 ## Канонічний Responsive і Controller-only Contract
 
-Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
-
-- `mobile` використовує vertical-first navigation, vertical candidate list у centered Move Picker layer, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує повноширинну vertical builder composition, horizontal candidates у centered Move Picker layer і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повноширинну vertical builder composition, dense wrapped Whiteboard, horizontal candidates у centered Move Picker layer і spatial row/column navigation;
-- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
-- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+Поточна placeholder surface рендерить responsive content, але не має
+page-owned controller targets. Її єдиний controller contract — shell `Menu`, що
+відкриває global menu без synthetic events.

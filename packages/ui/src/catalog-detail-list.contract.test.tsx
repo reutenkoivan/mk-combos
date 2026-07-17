@@ -49,15 +49,20 @@ import type {
 } from "@mk-combos/ui/components/combo-list";
 import { ComboList, comboListActions, comboListStates } from "@mk-combos/ui/components/combo-list";
 import type {
+  ComboListConfigContextSelection,
   ComboListConfigGameContextPicker,
+  ComboListConfigLockedCharacter,
   ComboListConfigModuleAction,
   ComboListConfigModuleIntent,
   ComboListConfigPickerKind,
+  ComboListConfigSelectionStep,
+  ComboListConfigSelectorHeader,
 } from "@mk-combos/ui/components/combo-list-config-module";
 import {
   ComboListConfigModule,
   comboListConfigModuleActions,
   comboListConfigPickerKinds,
+  comboListConfigSelectionSteps,
 } from "@mk-combos/ui/components/combo-list-config-module";
 import type {
   ComboMetadataGridAction,
@@ -82,15 +87,19 @@ import type {
   ActiveFilterChip,
   FilterChoiceFacet,
   FilterChoiceOption,
+  FilterChoicePresentation,
+  FilterControlAppliedViewModel,
+  FilterControlDraftViewModel,
   FilterControlGroupAction,
   FilterControlGroupIntent,
   FilterFacet,
   FilterFacetKind,
-  FilterRangeBoundary,
-  FilterRangeFacet,
+  FilterMultiChoiceFacet,
+  FilterSingleChoiceFacet,
 } from "@mk-combos/ui/components/filter-control-group";
 import {
   FilterControlGroup,
+  filterChoicePresentations,
   filterControlGroupActions,
   filterFacetKinds,
 } from "@mk-combos/ui/components/filter-control-group";
@@ -124,12 +133,14 @@ import {
   notationRendererActions,
 } from "@mk-combos/ui/components/notation-renderer";
 import {
+  ComboPresentationModeSchema,
   ComboPresentationSummarySchema,
   ComponentActionDescriptorSchema,
   ComponentAvailabilitySchema,
   ComponentLabelValueSchema,
   NamedListSummarySchema,
   PickerOptionSchema,
+  PickerPresentationModeSchema,
   PickerSlotSchema,
 } from "@mk-combos/ui/components/schema";
 import type {
@@ -142,8 +153,18 @@ import {
   StaleInvalidComboMarker,
   staleInvalidComboMarkerActions,
 } from "@mk-combos/ui/components/stale-invalid-combo-marker";
-import type { PickerSlotStatus } from "@mk-combos/ui/components/type";
-import { pickerSlotStatuses } from "@mk-combos/ui/components/value";
+import { ThemePreferenceSwitcher } from "@mk-combos/ui/components/theme-preference-switcher";
+import type {
+  ComboPresentationMode,
+  PickerPresentationMode,
+  PickerSlotStatus,
+  ThemePreferenceSwitcherOption,
+} from "@mk-combos/ui/components/type";
+import {
+  comboPresentationModes,
+  pickerPresentationModes,
+  pickerSlotStatuses,
+} from "@mk-combos/ui/components/value";
 import type { VariationPickerIntent } from "@mk-combos/ui/components/variation-picker";
 import { VariationPicker, variationPickerActions } from "@mk-combos/ui/components/variation-picker";
 import { mkCombosUi, uiContractGroups } from "@mk-combos/ui/contract";
@@ -171,6 +192,7 @@ const publicComponents = [
   NamedListIndex,
   NotationRenderer,
   StaleInvalidComboMarker,
+  ThemePreferenceSwitcher,
   VariationPicker,
 ] as const;
 
@@ -194,10 +216,14 @@ type PublicCatalogDetailListTypes = {
   comboDetailHeaderActionKind: ComboDetailHeaderActionKind;
   comboDetailHeaderIntent: ComboDetailHeaderIntent;
   comboListAction: ComboListAction;
+  comboListConfigContextSelection: ComboListConfigContextSelection;
   comboListConfigGameContextPicker: ComboListConfigGameContextPicker;
+  comboListConfigLockedCharacter: ComboListConfigLockedCharacter;
   comboListConfigModuleAction: ComboListConfigModuleAction;
   comboListConfigModuleIntent: ComboListConfigModuleIntent;
   comboListConfigPickerKind: ComboListConfigPickerKind;
+  comboListConfigSelectionStep: ComboListConfigSelectionStep;
+  comboListConfigSelectorHeader: ComboListConfigSelectorHeader;
   comboListIntent: ComboListIntent;
   comboListState: ComboListState;
   comboMetadataGridAction: ComboMetadataGridAction;
@@ -211,12 +237,15 @@ type PublicCatalogDetailListTypes = {
   errorStateSeverity: ErrorStateSeverity;
   filterChoiceFacet: FilterChoiceFacet;
   filterChoiceOption: FilterChoiceOption;
+  filterChoicePresentation: FilterChoicePresentation;
+  filterControlAppliedViewModel: FilterControlAppliedViewModel;
+  filterControlDraftViewModel: FilterControlDraftViewModel;
   filterControlGroupAction: FilterControlGroupAction;
   filterControlGroupIntent: FilterControlGroupIntent;
   filterFacet: FilterFacet;
   filterFacetKind: FilterFacetKind;
-  filterRangeBoundary: FilterRangeBoundary;
-  filterRangeFacet: FilterRangeFacet;
+  filterMultiChoiceFacet: FilterMultiChoiceFacet;
+  filterSingleChoiceFacet: FilterSingleChoiceFacet;
   kameoPickerIntent: KameoPickerIntent;
   listEditDialogIntent: ListEditDialogIntent;
   listEditDialogMode: ListEditDialogMode;
@@ -228,10 +257,13 @@ type PublicCatalogDetailListTypes = {
   notationRendererIntent: NotationRendererIntent;
   notationRendererWrappingMode: NotationRendererWrappingMode;
   pickerSlotStatus: PickerSlotStatus;
+  pickerPresentationMode: PickerPresentationMode;
+  comboPresentationMode: ComboPresentationMode;
   staleInvalidComboMarkerAction: StaleInvalidComboMarkerAction;
   staleInvalidComboMarkerActionDescriptor: StaleInvalidComboMarkerActionDescriptor;
   staleInvalidComboMarkerActionKind: StaleInvalidComboMarkerActionKind;
   staleInvalidComboMarkerState: StaleInvalidComboMarkerState;
+  themePreferenceSwitcherOption: ThemePreferenceSwitcherOption;
   variationPickerIntent: VariationPickerIntent;
 };
 
@@ -257,7 +289,17 @@ const roadmapComponentSubpaths = {
   namedListIndex: "@mk-combos/ui/components/named-list-index",
   notationRenderer: "@mk-combos/ui/components/notation-renderer",
   staleInvalidComboMarker: "@mk-combos/ui/components/stale-invalid-combo-marker",
+  themePreferenceSwitcher: "@mk-combos/ui/components/theme-preference-switcher",
   variationPicker: "@mk-combos/ui/components/variation-picker",
+} as const;
+
+const step26IconSubpaths = {
+  addToList: "@mk-combos/ui/icons/add-to-list",
+  duplicate: "@mk-combos/ui/icons/duplicate",
+  filters: "@mk-combos/ui/icons/filters",
+  repair: "@mk-combos/ui/icons/repair",
+  return: "@mk-combos/ui/icons/return",
+  viewDetail: "@mk-combos/ui/icons/view-detail",
 } as const;
 
 describe("catalog, detail, and named-list public contracts", () => {
@@ -268,6 +310,7 @@ describe("catalog, detail, and named-list public contracts", () => {
     }
 
     expect(uiContractGroups.components).toEqual(expect.objectContaining(roadmapComponentSubpaths));
+    expect(uiContractGroups.icons).toEqual(expect.objectContaining(step26IconSubpaths));
   });
 
   it("keeps package, publish, tsdown, and contract metadata in parity", async () => {
@@ -279,7 +322,10 @@ describe("catalog, detail, and named-list public contracts", () => {
     const publishExports = uiPackage.publishConfig.exports as Record<string, string>;
     const tsdownEntries = resolvedTsdownConfig?.entry as Record<string, string>;
 
-    for (const contractSubpath of Object.values(roadmapComponentSubpaths)) {
+    for (const contractSubpath of [
+      ...Object.values(roadmapComponentSubpaths),
+      ...Object.values(step26IconSubpaths),
+    ]) {
       const packageSubpath = `.${contractSubpath.slice("@mk-combos/ui".length)}`;
       const entrySubpath = packageSubpath.slice(2);
 
@@ -327,12 +373,14 @@ describe("catalog, detail, and named-list public contracts", () => {
       returnFocusToList: "returnFocusToList",
     });
     expect(filterControlGroupActions).toEqual({
-      clearFilters: "clearFilters",
-      closeFilterGroup: "closeFilterGroup",
-      removeActiveFilter: "removeActiveFilter",
-      returnFocusToCatalog: "returnFocusToCatalog",
-      toggleFilterGroup: "toggleFilterGroup",
-      updateOptionalFilter: "updateOptionalFilter",
+      applyFilters: "applyFilters",
+      clearAppliedFilters: "clearAppliedFilters",
+      discardDraftFilters: "discardDraftFilters",
+      openFilterGroup: "openFilterGroup",
+      removeAppliedFilter: "removeAppliedFilter",
+      removeDraftFilter: "removeDraftFilter",
+      resetDraftFilters: "resetDraftFilters",
+      toggleDraftOption: "toggleDraftOption",
     });
     expect(comboDetailHeaderActions).toEqual({
       duplicateCombo: "duplicateCombo",
@@ -398,25 +446,37 @@ describe("catalog, detail, and named-list public contracts", () => {
       repairInvalidCombo: "repairInvalidCombo",
     });
     expect(comboListConfigModuleActions).toEqual({
-      clearFilters: "clearFilters",
-      closeFilterGroup: "closeFilterGroup",
-      removeActiveFilter: "removeActiveFilter",
-      returnFocusToCatalog: "returnFocusToCatalog",
-      selectCharacter: "selectCharacter",
-      selectGameContext: "selectGameContext",
-      toggleFilterGroup: "toggleFilterGroup",
-      updateOptionalFilter: "updateOptionalFilter",
+      changeCharacter: "changeCharacter",
     });
     expect(notationRendererActions).toEqual({});
     expect(comboMetadataGridActions).toEqual({});
   });
 
   it("publishes exact rendering discriminants from runtime dictionaries", () => {
+    const tonedActiveFilter: ActiveFilterChip = {
+      filterId: "difficulty",
+      id: "difficulty-medium",
+      label: "Medium",
+      removeLabel: "Remove filter “Difficulty: Medium”",
+      tone: "warning",
+      value: "medium",
+    };
+
+    expect(tonedActiveFilter.tone).toBe("warning");
     expect(builderContextFieldKinds).toEqual({ choice: "choice", text: "text" });
     expect(comboListConfigPickerKinds).toEqual({ kameo: "kameo", variation: "variation" });
+    expect(comboListConfigSelectionSteps).toEqual({
+      character: "character",
+      specification: "specification",
+    });
+    expect(filterChoicePresentations).toEqual({ compact: "compact", visual: "visual" });
+    expect(pickerPresentationModes).toEqual({ commandDeck: "commandDeck", standard: "standard" });
+    expect(comboPresentationModes).toEqual({
+      commandDeck: "commandDeck",
+      standard: "standard",
+    });
     expect(filterFacetKinds).toEqual({
       multiChoice: "multiChoice",
-      range: "range",
       singleChoice: "singleChoice",
     });
     expect(comboListStates).toEqual({
@@ -446,6 +506,8 @@ describe("catalog, detail, and named-list public contracts", () => {
       status: pickerSlotStatuses.selectable,
     });
     const option = PickerOptionSchema.parse({
+      count: 3,
+      countLabel: "3 prepared combos",
       disabledReason: "Prepared unavailable reason",
       id: "fighter-1",
       label: "Fighter One",
@@ -460,7 +522,9 @@ describe("catalog, detail, and named-list public contracts", () => {
     });
 
     expect(slot).toEqual(expect.objectContaining({ column: 2, row: 3 }));
-    expect(option.id).toBe("fighter-1");
+    expect(option).toEqual(
+      expect.objectContaining({ countLabel: "3 prepared combos", id: "fighter-1" }),
+    );
     expect(combo.ref.gameId).toBe("future-game");
     expect(ComponentAvailabilitySchema.safeParse({ available: true, ownerState: {} }).success).toBe(
       false,
@@ -486,5 +550,9 @@ describe("catalog, detail, and named-list public contracts", () => {
       selectable: "selectable",
     });
     expect(mkCombosUi.valueSets.pickerSlotStatuses).toBe(pickerSlotStatuses);
+    expect(PickerPresentationModeSchema.parse("commandDeck")).toBe("commandDeck");
+    expect(ComboPresentationModeSchema.safeParse("filterPreview").success).toBe(false);
+    expect(mkCombosUi.valueSets.pickerPresentationModes).toBe(pickerPresentationModes);
+    expect(mkCombosUi.valueSets.comboPresentationModes).toBe(comboPresentationModes);
   });
 });

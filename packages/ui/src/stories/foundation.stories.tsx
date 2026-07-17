@@ -134,14 +134,14 @@ const TokenGrid = () => (
   <div className="grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-2">
     {Object.entries(uiSemanticTokens).map(([name, variable]) => (
       <div
-        className="grid min-h-16 gap-1 rounded-(--ui-radius-control) border border-(--ui-separator) bg-(--ui-content) p-2"
         key={name}
+        className="grid min-h-16 gap-1 rounded-(--ui-radius-control) border border-(--ui-separator) bg-(--ui-content) p-2"
       >
         <span className="text-xs font-medium text-(--ui-text)">{name}</span>
         <span className="text-xs text-(--ui-muted-text)">{variable}</span>
         <span
-          className="h-4 rounded-sm border border-(--ui-separator)"
           style={{ background: `var(${variable})` }}
+          className="h-4 rounded-sm border border-(--ui-separator)"
         />
       </div>
     ))}
@@ -152,36 +152,36 @@ const RecipeMatrix = () => (
   <div className="grid gap-3">
     <div className="flex flex-wrap gap-2">
       <button
+        type="button"
         className={controlRecipe({
           emphasis: uiEmphasisModes.normal,
           tone: uiToneModes.neutral,
         })}
-        type="button"
       >
         Neutral
       </button>
       <button
+        type="button"
         className={controlRecipe({
           emphasis: uiEmphasisModes.prominent,
           tone: uiToneModes.accent,
         })}
-        type="button"
       >
         Accent
       </button>
       <button
+        type="button"
         className={controlRecipe({
           emphasis: uiEmphasisModes.prominent,
           tone: uiToneModes.destructive,
         })}
-        type="button"
       >
         Destructive
       </button>
       <button
-        className={controlRecipe({ state: uiInteractionStates.disabled })}
         disabled
         type="button"
+        className={controlRecipe({ state: uiInteractionStates.disabled })}
       >
         Disabled
       </button>
@@ -193,14 +193,14 @@ const RecipeMatrix = () => (
     <div className="grid gap-2 md:grid-cols-2">
       <input
         aria-label="Search notation"
-        className={fieldRecipe({ state: uiInteractionStates.idle })}
         placeholder="Search notation"
+        className={fieldRecipe({ state: uiInteractionStates.idle })}
       />
       <input
         aria-invalid="true"
         aria-label="Invalid route name"
-        className={fieldRecipe({ state: uiInteractionStates.invalid })}
         defaultValue="Long localized route label without overlap"
+        className={fieldRecipe({ state: uiInteractionStates.invalid })}
       />
     </div>
 
@@ -249,8 +249,8 @@ const PrimitiveMatrix = () => {
             <Stack>
               <Group>
                 <Button
-                  onRequestPress={() => setStatus("Save requested")}
                   tone={uiToneModes.accent}
+                  onRequestPress={() => setStatus("Save requested")}
                 >
                   Save
                 </Button>
@@ -274,15 +274,15 @@ const PrimitiveMatrix = () => {
             <Field>
               <FieldLabel htmlFor="primitive-query">Search</FieldLabel>
               <TextInput
-                aria-describedby="primitive-query-message"
-                id="primitive-query"
                 invalid
+                value={query}
+                id="primitive-query"
+                placeholder="Find combo"
+                aria-describedby="primitive-query-message"
                 onValueChange={({ value }) => {
                   setQuery(value);
                   setStatus(`Search value: ${value || "empty"}`);
                 }}
-                placeholder="Find combo"
-                value={query}
               />
               <FieldMessage id="primitive-query-message" invalid>
                 Invalid state stays adjacent to the field.
@@ -293,11 +293,11 @@ const PrimitiveMatrix = () => {
           <Separator />
 
           <TabsRoot
+            value={tab}
             onValueChange={({ value }) => {
               setTab(value);
               setStatus(`Tab selected: ${value}`);
             }}
-            value={tab}
           >
             <TabsList aria-label="Settings sections">
               <TabsTab value="interface">Interface</TabsTab>
@@ -312,6 +312,7 @@ const PrimitiveMatrix = () => {
 
           <Stack>
             <SegmentedControl
+              value={displayMode}
               aria-label="Display mode"
               onValueChange={({ value }) => {
                 setDisplayMode(value);
@@ -322,7 +323,6 @@ const PrimitiveMatrix = () => {
                 { label: "PlayStation", value: notationDisplayModes.PlayStation },
                 { label: "Xbox", value: notationDisplayModes.Xbox },
               ]}
-              value={displayMode}
             />
             <StatusMessage aria-live="polite">{status}</StatusMessage>
             <StatusMessage tone={uiToneModes.warning}>
@@ -332,11 +332,11 @@ const PrimitiveMatrix = () => {
           </Stack>
 
           <DisclosureRoot
+            open={disclosureOpen}
             onOpenChange={({ open }) => {
               setDisclosureOpen(open);
               setStatus(`Disclosure ${open ? "expanded" : "collapsed"}`);
             }}
-            open={disclosureOpen}
           >
             <DisclosureTrigger>
               Open primitive disclosure with a long localized label
@@ -348,14 +348,14 @@ const PrimitiveMatrix = () => {
                 </span>
                 <Group>
                   <Button
-                    onRequestPress={() => setStatus("Primary action requested")}
                     tone={uiToneModes.accent}
+                    onRequestPress={() => setStatus("Primary action requested")}
                   >
                     Primary action
                   </Button>
                   <Button
-                    onRequestPress={() => setStatus("Destructive action requested")}
                     tone={uiToneModes.destructive}
+                    onRequestPress={() => setStatus("Destructive action requested")}
                   >
                     Destructive action
                   </Button>
@@ -373,8 +373,8 @@ const IconMatrix = () => (
   <div className="flex flex-wrap gap-2">
     {iconExamples.map((Icon) => (
       <span
-        className="inline-flex h-8 w-8 items-center justify-center rounded-(--ui-radius-control) border border-(--ui-control-border) bg-(--ui-control) text-(--ui-text)"
         key={Icon.displayName}
+        className="inline-flex h-8 w-8 items-center justify-center rounded-(--ui-radius-control) border border-(--ui-control-border) bg-(--ui-control) text-(--ui-text)"
       >
         <Icon size={16} />
       </span>
@@ -408,8 +408,8 @@ const NotationMatrix = () => {
             <div className="grid gap-1">
               {Object.values(notationDisplayModes).map((mode) => (
                 <div
-                  className="grid items-start gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]"
                   key={`${group.kind}-${mode}`}
+                  className="grid items-start gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]"
                 >
                   <span className="text-xs font-medium text-(--ui-muted-text)">{mode}</span>
                   <span className="flex flex-wrap gap-1">
@@ -434,8 +434,8 @@ const NotationMatrix = () => {
         <span className="text-xs font-semibold text-(--ui-muted-text)">Fallback</span>
         {Object.values(notationDisplayModes).map((mode) => (
           <div
-            className="grid items-start gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]"
             key={`fallback-${mode}`}
+            className="grid items-start gap-1 sm:grid-cols-[7rem_minmax(0,1fr)]"
           >
             <span className="text-xs font-medium text-(--ui-muted-text)">{mode}</span>
             <span className="flex flex-wrap gap-1">
@@ -475,9 +475,9 @@ export const Default: Story = {
 export const DarkIncreasedContrast: Story = {
   render: () => (
     <StoryFrame
+      theme={uiThemeModes.dark}
       contentClassName="max-w-5xl"
       contrast={uiContrastModes.increased}
-      theme={uiThemeModes.dark}
     >
       <Section title="Dark Increased Contrast Recipes">
         <RecipeMatrix />
@@ -511,12 +511,12 @@ export const LongLabelsAndStates: Story = {
       <Section title="Long Labels, Disabled, Invalid">
         <div className="grid gap-2">
           <button
+            disabled
+            type="button"
             className={controlRecipe({
               placement: uiPlacementModes.block,
               state: uiInteractionStates.disabled,
             })}
-            disabled
-            type="button"
           >
             Дуже довгий localized button label remains readable without overlap
           </button>

@@ -1,6 +1,23 @@
-import { languageCodes, notationDisplayModes } from "@mk-combos/contracts/settings/value";
-import { fireEvent, render, screen, waitFor, within } from "@mk-combos/contracts/test/unit/react";
+import {
+  languageCodes,
+  notationDisplayModes,
+  themePreferences,
+} from "@mk-combos/contracts/settings/value";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@mk-combos/contracts/test/unit/react";
+import type { ControllerCommandEvent } from "@mk-combos/controller-bridge/bridge/type";
+import { controllerCommandEventPhases } from "@mk-combos/controller-bridge/bridge/value";
+import { knownControllerCommandIds } from "@mk-combos/controller-bridge/command/value";
+import { controllerControlIds } from "@mk-combos/controller-bridge/input/value";
+import { controllerProfileIds } from "@mk-combos/controller-bridge/profile/value";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { ControllerCommandScope } from "../../app/controller-session/type";
 import type { LocalStateObservableState, LocalStateSource } from "../../app/local-state/type";
 import {
   localStateErrorCodes,
@@ -9,7 +26,10 @@ import {
 } from "../../app/local-state/value";
 import { FirstLaunchPage } from "./page";
 
-const navigate = vi.hoisted(() => vi.fn());
+const { controllerScopeSpy, navigate } = vi.hoisted(() => ({
+  controllerScopeSpy: vi.fn(),
+  navigate: vi.fn(),
+}));
 
 let observableState: LocalStateObservableState;
 
@@ -22,15 +42,9 @@ const localStateSource = {
   autoCompleteFromDeepLink: vi.fn<LocalStateSource["autoCompleteFromDeepLink"]>(
     () => successfulResult,
   ),
-  clearSettingsReturnTarget: vi.fn<LocalStateSource["clearSettingsReturnTarget"]>(
-    () => successfulResult,
-  ),
   completeFirstLaunch: vi.fn<LocalStateSource["completeFirstLaunch"]>(() => successfulResult),
   rememberLastActiveGame: vi.fn<LocalStateSource["rememberLastActiveGame"]>(() => successfulResult),
   replaceGameSlice: vi.fn<LocalStateSource["replaceGameSlice"]>(() => successfulResult),
-  setSettingsReturnTarget: vi.fn<LocalStateSource["setSettingsReturnTarget"]>(
-    () => successfulResult,
-  ),
   updateSettings: vi.fn<LocalStateSource["updateSettings"]>(() => successfulResult),
 } satisfies LocalStateSource;
 
@@ -41,6 +55,10 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("../../app/local-state/provider", () => ({
   useLocalStateObservableState: () => observableState,
   useLocalStateSource: () => localStateSource,
+}));
+
+vi.mock("../../app/controller-session/provider", () => ({
+  useControllerCommandScope: (scope: unknown) => controllerScopeSpy(scope),
 }));
 
 vi.mock("../../app/providers/provider", () => ({
@@ -55,6 +73,7 @@ function createObservableState(
       defaultGameId: "mkxl",
       language: languageCodes.EN,
       notationDisplayMode: notationDisplayModes.FGC,
+      themePreference: themePreferences.system,
     },
     firstLaunchCompleted: false,
     games: {},
@@ -66,12 +85,103 @@ function createObservableState(
   };
 }
 
+function commandEvent(commandId: string): ControllerCommandEvent {
+  return {
+    commandId,
+    controlId: controllerControlIds.faceSouth,
+    gamepadId: "first-launch-test-controller",
+    gamepadIndex: 0,
+    phase: controllerCommandEventPhases.press,
+    profileId: controllerProfileIds.standard,
+    sequence: 1,
+    timestamp: 100,
+    value: 1,
+  };
+}
+
+function getControllerScope(id: string): ControllerCommandScope {
+  const scope = [...controllerScopeSpy.mock.calls]
+    .reverse()
+    .map(([candidate]) => candidate as ControllerCommandScope)
+    .find((candidate) => candidate.id === id);
+
+  if (!scope) {
+    throw new Error(`Expected controller scope ${id}.`);
+  }
+
+  return scope;
+}
+
+function dispatchControllerCommand(scopeId: string, commandId: string) {
+  act(() => {
+    getControllerScope(scopeId).handleCommand(commandEvent(commandId));
+  });
+}
+
 describe("FirstLaunchPage", () => {
   beforeEach(() => {
     observableState = createObservableState();
     vi.clearAllMocks();
+    controllerScopeSpy.mockReset();
     localStateSource.completeFirstLaunch.mockReturnValue(successfulResult);
     navigate.mockResolvedValue(undefined);
+  });
+
+  it("completes first launch using only controller scopes and draft notation", async () => {
+    render(<FirstLaunchPage />);
+    await screen.findByRole("heading", { name: "Set up MK Combos" });
+
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.confirm);
+    expect(getControllerScope("first-launch-game-menu").enabled).toBe(true);
+    dispatchControllerCommand("first-launch-game-menu", knownControllerCommandIds.navDown);
+    dispatchControllerCommand("first-launch-game-menu", knownControllerCommandIds.confirm);
+
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.navDown);
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.navRight);
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.confirm);
+
+    await screen.findByRole("heading", { name: "Налаштуймо MK Combos" });
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.navDown);
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.navRight);
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.confirm);
+
+    expect(getControllerScope("first-launch-page").ribbon?.notationDisplayModeOverride).toBe(
+      notationDisplayModes.Xbox,
+    );
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.navDown);
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.confirm);
+
+    await waitFor(() =>
+      expect(localStateSource.completeFirstLaunch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          language: languageCodes.UA,
+          notationDisplayMode: notationDisplayModes.Xbox,
+        }),
+      ),
+    );
+    expect(getControllerScope("first-launch-page").commandIds).not.toContain(
+      knownControllerCommandIds.back,
+    );
+  });
+
+  it("closes the first-launch game overlay with Back without bypassing setup", async () => {
+    render(<FirstLaunchPage />);
+    await screen.findByRole("heading", { name: "Set up MK Combos" });
+
+    dispatchControllerCommand("first-launch-page", knownControllerCommandIds.confirm);
+
+    const overlayFocusedTargets = document.querySelectorAll('[data-controller-focused="true"]');
+    expect(overlayFocusedTargets).toHaveLength(1);
+    expect(overlayFocusedTargets[0]).toBe(screen.getByRole("menuitem", { name: "MKXL" }));
+
+    dispatchControllerCommand("first-launch-game-menu", knownControllerCommandIds.back);
+
+    expect(getControllerScope("first-launch-game-menu").enabled).toBe(false);
+    expect(document.querySelectorAll('[data-controller-focused="true"]')).toHaveLength(1);
+    expect(screen.getByRole("button", { name: "Starting game" }).dataset.controllerFocused).toBe(
+      "true",
+    );
+    expect(localStateSource.completeFirstLaunch).not.toHaveBeenCalled();
   });
 
   it("hydrates the explicit setup choices and shows a concise selected-mode preview", async () => {
@@ -80,6 +190,7 @@ describe("FirstLaunchPage", () => {
         defaultGameId: "mk1",
         language: languageCodes.UA,
         notationDisplayMode: notationDisplayModes.PlayStation,
+        themePreference: themePreferences.dark,
       },
       resolvedActiveGameId: "mk1",
     });
@@ -124,6 +235,7 @@ describe("FirstLaunchPage", () => {
         language: languageCodes.UA,
         lastActiveGameId: "mk1",
         notationDisplayMode: notationDisplayModes.Xbox,
+        themePreference: themePreferences.system,
       }),
     );
     expect(navigate).toHaveBeenCalledWith({

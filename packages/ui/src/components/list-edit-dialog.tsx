@@ -1,4 +1,5 @@
 import { Button } from "../primitives/button";
+import { Show } from "../primitives/conditional";
 import {
   DialogBackdrop,
   DialogDescription,
@@ -76,7 +77,9 @@ export function ListEditDialog(props: ListEditDialogProps) {
 
   return (
     <DialogRoot
+      open={props.open}
       disablePointerDismissal={props.busy}
+      sourceFocusTarget={props.sourceFocusTarget}
       onOpenChange={({ open, reason, sourceFocusTarget }) => {
         if (!open) {
           props.onRequestAction?.({
@@ -89,51 +92,56 @@ export function ListEditDialog(props: ListEditDialogProps) {
           });
         }
       }}
-      open={props.open}
-      sourceFocusTarget={props.sourceFocusTarget}
     >
       <DialogPortal>
         <DialogBackdrop />
         <DialogViewport>
           <DialogPopup
-            className="grid-rows-[minmax(0,1fr)_auto] overflow-hidden"
-            data-list-edit-mode={props.mode}
             data-ui-component="UI-CMP-022"
+            data-list-edit-mode={props.mode}
+            className="grid-rows-[minmax(0,1fr)_auto] overflow-hidden"
           >
             <Stack className="min-h-0 overflow-y-auto overscroll-contain pb-3" density="medium">
               <Stack>
                 <DialogTitle>{props.title}</DialogTitle>
                 <DialogDescription>{props.description}</DialogDescription>
               </Stack>
-              {nameMode ? (
-                <Field>
-                  <FieldLabel>{props.fieldLabel}</FieldLabel>
-                  <TextInput
-                    aria-label={props.fieldLabel}
-                    disabled={props.busy}
-                    invalid={Boolean(props.validationMessage)}
-                    onValueChange={({ value }) =>
-                      emit(
-                        listEditDialogActions.changeListDraftName,
-                        value,
-                        componentInteractionReasons.inputChange,
-                      )
-                    }
-                    value={props.draftName}
-                  />
-                  {props.validationMessage && (
-                    <FieldMessage invalid>{props.validationMessage}</FieldMessage>
-                  )}
-                </Field>
-              ) : (
-                props.deleteImpactMessage && (
-                  <p className="text-sm text-(--ui-destructive)">{props.deleteImpactMessage}</p>
-                )
-              )}
+              <Show
+                when={nameMode}
+                fallback={() => (
+                  <Show when={Boolean(props.deleteImpactMessage)}>
+                    {() => (
+                      <p className="text-sm text-(--ui-destructive)">{props.deleteImpactMessage}</p>
+                    )}
+                  </Show>
+                )}
+              >
+                {() => (
+                  <Field>
+                    <FieldLabel>{props.fieldLabel}</FieldLabel>
+                    <TextInput
+                      disabled={props.busy}
+                      value={props.draftName}
+                      aria-label={props.fieldLabel}
+                      invalid={Boolean(props.validationMessage)}
+                      onValueChange={({ value }) =>
+                        emit(
+                          listEditDialogActions.changeListDraftName,
+                          value,
+                          componentInteractionReasons.inputChange,
+                        )
+                      }
+                    />
+                    <Show when={Boolean(props.validationMessage)}>
+                      {() => <FieldMessage invalid>{props.validationMessage}</FieldMessage>}
+                    </Show>
+                  </Field>
+                )}
+              </Show>
             </Stack>
             <Group
-              className="sticky bottom-0 z-10 w-full flex-col-reverse items-stretch border-t border-(--ui-separator) bg-(--ui-dialog) pt-3 sm:flex-row sm:items-center"
               justify="end"
+              className="sticky bottom-0 z-10 w-full flex-col-reverse items-stretch border-t border-(--ui-separator) bg-(--ui-dialog) pt-3 sm:flex-row sm:items-center"
             >
               <Button
                 disabled={props.busy}
@@ -142,8 +150,8 @@ export function ListEditDialog(props: ListEditDialogProps) {
                 {props.cancelLabel}
               </Button>
               <Button
-                disabled={!props.submitAvailability.available || props.busy}
                 loading={props.busy}
+                disabled={!props.submitAvailability.available || props.busy}
                 onRequestPress={() => emit(listEditDialogActions.submitListEdit, props.draftName)}
                 tone={
                   props.mode === listEditDialogModes.deleteListConfirm

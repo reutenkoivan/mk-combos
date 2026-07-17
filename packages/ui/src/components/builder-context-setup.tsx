@@ -1,4 +1,5 @@
 import { Button } from "../primitives/button";
+import { Show } from "../primitives/conditional";
 import { Field, FieldLabel, FieldMessage, TextInput } from "../primitives/field";
 import { Group, Stack } from "../primitives/layout";
 import { StatusMessage } from "../primitives/state";
@@ -93,15 +94,15 @@ function renderBuilderContextField(field: BuilderContextField, props: FieldGroup
         <Group aria-label={field.label} role="group">
           {field.options.map((option) => (
             <SelectableItem
-              accessibleLabel={option.disabledReason ?? option.label}
-              className="grid-cols-[1fr] px-3 py-2"
-              disabled={props.busy || field.disabled || !option.available}
               key={option.id}
+              selected={option.id === field.value}
+              value={`${field.id}-${option.id}`}
+              className="grid-cols-[1fr] px-3 py-2"
+              accessibleLabel={option.disabledReason ?? option.label}
+              disabled={props.busy || field.disabled || !option.available}
               onRequestPress={() =>
                 props.onRequestChange(props.action, field.id, option.id, "press")
               }
-              selected={option.id === field.value}
-              value={`${field.id}-${option.id}`}
             >
               <span>{option.label}</span>
             </SelectableItem>
@@ -111,14 +112,14 @@ function renderBuilderContextField(field: BuilderContextField, props: FieldGroup
     case builderContextFieldKinds.text:
       return (
         <TextInput
+          value={field.value}
           aria-label={field.label}
+          placeholder={field.placeholder}
           disabled={props.busy || field.disabled}
           invalid={Boolean(field.validationMessage)}
           onValueChange={({ value }) =>
             props.onRequestChange(props.action, field.id, value, "inputChange")
           }
-          placeholder={field.placeholder}
-          value={field.value}
         />
       );
   }
@@ -132,7 +133,9 @@ function FieldGroup(props: FieldGroupProps) {
     <Field key={field.id}>
       <FieldLabel>{field.label}</FieldLabel>
       {renderBuilderContextField(field, props)}
-      {field.validationMessage && <FieldMessage invalid>{field.validationMessage}</FieldMessage>}
+      <Show when={Boolean(field.validationMessage)}>
+        {() => <FieldMessage invalid>{field.validationMessage}</FieldMessage>}
+      </Show>
     </Field>
   ));
 }
@@ -163,52 +166,56 @@ export function BuilderContextSetup(props: BuilderContextSetupProps) {
 
   return (
     <section
-      aria-busy={props.busy || undefined}
       aria-label={props.label}
       className="grid min-w-0 gap-4"
       data-ui-component="UI-CMP-023"
+      aria-busy={props.busy || undefined}
     >
       <Stack density="medium">
         <FieldGroup
-          action={builderContextSetupActions.updateBuilderContext}
           busy={props.busy}
           fields={props.primaryFields}
           onRequestChange={emitChange}
+          action={builderContextSetupActions.updateBuilderContext}
         />
         <FieldGroup
-          action={builderContextSetupActions.updateStageContext}
           busy={props.busy}
-          fields={props.optionalFields}
           onRequestChange={emitChange}
+          fields={props.optionalFields}
+          action={builderContextSetupActions.updateStageContext}
         />
         <FieldGroup
-          action={builderContextSetupActions.updateRuntimeStartState}
           busy={props.busy}
           fields={props.runtimeFields}
           onRequestChange={emitChange}
+          action={builderContextSetupActions.updateRuntimeStartState}
         />
       </Stack>
-      {props.validationMessage && (
-        <StatusMessage tone={uiToneModes.destructive}>{props.validationMessage}</StatusMessage>
-      )}
-      <Group>
-        {props.resetAction && (
-          <Button
-            disabled={!props.resetAction.available || props.busy}
-            onRequestPress={() =>
-              emitAction(builderContextSetupActions.resetBuilderContext, props.resetAction?.id)
-            }
-          >
-            {props.resetAction.label}
-          </Button>
+      <Show when={Boolean(props.validationMessage)}>
+        {() => (
+          <StatusMessage tone={uiToneModes.destructive}>{props.validationMessage}</StatusMessage>
         )}
+      </Show>
+      <Group>
+        <Show when={Boolean(props.resetAction)}>
+          {() => (
+            <Button
+              disabled={!props.resetAction?.available || props.busy}
+              onRequestPress={() =>
+                emitAction(builderContextSetupActions.resetBuilderContext, props.resetAction?.id)
+              }
+            >
+              {props.resetAction?.label}
+            </Button>
+          )}
+        </Show>
         <Button
-          disabled={!props.confirmAction.available || props.busy}
           loading={props.busy}
+          tone={uiToneModes.accent}
+          disabled={!props.confirmAction.available || props.busy}
           onRequestPress={() =>
             emitAction(builderContextSetupActions.confirmBuilderContext, props.confirmAction.id)
           }
-          tone={uiToneModes.accent}
         >
           {props.confirmAction.label}
         </Button>

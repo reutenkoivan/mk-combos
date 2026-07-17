@@ -87,6 +87,13 @@ Payload містить combo ref, target list id, source surface і source focus
 - Duplicate membership показує already-in-list або idempotent state без mutation.
 - Close/cancel повертає focus до source target.
 
+## Step 26 Localized Readability
+
+- `compatibleListsLabel` є owner-provided localized legend для selection region.
+- Unavailable list options показують назву й visible `disabledReason`; accessible name містить обидві частини.
+- `submitAvailability.disabledReason` показується у status region, а submit action має shared `add-to-list` icon і visible localized label.
+- Long list names і action labels wrap-ляться; sticky action row не перекриває scrollable list body.
+
 ## Канонічний Responsive і Controller-only Contract
 
 Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.

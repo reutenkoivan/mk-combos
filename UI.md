@@ -18,18 +18,22 @@ Generic routes:
 
 ```text
 /:gameId/catalog
-/:gameId/combos/:source/:comboId
+/:gameId/catalog/:character/:specification/:comboId
 /:gameId/lists
 /:gameId/builder
-/settings
 ```
+
+`UI-PAGE-008 Settings` не має власного route. App Shell відкриває його як modal над
+поточною working route через validated query `?settings=interface|backup`; відсутність
+параметра означає closed. `/settings` і `/backup` не існують як routes або compatibility
+redirects.
 
 Приклади:
 
 ```text
 /mkxl/catalog
 /mk1/catalog
-/mkxl/combos/seeded/scorpion-bnb-001
+/mkxl/catalog/kotal-kahn/war-god/kotal-kahn-war-god-starter-001
 /mk1/builder
 ```
 
@@ -44,7 +48,9 @@ Game-specific UI behavior належить `mkxl/*` або `mk1/*` через ga
 
 ## Стан На Рівні Сторінки / Pure UI Contract
 
-Кожна route-level сторінка або її page-level custom hook володіє станом, derived models, business orchestration і handler-ами. UI components отримують тільки controlled inputs і semantic callbacks.
+Кожна route-level сторінка, shell-level screen surface на кштал Settings modal або її
+page-level custom hook володіє станом, derived models, business orchestration і
+handler-ами. UI components отримують тільки controlled inputs і semantic callbacks.
 
 Обов'язкові правила для всіх `UI-PAGE-*` і активних `UI-CMP-*`:
 
@@ -59,6 +65,29 @@ Game-specific UI behavior належить `mkxl/*` або `mk1/*` через ga
 Якщо механіку винесено в module, module має поставляти pair: pure UI component + custom hook. Page component викликає hook, отримує prepared state/handlers і передає їх у UI component. Builder presentation exports із `@mk-combos/ui` дотримуються цього правила через `useComboWhiteboardModel` + `ComboWhiteboard` і `useComboFrameMeterModel` + `ComboFrameMeter`.
 
 Бізнес-логіка для React розділяється на `domain source` і `observable domain state`, які поставляються як окремі domain-specific custom hooks. Source hook повертає канонічний domain source, його інваріанти, потрібний lifecycle/domain status і semantic methods для зміни домену. Observable hook повертає read-facing derived state для UI: flags, availability, validation, labels, status projections, selection/open/focused стани та інші prepared значення. React components читають display state з observable hook, а зміни виконують тільки через methods із source hook; компоненти не читають raw domain source як view data, не реконструюють доменні правила і не мутують домен поза source methods.
+
+## Conditional Rendering Primitives
+
+`@mk-combos/ui/primitives/conditional` експортує `Show` для strict boolean branch і
+`Present` для значень, відсутніх лише у `null | undefined`. `Show` приймає `children` і
+необовʼязковий `fallback` як `() => ReactNode` та викликає тільки factory обраної гілки.
+Тому `map`, `filter`, `sort` та інша підготовка JSX усередині неактивної гілки не
+виконується.
+
+Branch factory у `Show` не є React component і не викликає Hooks безпосередньо. Hookful
+гілка повертає stable module-scope або imported component: `() => <Content />`. React
+виконує component body, Effects і Hooks лише коли ця гілка активна. `Present` передає
+non-nullish значення через `PresentContentProps<Value>` у stable component reference та
+рендерить його як `<Content value={value} />`; inline component reference може скидати
+локальний state на parent render.
+
+Для boolean JSX першим вибором є lazy `Show`, включно з гілками, що містять O(n)-роботу.
+`Present` застосовується тільки до nullish presence (`null | undefined`) зі stable content
+component. Conditional expression використовується для scalar value selection або одного
+state-driven exhaustive branch, а не для boolean/nullish JSX presence. `Show` і `Present`
+не додають DOM wrapper, не мають keep-alive гарантії та покладаються на стандартний React
+reconciliation; для явного збереження state прихованої surface використовується
+`<Activity>`. Mutable JSX-контейнери на кштал `let content: ReactNode` не використовуються.
 
 ## Responsive і Controller-only Contract
 
@@ -80,7 +109,56 @@ Game-specific UI behavior належить `mkxl/*` або `mk1/*` через ga
 - responsive transition зберігає semantic target або використовує declared fallback;
 - hidden responsive branch не монтується і не лишається у focus/accessibility tree.
 
-Controller lifecycle належить `@mk-combos/controller-bridge`. First gesture, reconnect і resume після hidden document проходять `awaitingNeutral`; жодна затиснута кнопка не запускає дію. `UI-CMP-038 Controller Access Gate` блокує application content у `unsupported`, `blocked`, `awaitingGesture`, `awaitingNeutral` і `disconnected` states.
+Settings є shell-owned modal scope: working route лишається змонтованою, але inert. Close,
+`Escape`, backdrop, browser Back і semantic controller `Back` прибирають query та
+повертають focus opener-у. Якщо відкритий nested backup dialog, перший dismissal належить
+йому; active busy backup operation блокує закриття Settings. У `mobile` і `tablet`
+Settings є full-screen, у `desktop` — tall, wide centered dialog над backdrop.
+
+App Shell володіє єдиною нижньою controller command ribbon. Вона є третьою
+in-flow grid row після Top Bar і active route slot, не використовує `fixed` або
+`sticky` і має horizontal overflow та safe-area padding. Ribbon монтується лише
+коли controller session має `connected: true` і resolved command model не порожня.
+
+Page або active overlay реєструє app-owned command scope з semantic command IDs та
+localized labels. Останній active overlay замінює page model; `exclusive` scope блокує
+нижчі scopes, крім explicitly prepared `passThroughCommandIds`. Shell додає
+`Menu` останнім, якщо active context має append policy; contextual command перемагає
+під час dedupe. Blocking/busy context може suppress-ити shell `Menu`.
+
+Ribbon рендерить input tokens через `NotationRenderer` за selected notation display
+mode, а не за detected controller profile:
+
+| Semantic input | Ribbon token |
+| --- | --- |
+| Navigation | текст `D-Pad` |
+| `openActions` | `1` |
+| `openFilters` | `2` |
+| `confirm` | `3` |
+| `back` | `4` |
+| Previous / next tab | `leftShoulder` / `rightShoulder` |
+| Global menu | `start` |
+
+Тому FGC показує `1–4`, PlayStation — Square/Triangle/Cross/Circle, Xbox — X/Y/A/B,
+а global menu — Start/Options/Menu. First Launch тимчасово передає draft display mode;
+решта surfaces використовує applied mode, а Settings оновлює glyphs одразу
+після вибору.
+
+First Launch, Catalog/filter drawer, Combo Detail, Settings/dialogs і route Recovery
+постачають contextual scopes. Recovery має один Confirm-target для переходу
+до fallback Catalog. Named Lists і Builder лишаються placeholders без page scope,
+тому їх connected ribbon містить лише `Menu`. Redirect/loading branches і active
+native file picker не показують ribbon.
+
+Controller lifecycle належить `@mk-combos/controller-bridge`. First gesture, reconnect і resume після hidden document проходять `awaitingNeutral`; жодна затиснута кнопка не запускає дію. `UI-CMP-038 Controller Access Gate` рендерить prepared capability/access state, але disconnect сам по собі не скидає active application content або keyboard/mouse flow.
+
+Controller-focused presentation активується глобально лише коли observable controller session
+має `connected: true`. Під час checking, unsupported, blocked, awaiting gesture, disconnect або
+suspend logical focus target зберігається, але controller ring, controller marker і controller-only
+auto-scroll і command ribbon не показуються й не запускаються. Reconnect після neutral
+відновлює останній доступний logical
+target. Native keyboard `focus-visible` працює незалежно від controller connection і не
+підміняється controller focus state.
 
 Native backup file picker є єдиним external-input винятком: activation і вибір файла потребують pointer/touch/keyboard transient activation. Після cancel або selection controller focus повертається до import trigger, validation recovery або safe preview action.
 
@@ -88,7 +166,11 @@ Native backup file picker є єдиним external-input винятком: activ
 
 Звичайна page composition використовує один canvas. Page header, form groups, reference content і disclosure regions не отримують окремі card backgrounds, повні rectangular borders, radii або shadows. Peer sections розділяються spacing, typographic hierarchy та одним separator між сусідніми regions.
 
-`elevated` і `glass` materials дозволені тільки для dialogs, menus, popovers та floating controller ribbon. Text controls, segmented controls, notation keycaps, validation states і focus ring зберігають власні межі, бо вони позначають interaction або semantic state.
+`elevated` і `glass` materials дозволені тільки для dialogs, menus та popovers. App Shell command ribbon є пласкою in-flow row з одним top separator. Text controls, segmented controls, notation keycaps, validation states і focus ring зберігають власні межі, бо вони позначають interaction або semantic state.
+
+`UI-PAGE-008 Settings` є overlay-винятком: його tall desktop dialog може групувати
+interface controls, notation reference і backup registry у subtle inset panels без окремих
+card shadows. Зовнішню elevation все одно має лише modal surface.
 
 Standalone icon-only actions використовують `UiControlPresentationMode = filled | icon` з `icon` presentation. У `idle`, `hover`, `active`, `open` і `selected` вони мають transparent background, transparent border і не мають inset shadow. State передається кольором/opacity іконки та зовнішнім focus ring; mobile/tablet hit area лишається не меншою за `44×44px`. Buttons із readable text або `icon + text` не є icon-only actions.
 
@@ -114,7 +196,7 @@ Standalone icon-only actions використовують `UiControlPresentation
 - [`UI-PAGE-004`](./ui/UI-PAGE-004.md) Combo Detail.
 - [`UI-PAGE-005`](./ui/UI-PAGE-005.md) Named Lists.
 - [`UI-PAGE-006`](./ui/UI-PAGE-006.md) Custom Combo Builder.
-- `UI-PAGE-007` Backup Management. `Deprecated`; перенаправлення до `UI-PAGE-008 Settings -> UI-CMP-034 Backup Collapsible Block`.
+- `UI-PAGE-007` Backup Management. `Deprecated` historical code; route і compatibility behavior відсутні.
 - [`UI-PAGE-008`](./ui/UI-PAGE-008.md) Settings.
 
 ### Components
@@ -177,7 +259,9 @@ UI-PAGE-001 App Shell
      -> UI-PAGE-004 Combo Detail
      -> UI-PAGE-005 Named Lists
      -> UI-PAGE-006 Custom Combo Builder
+  -> query-controlled Settings modal overlay
      -> UI-PAGE-008 Settings
+  -> connected-only Controller Command Ribbon
 ```
 
 `apps/web/src/game-business/installed-games/value.ts` є єдиною installation point у web app для game business entry points. UI pages отримують active game behavior від resolved business entry point.
@@ -186,7 +270,7 @@ UI-PAGE-001 App Shell
 
 ### `UI-PAGE-001` App Shell
 
-Резолвить active `gameId` із route prefix, вибирає installed business entry point, володіє global routing, передає settings і маршрутизує controller commands до active surface.
+Резолвить active `gameId` із route prefix, вибирає installed business entry point, володіє global routing, передає settings, маршрутизує controller commands і рендерить єдину connected-only command ribbon.
 
 ### `UI-PAGE-002` First-Launch Setup
 
@@ -205,26 +289,31 @@ Shared detail page. Делегує seeded/custom lookup, stale detection, detail
 
 ### `UI-PAGE-005` Named Lists
 
-Shared lists page. Lists scoped by `gameId`; active business entry point валідить combo references і game-owned local data.
+Shared lists page. Lists scoped by `gameId`; active business entry point валідить combo references і game-owned local data. Поточна placeholder route не реєструє page controller scope, тому connected ribbon містить лише shell `Menu`.
 
 ### `UI-PAGE-006` Custom Combo Builder
 
-Shared builder page. Використовує `@mk-combos/ui` для whiteboard/frame UI і active game builder behavior для graph composition, replay, valid next moves і custom combo output.
+Shared builder page. Використовує `@mk-combos/ui` для whiteboard/frame UI і active game builder behavior для graph composition, replay, valid next moves і custom combo output. Поточна placeholder route не реєструє page controller scope, тому connected ribbon містить лише shell `Menu`.
 
 ### `UI-PAGE-008` Settings
 
-Global settings page. Language і display mode застосовуються та autosave-яться одразу після вибору. Backup section будується як single-open accordion: по одному `UI-CMP-034` для кожної installed game, і кожен item імпортує/експортує лише свою game slice. Game switching після first launch відбувається через `UI-CMP-002 Game Switcher` усередині global breadcrumbs.
+Global Settings modal над current working route. `?settings=interface|backup` є controlled
+open/section state; closing removes the query without replacing the route. Language і display
+mode застосовуються та autosave-яться одразу після вибору. Backup section будується як
+single-open accordion: по одному `UI-CMP-034` для кожної installed game, і кожен item
+імпортує/експортує лише свою game slice. Game switching після first launch відбувається через
+`UI-CMP-002 Game Switcher` у working-route breadcrumbs, які inert, доки Settings open.
 
 ## Підсумок Володіння Компонентами
 
 - `UI-CMP-001` і `UI-CMP-005` рендерять shell/controller state з `apps/web` і `@mk-combos/controller-bridge`.
-- `UI-CMP-002` рендерить installed games з App Shell або First Launch inputs. У global use він є першим item у [`UI-CMP-032 Breadcrumbs`](./ui/UI-CMP-032.md) на `desktop` або game switcher усередині mobile/tablet drawer і емітить game-switch intents до App Shell.
+- `UI-CMP-002` рендерить installed games з App Shell або First Launch inputs. У global use він є першим item у [`UI-CMP-032 Breadcrumbs`](./ui/UI-CMP-032.md) на `tablet` і `desktop` або game switcher усередині mobile drawer і емітить game-switch intents до App Shell.
 - `UI-CMP-004` рендерить display mode selection з First Launch або Settings inputs. `UI-CMP-037` рендерить reusable UI-owned SVG notation legend table.
-- `UI-CMP-033` рендерить Top Bar burger menu з App Shell/Top Bar controlled menu state. На `desktop` це anchored dropdown; на `mobile` і `tablet` — правий full-height drawer з equivalents для hidden inline breadcrumbs/game switcher/navigation. Visible controller connection indicator лишається outside active navigation surface.
+- `UI-CMP-033` рендерить Top Bar burger menu з App Shell/Top Bar controlled menu state. На `desktop` це anchored dropdown; на `mobile` — правий full-height drawer з equivalents для hidden inline breadcrumbs/game switcher/navigation; на `tablet` — full-height drawer із global actions без duplicate inline navigation. Visible controller connection indicator лишається outside active navigation surface.
 - `UI-CMP-007`, `UI-CMP-008` і `UI-CMP-009` є picker surfaces. Їхні option descriptors і layout data приходять з active game business або game-specific catalog packages.
 - `UI-CMP-010`, `UI-CMP-011`, `UI-CMP-012` і `UI-CMP-013` рендерять prepared catalog models і емітять events до page.
 - `UI-CMP-015` рендерить notation із provided notation data і display mode через UI-owned notation icon registry; він не мутує combo data.
-- `UI-CMP-034` рендериться Settings по одному разу на installed game; parent володіє accordion state, target `gameId`, file IO та orchestration game-business validation.
+- `UI-CMP-034` рендериться Settings по одному разу на installed game; parent володіє accordion state, target `gameId`, file IO, orchestration game-business validation і Settings-level dismissal barrier під час nested/busy backup flow.
 - `UI-CMP-035` і `UI-CMP-036` є pure components із `@mk-combos/ui`; їхні page-level hooks готують view models і semantic handlers, а graph validity і replay належать active game builder logic.
 
 ## System States
@@ -260,7 +349,7 @@ Prose документації пишеться українською. Англ
 - порядок у `<Stack>` читається згори вниз, а порядок у `<Group>` - зліва направо / від start до end;
 - `<Stack>` використовується тільки коли дочірні entities розташовані вертикально;
 - `<Group>` використовується тільки коли дочірні entities розташовані горизонтально;
-- `<Show when={condition}>...</Show>` використовується для conditional, optional, expanded/collapsed, overlay і responsive гілок;
+- `<Show when={condition}>{() => ...}</Show>` використовується для conditional, optional, expanded/collapsed, overlay і responsive гілок;
 - documented component/page використовує self-explaining PascalCase JSX tag і `ui="UI-CMP-*"` або `ui="UI-PAGE-*"`;
 - локальні regions, slots, surfaces, panels, overlays, lists, rows, items і actions теж використовують self-explaining PascalCase tags, а не generic `<Component>` або `<Slot>`;
 - `name` props дозволені для `<Stack>` і `<Group>`, щоб назвати layout group; назва entity не дублюється через `name`;
@@ -285,9 +374,11 @@ Naming guidance для anatomy entities:
     <NavigationRegion>
       <Group name="NavigationItems">
         <Show when={responsiveMode === "desktop"}>
-          <BreadcrumbsSlot>
-            <Breadcrumbs ui="UI-CMP-032" />
-          </BreadcrumbsSlot>
+          {() => (
+            <BreadcrumbsSlot>
+              <Breadcrumbs ui="UI-CMP-032" />
+            </BreadcrumbsSlot>
+          )}
         </Show>
 
         <ControllerStatusRegion>

@@ -9,11 +9,15 @@
 - Користувач працює з обома іграми в одному застосунку.
 - Route prefix визначає active game для deep links: `/mkxl/...` або `/mk1/...`.
 - Settings зберігають default/last active game, але не перемагають valid route prefix.
+- Settings відкривається як App Shell modal над current working route через
+  `?settings=interface|backup`; Close, `Escape`, backdrop, browser Back і controller
+  `Back` закривають modal, якщо nested/busy backup flow не має dismissal precedence.
 - Game-specific правила не змішуються в UX: MKXL має variation/stage/interactable контекст, MK1 має main character/kameo контекст.
 - Локальні lists і custom combos scoped by `gameId`.
 - Кожен backup переносить рівно одну game slice; global settings та slices інших ігор не входять у файл.
 - Settings показує по одному backup accordion item для кожної installed game, а slice валідить відповідний business entry point.
 - Settings autosave-ить language і notation display mode одразу після вибору; persistence failure лишає value активним у session-only режимі.
+- Підключений controller отримує єдину in-flow command ribbon в App Shell; input glyphs відповідають selected notation display mode, а не detected controller profile.
 
 ## Контексти входу
 
@@ -26,7 +30,7 @@
 ### Перший запуск за прямим посиланням
 
 - `US-023`: Перший запуск за прямим посиланням.
-  Мета: дати користувачу вперше відкрити route-prefixed URL, наприклад `/mkxl/catalog` або `/mk1/combos/...`, без ручного setup.
+  Мета: дати користувачу вперше відкрити route-prefixed URL, наприклад `/mkxl/catalog` або `/mk1/catalog/scorpion/cyrax/scorpion-cyrax-seed-001`, без ручного setup.
   Статус деталізації: Заплановано.
 
 ### Повернення за прямим посиланням
@@ -52,8 +56,8 @@
   Статус деталізації: Заплановано.
 
 - `US-021`: Перегляд controller hints.
-  Мета: показати користувачу актуальні підказки кнопок для DualSense або Xbox controller.
-  Статус деталізації: Заплановано.
+  Мета: показати актуальні contextual commands у єдиній App Shell ribbon з glyphs selected FGC/PlayStation/Xbox mode; Top Bar status/hint panel лишається окремою surface.
+  Статус деталізації: Описано.
 
 ### Дослідження каталогу
 
@@ -126,16 +130,16 @@
 ### Керування контролером
 
 - `US-019`: Керування застосунком через DualSense або Xbox controller.
-  Мета: дати користувачу керувати catalog, filters, detail view і lists через semantic controller commands.
-  Статус деталізації: Заплановано.
+  Мета: дати користувачу керувати First Launch, global menu, Catalog/filter drawer, Combo Detail, Settings modal/nested backup dialogs і Recovery через semantic controller commands.
+  Статус деталізації: Описано.
 
 - `US-020`: Керування combo builder через controller.
-  Мета: дати користувачу створювати custom combo в builder через semantic controller commands, які page-level flow мапить на active game builder.
+  Мета: дати користувачу створювати custom combo в builder через semantic controller commands. Поточна Builder route є placeholder і показує тільки global `Menu` command.
   Статус деталізації: Заплановано.
 
 - `US-022`: Відновлення роботи після disconnect/reconnect controller.
-  Мета: забезпечити продовження роботи після втрати або повторного підключення контролера.
-  Статус деталізації: Заплановано.
+  Мета: приховати ribbon і controller ring під час disconnect, зберегти logical focus і відновити актуальний context після neutral reconnect.
+  Статус деталізації: Описано.
 
 ### Стан помилки та відновлення
 

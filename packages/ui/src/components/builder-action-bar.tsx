@@ -1,6 +1,7 @@
 import { useId } from "react";
 
 import { Button } from "../primitives/button";
+import { Present, type PresentContentProps, Show } from "../primitives/conditional";
 import { StatusMessage } from "../primitives/state";
 import { cx } from "../recipes/class-name";
 import { surfaceRecipe } from "../recipes/surface";
@@ -72,6 +73,109 @@ const statusToneByState = {
   [builderActionBarStates.saving]: uiToneModes.accent,
 } as const satisfies Record<BuilderActionBarState, (typeof uiToneModes)[keyof typeof uiToneModes]>;
 
+function BuilderActionStatusRegion(props: {
+  compact: boolean;
+  state: BuilderActionBarState;
+  status: string | undefined;
+  statusId: string;
+}) {
+  return (
+    <div
+      data-builder-action-region="status"
+      className={cx(
+        "grid min-h-5 min-w-0 content-center",
+        props.compact ? "justify-items-start" : "justify-items-center text-center",
+      )}
+    >
+      <Show
+        when={Boolean(props.status)}
+        fallback={() => <span aria-hidden="true" className="block h-5" />}
+      >
+        {() => (
+          <StatusMessage
+            aria-atomic="true"
+            id={props.statusId}
+            tone={statusToneByState[props.state]}
+            aria-live={props.state === builderActionBarStates.saveError ? "assertive" : "polite"}
+          >
+            {props.status}
+          </StatusMessage>
+        )}
+      </Show>
+    </div>
+  );
+}
+
+type BuilderActionValue = Readonly<{
+  compact: boolean;
+  descriptor: BuilderActionBarActionDescriptor;
+  onRequestAction: (descriptor: BuilderActionBarActionDescriptor) => void;
+  presentation: Readonly<{ block?: boolean; primary?: boolean }>;
+  saving: boolean;
+  sourceFocusTarget: string | undefined;
+  statusId: string;
+}>;
+
+type BuilderActionSharedValue = Omit<BuilderActionValue, "descriptor" | "presentation">;
+
+function BuilderAction({ value }: PresentContentProps<BuilderActionValue>) {
+  const unavailableReasonId = `${value.statusId}-${value.descriptor.id}-unavailable`;
+  const unavailable = !value.descriptor.available;
+  const finishSaving =
+    value.saving && value.descriptor.action === builderActionBarActions.finishBuilder;
+  const block = value.presentation.block ?? value.compact;
+
+  return (
+    <div
+      className={cx("grid min-w-0 gap-1", block && "w-full")}
+      data-builder-action-wrapper={value.descriptor.action}
+    >
+      <Button
+        loading={finishSaving}
+        disabled={value.saving || unavailable}
+        sourceFocusTarget={value.sourceFocusTarget}
+        data-builder-action={value.descriptor.action}
+        className={value.compact ? "min-h-11" : undefined}
+        onRequestPress={() => value.onRequestAction(value.descriptor)}
+        placement={block ? uiPlacementModes.block : uiPlacementModes.inline}
+        emphasis={value.presentation.primary ? uiEmphasisModes.prominent : undefined}
+        tone={value.descriptor.tone ?? actionToneByAction[value.descriptor.action]}
+        aria-describedby={
+          unavailable && value.descriptor.disabledReason ? unavailableReasonId : undefined
+        }
+      >
+        {value.descriptor.label}
+      </Button>
+      <Show when={Boolean(unavailable && value.descriptor.disabledReason)}>
+        {() => (
+          <StatusMessage id={unavailableReasonId}>{value.descriptor.disabledReason}</StatusMessage>
+        )}
+      </Show>
+    </div>
+  );
+}
+
+function BuilderPrimaryActionRegion({ value }: PresentContentProps<BuilderActionValue>) {
+  return (
+    <div data-builder-action-region="primary">
+      <BuilderAction value={value} />
+    </div>
+  );
+}
+
+const createBuilderActionValue = (
+  descriptor: BuilderActionBarActionDescriptor | undefined,
+  shared: BuilderActionSharedValue,
+  presentation: BuilderActionValue["presentation"] = {},
+): BuilderActionValue | undefined =>
+  descriptor
+    ? {
+        ...shared,
+        descriptor,
+        presentation,
+      }
+    : undefined;
+
 export function BuilderActionBar(props: BuilderActionBarProps) {
   const statusId = useId();
   const saving = props.state === builderActionBarStates.saving;
@@ -122,110 +226,110 @@ export function BuilderActionBar(props: BuilderActionBarProps) {
     });
   };
 
-  const renderAction = (
-    descriptor: BuilderActionBarActionDescriptor,
-    presentation: { block?: boolean; primary?: boolean } = {},
-  ) => {
-    const unavailableReasonId = `${statusId}-${descriptor.id}-unavailable`;
-    const unavailable = !descriptor.available;
-    const finishSaving = saving && descriptor.action === builderActionBarActions.finishBuilder;
-    const block = presentation.block ?? compact;
-
-    return (
-      <div
-        className={cx("grid min-w-0 gap-1", block && "w-full")}
-        data-builder-action-wrapper={descriptor.action}
-        key={descriptor.id}
-      >
-        <Button
-          aria-describedby={
-            unavailable && descriptor.disabledReason ? unavailableReasonId : undefined
-          }
-          className={compact ? "min-h-11" : undefined}
-          data-builder-action={descriptor.action}
-          disabled={saving || unavailable}
-          emphasis={presentation.primary ? uiEmphasisModes.prominent : undefined}
-          loading={finishSaving}
-          onRequestPress={() => emit(descriptor)}
-          placement={block ? uiPlacementModes.block : uiPlacementModes.inline}
-          sourceFocusTarget={props.sourceFocusTarget}
-          tone={descriptor.tone ?? actionToneByAction[descriptor.action]}
-        >
-          {descriptor.label}
-        </Button>
-        {unavailable && descriptor.disabledReason && (
-          <StatusMessage id={unavailableReasonId}>{descriptor.disabledReason}</StatusMessage>
-        )}
-      </div>
-    );
+  const actionSharedValue: BuilderActionSharedValue = {
+    compact,
+    onRequestAction: emit,
+    saving,
+    sourceFocusTarget: props.sourceFocusTarget,
+    statusId,
   };
-
-  const statusRegion = (
-    <div
-      className={cx(
-        "grid min-h-5 min-w-0 content-center",
-        compact ? "justify-items-start" : "justify-items-center text-center",
-      )}
-      data-builder-action-region="status"
-    >
-      {props.status ? (
-        <StatusMessage
-          aria-atomic="true"
-          aria-live={props.state === builderActionBarStates.saveError ? "assertive" : "polite"}
-          id={statusId}
-          tone={statusToneByState[props.state]}
-        >
-          {props.status}
-        </StatusMessage>
-      ) : (
-        <span aria-hidden="true" className="block h-5" />
-      )}
-    </div>
-  );
 
   return (
     <section
-      aria-busy={saving || undefined}
       aria-label={props.label}
+      data-dirty={props.dirty}
+      data-state={props.state}
+      aria-busy={saving || undefined}
+      data-ui-component="UI-CMP-026"
+      data-layout={compact ? "compact" : "dock"}
       className={cx(
         surfaceRecipe({ material: uiMaterialModes.elevated }),
         "grid min-h-[5.25rem] min-w-0 gap-3",
       )}
-      data-dirty={props.dirty}
-      data-layout={compact ? "compact" : "dock"}
-      data-state={props.state}
-      data-ui-component="UI-CMP-026"
     >
-      {compact ? (
-        <div className="grid min-w-0 gap-3">
-          {primaryAction && (
-            <div data-builder-action-region="primary">
-              {renderAction(primaryAction, { block: true, primary: true })}
+      <Show
+        when={compact}
+        fallback={() => (
+          <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(12rem,auto)_minmax(0,1fr)] items-center gap-3">
+            <div className="flex min-w-0 justify-start" data-builder-action-region="undo">
+              <Present value={createBuilderActionValue(undoAction, actionSharedValue)}>
+                {BuilderAction}
+              </Present>
             </div>
-          )}
-          {statusRegion}
-          {(undoAction || cancelActions.length > 0) && (
-            <div className="grid min-w-0 grid-cols-2 gap-2" data-builder-action-region="secondary">
-              {undoAction && renderAction(undoAction, { block: true })}
-              {cancelActions.map((descriptor) => renderAction(descriptor, { block: true }))}
+            <BuilderActionStatusRegion
+              compact={compact}
+              state={props.state}
+              statusId={statusId}
+              status={props.status}
+            />
+            <div
+              data-builder-action-region="primary"
+              className="flex min-w-0 flex-wrap items-start justify-end gap-2"
+            >
+              {cancelActions.map((descriptor) => (
+                <BuilderAction
+                  key={descriptor.id}
+                  value={{
+                    ...actionSharedValue,
+                    descriptor,
+                    presentation: {},
+                  }}
+                />
+              ))}
+              <Present
+                value={createBuilderActionValue(primaryAction, actionSharedValue, {
+                  primary: true,
+                })}
+              >
+                {BuilderAction}
+              </Present>
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_minmax(12rem,auto)_minmax(0,1fr)] items-center gap-3">
-          <div className="flex min-w-0 justify-start" data-builder-action-region="undo">
-            {undoAction && renderAction(undoAction)}
           </div>
-          {statusRegion}
-          <div
-            className="flex min-w-0 flex-wrap items-start justify-end gap-2"
-            data-builder-action-region="primary"
-          >
-            {cancelActions.map((descriptor) => renderAction(descriptor))}
-            {primaryAction && renderAction(primaryAction, { primary: true })}
+        )}
+      >
+        {() => (
+          <div className="grid min-w-0 gap-3">
+            <Present
+              value={createBuilderActionValue(primaryAction, actionSharedValue, {
+                block: true,
+                primary: true,
+              })}
+            >
+              {BuilderPrimaryActionRegion}
+            </Present>
+            <BuilderActionStatusRegion
+              compact={compact}
+              state={props.state}
+              statusId={statusId}
+              status={props.status}
+            />
+            <Show when={Boolean(undoAction || cancelActions.length > 0)}>
+              {() => (
+                <div
+                  data-builder-action-region="secondary"
+                  className="grid min-w-0 grid-cols-2 gap-2"
+                >
+                  <Present
+                    value={createBuilderActionValue(undoAction, actionSharedValue, { block: true })}
+                  >
+                    {BuilderAction}
+                  </Present>
+                  {cancelActions.map((descriptor) => (
+                    <BuilderAction
+                      key={descriptor.id}
+                      value={{
+                        ...actionSharedValue,
+                        descriptor,
+                        presentation: { block: true },
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </Show>
           </div>
-        </div>
-      )}
+        )}
+      </Show>
     </section>
   );
 }

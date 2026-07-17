@@ -16,10 +16,10 @@ export function GameIcon({
   return (
     <img
       {...props}
-      alt={decorative ? "" : asset.accessibleLabel}
-      aria-hidden={decorative || undefined}
-      draggable={draggable}
       src={asset.src}
+      draggable={draggable}
+      aria-hidden={decorative || undefined}
+      alt={decorative ? "" : asset.accessibleLabel}
     />
   );
 }

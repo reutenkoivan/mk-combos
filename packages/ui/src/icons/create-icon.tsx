@@ -36,12 +36,12 @@ export const createIconComponent = (Icon: LucideIcon, metadata: MkCombosIconMeta
     return (
       <Icon
         {...iconProps}
-        aria-hidden={decorative ? true : ariaHidden}
-        aria-label={decorative ? undefined : (ariaLabel ?? metadata.accessibleLabel)}
-        data-ui-icon={metadata.name}
         ref={ref}
-        role={decorative ? undefined : (role ?? "img")}
+        data-ui-icon={metadata.name}
         size={resolveIconSize(size)}
+        aria-hidden={decorative ? true : ariaHidden}
+        role={decorative ? undefined : (role ?? "img")}
+        aria-label={decorative ? undefined : (ariaLabel ?? metadata.accessibleLabel)}
       />
     );
   }

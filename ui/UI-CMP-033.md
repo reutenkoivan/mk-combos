@@ -19,12 +19,15 @@
 Компонент дає користувачу:
 
 - компактний opener для global navigation і utility actions;
-- доступ до `Named Lists`, `Custom Combo Builder` і `Settings`;
-- mobile і tablet navigation fallback на екранах менших за desktop layout;
-- доступ до `UI-CMP-002 Game Switcher` у mobile і tablet layout, коли breadcrumbs не монтуються inline;
-- доступ до `Catalog` у mobile і tablet layout, коли desktop breadcrumb navigation не монтується inline.
+- доступ до `Named Lists`, `Custom Combo Builder` і action відкриття `Settings` modal;
+- mobile navigation fallback на екранах без inline breadcrumbs;
+- доступ до `UI-CMP-002 Game Switcher` у mobile layout, коли breadcrumbs не монтуються inline;
+- доступ до `Catalog` у mobile layout, коли tablet/desktop breadcrumb navigation не монтується inline;
+- tablet drawer із global actions без duplicate inline breadcrumbs або Game Switcher.
 
-`UI-CMP-033` не є page-level router, settings editor або controller input layer. Він рендерить переданий menu model, емітить UI/navigation intents і повертає focus до opener після закриття.
+`UI-CMP-033` не є page-level router, Settings editor або controller input layer. Він
+рендерить переданий menu model, емітить UI/navigation/open intents і повертає focus
+до opener після закриття.
 
 ## Архітектурний контекст
 
@@ -35,7 +38,8 @@
 - desktop menu і responsive drawer мають використовувати shared primitives із `packages/ui`, які wrap-лять Base UI;
 - styling має йти через semantic `tailwind-variants` recipes для `control`, `popup`, `item`, `surface`, `panel` і `separator`;
 - burger icon має імпортуватися тільки через icon facade `@mk-combos/ui/icons/...`, а не напряму з `lucide-react`;
-- app-level route rewrite, settings persistence і game validation лишаються в `UI-PAGE-001 App Shell` та active game business entry point.
+- app-level route rewrite, Settings query/modal state, settings persistence і game
+  validation лишаються в `UI-PAGE-001 App Shell` та active game business entry point.
 
 ## Володіння
 
@@ -48,6 +52,7 @@
 - installed game list;
 - game-switch navigation;
 - global route navigation;
+- Settings query/open orchestration;
 - closing menu on route change;
 - applied settings і local persistence.
 
@@ -94,10 +99,12 @@ Burger opener стоїть праворуч у Top Bar. На `desktop` menu surf
       <ResponsiveDrawerSurface side="right" fullHeight modal>
         <Stack name="ResponsiveDrawerLayout">
           <DrawerHeader />
-          <ResponsiveGameSwitcherRegion>
-            <GameSwitcher ui="UI-CMP-002" />
-          </ResponsiveGameSwitcherRegion>
-          <ResponsiveBreadcrumbNavigationRegion />
+          <Show when={responsiveMode === "mobile"}>
+            <ResponsiveGameSwitcherRegion>
+              <GameSwitcher ui="UI-CMP-002" />
+            </ResponsiveGameSwitcherRegion>
+            <ResponsiveBreadcrumbNavigationRegion />
+          </Show>
           <GlobalNavigationItemGroup />
         </Stack>
       </ResponsiveDrawerSurface>
@@ -109,7 +116,7 @@ Burger opener стоїть праворуч у Top Bar. На `desktop` menu surf
 Правила розміщення:
 
 - Opener завжди лишається праворуч у Top Bar; surface не займає місце в normal bar flow.
-- На `desktop` menu не дублює breadcrumbs або inline game switcher; на `mobile` і `tablet` ці equivalents стоять у верхній частині drawer.
+- На `desktop` menu і на `tablet` drawer не дублюють breadcrumbs або inline game switcher; на `mobile` ці equivalents стоять у верхній частині drawer.
 - Status/disabled items стоять унизу surface і не змішуються з primary navigation group.
 
 ### MenuTriggerSlot
@@ -140,7 +147,7 @@ Burger opener стоїть праворуч у Top Bar. На `desktop` menu surf
 
 ### ResponsiveDrawerSurface
 
-`ResponsiveDrawerSurface` є modal dialog/navigation surface для `mobile` і `tablet`.
+`ResponsiveDrawerSurface` є modal dialog/navigation surface для `mobile` і `tablet`; navigation fallback regions монтуються тільки в `mobile`.
 
 Вимоги:
 
@@ -153,7 +160,7 @@ Burger opener стоїть праворуч у Top Bar. На `desktop` menu surf
 
 ### Compact game switcher region
 
-У `mobile` і `tablet` layout drawer включає `UI-CMP-002 Game Switcher` як breadcrumbs-equivalent game switcher.
+У `mobile` layout drawer включає `UI-CMP-002 Game Switcher` як breadcrumbs-equivalent game switcher. У `tablet` Game Switcher уже змонтований inline і не дублюється в drawer.
 
 Rules:
 
@@ -164,7 +171,7 @@ Rules:
 
 ### Compact navigation region
 
-У `mobile` і `tablet` layout drawer включає navigation equivalents для прихованого inline breadcrumb trail.
+У `mobile` layout drawer включає navigation equivalents для прихованого inline breadcrumb trail. У `tablet` drawer не дублює inline breadcrumb trail.
 
 Menu може містити:
 
@@ -173,7 +180,7 @@ Menu може містити:
 - current route або current surface item;
 - parent breadcrumb-like navigation items, якщо App Shell передав їх як available actions.
 
-`Catalog` дозволений у mobile і tablet drawer, тому що desktop breadcrumb access не монтується inline у цьому layout. Якщо `Catalog` уже є breadcrumb item, global action із тим самим stable id не дублюється.
+`Catalog` дозволений у mobile drawer, тому що inline breadcrumb access не монтується в цьому layout. У tablet drawer Catalog не дублюється, бо доступний inline. Якщо `Catalog` уже є breadcrumb item, global action із тим самим stable id не дублюється.
 
 ### Global navigation item group
 
@@ -183,6 +190,10 @@ Global navigation item group містить:
 - `Custom Combo Builder`;
 - `Settings`;
 - optional global utility actions, якщо App Shell передав їх як available.
+
+`Settings` є global open action, не route navigation item. Після activation menu/drawer
+закривається, а App Shell додає `settings=interface` до current working route і монтує
+`UI-PAGE-008` modal.
 
 Menu не містить окремий Backup action. Backup доступний через `UI-PAGE-008 Settings -> UI-CMP-034 Backup Collapsible Block`.
 
@@ -219,11 +230,11 @@ Expected behavior:
 
 ### `tablet`
 
-На `tablet` Top Bar JSX включає current-location identity, controller indicator і burger opener. Inline breadcrumbs/game switcher не монтуються; drawer містить game switcher, full trail, secondary navigation та global actions.
+На `tablet` Top Bar JSX включає inline breadcrumbs із Game Switcher, controller indicator і burger opener. Burger відкриває full-height drawer із global actions без duplicate breadcrumbs або Game Switcher.
 
-### `mobile` і `tablet`
+### `mobile`
 
-На `mobile` і `tablet` Top Bar JSX включає:
+На `mobile` Top Bar JSX включає:
 
 ```text
 UI-CMP-001
@@ -250,8 +261,8 @@ Expected behavior:
 
 - `responsiveMode`: `mobile`, `tablet` або `desktop`.
 - `menuState`: `closed` або `open`.
-- `activeSurfaceCode`: code активної UI-поверхні.
-- `activeRouteLabel`: localized label активного route або surface.
+- `activeSurfaceCode`: code active working-route surface; Settings modal не підміняє його.
+- `activeRouteLabel`: localized label active working route або surface.
 - `activeGameId`: installed game id із route prefix або app-level state.
 - `activeGameLabel`: label active business entry point.
 - `availableGames`: installed game descriptors для `UI-CMP-002`.
@@ -269,12 +280,13 @@ Expected behavior:
 - `requestOpenTopBarMenu`: відкрити menu.
 - `requestCloseTopBarMenu`: закрити active surface з semantic reason, включно з `closePress`, `closeWatcher`, `outsidePress`, `escapeKey` або `swipe`.
 - `requestToggleTopBarMenu`: перемкнути menu.
-- `requestNavigateCatalog`: перейти до `UI-PAGE-003 Catalog`, mobile і tablet-only equivalent для breadcrumb access.
+- `requestNavigateCatalog`: перейти до `UI-PAGE-003 Catalog`, mobile-only equivalent для breadcrumb access.
 - `requestNavigateNamedLists`: перейти до `UI-PAGE-005 Named Lists`.
 - `requestNavigateBuilder`: перейти до `UI-PAGE-006 Custom Combo Builder`.
-- `requestNavigateSettings`: перейти до `UI-PAGE-008 Settings`.
-- `requestNavigateBreadcrumb`: перейти за navigable breadcrumb item, якщо item включено в mobile і tablet drawer.
-- `requestSwitchGameFromMenu`: оновити через App Shell тільки post-launch `lastActiveGameId`, не змінювати `defaultGameId` і виконати analogous navigation.
+- `requestOpenSettings`: попросити App Shell закрити menu/drawer і додати
+  `settings=interface` до current working route.
+- `requestNavigateBreadcrumb`: перейти за navigable breadcrumb item, якщо item включено в mobile drawer.
+- `requestSwitchGameFromMenu`: оновити через App Shell тільки post-launch `lastActiveGameId`, не змінювати `defaultGameId` і виконати analogous navigation у mobile drawer.
 - `requestSelectTopBarMenuAction`: виконати allowed utility action.
 
 `requestSwitchGameFromMenu` має той самий App Shell effect, що й `requestSwitchGameFromBreadcrumb`.
@@ -285,7 +297,7 @@ Expected behavior:
 
 - opener button semantics;
 - desktop menu і responsive drawer semantics;
-- conditional content contract для desktop menu і mobile/tablet drawer content;
+- conditional content contract для desktop menu, global-only tablet drawer і navigation-capable mobile drawer;
 - disabled/current/selected menu item presentation;
 - keyboard і pointer interaction;
 - focus restore після close;
@@ -294,6 +306,7 @@ Expected behavior:
 Компонент не відповідає за:
 
 - route rewrite;
+- Settings query mutation, modal mounting або dismissal;
 - settings persistence;
 - installed game validation;
 - validation game-owned local state;
@@ -325,30 +338,48 @@ Expected behavior:
 Очікуваний UI:
 
 - desktop menu surface aligned до opener;
-- menu містить global actions без mobile і tablet duplicate breadcrumbs;
+- menu містить global actions без duplicate breadcrumbs;
 - `Escape` закриває menu;
 - focus повертається до opener після close.
 
-### `mobileOrTabletClosed`
+### `tabletClosed`
 
-`responsiveMode = mobile` або `responsiveMode = tablet`, menu закрите.
+`responsiveMode = tablet`, drawer закритий.
 
 Очікуваний UI:
 
-- inline breadcrumbs не змонтовані;
-- inline `UI-CMP-002` не змонтований;
+- breadcrumbs і `UI-CMP-002` змонтовані inline;
+- burger opener visible;
+- controller connection indicator visible outside drawer, якщо `UI-CMP-005` у visible state.
+
+### `tabletOpen`
+
+`responsiveMode = tablet`, drawer відкритий.
+
+Очікуваний UI:
+
+- drawer містить global actions без duplicate game switcher або breadcrumb navigation;
+- inline breadcrumbs стають inert на час modal drawer;
+- visible controller indicator лишається outside drawer.
+
+### `mobileClosed`
+
+`responsiveMode = mobile`, drawer закритий.
+
+Очікуваний UI:
+
+- inline breadcrumbs і `UI-CMP-002` не змонтовані;
 - burger opener visible;
 - controller connection indicator visible outside drawer, якщо `UI-CMP-005` у visible state;
 - tab order не містить приховані breadcrumbs.
 
-### `mobileOrTabletOpen`
+### `mobileOpen`
 
-`responsiveMode = mobile` або `responsiveMode = tablet`, menu відкрите.
+`responsiveMode = mobile`, drawer відкритий.
 
 Очікуваний UI:
 
-- drawer містить mobile і tablet game switcher region;
-- drawer містить Catalog/current trail navigation equivalents;
+- drawer містить game switcher і Catalog/current trail navigation equivalents;
 - drawer містить Named Lists, Builder і Settings;
 - current route/action позначений як current або disabled-current;
 - visible controller indicator лишається outside drawer.
@@ -373,6 +404,18 @@ First-launch gate ще не завершено.
 - repeated activation тимчасово disabled;
 - після successful navigation menu закривається;
 - focus переходить до safe shell/page target згідно з App Shell navigation behavior.
+
+### `settingsOpenPending`
+
+Користувач активував Settings item.
+
+Очікуваний UI:
+
+- component емітить `requestOpenSettings`, не route target;
+- menu/drawer закривається до mounting Settings modal;
+- App Shell зберігає working route і додає `settings=interface`;
+- focus переходить у Settings modal, а після dismissal повертається до burger opener
+  або prepared safe shell target.
 
 ### `disabledAction`
 
@@ -399,7 +442,8 @@ Action переданий, але тимчасово unavailable.
 - Responsive drawer також закривається через backdrop interaction, close control і swipe праворуч.
 - Outside click/tap закриває active menu/drawer без виконання action.
 - Route change закриває active menu/drawer без domain mutation активної сторінки.
-- Focus order у mobile і tablet layout: visible controller indicator, burger opener, opened menu items, потім active surface або safe shell target.
+- Focus order у `mobile`: visible controller indicator, burger opener, opened menu items, потім active surface або safe shell target.
+- Focus order у `tablet`: inline Game Switcher і breadcrumbs, visible controller indicator, burger opener, opened drawer items, потім active surface або safe shell target.
 - Розміщення має лишатися usable за browser zoom і increased text size.
 - Meaningful transition має reduced-motion behavior.
 
@@ -437,12 +481,15 @@ Forbidden primary public axes:
 
 - `UI-CMP-033` має burger opener як єдиний opener.
 - Opener має accessible name, `aria-expanded` і keyboard activation.
-- На `desktop` breadcrumbs і `UI-CMP-002` змонтовані inline, а `UI-CMP-033` не дублює їх у menu.
-- На `mobile` і `tablet` breadcrumbs і inline `UI-CMP-002` не монтуються.
-- На `mobile` і `tablet` drawer містить `UI-CMP-002`, один Catalog navigation item, current trail equivalents, Named Lists, Builder і Settings.
+- На `tablet` і `desktop` breadcrumbs і `UI-CMP-002` змонтовані inline, а `UI-CMP-033` не дублює їх у menu/drawer.
+- На `mobile` breadcrumbs і inline `UI-CMP-002` не монтуються.
+- На `mobile` drawer містить `UI-CMP-002`, один Catalog navigation item, current trail equivalents, Named Lists, Builder і Settings.
+- На `tablet` drawer містить global actions без duplicate breadcrumbs або `UI-CMP-002`.
 - Visible controller connection indicator лишається outside drawer і не дублюється в drawer.
-- Compact hiding не реалізується CSS-only visibility; hidden inline controls відсутні з DOM/focus order.
+- Mobile hiding не реалізується CSS-only visibility; hidden inline controls відсутні з DOM/focus order.
 - Successful menu/drawer action закриває active surface.
+- Settings item емітить `requestOpenSettings`; component не виконує navigation або
+  query mutation самостійно.
 - `Escape` закриває menu/drawer і повертає focus до opener.
 - Route change закриває menu/drawer.
 - `UI-CMP-033` не містить language або notation display mode controls або `UI-CMP-037 Notation Legend Table`.
@@ -455,8 +502,10 @@ Storybook має містити сценарії:
 
 - `WideClosed`;
 - `WideOpen`;
-- `CompactClosed`;
-- `CompactOpen`;
+- `MobileClosed`;
+- `MobileOpen`;
+- `TabletClosed`;
+- `TabletOpen` без duplicate inline navigation;
 - `ControllerAbsent`;
 - `ControllerConnected`;
 - `ControllerDisconnectGrace`;
@@ -488,18 +537,21 @@ Automated accessibility checks мають перевірити:
 - disabled reasons;
 - focus return;
 - keyboard operation;
-- відсутність hidden-but-focusable breadcrumbs у mobile і tablet layout.
+- відсутність hidden-but-focusable breadcrumbs у mobile layout;
+- відсутність duplicate breadcrumbs і Game Switcher у tablet drawer.
 
 ## Тестові сценарії
 
-- Wide route `/mkxl/catalog` показує `MKXL` у inline `UI-CMP-002`, burger menu містить Named Lists, Builder і Settings.
-- Wide burger menu не містить duplicate game switcher.
-- Wide Catalog доступний через breadcrumb item.
-- Compact route `/mkxl/catalog` не монтує inline breadcrumbs.
-- Compact drawer містить `UI-CMP-002` і рівно один Catalog navigation item.
-- Compact game switch із `MKXL` на `MK1` емітить той самий App Shell intent, що й breadcrumb game switch.
-- Compact Named Lists action закриває drawer після successful navigation.
-- Compact Settings action не відкриває inline language/display mode controls або notation legend у Top Bar.
+- Tablet/desktop route `/mkxl/catalog` показує `MKXL` у inline `UI-CMP-002`.
+- Desktop menu і tablet drawer не містять duplicate game switcher або breadcrumbs.
+- Tablet/desktop Catalog доступний через breadcrumb item.
+- Mobile route `/mkxl/catalog` не монтує inline breadcrumbs.
+- Mobile drawer містить `UI-CMP-002` і рівно один Catalog navigation item.
+- Mobile game switch із `MKXL` на `MK1` емітить той самий App Shell intent, що й breadcrumb game switch.
+- Mobile Named Lists action закриває drawer після successful navigation.
+- Mobile Settings action закриває drawer, емітить `requestOpenSettings` і дозволяє App
+  Shell відкрити `/mkxl/catalog?settings=interface` без unmount working Catalog.
+- Settings action не відкриває inline language/display mode controls або notation legend у Top Bar.
 - Connected controller indicator лишається visible outside drawer.
 - Disconnect grace indicator лишається visible outside drawer протягом 1 хв.
 - No controller state не резервує місце під indicator outside menu/drawer.

@@ -3,6 +3,8 @@ import { useId } from "react";
 import { useFieldMessage } from "../hooks/field-message";
 import { useComponentOpenChangeEmitter, useComponentValueEmitter } from "../hooks/intents";
 import { ChevronDownIcon } from "../icons/chevron-down";
+import { useUiRootContext } from "../internal/ui-root-context";
+import { Show } from "../primitives/conditional";
 import {
   MenuItem,
   MenuPopup,
@@ -13,7 +15,7 @@ import {
 } from "../primitives/menu";
 import { uiFloatingAlignments } from "../primitives/positioning";
 import { StatusMessage } from "../primitives/state";
-import { uiSelectionStates, uiToneModes } from "../tokens/value";
+import { uiEmphasisModes, uiSelectionStates, uiToneModes } from "../tokens/value";
 import type { ComponentActionIntent, ComponentValueIntent, GameSwitcherOption } from "./type";
 import { componentOptionStatuses } from "./value";
 
@@ -35,6 +37,8 @@ export type GameSwitcherContext = (typeof gameSwitcherContexts)[keyof typeof gam
 export type GameSwitcherProps = {
   availableGames: readonly GameSwitcherOption[];
   busy?: boolean;
+  controllerFocused?: boolean;
+  controllerFocusedGameId?: string;
   context: GameSwitcherContext;
   disabled?: boolean;
   invalidSelectedGame?: boolean;
@@ -49,6 +53,7 @@ export type GameSwitcherProps = {
 };
 
 export function GameSwitcher(props: GameSwitcherProps) {
+  const { controllerFocusVisible } = useUiRootContext();
   const labelId = useId();
   const selected = props.availableGames.find((option) => option.gameId === props.selectedGameId);
   const blocked = Boolean(props.disabled || props.busy);
@@ -71,33 +76,44 @@ export function GameSwitcher(props: GameSwitcherProps) {
 
   return (
     <div
+      data-context={props.context}
+      data-ui-component="UI-CMP-002"
       aria-busy={props.busy || undefined}
       className={
         props.context === gameSwitcherContexts.firstLaunch
           ? "grid min-w-0 gap-2 border-t border-(--ui-separator) py-4"
           : "grid min-w-0 gap-1"
       }
-      data-context={props.context}
-      data-ui-component="UI-CMP-002"
     >
-      {props.context === gameSwitcherContexts.firstLaunch && (
-        <span className="text-sm font-medium" id={labelId}>
-          {props.label}
-        </span>
-      )}
+      <Show when={props.context === gameSwitcherContexts.firstLaunch}>
+        {() => (
+          <span className="text-sm font-medium" id={labelId}>
+            {props.label}
+          </span>
+        )}
+      </Show>
       <MenuRoot
         disabled={blocked}
-        onOpenChange={menuChangeEmitter.methods.handleOpenChange}
         open={props.menuOpen}
         sourceFocusTarget={props.sourceFocusTarget}
+        onOpenChange={menuChangeEmitter.methods.handleOpenChange}
       >
         <MenuTrigger
           {...fieldMessage.methods.getControlProps()}
+          disabled={blocked}
+          className="max-w-full justify-between"
+          data-ui-focus-target={props.sourceFocusTarget}
+          tone={props.invalidSelectedGame ? uiToneModes.destructive : uiToneModes.neutral}
           aria-label={props.context === gameSwitcherContexts.breadcrumbs ? props.label : undefined}
           aria-labelledby={props.context === gameSwitcherContexts.firstLaunch ? labelId : undefined}
-          className="max-w-full justify-between"
-          disabled={blocked}
-          tone={props.invalidSelectedGame ? uiToneModes.destructive : uiToneModes.neutral}
+          data-controller-focused={
+            controllerFocusVisible && props.controllerFocused ? "true" : undefined
+          }
+          emphasis={
+            props.context === gameSwitcherContexts.breadcrumbs
+              ? uiEmphasisModes.subtle
+              : uiEmphasisModes.normal
+          }
         >
           <span className="truncate">
             {selected?.shortLabel ?? selected?.label ?? props.selectedGameId}
@@ -111,26 +127,34 @@ export function GameSwitcher(props: GameSwitcherProps) {
                 const unavailable = option.status === componentOptionStatuses.disabledUnavailable;
                 return (
                   <MenuItem
-                    disabled={blocked || unavailable}
                     key={option.gameId}
                     label={option.label}
+                    value={option.gameId}
+                    disabled={blocked || unavailable}
                     onRequestSelect={({ reason, value }) =>
                       valueEmitter.methods.emitValue(value, reason)
                     }
+                    data-ui-focus-target={`${props.sourceFocusTarget ?? "game-switcher"}:${option.gameId}`}
                     selection={
                       option.gameId === props.selectedGameId
                         ? uiSelectionStates.selected
                         : uiSelectionStates.none
                     }
-                    value={option.gameId}
+                    data-controller-focused={
+                      controllerFocusVisible && props.controllerFocusedGameId === option.gameId
+                        ? "true"
+                        : undefined
+                    }
                   >
                     <span className="grid min-w-0 gap-1">
                       <span className="truncate">{option.label}</span>
-                      {(option.description || option.disabledReason) && (
-                        <span className="text-xs text-(--ui-muted-text)">
-                          {option.disabledReason ?? option.description}
-                        </span>
-                      )}
+                      <Show when={Boolean(option.description || option.disabledReason)}>
+                        {() => (
+                          <span className="text-xs text-(--ui-muted-text)">
+                            {option.disabledReason ?? option.description}
+                          </span>
+                        )}
+                      </Show>
                     </span>
                   </MenuItem>
                 );
@@ -139,14 +163,16 @@ export function GameSwitcher(props: GameSwitcherProps) {
           </MenuPositioner>
         </MenuPortal>
       </MenuRoot>
-      {props.validationMessage && (
-        <StatusMessage
-          id={fieldMessage.state.messageId}
-          tone={props.invalidSelectedGame ? uiToneModes.destructive : uiToneModes.neutral}
-        >
-          {props.validationMessage}
-        </StatusMessage>
-      )}
+      <Show when={Boolean(props.validationMessage)}>
+        {() => (
+          <StatusMessage
+            id={fieldMessage.state.messageId}
+            tone={props.invalidSelectedGame ? uiToneModes.destructive : uiToneModes.neutral}
+          >
+            {props.validationMessage}
+          </StatusMessage>
+        )}
+      </Show>
     </div>
   );
 }

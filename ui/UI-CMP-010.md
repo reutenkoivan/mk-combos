@@ -312,8 +312,8 @@ Guard rails:
 
 - Valid MKXL `character + variation` context показує combo cards.
 - Valid MK1 `character + kameo` context показує combo cards.
-- Optional starter, position, meter, damage, difficulty, route type або tags filter оновлює `visibleCombos`.
-- MKXL stage/interactable filters звужують list без показу kameo metadata.
+- Optional Position, Meter, Difficulty, Route class або Source filter оновлює `visibleCombos`.
+- MKXL Arena single-choice → Interactables multi-choice cascade звужує list без показу kameo metadata.
 - `contextIncomplete` не дозволяє open detail або add-to-list.
 - `loadingCombos` зберігає місце list і блокує card actions.
 - Valid context без seeded combos показує `noCombos`.
@@ -330,6 +330,23 @@ Guard rails:
 - Sorting, pagination і virtualization не входять у v1 contract `UI-CMP-010`.
 - Catalog лишається owner-ом data preparation, filters, route changes і page-level dialogs.
 - [`UI-CMP-011 Combo Card`](./UI-CMP-011.md) має власний детальний contract окремо від list container.
+
+## Step 26 Disabled-State Contract
+
+- `listDisabled` робить усі rendered cards inert незалежно від того, чи передано `statusMessage`.
+- Optional `disabledReason` показується один раз у list status region; він не дублюється в кожній card.
+- Loading, empty і ready presentations лишаються взаємовиключними та визначаються тільки `state`.
+
+## Command Deck Presentations
+
+- `presentation = standard | commandDeck`; default `standard` зберігає попередню list anatomy.
+- `commandDeck` рендерить prepared order як semantic `<ol>` без зовнішньої рамки та передає той самий presentation у `UI-CMP-011`.
+- Між сусідніми flat rows є рівно один horizontal separator; index cell має лише `border-end`, який відділяє номер від card content. Перша й остання rows не створюють collection edge border.
+- У flat presentations prepared `open detail` action стає одним native action target на всю площу row, включно з index cell; окрема detail-кнопка не рендериться. Focus або press продовжують емітити ті самі `focusCombo` / `openComboDetail` intents.
+- Інші contextual actions лишаються окремими semantic controls поверх row target і не активують detail. Modal filter drawer повторно використовує `commandDeck` list для live draft preview та робить його inert на рівні page overlay.
+- `state` і `presentation` ортогональні: `state` одноосібно визначає loading/empty/items, presentation — лише anatomy та density.
+- `listDisabled` та loading роблять усі rows inert у кожному presentation; optional status/disabled reason показується один раз над ordered list.
+- У Catalog vertical scroll належить results viewport зі списком; global header і filter summary лишаються поза цим scroller. `UI-CMP-010` не створює паралельний page-level scroll owner.
 
 ## Канонічний Responsive і Controller-only Contract
 

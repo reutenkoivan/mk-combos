@@ -1,9 +1,11 @@
+import { LocalizedTextSchema } from "@mk-combos/contracts/settings/schema";
+import { Mk1PickerSlotSchema } from "@mk-combos/mk1-data/shared/schema";
 import { z } from "zod/v4";
 
 import {
   mk1CatalogContextStatuses,
+  mk1CatalogOptionAvailabilities,
   mk1CatalogRecoveryCodes,
-  mk1CatalogRouteQueryKeys,
 } from "./value";
 
 const CatalogIdSchema = z
@@ -11,29 +13,9 @@ const CatalogIdSchema = z
   .min(1)
   .regex(/^[a-z0-9][a-z0-9:-]*$/u);
 
-const PlainRouteValueSchema = z.union([z.string(), z.array(z.string()).readonly()]);
-
-const createMk1CatalogRouteQuerySchema = () =>
-  z
-    .object({
-      character: PlainRouteValueSchema.optional(),
-      kameo: PlainRouteValueSchema.optional(),
-      starter: PlainRouteValueSchema.optional(),
-      position: PlainRouteValueSchema.optional(),
-      meter: PlainRouteValueSchema.optional(),
-      damageMin: PlainRouteValueSchema.optional(),
-      damageMax: PlainRouteValueSchema.optional(),
-      difficulty: PlainRouteValueSchema.optional(),
-      routeType: PlainRouteValueSchema.optional(),
-      tag: PlainRouteValueSchema.optional(),
-    })
-    .strict();
-
 export const Mk1CatalogContextStatusSchema = z.enum(mk1CatalogContextStatuses);
-
 export const Mk1CatalogRecoveryCodeSchema = z.enum(mk1CatalogRecoveryCodes);
-
-export const Mk1CatalogRouteQueryKeySchema = z.enum(mk1CatalogRouteQueryKeys);
+export const Mk1CatalogOptionAvailabilitySchema = z.enum(mk1CatalogOptionAvailabilities);
 
 export const Mk1CatalogContextSchema = z
   .object({
@@ -42,19 +24,33 @@ export const Mk1CatalogContextSchema = z
   })
   .strict();
 
-export const Mk1CatalogRequiredContextSchema = z
+export const Mk1CatalogCharacterOptionSchema = z
   .object({
-    characterId: CatalogIdSchema,
-    kameoId: CatalogIdSchema,
+    id: CatalogIdSchema,
+    label: LocalizedTextSchema,
+    shortLabel: LocalizedTextSchema.optional(),
+    rosterOrder: z.number().int().positive(),
+    pickerSlot: Mk1PickerSlotSchema,
+    comboCount: z.number().int().min(0),
+    availability: Mk1CatalogOptionAvailabilitySchema,
   })
   .strict();
 
-export const Mk1CatalogPlainRouteQuerySchema = createMk1CatalogRouteQuerySchema();
+export const Mk1CatalogKameoOptionSchema = z
+  .object({
+    id: CatalogIdSchema,
+    label: LocalizedTextSchema,
+    shortLabel: LocalizedTextSchema.optional(),
+    kameoOrder: z.number().int().positive(),
+    pickerSlot: Mk1PickerSlotSchema,
+    comboCount: z.number().int().min(0),
+    availability: Mk1CatalogOptionAvailabilitySchema,
+  })
+  .strict();
 
-export const Mk1CatalogRouteQuerySchema = createMk1CatalogRouteQuerySchema();
-
-export {
-  mk1CatalogContextStatuses,
-  mk1CatalogRecoveryCodes,
-  mk1CatalogRouteQueryKeys,
-} from "./value";
+export const Mk1CatalogContextOptionsSchema = z
+  .object({
+    characters: z.array(Mk1CatalogCharacterOptionSchema).readonly(),
+    kameos: z.array(Mk1CatalogKameoOptionSchema).readonly(),
+  })
+  .strict();

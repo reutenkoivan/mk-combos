@@ -1,5 +1,6 @@
 import { NotationIcon } from "../notation/renderer";
 import type { UiNotationLegendRow } from "../notation/type";
+import { Show } from "../primitives/conditional";
 
 export const notationLegendTableLayouts = {
   compact: "compact",
@@ -28,11 +29,11 @@ export function NotationLegendTable(props: NotationLegendTableProps) {
 
   return (
     <div
-      className="min-w-0 overflow-hidden border-t border-(--ui-separator) py-4"
-      data-disabled={props.disabled || undefined}
-      data-invalid={props.invalid || undefined}
       data-layout={layout}
       data-ui-component="UI-CMP-037"
+      data-invalid={props.invalid || undefined}
+      data-disabled={props.disabled || undefined}
+      className="min-w-0 overflow-hidden border-t border-(--ui-separator) py-4"
     >
       <table
         aria-label={!props.caption ? props.ariaLabel : undefined}
@@ -42,17 +43,19 @@ export function NotationLegendTable(props: NotationLegendTableProps) {
             : "block w-full text-left text-sm [&_tbody]:grid [&_tbody]:divide-y [&_tbody]:divide-(--ui-separator) [&_thead]:sr-only [&_tr]:grid [&_tr]:gap-2 [&_tr]:py-3"
         }
       >
-        {props.caption && (
-          <caption
-            className={
-              layout === notationLegendTableLayouts.table
-                ? "pb-3 text-left font-semibold"
-                : "block w-full pb-3 text-left font-semibold"
-            }
-          >
-            {props.caption}
-          </caption>
-        )}
+        <Show when={Boolean(props.caption)}>
+          {() => (
+            <caption
+              className={
+                layout === notationLegendTableLayouts.table
+                  ? "pb-3 text-left font-semibold"
+                  : "block w-full pb-3 text-left font-semibold"
+              }
+            >
+              {props.caption}
+            </caption>
+          )}
+        </Show>
         <thead>
           <tr
             className={
@@ -67,22 +70,24 @@ export function NotationLegendTable(props: NotationLegendTableProps) {
             <th className="p-2" scope="col">
               {props.markersHeaderLabel}
             </th>
-            {props.showModifiers && (
-              <th className="p-2" scope="col">
-                {props.modifiersHeaderLabel}
-              </th>
-            )}
+            <Show when={Boolean(props.showModifiers)}>
+              {() => (
+                <th className="p-2" scope="col">
+                  {props.modifiersHeaderLabel}
+                </th>
+              )}
+            </Show>
           </tr>
         </thead>
         <tbody>
           {props.legendRows.map((row) => (
             <tr
+              key={row.mode}
               className={
                 layout === notationLegendTableLayouts.table
                   ? "border-b border-(--ui-separator) last:border-b-0"
                   : undefined
               }
-              key={row.mode}
             >
               <th className="p-2 font-medium" scope="row">
                 <span className="inline-flex items-center gap-2">
@@ -100,18 +105,20 @@ export function NotationLegendTable(props: NotationLegendTableProps) {
                   ))}
                 </span>
               </td>
-              {props.showModifiers && (
-                <td className="p-2">
-                  <span className="flex flex-wrap items-center gap-1">
-                    {row.modifierIcons?.map((icon) => (
-                      <NotationIcon
-                        descriptor={icon}
-                        key={`${row.mode}-${icon.iconName}-${icon.token}`}
-                      />
-                    ))}
-                  </span>
-                </td>
-              )}
+              <Show when={Boolean(props.showModifiers)}>
+                {() => (
+                  <td className="p-2">
+                    <span className="flex flex-wrap items-center gap-1">
+                      {row.modifierIcons?.map((icon) => (
+                        <NotationIcon
+                          descriptor={icon}
+                          key={`${row.mode}-${icon.iconName}-${icon.token}`}
+                        />
+                      ))}
+                    </span>
+                  </td>
+                )}
+              </Show>
             </tr>
           ))}
         </tbody>

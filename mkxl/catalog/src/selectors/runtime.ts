@@ -1,6 +1,8 @@
 import type { ComboId } from "@mk-combos/contracts/identity/type";
 import type { MkxlSeededCombo } from "@mk-combos/mkxl-data/combos/type";
 import { mkxlSeededCombos } from "@mk-combos/mkxl-data/combos/value";
+import type { MkxlMove } from "@mk-combos/mkxl-data/movelists/type";
+import { mkxlMoveCategories, mkxlMoves } from "@mk-combos/mkxl-data/movelists/value";
 import { mkxlCharacters } from "@mk-combos/mkxl-data/roster/value";
 import { mkxlStages } from "@mk-combos/mkxl-data/stages/value";
 import { mkxlVariations } from "@mk-combos/mkxl-data/variations/value";
@@ -11,10 +13,17 @@ import { mkxlCatalogContextStatuses } from "../context/value";
 import {
   comboMatchesMkxlCatalogFilters,
   createMkxlCatalogFilterFacets,
+  getMkxlCatalogComboSource,
   recoverMkxlCatalogFilters,
 } from "../filters/runtime";
 import type { MkxlCatalogFilterFacet, MkxlCatalogFilters } from "../filters/type";
-import type { MkxlCatalogComboSummary, MkxlCatalogEntityLabel } from "../summary/type";
+import type {
+  MkxlCatalogComboSummary,
+  MkxlCatalogEntityLabel,
+  MkxlCatalogRouteStep,
+  MkxlCatalogRouteStepKind,
+} from "../summary/type";
+import { mkxlCatalogRouteStepEmphases, mkxlCatalogRouteStepKinds } from "../summary/value";
 
 type SelectMkxlCatalogCombosInput = {
   context: MkxlCatalogContext;
@@ -28,6 +37,7 @@ for (const character of mkxlCharacters) {
 }
 
 const variationsById = new Map<string, (typeof mkxlVariations)[number]>();
+const movesById = new Map<string, MkxlMove>(mkxlMoves.map((move) => [move.id, move]));
 
 for (const variation of mkxlVariations) {
   variationsById.set(variation.id, variation);
@@ -107,7 +117,88 @@ const summarizeStageInteractables = (
   return interactables;
 };
 
-export const summarizeMkxlCatalogCombo = (combo: MkxlSeededCombo): MkxlCatalogComboSummary => {
+type RouteGroup = {
+  readonly moveId: string;
+  readonly notation: MkxlCatalogRouteStep["notation"];
+  readonly repetitionCount: number;
+};
+
+const routeGroups = (combo: MkxlSeededCombo): readonly RouteGroup[] => {
+  const groups: RouteGroup[] = [];
+  for (const [index, moveId] of combo.movePath.entries()) {
+    const notation = combo.notation[index];
+    if (!notation) {
+      throw new Error(`MKXL combo ${combo.id} is missing notation for route step ${index}.`);
+    }
+    const previous = groups.at(-1);
+    if (previous?.moveId === moveId) {
+      groups[groups.length - 1] = { ...previous, repetitionCount: previous.repetitionCount + 1 };
+    } else {
+      groups.push({ moveId, notation, repetitionCount: 1 });
+    }
+  }
+  return groups;
+};
+
+const routeStepKind = (
+  group: RouteGroup,
+  index: number,
+  lastIndex: number,
+): MkxlCatalogRouteStepKind => {
+  const move = movesById.get(group.moveId);
+
+  if (move?.tags.includes("cashout") || move?.category === mkxlMoveCategories.stage) {
+    return mkxlCatalogRouteStepKinds.cashout;
+  }
+  if (
+    (move?.meterCost ?? 0) > 0 ||
+    move?.tags.includes("meter") ||
+    move?.category === mkxlMoveCategories.enhanced ||
+    move?.category === mkxlMoveCategories.xray
+  ) {
+    return mkxlCatalogRouteStepKinds.meter;
+  }
+  if (index === lastIndex) return mkxlCatalogRouteStepKinds.finish;
+  if (move?.tags.includes("launcher")) return mkxlCatalogRouteStepKinds.launcher;
+  if (index === 0) {
+    return move?.category === mkxlMoveCategories.string && group.notation.length >= 3
+      ? mkxlCatalogRouteStepKinds.string
+      : mkxlCatalogRouteStepKinds.starter;
+  }
+  if (move?.category === mkxlMoveCategories.string) {
+    return group.repetitionCount > 1 || group.notation.length <= 2
+      ? mkxlCatalogRouteStepKinds.link
+      : mkxlCatalogRouteStepKinds.string;
+  }
+  if (
+    move?.category === mkxlMoveCategories.special ||
+    move?.category === mkxlMoveCategories.variation
+  ) {
+    return mkxlCatalogRouteStepKinds.cancel;
+  }
+  return mkxlCatalogRouteStepKinds.link;
+};
+
+const summarizeRoute = (combo: MkxlSeededCombo): readonly MkxlCatalogRouteStep[] => {
+  const groups = routeGroups(combo);
+  const lastIndex = groups.length - 1;
+  return groups.map((group, index) => {
+    const kind = routeStepKind(group, index, lastIndex);
+    return {
+      kind,
+      notation: group.notation,
+      repetitionCount: group.repetitionCount,
+      emphasis:
+        kind === mkxlCatalogRouteStepKinds.cashout ||
+        kind === mkxlCatalogRouteStepKinds.finish ||
+        kind === mkxlCatalogRouteStepKinds.meter
+          ? mkxlCatalogRouteStepEmphases.strong
+          : mkxlCatalogRouteStepEmphases.standard,
+    };
+  });
+};
+
+const summarizeMkxlCatalogCombo = (combo: MkxlSeededCombo): MkxlCatalogComboSummary => {
   const character = charactersById.get(combo.characterId);
   const variation = variationsById.get(combo.variationId);
   const stage =
@@ -127,6 +218,8 @@ export const summarizeMkxlCatalogCombo = (combo: MkxlSeededCombo): MkxlCatalogCo
     },
     gameId: "mkxl",
     source: "seeded",
+    provenance: getMkxlCatalogComboSource(combo),
+    sourceIds: combo.sourceIds,
     title: combo.title,
     character: {
       ...entityLabel(character.id, character.label),
@@ -144,6 +237,7 @@ export const summarizeMkxlCatalogCombo = (combo: MkxlSeededCombo): MkxlCatalogCo
         : [],
     movePath: combo.movePath,
     cachedNotation: combo.notation,
+    routeSteps: summarizeRoute(combo),
     metadata: combo.metadata,
     tags: combo.metadata.tags,
     notes: combo.notes,

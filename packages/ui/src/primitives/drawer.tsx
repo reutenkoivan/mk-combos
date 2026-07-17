@@ -63,12 +63,12 @@ export function DrawerRoot(props: DrawerRootProps) {
 
   return (
     <BaseDrawer.Root
-      defaultOpen={defaultOpen}
-      disablePointerDismissal={disablePointerDismissal}
-      modal={modal}
-      onOpenChange={handleOpenChange}
       open={open}
+      modal={modal}
+      defaultOpen={defaultOpen}
+      onOpenChange={handleOpenChange}
       swipeDirection={swipeDirection}
+      disablePointerDismissal={disablePointerDismissal}
     >
       {children}
     </BaseDrawer.Root>
@@ -105,12 +105,12 @@ export function DrawerTrigger(props: DrawerTriggerProps) {
   return (
     <BaseDrawer.Trigger
       {...triggerProps}
-      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-drawer-trigger
-      disabled={disabled}
       ref={ref}
       type={type}
+      disabled={disabled}
+      data-ui-drawer-trigger
+      data-disabled={disabled ? "true" : undefined}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
     >
       {children}
     </BaseDrawer.Trigger>
@@ -123,22 +123,23 @@ export type DrawerPortalProps = ComponentPropsWithRef<typeof BaseDrawer.Portal>;
 
 export function DrawerPortal(props: DrawerPortalProps) {
   const { className, ...portalProps } = props;
-  const { contrast, density, responsiveMode, theme } = useUiRootContext();
+  const { contrast, controllerFocusVisible, density, responsiveMode, theme } = useUiRootContext();
 
   return (
     <BaseDrawer.Portal
       {...portalProps}
+      data-ui-theme={theme}
+      data-ui-portal="drawer"
+      data-ui-density={density}
+      data-ui-contrast={contrast}
+      data-ui-responsive={responsiveMode}
+      data-ui-controller-focus-visible={controllerFocusVisible ? "true" : "false"}
       className={(state) =>
         cx(
           "mk-combos-ui-root mk-combos-ui-portal-root",
           typeof className === "function" ? className(state) : className,
         )
       }
-      data-ui-contrast={contrast}
-      data-ui-density={density}
-      data-ui-portal="drawer"
-      data-ui-responsive={responsiveMode}
-      data-ui-theme={theme}
     />
   );
 }
@@ -153,12 +154,12 @@ export function DrawerBackdrop(props: DrawerBackdropProps) {
   return (
     <BaseDrawer.Backdrop
       {...backdropProps}
+      ref={ref}
+      data-ui-drawer-backdrop
       className={cx(
         "fixed inset-0 z-40 min-h-dvh bg-black/45 opacity-[calc(1-var(--drawer-swipe-progress))] transition-opacity duration-300 ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 data-swiping:duration-0 motion-reduce:transition-none",
         className,
       )}
-      data-ui-drawer-backdrop
-      ref={ref}
     />
   );
 }
@@ -173,9 +174,9 @@ export function DrawerViewport(props: DrawerViewportProps) {
   return (
     <BaseDrawer.Viewport
       {...viewportProps}
-      className={cx("fixed inset-0 z-50 flex items-stretch", className)}
-      data-ui-drawer-viewport
       ref={ref}
+      data-ui-drawer-viewport
+      className={cx("fixed inset-0 z-50 flex items-stretch", className)}
     >
       {children}
     </BaseDrawer.Viewport>
@@ -186,8 +187,11 @@ DrawerViewport.displayName = "DrawerViewport";
 
 export type DrawerPopupProps = UiPrimitiveProps<HTMLDivElement> & {
   density?: UiDensityMode;
+  finalFocus?: ComponentPropsWithRef<typeof BaseDrawer.Popup>["finalFocus"];
+  initialFocus?: ComponentPropsWithRef<typeof BaseDrawer.Popup>["initialFocus"];
   material?: UiMaterialMode;
   shape?: UiShapeMode;
+  tabIndex?: number;
 };
 
 export function DrawerPopup(props: DrawerPopupProps) {
@@ -195,6 +199,8 @@ export function DrawerPopup(props: DrawerPopupProps) {
     children,
     className,
     density = uiDensityModes.medium,
+    finalFocus,
+    initialFocus,
     material = uiMaterialModes.elevated,
     ref,
     shape = uiShapeModes.fixed,
@@ -204,14 +210,16 @@ export function DrawerPopup(props: DrawerPopupProps) {
   return (
     <BaseDrawer.Popup
       {...popupProps}
+      ref={ref}
+      finalFocus={finalFocus}
+      initialFocus={initialFocus}
+      data-ui-drawer-popup
       className={cx(
         popupRecipe({ density, material, shape }),
         surfaceRecipe({ density, material, shape }),
         "overscroll-contain touch-auto outline-none transition-transform duration-300 ease-out data-swiping:select-none data-swiping:duration-0 motion-reduce:transition-none",
         className,
       )}
-      data-ui-drawer-popup
-      ref={ref}
     >
       {children}
     </BaseDrawer.Popup>
@@ -228,9 +236,9 @@ export function DrawerContent(props: DrawerContentProps) {
   return (
     <BaseDrawer.Content
       {...contentProps}
-      className={cx("grid min-w-0 gap-3", className)}
-      data-ui-drawer-content
       ref={ref}
+      data-ui-drawer-content
+      className={cx("grid min-w-0 gap-3", className)}
     >
       {children}
     </BaseDrawer.Content>
@@ -247,12 +255,12 @@ export function DrawerTitle(props: DrawerTitleProps) {
   return (
     <BaseDrawer.Title
       {...titleProps}
+      ref={ref}
+      data-ui-drawer-title
       className={cx(
         "font-(--ui-font-display) text-base font-semibold tracking-[-0.01em]",
         className,
       )}
-      data-ui-drawer-title
-      ref={ref}
     >
       {children}
     </BaseDrawer.Title>
@@ -269,9 +277,9 @@ export function DrawerDescription(props: DrawerDescriptionProps) {
   return (
     <BaseDrawer.Description
       {...descriptionProps}
-      className={cx("text-[13px] leading-snug text-(--ui-muted-text)", className)}
-      data-ui-drawer-description
       ref={ref}
+      data-ui-drawer-description
+      className={cx("text-[13px] leading-snug text-(--ui-muted-text)", className)}
     >
       {children}
     </BaseDrawer.Description>
@@ -319,16 +327,16 @@ export function DrawerClose(props: DrawerCloseProps) {
   return (
     <BaseDrawer.Close
       {...closeProps}
+      ref={ref}
+      type={type}
+      disabled={disabled}
+      data-ui-drawer-close
+      data-disabled={disabled ? "true" : undefined}
+      onClick={() => onRequestPress?.({ reason: "press", sourceFocusTarget })}
       className={cx(
         controlRecipe({ appearance, density, emphasis, placement, shape, tone }),
         className,
       )}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-drawer-close
-      disabled={disabled}
-      onClick={() => onRequestPress?.({ reason: "press", sourceFocusTarget })}
-      ref={ref}
-      type={type}
     >
       {children}
     </BaseDrawer.Close>

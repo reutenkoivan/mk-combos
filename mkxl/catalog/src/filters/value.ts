@@ -1,26 +1,33 @@
-export const mkxlCatalogFilterIds = {
-  damage: "damage",
-  difficulty: "difficulty",
-  interactable: "interactable",
-  meter: "meter",
-  position: "position",
-  routeType: "routeType",
-  stage: "stage",
-  starter: "starter",
-  tags: "tags",
-} as const;
-
 export const mkxlCatalogMultiSelectFilterIds = {
   difficulty: "difficulty",
   interactable: "interactable",
   meter: "meter",
   position: "position",
-  routeType: "routeType",
-  stage: "stage",
-  starter: "starter",
-  tags: "tags",
+  routeClass: "routeClass",
+  source: "source",
 } as const;
 
-export const mkxlCatalogRangeFilterIds = {
-  damage: "damage",
+export const mkxlCatalogSingleSelectFilterIds = {
+  stage: "stage",
+} as const;
+
+export const mkxlCatalogFilterIds = {
+  ...mkxlCatalogMultiSelectFilterIds,
+  ...mkxlCatalogSingleSelectFilterIds,
+} as const;
+
+export const mkxlCatalogSources = {
+  curated: "curated",
+  community: "community",
+  personal: "personal",
+} as const;
+
+export const mkxlCatalogFilterQueryKeys = {
+  difficulty: "difficulty",
+  interactable: "interactable",
+  meter: "meter",
+  position: "position",
+  routeClass: "routeClass",
+  source: "source",
+  stage: "stage",
 } as const;

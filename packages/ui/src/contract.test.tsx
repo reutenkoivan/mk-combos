@@ -9,6 +9,7 @@ import {
 import type { UiFocusDirection, UiFocusNeighbors } from "@mk-combos/ui/focus-navigation/type";
 import { uiFocusDirections as typeFocusDirections } from "@mk-combos/ui/focus-navigation/type";
 import { uiFocusDirections } from "@mk-combos/ui/focus-navigation/value";
+import { AddToListIcon, addToListIcon } from "@mk-combos/ui/icons/add-to-list";
 import { AlertTriangleIcon, alertTriangleIcon } from "@mk-combos/ui/icons/alert-triangle";
 import { CheckIcon, checkIcon } from "@mk-combos/ui/icons/check";
 import { ChevronDownIcon, chevronDownIcon } from "@mk-combos/ui/icons/chevron-down";
@@ -17,14 +18,19 @@ import { ChevronRightIcon, chevronRightIcon } from "@mk-combos/ui/icons/chevron-
 import { ChevronUpIcon, chevronUpIcon } from "@mk-combos/ui/icons/chevron-up";
 import { CircleHelpIcon, circleHelpIcon } from "@mk-combos/ui/icons/circle-help";
 import { DownloadIcon, downloadIcon } from "@mk-combos/ui/icons/download";
+import { DuplicateIcon, duplicateIcon } from "@mk-combos/ui/icons/duplicate";
 import { EditIcon, editIcon } from "@mk-combos/ui/icons/edit";
+import { FiltersIcon, filtersIcon } from "@mk-combos/ui/icons/filters";
 import { Gamepad2Icon, gamepad2Icon } from "@mk-combos/ui/icons/gamepad-2";
 import { MenuIcon, menuIcon } from "@mk-combos/ui/icons/menu";
 import { PlusIcon, plusIcon } from "@mk-combos/ui/icons/plus";
+import { RepairIcon, repairIcon } from "@mk-combos/ui/icons/repair";
+import { ReturnIcon, returnIcon } from "@mk-combos/ui/icons/return";
 import { SearchIcon, searchIcon } from "@mk-combos/ui/icons/search";
 import { SettingsIcon, settingsIcon } from "@mk-combos/ui/icons/settings";
 import { Trash2Icon, trash2Icon } from "@mk-combos/ui/icons/trash-2";
 import { UploadIcon, uploadIcon } from "@mk-combos/ui/icons/upload";
+import { ViewDetailIcon, viewDetailIcon } from "@mk-combos/ui/icons/view-detail";
 import { XIcon, xIcon } from "@mk-combos/ui/icons/x";
 import {
   createNotationLegendRows,
@@ -258,7 +264,6 @@ import {
 } from "./internal/base-ui/dialog";
 import { NotationIcon } from "./notation/renderer";
 import { mapBaseUiReason } from "./primitives/internal";
-import * as recipeBarrel from "./recipes";
 import { controlRecipe } from "./recipes/control";
 import { fieldRecipe } from "./recipes/field";
 import { indicatorRecipe } from "./recipes/indicator";
@@ -353,6 +358,7 @@ const notationControllerControlTokens = [
 ] as const;
 
 const iconContracts = [
+  { Component: AddToListIcon, metadata: addToListIcon },
   { Component: AlertTriangleIcon, metadata: alertTriangleIcon },
   { Component: CheckIcon, metadata: checkIcon },
   { Component: ChevronDownIcon, metadata: chevronDownIcon },
@@ -361,14 +367,19 @@ const iconContracts = [
   { Component: ChevronUpIcon, metadata: chevronUpIcon },
   { Component: CircleHelpIcon, metadata: circleHelpIcon },
   { Component: DownloadIcon, metadata: downloadIcon },
+  { Component: DuplicateIcon, metadata: duplicateIcon },
   { Component: EditIcon, metadata: editIcon },
+  { Component: FiltersIcon, metadata: filtersIcon },
   { Component: Gamepad2Icon, metadata: gamepad2Icon },
   { Component: MenuIcon, metadata: menuIcon },
   { Component: PlusIcon, metadata: plusIcon },
+  { Component: RepairIcon, metadata: repairIcon },
+  { Component: ReturnIcon, metadata: returnIcon },
   { Component: SearchIcon, metadata: searchIcon },
   { Component: SettingsIcon, metadata: settingsIcon },
   { Component: Trash2Icon, metadata: trash2Icon },
   { Component: UploadIcon, metadata: uploadIcon },
+  { Component: ViewDetailIcon, metadata: viewDetailIcon },
   { Component: XIcon, metadata: xIcon },
 ] as const;
 
@@ -406,6 +417,7 @@ describe("@mk-combos/ui foundation", () => {
     );
     expect(contractEntry.uiContractGroups.primitives).toEqual({
       button: "@mk-combos/ui/primitives/button",
+      conditional: "@mk-combos/ui/primitives/conditional",
       dialog: "@mk-combos/ui/primitives/dialog",
       drawer: "@mk-combos/ui/primitives/drawer",
       disclosure: "@mk-combos/ui/primitives/disclosure",
@@ -834,16 +846,6 @@ describe("@mk-combos/ui foundation", () => {
     expect(tabsTabRecipe()).toContain("data-[active]:text-(--ui-text)");
     expect(tabsTabRecipe()).toContain("data-[disabled]:cursor-not-allowed");
     expect(tabsIndicatorRecipe()).toContain("motion-reduce:transition-none");
-    expect(recipeBarrel.controlRecipe).toBe(controlRecipe);
-    expect(recipeBarrel.fieldRecipe).toBe(fieldRecipe);
-    expect(recipeBarrel.indicatorRecipe).toBe(indicatorRecipe);
-    expect(recipeBarrel.itemRecipe).toBe(itemRecipe);
-    expect(recipeBarrel.popupRecipe).toBe(popupRecipe);
-    expect(recipeBarrel.separatorRecipe).toBe(separatorRecipe);
-    expect(recipeBarrel.surfaceRecipe).toBe(surfaceRecipe);
-    expect(recipeBarrel.tabsIndicatorRecipe).toBe(tabsIndicatorRecipe);
-    expect(recipeBarrel.tabsTabRecipe).toBe(tabsTabRecipe);
-    expect(recipeBarrel.cx("a", false, "b")).toBe("a b");
   });
 
   it("renders public base primitives with semantic callbacks and stable states", () => {
@@ -862,9 +864,9 @@ describe("@mk-combos/ui foundation", () => {
               <Grid columns="two">
                 <Group>
                   <Button
-                    onRequestPress={(payload) => buttonPayloads.push(payload)}
-                    sourceFocusTarget="save-action"
                     tone="accent"
+                    sourceFocusTarget="save-action"
+                    onRequestPress={(payload) => buttonPayloads.push(payload)}
                   >
                     Save
                   </Button>
@@ -885,22 +887,22 @@ describe("@mk-combos/ui foundation", () => {
               <Field>
                 <FieldLabel htmlFor="query">Query</FieldLabel>
                 <TextInput
-                  id="query"
-                  onValueChange={(payload) => inputPayloads.push(payload)}
-                  placeholder="Search"
                   value=""
+                  id="query"
+                  placeholder="Search"
+                  onValueChange={(payload) => inputPayloads.push(payload)}
                 />
                 <FieldMessage invalid>Required field</FieldMessage>
               </Field>
               <TextInput aria-label="Read only query" readOnly value="Locked" />
               <SegmentedControl
+                value="UA"
                 aria-label="Language"
                 onValueChange={(payload) => segmentPayloads.push(payload)}
                 options={[
                   { label: "English", value: "EN" },
                   { label: "Ukrainian", value: "UA" },
                 ]}
-                value="UA"
               />
             </Panel>
           </Surface>
@@ -979,13 +981,13 @@ describe("@mk-combos/ui foundation", () => {
         </Button>
         <TextInput aria-label="Disabled query" disabled value="Locked" />
         <SegmentedControl
+          value="EN"
           aria-label="Disabled option selector"
           onValueChange={(payload) => segmentPayloads.push(payload)}
           options={[
             { label: "English", value: "EN" },
             { disabled: true, label: "Ukrainian", value: "UA" },
           ]}
-          value="EN"
         />
         <MenuRoot open>
           <MenuTrigger>Disabled item menu</MenuTrigger>
@@ -994,8 +996,8 @@ describe("@mk-combos/ui foundation", () => {
               <MenuPopup>
                 <MenuItem
                   disabled
-                  onRequestSelect={(payload) => menuPayloads.push(payload)}
                   value="disabled-item"
+                  onRequestSelect={(payload) => menuPayloads.push(payload)}
                 >
                   Disabled menu item
                 </MenuItem>
@@ -1090,15 +1092,20 @@ describe("@mk-combos/ui foundation", () => {
     const menuPayloads: Array<{ reason: "itemPress"; value: "edit" }> = [];
 
     render(
-      <UiRoot contrast="increased" responsiveMode="tablet" theme="light">
+      <UiRoot
+        theme="light"
+        contrast="increased"
+        responsiveMode="tablet"
+        controllerFocusVisible={false}
+      >
         <DialogRoot modal={false}>
           <DialogTrigger>Open lightweight dialog</DialogTrigger>
         </DialogRoot>
 
         <DisclosureRoot
-          onOpenChange={(payload) => disclosurePayloads.push(payload)}
           open={false}
           sourceFocusTarget="backup-trigger"
+          onOpenChange={(payload) => disclosurePayloads.push(payload)}
         >
           <DisclosureTrigger>Backup details</DisclosureTrigger>
           <DisclosurePanel>Collapsed backup content</DisclosurePanel>
@@ -1156,6 +1163,7 @@ describe("@mk-combos/ui foundation", () => {
       const portal = document.querySelector(`[data-ui-portal="${portalKind}"]`);
       expect(portal?.className).toContain("mk-combos-ui-portal-root");
       expect(portal?.getAttribute("data-ui-contrast")).toBe("increased");
+      expect(portal?.getAttribute("data-ui-controller-focus-visible")).toBe("false");
       expect(portal?.getAttribute("data-ui-responsive")).toBe("tablet");
       expect(portal?.getAttribute("data-ui-theme")).toBe("light");
     }
@@ -1275,10 +1283,10 @@ describe("@mk-combos/ui foundation", () => {
     render(
       <UiRoot contrast="increased" responsiveMode="mobile" theme="light">
         <DrawerRoot
-          onOpenChange={(payload) => openPayloads.push(payload)}
           open
-          sourceFocusTarget="navigation-trigger"
           swipeDirection="right"
+          sourceFocusTarget="navigation-trigger"
+          onOpenChange={(payload) => openPayloads.push(payload)}
         >
           <DrawerTrigger>Open navigation</DrawerTrigger>
           <DrawerPortal>

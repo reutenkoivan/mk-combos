@@ -6,8 +6,19 @@ import {
 } from "@mk-combos/contracts/build/tsdown/config";
 import { createViteConfig } from "@mk-combos/contracts/build/vite/config";
 import { withStorybookViteConfig } from "@mk-combos/contracts/build/vite/storybook";
+import {
+  CatalogFilterChangeSchema,
+  catalogFilterChangeKinds as catalogFilterSchemaChangeKinds,
+} from "@mk-combos/contracts/catalog-filter/schema";
+import {
+  type CatalogFilterChange,
+  type CatalogFilterChangeKind,
+  catalogFilterChangeKinds as catalogFilterTypeChangeKinds,
+} from "@mk-combos/contracts/catalog-filter/type";
+import { catalogFilterChangeKinds } from "@mk-combos/contracts/catalog-filter/value";
 import * as contractEntry from "@mk-combos/contracts/contract";
 import {
+  type CatalogFilterChange as CatalogFilterChangeFromContract,
   type ComboDetailRouteParams,
   type ComboRef,
   contractGroups,
@@ -29,26 +40,30 @@ import { validationSeverities as resultSchemaValidationSeverities } from "@mk-co
 import type { AppResult, ValidationSeverity } from "@mk-combos/contracts/result/type";
 import { validationSeverities as resultTypeValidationSeverities } from "@mk-combos/contracts/result/type";
 import { validationSeverities } from "@mk-combos/contracts/result/value";
-import {
-  appRouteKinds as routesSchemaAppRouteKinds,
-  gameRouteKinds as routesSchemaGameRouteKinds,
-} from "@mk-combos/contracts/routes/schema";
-import type { AppRouteKind, GameRouteKind } from "@mk-combos/contracts/routes/type";
-import {
-  appRouteKinds as routesTypeAppRouteKinds,
-  gameRouteKinds as routesTypeGameRouteKinds,
-} from "@mk-combos/contracts/routes/type";
-import { appRouteKinds, gameRouteKinds } from "@mk-combos/contracts/routes/value";
+import { gameRouteKinds as routesSchemaGameRouteKinds } from "@mk-combos/contracts/routes/schema";
+import type { GameRouteKind } from "@mk-combos/contracts/routes/type";
+import { gameRouteKinds as routesTypeGameRouteKinds } from "@mk-combos/contracts/routes/type";
+import { gameRouteKinds } from "@mk-combos/contracts/routes/value";
 import {
   languageCodes as settingsSchemaLanguageCodes,
   notationDisplayModes as settingsSchemaNotationDisplayModes,
+  themePreferences as settingsSchemaThemePreferences,
 } from "@mk-combos/contracts/settings/schema";
-import type { LanguageCode, NotationDisplayMode } from "@mk-combos/contracts/settings/type";
+import type {
+  LanguageCode,
+  NotationDisplayMode,
+  ThemePreference,
+} from "@mk-combos/contracts/settings/type";
 import {
   languageCodes as settingsTypeLanguageCodes,
   notationDisplayModes as settingsTypeNotationDisplayModes,
+  themePreferences as settingsTypeThemePreferences,
 } from "@mk-combos/contracts/settings/type";
-import { languageCodes, notationDisplayModes } from "@mk-combos/contracts/settings/value";
+import {
+  languageCodes,
+  notationDisplayModes,
+  themePreferences,
+} from "@mk-combos/contracts/settings/value";
 import { createE2eConfig } from "@mk-combos/contracts/test/e2e/config";
 import {
   type APIRequestContext,
@@ -104,6 +119,11 @@ describe("@mk-combos/contracts", () => {
       schema: "@mk-combos/contracts/backup/schema",
       type: "@mk-combos/contracts/backup/type",
     });
+    expect(contractGroups.catalogFilter).toEqual({
+      schema: "@mk-combos/contracts/catalog-filter/schema",
+      type: "@mk-combos/contracts/catalog-filter/type",
+      value: "@mk-combos/contracts/catalog-filter/value",
+    });
     expect(Object.keys(backupSchemaEntry).sort()).toEqual([
       "GameBackupEnvelopeSchema",
       "createGameBackupEnvelopeSchema",
@@ -122,7 +142,7 @@ describe("@mk-combos/contracts", () => {
     expect(contractGroups.env).not.toHaveProperty("schema");
   });
 
-  it("keeps combo references game-agnostic", () => {
+  it("keeps combo references game-agnostic and route params source-neutral", () => {
     const comboRef = {
       gameId: "future-game",
       source: "seeded",
@@ -130,12 +150,18 @@ describe("@mk-combos/contracts", () => {
     } satisfies ComboRef;
 
     const routeParams = {
-      gameId: comboRef.gameId,
-      source: comboRef.source,
+      characterSlug: "fighter",
       comboId: comboRef.comboId,
+      gameId: comboRef.gameId,
+      specificationSlug: "context",
     } satisfies ComboDetailRouteParams;
 
-    expect(routeParams).toEqual(comboRef);
+    expect(routeParams).toEqual({
+      characterSlug: "fighter",
+      comboId: "starter-001",
+      gameId: "future-game",
+      specificationSlug: "context",
+    });
   });
 
   it("supports localized text with optional fallback copy", () => {
@@ -194,6 +220,13 @@ describe("@mk-combos/contracts", () => {
     expect(comboSources).toEqual({ custom: "custom", seeded: "seeded" });
     expect(identitySchemaComboSources).toBe(comboSources);
     expect(identityTypeComboSources).toBe(identitySchemaComboSources);
+    expect(catalogFilterChangeKinds).toEqual({
+      clearAll: "clearAll",
+      clearFacet: "clearFacet",
+      toggleOption: "toggleOption",
+    });
+    expect(catalogFilterSchemaChangeKinds).toBe(catalogFilterChangeKinds);
+    expect(catalogFilterTypeChangeKinds).toBe(catalogFilterSchemaChangeKinds);
     expect(validationSeverities).toEqual({ error: "error", info: "info", warning: "warning" });
     expect(resultSchemaValidationSeverities).toBe(validationSeverities);
     expect(resultTypeValidationSeverities).toBe(resultSchemaValidationSeverities);
@@ -205,31 +238,40 @@ describe("@mk-combos/contracts", () => {
     });
     expect(routesSchemaGameRouteKinds).toBe(gameRouteKinds);
     expect(routesTypeGameRouteKinds).toBe(routesSchemaGameRouteKinds);
-    expect(appRouteKinds).toEqual({
-      builder: "builder",
-      catalog: "catalog",
-      comboDetail: "comboDetail",
-      lists: "lists",
-      settings: "settings",
-    });
-    expect(routesSchemaAppRouteKinds).toBe(appRouteKinds);
-    expect(routesTypeAppRouteKinds).toBe(routesSchemaAppRouteKinds);
     expect(languageCodes).toEqual({ EN: "EN", UA: "UA" });
     expect(settingsSchemaLanguageCodes).toBe(languageCodes);
     expect(settingsTypeLanguageCodes).toBe(settingsSchemaLanguageCodes);
     expect(notationDisplayModes).toEqual({ FGC: "FGC", PlayStation: "PlayStation", Xbox: "Xbox" });
     expect(settingsSchemaNotationDisplayModes).toBe(notationDisplayModes);
     expect(settingsTypeNotationDisplayModes).toBe(settingsSchemaNotationDisplayModes);
+    expect(themePreferences).toEqual({ dark: "dark", light: "light", system: "system" });
+    expect(settingsSchemaThemePreferences).toBe(themePreferences);
+    expect(settingsTypeThemePreferences).toBe(settingsSchemaThemePreferences);
 
     const typedValues = {
-      appRoute: appRouteKinds.settings satisfies AppRouteKind,
       comboSource: comboSources.custom satisfies ComboSource,
       gameRoute: gameRouteKinds.builder satisfies GameRouteKind,
       language: languageCodes.UA satisfies LanguageCode,
       notation: notationDisplayModes.FGC satisfies NotationDisplayMode,
+      theme: themePreferences.system satisfies ThemePreference,
       severity: validationSeverities.warning satisfies ValidationSeverity,
+      filterChangeKind: catalogFilterChangeKinds.toggleOption satisfies CatalogFilterChangeKind,
     };
     expect(typedValues).toBeDefined();
+
+    const filterChange = CatalogFilterChangeSchema.parse({
+      kind: catalogFilterChangeKinds.toggleOption,
+      filterId: "tag",
+      value: "practice",
+      selected: true,
+    }) satisfies CatalogFilterChange;
+    const contractFilterChange: CatalogFilterChangeFromContract = filterChange;
+
+    expect(contractFilterChange).toMatchObject({ value: "practice" });
+    expect(mkCombosContract.valueSets.catalogFilterChangeKinds).toBe(catalogFilterChangeKinds);
+    expect(mkCombosContract.valueSets.gameRouteKinds).toBe(gameRouteKinds);
+    expect(mkCombosContract.valueSets).not.toHaveProperty("appRouteKinds");
+    expect(mkCombosContract.valueSets.themePreferences).toBe(themePreferences);
   });
 
   it("keeps test helper re-exports intentional", () => {

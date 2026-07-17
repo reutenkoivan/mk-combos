@@ -1,38 +1,42 @@
+import { CatalogFilterChangeSchema } from "@mk-combos/contracts/catalog-filter/schema";
+import type { CatalogFilterChange } from "@mk-combos/contracts/catalog-filter/type";
+import { catalogFilterChangeKinds } from "@mk-combos/contracts/catalog-filter/value";
 import type { ValidationMessage } from "@mk-combos/contracts/result/type";
 import { validationSeverities } from "@mk-combos/contracts/result/value";
+import type { LocalizedText } from "@mk-combos/contracts/settings/type";
 import type { MkxlSeededCombo } from "@mk-combos/mkxl-data/combos/type";
 import { mkxlStages } from "@mk-combos/mkxl-data/stages/value";
 
-import { MkxlCatalogFiltersSchema } from "./schema";
-import type { MkxlCatalogFilterFacet, MkxlCatalogFilterOption, MkxlCatalogFilters } from "./type";
-import { mkxlCatalogMultiSelectFilterIds, mkxlCatalogRangeFilterIds } from "./value";
+import {
+  MkxlCatalogFilterIdSchema,
+  MkxlCatalogFilterQuerySchema,
+  MkxlCatalogFiltersSchema,
+  MkxlCatalogPlainFilterQuerySchema,
+} from "./schema";
+import type {
+  MkxlCatalogFilterFacet,
+  MkxlCatalogFilterOption,
+  MkxlCatalogFilterQuery,
+  MkxlCatalogFilters,
+  MkxlCatalogMultiSelectFilterId,
+  MkxlCatalogSource,
+} from "./type";
+import {
+  mkxlCatalogMultiSelectFilterIds,
+  mkxlCatalogSingleSelectFilterIds,
+  mkxlCatalogSources,
+} from "./value";
 
-type PlainRouteQuery = Readonly<Record<string, string | readonly string[] | undefined>>;
+const emptyMkxlCatalogFilters = {} as const satisfies MkxlCatalogFilters;
 
-type FilterRecoveryResult = {
-  filters: MkxlCatalogFilters;
-  messages: readonly ValidationMessage[];
+type FilterRecovery = {
+  readonly filters: MkxlCatalogFilters;
+  readonly messages: readonly ValidationMessage[];
 };
 
-type FilterQueryOutput = {
-  starter?: readonly string[];
-  position?: readonly string[];
-  meter?: readonly string[];
-  damageMin?: string;
-  damageMax?: string;
-  difficulty?: readonly string[];
-  routeType?: readonly string[];
-  tag?: readonly string[];
-  stage?: string;
-  interactable?: readonly string[];
-};
-
-const stageIds = new Set<string>();
-
+const stageById = new Map(mkxlStages.map((stage) => [stage.id, stage]));
 const interactableStageById = new Map<string, string>();
-
 for (const stage of mkxlStages) {
-  stageIds.add(stage.id);
   for (const interactable of stage.interactables) {
     interactableStageById.set(interactable.id, stage.id);
   }
@@ -45,691 +49,520 @@ const toMessage = (code: string, message: string, path: readonly string[]): Vali
   path,
 });
 
-const toList = (value: string | readonly string[] | undefined): readonly string[] => {
-  if (value === undefined) {
-    return [];
-  }
+const toList = (value: string | readonly string[] | undefined): readonly string[] =>
+  value === undefined ? [] : typeof value === "string" ? [value] : value;
 
-  return typeof value === "string" ? [value] : value;
-};
-
-const unique = <T>(values: readonly T[]): readonly T[] => [...new Set(values)];
-
-const presentStrings = (values: readonly string[]): readonly string[] => {
-  const seenValues = new Set<string>();
-  const presentValues: string[] = [];
-
-  for (const value of values) {
-    const trimmedValue = value.trim();
-
-    if (!trimmedValue || seenValues.has(trimmedValue)) {
-      continue;
+const presentUnique = (value: string | readonly string[] | undefined): readonly string[] => {
+  const values: string[] = [];
+  const seen = new Set<string>();
+  for (const entry of toList(value)) {
+    const trimmed = entry.trim();
+    if (trimmed && !seen.has(trimmed)) {
+      seen.add(trimmed);
+      values.push(trimmed);
     }
-
-    seenValues.add(trimmedValue);
-    presentValues.push(trimmedValue);
   }
-
-  return presentValues;
+  return values;
 };
 
-const numberStringsToNumbers = (
-  values: readonly string[],
+const firstPresent = (value: string | readonly string[] | undefined): string | undefined =>
+  presentUnique(value)[0];
+
+const parseNumbers = (
+  value: string | readonly string[] | undefined,
   path: string,
-): { values: readonly number[]; messages: readonly ValidationMessage[] } => {
-  const parsedValues: number[] = [];
-  const messages: ValidationMessage[] = [];
-  const seenValues = new Set<number>();
-
-  for (const value of values) {
-    if (!/^\d+$/u.test(value)) {
+  messages: ValidationMessage[],
+): readonly number[] => {
+  const numbers: number[] = [];
+  for (const entry of presentUnique(value)) {
+    if (!/^\d+$/u.test(entry)) {
       messages.push(
-        toMessage("mkxl.catalog.invalid_filter_value", `Invalid ${path} filter value.`, [path]),
+        toMessage("mkxl.catalog.invalid_filter", `${path} must be an integer.`, [path]),
       );
       continue;
     }
-
-    const parsedValue = Number(value);
-
-    if (seenValues.has(parsedValue)) {
-      continue;
-    }
-
-    seenValues.add(parsedValue);
-    parsedValues.push(parsedValue);
+    numbers.push(Number(entry));
   }
-
-  return {
-    values: parsedValues,
-    messages,
-  };
+  return numbers;
 };
 
-const enumStrings = <T extends string>(
-  values: readonly string[],
-  allowedValues: readonly T[],
-  path: string,
-): { values: readonly T[]; messages: readonly ValidationMessage[] } => {
-  const allowed = new Set<string>(allowedValues);
-  const parsedValues: T[] = [];
-  const messages: ValidationMessage[] = [];
-  const seenValues = new Set<string>();
-  const isAllowedValue = (value: string): value is T => allowed.has(value);
-
-  for (const value of values) {
-    if (!isAllowedValue(value)) {
-      messages.push(
-        toMessage("mkxl.catalog.invalid_filter_value", `Invalid ${path} filter value.`, [path]),
-      );
-      continue;
-    }
-
-    if (seenValues.has(value)) {
-      continue;
-    }
-
-    seenValues.add(value);
-    parsedValues.push(value);
-  }
-
-  return {
-    values: parsedValues,
-    messages,
-  };
-};
-
-const addArray = <T>(target: Record<string, unknown>, key: string, values: readonly T[]) => {
-  if (values.length > 0) {
-    target[key] = values;
-  }
-};
-
-const normalizeDamageRange = (
-  minValue: string | undefined,
-  maxValue: string | undefined,
-): { damage?: MkxlCatalogFilters["damage"]; messages: readonly ValidationMessage[] } => {
-  const messages: ValidationMessage[] = [];
-  const parseBound = (value: string | undefined, path: string) => {
-    if (value === undefined) {
-      return undefined;
-    }
-    if (!/^\d+$/u.test(value)) {
-      messages.push(
-        toMessage("mkxl.catalog.invalid_filter_value", `Invalid ${path} filter value.`, [path]),
-      );
-      return undefined;
-    }
-
-    return Number(value);
-  };
-
-  const min = parseBound(minValue, "damageMin");
-  const max = parseBound(maxValue, "damageMax");
-
-  if (min !== undefined && max !== undefined && min > max) {
-    messages.push(
-      toMessage(
-        "mkxl.catalog.invalid_damage_range",
-        "Damage minimum cannot be greater than damage maximum.",
-        ["damage"],
-      ),
-    );
-    return { messages };
-  }
-
-  const damage = { min, max };
-
-  return min === undefined && max === undefined ? { messages } : { damage, messages };
-};
-
-const recoverStageAndInteractables = (filters: MkxlCatalogFilters): FilterRecoveryResult => {
+const recoverCanonicalFilters = (filters: MkxlCatalogFilters): FilterRecovery => {
   const messages: ValidationMessage[] = [];
   let stageId = filters.stageId;
   let interactableIds = filters.interactableIds;
+  let sources = filters.sources;
 
-  if (stageId && !stageIds.has(stageId)) {
+  if (stageId && !stageById.has(stageId)) {
     messages.push(
-      toMessage("mkxl.catalog.invalid_stage", "Stage filter does not exist in MKXL data.", [
-        "stage",
-      ]),
+      toMessage("mkxl.catalog.invalid_stage", "Stage does not exist in MKXL data.", ["stage"]),
     );
     stageId = undefined;
   }
 
-  if (interactableIds) {
-    const validInteractables: string[] = [];
-
-    for (const interactableId of interactableIds) {
-      const interactableStageId = interactableStageById.get(interactableId);
-
-      if (!interactableStageId) {
-        messages.push(
-          toMessage(
-            "mkxl.catalog.invalid_interactable",
-            "Interactable filter does not exist in MKXL data.",
-            ["interactable"],
-          ),
-        );
-        continue;
-      }
-
-      if (stageId && interactableStageId !== stageId) {
-        messages.push(
-          toMessage(
-            "mkxl.catalog.incompatible_interactable",
-            "Interactable filter does not belong to the selected stage.",
-            ["interactable"],
-          ),
-        );
-        continue;
-      }
-
-      validInteractables.push(interactableId);
+  if (interactableIds && !stageId) {
+    messages.push(
+      toMessage(
+        "mkxl.catalog.interactable_requires_stage",
+        "Select a stage before selecting an interactable.",
+        ["interactable"],
+      ),
+    );
+    interactableIds = undefined;
+  } else if (interactableIds && stageId) {
+    const compatible = interactableIds.filter(
+      (interactableId) => interactableStageById.get(interactableId) === stageId,
+    );
+    if (compatible.length !== interactableIds.length) {
+      messages.push(
+        toMessage(
+          "mkxl.catalog.incompatible_interactable",
+          "Interactable does not belong to the selected stage.",
+          ["interactable"],
+        ),
+      );
     }
-
-    interactableIds = validInteractables.length > 0 ? unique(validInteractables) : undefined;
+    interactableIds = compatible.length > 0 ? compatible : undefined;
   }
 
-  const recovered = MkxlCatalogFiltersSchema.parse({
-    ...filters,
-    stageId,
-    interactableIds,
-  });
+  if (sources?.includes(mkxlCatalogSources.personal)) {
+    messages.push(
+      toMessage(
+        "mkxl.catalog.personal_source_unavailable",
+        "Personal combos are not available in the catalog yet.",
+        [mkxlCatalogMultiSelectFilterIds.source],
+      ),
+    );
+    const availableSources = sources.filter((source) => source !== mkxlCatalogSources.personal);
+    sources = availableSources.length > 0 ? availableSources : undefined;
+  }
 
   return {
-    filters: recovered,
+    filters: MkxlCatalogFiltersSchema.parse({
+      ...filters,
+      stageId,
+      interactableIds,
+      sources,
+    }),
     messages,
   };
 };
 
-export const emptyMkxlCatalogFilters = {} as const satisfies MkxlCatalogFilters;
+export const recoverMkxlCatalogFilters = (input: unknown = {}): FilterRecovery => {
+  const parsed = MkxlCatalogFiltersSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      filters: emptyMkxlCatalogFilters,
+      messages: parsed.error.issues.map((issue) =>
+        toMessage(
+          "mkxl.catalog.invalid_filters",
+          issue.message,
+          issue.path.map((segment) => String(segment)),
+        ),
+      ),
+    };
+  }
+  return recoverCanonicalFilters(parsed.data);
+};
 
-export const clearMkxlCatalogFilters = (_filters: MkxlCatalogFilters): MkxlCatalogFilters =>
-  emptyMkxlCatalogFilters;
+export const parseMkxlCatalogFilterQuery = (input: unknown): FilterRecovery => {
+  const query = MkxlCatalogPlainFilterQuerySchema.safeParse(input);
+  if (!query.success) {
+    return {
+      filters: emptyMkxlCatalogFilters,
+      messages: query.error.issues.map((issue) =>
+        toMessage(
+          "mkxl.catalog.invalid_filter_query",
+          issue.message,
+          issue.path.map((segment) => String(segment)),
+        ),
+      ),
+    };
+  }
 
-export const recoverMkxlCatalogFilters = (filters: MkxlCatalogFilters): FilterRecoveryResult =>
-  recoverStageAndInteractables(MkxlCatalogFiltersSchema.parse(filters));
-
-export const parseMkxlCatalogFiltersFromRouteQuery = (
-  query: PlainRouteQuery,
-): FilterRecoveryResult => {
   const messages: ValidationMessage[] = [];
-  const filterInput: Record<string, unknown> = {};
-  const starters = presentStrings(toList(query.starter));
-  const tags = presentStrings(toList(query.tag));
-  const interactables = presentStrings(toList(query.interactable));
-  const meter = numberStringsToNumbers(toList(query.meter), "meter");
-  const damage = normalizeDamageRange(
-    typeof query.damageMin === "string" ? query.damageMin : undefined,
-    typeof query.damageMax === "string" ? query.damageMax : undefined,
-  );
-  const positions = enumStrings(
-    toList(query.position),
-    ["midscreen", "corner", "antiAir"],
-    "position",
-  );
-  const difficulties = enumStrings(
-    toList(query.difficulty),
-    ["easy", "medium", "hard"],
-    "difficulty",
-  );
-  const routeTypes = enumStrings(
-    toList(query.routeType),
-    ["bnb", "punish", "metered", "stage"],
-    "routeType",
-  );
-
-  addArray(filterInput, "starters", starters);
-  addArray(filterInput, "tags", tags);
-  addArray(filterInput, "interactableIds", interactables);
-  addArray(filterInput, "meter", meter.values);
-  addArray(filterInput, "positions", positions.values);
-  addArray(filterInput, "difficulties", difficulties.values);
-  addArray(filterInput, "routeTypes", routeTypes.values);
-
-  if (typeof query.stage === "string" && query.stage.trim()) {
-    filterInput.stageId = query.stage.trim();
-  }
-  if (damage.damage) {
-    filterInput.damage = damage.damage;
-  }
-
-  messages.push(
-    ...meter.messages,
-    ...damage.messages,
-    ...positions.messages,
-    ...difficulties.messages,
-    ...routeTypes.messages,
-  );
-
-  const recovered = recoverStageAndInteractables(MkxlCatalogFiltersSchema.parse(filterInput));
-
-  return {
-    filters: recovered.filters,
-    messages: [...messages, ...recovered.messages],
+  const positions = presentUnique(query.data.position);
+  const meter = parseNumbers(query.data.meter, "meter", messages);
+  const difficulties = presentUnique(query.data.difficulty);
+  const routeClasses = presentUnique(query.data.routeClass);
+  const sources = presentUnique(query.data.source);
+  const interactableIds = presentUnique(query.data.interactable);
+  const stageId = firstPresent(query.data.stage);
+  const candidate = {
+    ...(positions.length > 0 ? { positions } : {}),
+    ...(meter.length > 0 ? { meter } : {}),
+    ...(difficulties.length > 0 ? { difficulties } : {}),
+    ...(routeClasses.length > 0 ? { routeClasses } : {}),
+    ...(sources.length > 0 ? { sources } : {}),
+    ...(interactableIds.length > 0 ? { interactableIds } : {}),
+    ...(stageId ? { stageId } : {}),
   };
+  const recovered = recoverMkxlCatalogFilters(candidate);
+  return { filters: recovered.filters, messages: [...messages, ...recovered.messages] };
 };
 
-export const serializeMkxlCatalogFiltersToRouteQuery = (
-  filters: MkxlCatalogFilters,
-): FilterQueryOutput => {
+export const serializeMkxlCatalogFilterQuery = (
+  filters: MkxlCatalogFilters = {},
+): MkxlCatalogFilterQuery => {
   const recovered = recoverMkxlCatalogFilters(filters).filters;
-  const query: FilterQueryOutput = {};
-
-  if (recovered.starters) {
-    query.starter = recovered.starters;
-  }
-  if (recovered.positions) {
-    query.position = recovered.positions;
-  }
-  if (recovered.meter) {
-    const meterValues: string[] = [];
-
-    for (const meterValue of recovered.meter) {
-      meterValues.push(String(meterValue));
-    }
-
-    query.meter = meterValues;
-  }
-  if (recovered.damage?.min !== undefined) {
-    query.damageMin = String(recovered.damage.min);
-  }
-  if (recovered.damage?.max !== undefined) {
-    query.damageMax = String(recovered.damage.max);
-  }
-  if (recovered.difficulties) {
-    query.difficulty = recovered.difficulties;
-  }
-  if (recovered.routeTypes) {
-    query.routeType = recovered.routeTypes;
-  }
-  if (recovered.tags) {
-    query.tag = recovered.tags;
-  }
-  if (recovered.stageId) {
-    query.stage = recovered.stageId;
-  }
-  if (recovered.interactableIds) {
-    query.interactable = recovered.interactableIds;
-  }
-
-  return query;
+  return MkxlCatalogFilterQuerySchema.parse({
+    position: recovered.positions,
+    meter: recovered.meter?.map(String),
+    difficulty: recovered.difficulties,
+    routeClass: recovered.routeClasses,
+    source: recovered.sources,
+    stage: recovered.stageId,
+    interactable: recovered.interactableIds,
+  });
 };
 
-export const setMkxlCatalogStageFilter = (
+const setMkxlCatalogStageFilter = (
   filters: MkxlCatalogFilters,
   stageId: string | undefined,
-): FilterRecoveryResult =>
-  recoverStageAndInteractables({
-    ...filters,
-    stageId,
-    interactableIds: stageId ? filters.interactableIds : undefined,
-  });
+): FilterRecovery => recoverMkxlCatalogFilters({ ...filters, stageId, interactableIds: undefined });
 
-export const comboMatchesMkxlCatalogFilters = (
-  combo: MkxlSeededCombo,
+const toggleDesiredValue = <T>(
+  values: readonly T[] | undefined,
+  value: T,
+  selected: boolean,
+): readonly T[] | undefined => {
+  const current = values ?? [];
+  const next = selected
+    ? current.includes(value)
+      ? current
+      : [...current, value]
+    : current.filter((entry) => entry !== value);
+  return next.length > 0 ? next : undefined;
+};
+
+const invalidChange = (
   filters: MkxlCatalogFilters,
-): boolean => {
-  const lookups = filterLookupCache.get(filters) ?? createFilterLookups(filters);
-  filterLookupCache.set(filters, lookups);
+  filterId: string | undefined,
+  message: string,
+): FilterRecovery => ({
+  filters,
+  messages: [
+    toMessage("mkxl.catalog.invalid_filter_change", message, filterId ? [filterId] : ["filters"]),
+  ],
+});
 
-  return comboMatchesFilterLookups(combo, filters, lookups);
+const clearFacet = (filters: MkxlCatalogFilters, filterId: string): FilterRecovery => {
+  const parsed = MkxlCatalogFilterIdSchema.safeParse(filterId);
+  if (!parsed.success) {
+    return invalidChange(filters, filterId, "MKXL catalog filter does not exist.");
+  }
+  switch (parsed.data) {
+    case mkxlCatalogMultiSelectFilterIds.position:
+      return { filters: { ...filters, positions: undefined }, messages: [] };
+    case mkxlCatalogMultiSelectFilterIds.meter:
+      return { filters: { ...filters, meter: undefined }, messages: [] };
+    case mkxlCatalogMultiSelectFilterIds.difficulty:
+      return { filters: { ...filters, difficulties: undefined }, messages: [] };
+    case mkxlCatalogMultiSelectFilterIds.routeClass:
+      return { filters: { ...filters, routeClasses: undefined }, messages: [] };
+    case mkxlCatalogMultiSelectFilterIds.source:
+      return { filters: { ...filters, sources: undefined }, messages: [] };
+    case mkxlCatalogSingleSelectFilterIds.stage:
+      return setMkxlCatalogStageFilter(filters, undefined);
+    case mkxlCatalogMultiSelectFilterIds.interactable:
+      return { filters: { ...filters, interactableIds: undefined }, messages: [] };
+  }
 };
 
-type FilterLookups = {
-  starters?: ReadonlySet<string>;
-  positions?: ReadonlySet<string>;
-  meter?: ReadonlySet<number>;
-  difficulties?: ReadonlySet<string>;
-  routeTypes?: ReadonlySet<string>;
-  tags?: readonly string[];
-  interactableIds?: ReadonlySet<string>;
+const toggleOption = (
+  filters: MkxlCatalogFilters,
+  change: Extract<CatalogFilterChange, { kind: typeof catalogFilterChangeKinds.toggleOption }>,
+): FilterRecovery => {
+  const filterId = MkxlCatalogFilterIdSchema.safeParse(change.filterId);
+  if (!filterId.success) {
+    return invalidChange(filters, change.filterId, "MKXL catalog option filter does not exist.");
+  }
+
+  let candidate: unknown;
+  switch (filterId.data) {
+    case mkxlCatalogMultiSelectFilterIds.position:
+      candidate = {
+        ...filters,
+        positions: toggleDesiredValue(filters.positions, change.value, change.selected),
+      };
+      break;
+    case mkxlCatalogMultiSelectFilterIds.meter:
+      if (!/^\d+$/u.test(change.value)) {
+        return invalidChange(filters, change.filterId, "Meter must be a non-negative integer.");
+      }
+      candidate = {
+        ...filters,
+        meter: toggleDesiredValue(filters.meter, Number(change.value), change.selected),
+      };
+      break;
+    case mkxlCatalogMultiSelectFilterIds.difficulty:
+      candidate = {
+        ...filters,
+        difficulties: toggleDesiredValue(filters.difficulties, change.value, change.selected),
+      };
+      break;
+    case mkxlCatalogMultiSelectFilterIds.routeClass:
+      candidate = {
+        ...filters,
+        routeClasses: toggleDesiredValue(filters.routeClasses, change.value, change.selected),
+      };
+      break;
+    case mkxlCatalogMultiSelectFilterIds.source:
+      if (change.selected && change.value === mkxlCatalogSources.personal) {
+        return invalidChange(filters, change.filterId, "Personal combos are not available yet.");
+      }
+      candidate = {
+        ...filters,
+        sources: toggleDesiredValue(filters.sources, change.value, change.selected),
+      };
+      break;
+    case mkxlCatalogSingleSelectFilterIds.stage: {
+      if (!stageById.has(change.value)) {
+        return invalidChange(filters, change.filterId, "MKXL stage does not exist.");
+      }
+      const stageId = change.selected
+        ? change.value
+        : filters.stageId === change.value
+          ? undefined
+          : filters.stageId;
+      return setMkxlCatalogStageFilter(filters, stageId);
+    }
+    case mkxlCatalogMultiSelectFilterIds.interactable:
+      if (!filters.stageId) {
+        return invalidChange(filters, change.filterId, "Select a stage first.");
+      }
+      if (interactableStageById.get(change.value) !== filters.stageId) {
+        return invalidChange(
+          filters,
+          change.filterId,
+          "Interactable does not belong to the selected stage.",
+        );
+      }
+      candidate = {
+        ...filters,
+        interactableIds: toggleDesiredValue(filters.interactableIds, change.value, change.selected),
+      };
+      break;
+  }
+
+  const parsed = MkxlCatalogFiltersSchema.safeParse(candidate);
+  return parsed.success
+    ? recoverCanonicalFilters(parsed.data)
+    : invalidChange(filters, change.filterId, parsed.error.issues[0]?.message ?? "Invalid option.");
 };
 
-const filterLookupCache = new WeakMap<MkxlCatalogFilters, FilterLookups>();
+export const applyMkxlCatalogFilterChange = (
+  input: unknown,
+  change: CatalogFilterChange,
+): FilterRecovery => {
+  const recovered = recoverMkxlCatalogFilters(input);
+  const parsedChange = CatalogFilterChangeSchema.safeParse(change);
+  if (!parsedChange.success) {
+    return {
+      filters: recovered.filters,
+      messages: [
+        ...recovered.messages,
+        ...invalidChange(recovered.filters, undefined, "Catalog filter change is invalid.")
+          .messages,
+      ],
+    };
+  }
+
+  const changed = (() => {
+    switch (parsedChange.data.kind) {
+      case catalogFilterChangeKinds.clearAll:
+        return { filters: emptyMkxlCatalogFilters, messages: [] } satisfies FilterRecovery;
+      case catalogFilterChangeKinds.clearFacet:
+        return clearFacet(recovered.filters, parsedChange.data.filterId);
+      case catalogFilterChangeKinds.toggleOption:
+        return toggleOption(recovered.filters, parsedChange.data);
+    }
+  })();
+
+  return { filters: changed.filters, messages: [...recovered.messages, ...changed.messages] };
+};
+
+export const getMkxlCatalogComboSource = (combo: MkxlSeededCombo): MkxlCatalogSource =>
+  combo.sourceIds.includes("community-combo-source")
+    ? mkxlCatalogSources.community
+    : mkxlCatalogSources.curated;
 
 const createStringSet = (values: readonly string[] | undefined): ReadonlySet<string> | undefined =>
   values ? new Set(values) : undefined;
-
 const createNumberSet = (values: readonly number[] | undefined): ReadonlySet<number> | undefined =>
   values ? new Set(values) : undefined;
 
-const createFilterLookups = (filters: MkxlCatalogFilters): FilterLookups => ({
-  starters: createStringSet(filters.starters),
-  positions: createStringSet(filters.positions),
-  meter: createNumberSet(filters.meter),
-  difficulties: createStringSet(filters.difficulties),
-  routeTypes: createStringSet(filters.routeTypes),
-  tags: filters.tags,
-  interactableIds: createStringSet(filters.interactableIds),
-});
-
-const comboMatchesFilterLookups = (
+export const comboMatchesMkxlCatalogFilters = (
   combo: MkxlSeededCombo,
-  filters: MkxlCatalogFilters,
-  lookups: FilterLookups,
+  filters: MkxlCatalogFilters = {},
 ): boolean => {
-  const metadata = combo.metadata;
+  const recovered = recoverMkxlCatalogFilters(filters).filters;
+  const positions = createStringSet(recovered.positions);
+  const meter = createNumberSet(recovered.meter);
+  const difficulties = createStringSet(recovered.difficulties);
+  const routeClasses = createStringSet(recovered.routeClasses);
+  const sources = createStringSet(recovered.sources);
 
-  if (lookups.starters && !lookups.starters.has(metadata.starter)) {
-    return false;
-  }
-  if (lookups.positions && !lookups.positions.has(metadata.position)) {
-    return false;
-  }
-  if (lookups.meter && !lookups.meter.has(metadata.meter)) {
-    return false;
-  }
-  if (filters.damage?.min !== undefined && metadata.damage < filters.damage.min) {
-    return false;
-  }
-  if (filters.damage?.max !== undefined && metadata.damage > filters.damage.max) {
-    return false;
-  }
-  if (lookups.difficulties && !lookups.difficulties.has(metadata.difficulty)) {
-    return false;
-  }
-  if (lookups.routeTypes && !lookups.routeTypes.has(metadata.routeType)) {
-    return false;
-  }
-  if (lookups.tags) {
-    for (const tag of lookups.tags) {
-      if (!metadata.tags.includes(tag)) {
-        return false;
-      }
-    }
-  }
-  if (filters.stageId) {
+  if (positions && !positions.has(combo.metadata.position)) return false;
+  if (meter && !meter.has(combo.metadata.meter)) return false;
+  if (difficulties && !difficulties.has(combo.metadata.difficulty)) return false;
+  if (routeClasses && !routeClasses.has(combo.metadata.routeType)) return false;
+  if (sources && !sources.has(getMkxlCatalogComboSource(combo))) return false;
+  if (recovered.stageId) {
     if (
       combo.stageContext.kind !== "stageSpecific" ||
-      combo.stageContext.stageId !== filters.stageId
+      combo.stageContext.stageId !== recovered.stageId
     ) {
       return false;
     }
   }
-  if (lookups.interactableIds) {
-    const { stageContext } = combo;
-
-    if (stageContext.kind !== "stageSpecific") {
-      return false;
-    }
-    let hasSelectedInteractable = false;
-
-    for (const interactableId of stageContext.interactableIds) {
-      if (lookups.interactableIds.has(interactableId)) {
-        hasSelectedInteractable = true;
-        break;
-      }
-    }
-
-    if (!hasSelectedInteractable) {
+  if (recovered.interactableIds) {
+    if (combo.stageContext.kind !== "stageSpecific") return false;
+    if (!combo.stageContext.interactableIds.some((id) => recovered.interactableIds?.includes(id))) {
       return false;
     }
   }
-
   return true;
 };
 
-const incrementCount = (counts: Map<string, number>, id: string) => {
-  counts.set(id, (counts.get(id) ?? 0) + 1);
-};
+const localized = (label: string): LocalizedText => ({ default: label, fallback: label });
 
-type FacetAggregation = {
-  starterCounts: Map<string, number>;
-  positionCounts: Map<string, number>;
-  meterCounts: Map<string, number>;
-  difficultyCounts: Map<string, number>;
-  routeTypeCounts: Map<string, number>;
-  tagCounts: Map<string, number>;
-  stageCounts: Map<string, number>;
-  interactableCounts: Map<string, number>;
-  minDamage: number;
-  maxDamage: number;
-  hasDamage: boolean;
-};
-
-const createEmptyFacetAggregation = (): FacetAggregation => ({
-  starterCounts: new Map(),
-  positionCounts: new Map(),
-  meterCounts: new Map(),
-  difficultyCounts: new Map(),
-  routeTypeCounts: new Map(),
-  tagCounts: new Map(),
-  stageCounts: new Map(),
-  interactableCounts: new Map(),
-  minDamage: 0,
-  maxDamage: 0,
-  hasDamage: false,
-});
-
-const updateDamageBounds = (aggregation: FacetAggregation, damage: number) => {
-  if (!aggregation.hasDamage) {
-    aggregation.minDamage = damage;
-    aggregation.maxDamage = damage;
-    aggregation.hasDamage = true;
-    return;
-  }
-
-  aggregation.minDamage = Math.min(aggregation.minDamage, damage);
-  aggregation.maxDamage = Math.max(aggregation.maxDamage, damage);
-};
-
-const addStageSpecificComboToFacetAggregation = (
-  aggregation: FacetAggregation,
-  stageContext: Extract<MkxlSeededCombo["stageContext"], { kind: "stageSpecific" }>,
-) => {
-  incrementCount(aggregation.stageCounts, stageContext.stageId);
-
-  if (stageContext.interactableIds.length === 1) {
-    const [interactableId] = stageContext.interactableIds;
-
-    if (interactableId) {
-      incrementCount(aggregation.interactableCounts, interactableId);
-    }
-    return;
-  }
-
-  const countedInteractables = new Set<string>();
-
-  for (const interactableId of stageContext.interactableIds) {
-    if (countedInteractables.has(interactableId)) {
-      continue;
-    }
-
-    countedInteractables.add(interactableId);
-    incrementCount(aggregation.interactableCounts, interactableId);
-  }
-};
-
-const addComboToFacetAggregation = (aggregation: FacetAggregation, combo: MkxlSeededCombo) => {
-  const { metadata, stageContext } = combo;
-
-  incrementCount(aggregation.starterCounts, metadata.starter);
-  incrementCount(aggregation.positionCounts, metadata.position);
-  incrementCount(aggregation.meterCounts, String(metadata.meter));
-  incrementCount(aggregation.difficultyCounts, metadata.difficulty);
-  incrementCount(aggregation.routeTypeCounts, metadata.routeType);
-
-  for (const tag of metadata.tags) {
-    incrementCount(aggregation.tagCounts, tag);
-  }
-
-  updateDamageBounds(aggregation, metadata.damage);
-
-  if (stageContext.kind === "stageSpecific") {
-    addStageSpecificComboToFacetAggregation(aggregation, stageContext);
-  }
-};
-
-const stageLabel = (stage: (typeof mkxlStages)[number]) =>
-  stage.label.default ?? stage.label.EN ?? stage.label.UA ?? stage.label.fallback ?? stage.id;
-
-const interactableLabel = (interactable: (typeof mkxlStages)[number]["interactables"][number]) =>
-  interactable.label.default ??
-  interactable.label.EN ??
-  interactable.label.UA ??
-  interactable.label.fallback ??
-  interactable.id;
-
-const createFilterOption = (
+const option = (
   id: string,
+  label: LocalizedText,
   count: number,
   selected: boolean,
-  label = id,
+  disabled = count === 0 && !selected,
+  disabledReason?: string,
 ): MkxlCatalogFilterOption => ({
   id,
-  label: { default: label, fallback: label },
+  label,
   count,
   selected,
+  disabled,
+  disabledReason: disabledReason ? localized(disabledReason) : undefined,
 });
 
-const createOptionsFromCounts = (
-  counts: ReadonlyMap<string, number>,
-  selectedValues: ReadonlySet<string> | undefined,
-): readonly MkxlCatalogFilterOption[] => {
-  const options: MkxlCatalogFilterOption[] = [];
+const increment = (counts: Map<string, number>, id: string) =>
+  counts.set(id, (counts.get(id) ?? 0) + 1);
 
-  for (const [id, count] of counts) {
-    options.push(createFilterOption(id, count, Boolean(selectedValues?.has(id))));
-  }
-
-  return options;
+type Aggregation = {
+  positions: Map<string, number>;
+  meter: Map<string, number>;
+  difficulties: Map<string, number>;
+  routeClasses: Map<string, number>;
+  sources: Map<string, number>;
+  stages: Map<string, number>;
+  interactables: Map<string, number>;
 };
 
-const createMeterOptions = (
-  meterCounts: ReadonlyMap<string, number>,
-  selectedMeter: ReadonlySet<number> | undefined,
-): readonly MkxlCatalogFilterOption[] => {
-  const options: MkxlCatalogFilterOption[] = [];
-
-  for (const [id, count] of meterCounts) {
-    options.push(createFilterOption(id, count, Boolean(selectedMeter?.has(Number(id)))));
-  }
-
-  return options;
-};
-
-const createStageAndInteractableOptions = (
-  aggregation: FacetAggregation,
-  filters: MkxlCatalogFilters,
-  selectedInteractables: ReadonlySet<string> | undefined,
-): {
-  stageOptions: readonly MkxlCatalogFilterOption[];
-  interactableOptions: readonly MkxlCatalogFilterOption[];
-} => {
-  const stageOptions: MkxlCatalogFilterOption[] = [];
-  const interactableOptions: MkxlCatalogFilterOption[] = [];
-
-  for (const stage of mkxlStages) {
-    stageOptions.push(
-      createFilterOption(
-        stage.id,
-        aggregation.stageCounts.get(stage.id) ?? 0,
-        filters.stageId === stage.id,
-        stageLabel(stage),
-      ),
-    );
-
-    if (filters.stageId && stage.id !== filters.stageId) {
-      continue;
-    }
-
-    for (const interactable of stage.interactables) {
-      interactableOptions.push(
-        createFilterOption(
-          interactable.id,
-          aggregation.interactableCounts.get(interactable.id) ?? 0,
-          Boolean(selectedInteractables?.has(interactable.id)),
-          interactableLabel(interactable),
-        ),
-      );
-    }
-  }
-
-  return {
-    stageOptions,
-    interactableOptions,
+const aggregate = (combos: readonly MkxlSeededCombo[]): Aggregation => {
+  const result: Aggregation = {
+    positions: new Map(),
+    meter: new Map(),
+    difficulties: new Map(),
+    routeClasses: new Map(),
+    sources: new Map(),
+    stages: new Map(),
+    interactables: new Map(),
   };
+  for (const combo of combos) {
+    increment(result.positions, combo.metadata.position);
+    increment(result.meter, String(combo.metadata.meter));
+    increment(result.difficulties, combo.metadata.difficulty);
+    increment(result.routeClasses, combo.metadata.routeType);
+    increment(result.sources, getMkxlCatalogComboSource(combo));
+    if (combo.stageContext.kind === "stageSpecific") {
+      increment(result.stages, combo.stageContext.stageId);
+      for (const id of new Set(combo.stageContext.interactableIds))
+        increment(result.interactables, id);
+    }
+  }
+  return result;
 };
 
-const createFacetDescriptors = (
-  aggregation: FacetAggregation,
-  filters: MkxlCatalogFilters,
-): readonly MkxlCatalogFilterFacet[] => {
-  const selectedStarters = createStringSet(filters.starters);
-  const selectedPositions = createStringSet(filters.positions);
-  const selectedMeter = createNumberSet(filters.meter);
-  const selectedDifficulties = createStringSet(filters.difficulties);
-  const selectedRouteTypes = createStringSet(filters.routeTypes);
-  const selectedTags = createStringSet(filters.tags);
-  const selectedInteractables = createStringSet(filters.interactableIds);
-  const { stageOptions, interactableOptions } = createStageAndInteractableOptions(
-    aggregation,
-    filters,
-    selectedInteractables,
-  );
+const optionsFromCounts = (
+  counts: ReadonlyMap<string, number>,
+  selected: ReadonlySet<string>,
+): readonly MkxlCatalogFilterOption[] =>
+  [...counts].map(([id, count]) => option(id, localized(id), count, selected.has(id)));
 
-  return [
-    {
-      kind: "multiSelect",
-      id: mkxlCatalogMultiSelectFilterIds.starter,
-      options: createOptionsFromCounts(aggregation.starterCounts, selectedStarters),
-    },
-    {
-      kind: "multiSelect",
-      id: mkxlCatalogMultiSelectFilterIds.position,
-      options: createOptionsFromCounts(aggregation.positionCounts, selectedPositions),
-    },
-    {
-      kind: "multiSelect",
-      id: mkxlCatalogMultiSelectFilterIds.meter,
-      options: createMeterOptions(aggregation.meterCounts, selectedMeter),
-    },
-    {
-      kind: "range",
-      id: mkxlCatalogRangeFilterIds.damage,
-      min: aggregation.minDamage,
-      max: aggregation.maxDamage,
-      selectedMin: filters.damage?.min,
-      selectedMax: filters.damage?.max,
-    },
-    {
-      kind: "multiSelect",
-      id: mkxlCatalogMultiSelectFilterIds.difficulty,
-      options: createOptionsFromCounts(aggregation.difficultyCounts, selectedDifficulties),
-    },
-    {
-      kind: "multiSelect",
-      id: mkxlCatalogMultiSelectFilterIds.routeType,
-      options: createOptionsFromCounts(aggregation.routeTypeCounts, selectedRouteTypes),
-    },
-    {
-      kind: "multiSelect",
-      id: mkxlCatalogMultiSelectFilterIds.tags,
-      options: createOptionsFromCounts(aggregation.tagCounts, selectedTags),
-    },
-    {
-      kind: "multiSelect",
-      id: mkxlCatalogMultiSelectFilterIds.stage,
-      options: stageOptions,
-    },
-    {
-      kind: "multiSelect",
-      id: mkxlCatalogMultiSelectFilterIds.interactable,
-      options: interactableOptions,
-    },
-  ] satisfies readonly MkxlCatalogFilterFacet[];
-};
+const facet = (
+  id: MkxlCatalogMultiSelectFilterId,
+  options: readonly MkxlCatalogFilterOption[],
+): MkxlCatalogFilterFacet => ({ kind: "multiSelect", id, options });
 
 export const createMkxlCatalogFilterFacets = (
   combos: readonly MkxlSeededCombo[],
-  filters: MkxlCatalogFilters,
+  filters: MkxlCatalogFilters = {},
 ): readonly MkxlCatalogFilterFacet[] => {
-  const aggregation = createEmptyFacetAggregation();
+  const recovered = recoverMkxlCatalogFilters(filters).filters;
+  const counts = aggregate(combos);
+  const selectedStage = recovered.stageId ? stageById.get(recovered.stageId) : undefined;
+  const interactableOptions = (selectedStage?.interactables ?? [])
+    .map((interactable) =>
+      option(
+        interactable.id,
+        interactable.label,
+        counts.interactables.get(interactable.id) ?? 0,
+        recovered.interactableIds?.includes(interactable.id) ?? false,
+      ),
+    )
+    .filter((entry) => entry.count > 0 || entry.selected);
+  const stageOptions = mkxlStages
+    .map((stage) =>
+      option(
+        stage.id,
+        stage.label,
+        counts.stages.get(stage.id) ?? 0,
+        recovered.stageId === stage.id,
+      ),
+    )
+    .filter((entry) => entry.count > 0 || entry.selected);
 
-  for (const combo of combos) {
-    addComboToFacetAggregation(aggregation, combo);
-  }
-
-  return createFacetDescriptors(aggregation, filters);
+  return [
+    facet(
+      mkxlCatalogMultiSelectFilterIds.position,
+      optionsFromCounts(counts.positions, new Set(recovered.positions)),
+    ),
+    facet(
+      mkxlCatalogMultiSelectFilterIds.meter,
+      optionsFromCounts(counts.meter, new Set(recovered.meter?.map(String))),
+    ),
+    facet(
+      mkxlCatalogMultiSelectFilterIds.difficulty,
+      optionsFromCounts(counts.difficulties, new Set(recovered.difficulties)),
+    ),
+    facet(
+      mkxlCatalogMultiSelectFilterIds.routeClass,
+      optionsFromCounts(counts.routeClasses, new Set(recovered.routeClasses)),
+    ),
+    facet(
+      mkxlCatalogMultiSelectFilterIds.source,
+      Object.values(mkxlCatalogSources).map((source) =>
+        source === mkxlCatalogSources.personal
+          ? option(
+              source,
+              localized("Personal"),
+              0,
+              false,
+              true,
+              "Personal combos are coming later.",
+            )
+          : option(
+              source,
+              localized(source === mkxlCatalogSources.curated ? "Curated" : "Community"),
+              counts.sources.get(source) ?? 0,
+              recovered.sources?.includes(source) ?? false,
+            ),
+      ),
+    ),
+    {
+      kind: "singleSelect",
+      id: mkxlCatalogSingleSelectFilterIds.stage,
+      options: stageOptions,
+    },
+    ...(selectedStage
+      ? [facet(mkxlCatalogMultiSelectFilterIds.interactable, interactableOptions)]
+      : []),
+  ];
 };

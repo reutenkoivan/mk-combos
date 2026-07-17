@@ -1,10 +1,12 @@
 import { BuilderRuntimeSnapshotSchema } from "@mk-combos/builder-core/runtime/schema";
 import type { BuilderRuntimeSnapshot } from "@mk-combos/builder-core/runtime/type";
 import { builderComboStateStatuses } from "@mk-combos/builder-core/stale/value";
+import type { CatalogFilterChange } from "@mk-combos/contracts/catalog-filter/type";
 import type { ComboId } from "@mk-combos/contracts/identity/type";
 import { comboSources } from "@mk-combos/contracts/identity/value";
 import { err, ok } from "@mk-combos/contracts/result/runtime";
 import type { AppError, AppResult, ValidationMessage } from "@mk-combos/contracts/result/type";
+import { ComboDetailRouteParamsSchema } from "@mk-combos/contracts/routes/schema";
 import type { LocalizedText } from "@mk-combos/contracts/settings/type";
 import {
   composeMk1BuilderGraph,
@@ -21,15 +23,18 @@ import {
 } from "@mk-combos/mk1-builder/state/runtime";
 import {
   getMk1CatalogContextOptions,
-  parseMk1CatalogRouteQuery,
   recoverMk1CatalogContext,
   selectMk1CatalogCharacter,
   selectMk1CatalogKameo,
-  serializeMk1CatalogRouteQuery,
 } from "@mk-combos/mk1-catalog/context/runtime";
 import { Mk1CatalogContextSchema } from "@mk-combos/mk1-catalog/context/schema";
-import type { Mk1CatalogPlainRouteQuery } from "@mk-combos/mk1-catalog/context/type";
-import { recoverMk1CatalogFilters } from "@mk-combos/mk1-catalog/filters/runtime";
+import type { Mk1CatalogRecovery } from "@mk-combos/mk1-catalog/context/type";
+import {
+  applyMk1CatalogFilterChange,
+  parseMk1CatalogFilterQuery,
+  recoverMk1CatalogFilters,
+  serializeMk1CatalogFilterQuery,
+} from "@mk-combos/mk1-catalog/filters/runtime";
 import type { Mk1CatalogFilters } from "@mk-combos/mk1-catalog/filters/type";
 import {
   getMk1CatalogComboSummary,
@@ -48,6 +53,7 @@ import {
   Mk1BusinessComboLookupSchema,
   Mk1BusinessComboRefSchema,
   Mk1BusinessCustomComboSummarySchema,
+  Mk1BusinessLastCatalogSchema,
   Mk1BusinessSliceSchema,
   Mk1BusinessValidationReportSchema,
   Mk1NamedListSchema,
@@ -71,6 +77,9 @@ type ZodIssueLike = {
 };
 
 const MoveIdListSchema = z.array(z.string().min(1)).readonly();
+const Mk1ComboDetailRouteParamsSchema = ComboDetailRouteParamsSchema.extend({
+  gameId: z.literal("mk1"),
+});
 
 const charactersById = new Map(mk1Characters.map((character) => [character.id, character]));
 const kameosById = new Map(mk1Kameos.map((kameo) => [kameo.id, kameo]));
@@ -157,6 +166,78 @@ const parseMk1BusinessSlice = (input: unknown): AppResult<Mk1BusinessSlice> => {
 
 const parseSliceOrEmpty = (input: unknown | undefined): AppResult<Mk1BusinessSlice> =>
   input === undefined ? ok(createEmptyMk1BusinessSlice()) : parseMk1BusinessSlice(input);
+
+const applyMk1BusinessCatalogFilterChange = (input: {
+  context: unknown;
+  filters: unknown;
+  change: CatalogFilterChange;
+}): Mk1CatalogRecovery => {
+  const context = Mk1CatalogContextSchema.safeParse(input.context);
+  const changed = applyMk1CatalogFilterChange(input.filters, input.change);
+  const recovered = recoverMk1CatalogContext(context.success ? context.data : {}, changed.filters);
+  const contextMessages = context.success
+    ? []
+    : zodMessages(context.error.issues, "mk1.business.invalid_catalog_context");
+
+  return {
+    ...recovered,
+    messages: [...contextMessages, ...changed.messages, ...recovered.messages],
+  };
+};
+
+const restoreLastMk1BusinessCatalog = (sliceInput: unknown): AppResult<Mk1CatalogRecovery> => {
+  const slice = parseMk1BusinessSlice(sliceInput);
+
+  if (!slice.ok) {
+    return slice;
+  }
+
+  const lastCatalog = slice.value.lastCatalog;
+
+  return ok(
+    lastCatalog
+      ? recoverMk1CatalogContext(lastCatalog.context, lastCatalog.filters)
+      : recoverMk1CatalogContext({}, {}),
+  );
+};
+
+const saveLastMk1BusinessCatalog = (input: {
+  slice: unknown;
+  context: unknown;
+  filters: unknown;
+}): AppResult<Mk1BusinessSlice> => {
+  const slice = parseMk1BusinessSlice(input.slice);
+
+  if (!slice.ok) {
+    return slice;
+  }
+
+  const lastCatalog = Mk1BusinessLastCatalogSchema.safeParse({
+    context: input.context,
+    filters: input.filters,
+  });
+
+  if (!lastCatalog.success) {
+    return err(
+      appError(
+        "mk1.business.invalid_last_catalog",
+        "MK1 catalog state is malformed.",
+        zodMessages(lastCatalog.error.issues, "mk1.business.invalid_last_catalog"),
+        lastCatalog.error,
+      ),
+    );
+  }
+
+  const recovered = recoverMk1CatalogContext(lastCatalog.data.context, lastCatalog.data.filters);
+
+  return parseMk1BusinessSlice({
+    ...slice.value,
+    lastCatalog: {
+      context: recovered.context,
+      filters: recovered.filters,
+    },
+  });
+};
 
 const customCombosById = (slice: Mk1BusinessSlice): ReadonlyMap<string, Mk1BusinessCustomCombo> =>
   new Map(slice.customCombos.map((combo) => [combo.id, combo]));
@@ -579,28 +660,38 @@ const validateMk1BusinessSlice = (input: unknown): AppResult<Mk1BusinessValidati
 const serializeMk1BusinessSlice = (input: unknown): AppResult<Mk1BusinessSlice> =>
   parseMk1BusinessSlice(input);
 
-const routeRef = (refInput: unknown): AppResult<Mk1BusinessComboRef> => parseComboRef(refInput);
-
 const mk1BusinessRoutes = {
   catalog: () => "/mk1/catalog",
-  comboDetail: (refInput: unknown): AppResult<string> => {
-    const ref = routeRef(refInput);
+  comboDetail: (input: unknown): AppResult<string> => {
+    const params = Mk1ComboDetailRouteParamsSchema.safeParse(input);
 
-    if (!ref.ok) {
-      return ref;
+    if (!params.success) {
+      return err(
+        appError(
+          "mk1.business.invalid_combo_detail_route",
+          "MK1 combo detail route parameters are malformed.",
+          zodMessages(params.error.issues, "mk1.business.invalid_combo_detail_route"),
+          params.error,
+        ),
+      );
     }
 
-    return ok(`/mk1/combos/${ref.value.source}/${ref.value.comboId}`);
+    return ok(
+      `/mk1/catalog/${params.data.characterSlug}/${params.data.specificationSlug}/${params.data.comboId}`,
+    );
   },
   lists: () => "/mk1/lists",
   builder: () => "/mk1/builder",
 } as const;
 
 const mk1BusinessCatalog = {
-  parseRouteQuery: (query: Mk1CatalogPlainRouteQuery) => parseMk1CatalogRouteQuery(query),
-  serializeRouteQuery: serializeMk1CatalogRouteQuery,
+  parseFilterQuery: parseMk1CatalogFilterQuery,
+  serializeFilterQuery: serializeMk1CatalogFilterQuery,
+  applyFilterChange: applyMk1BusinessCatalogFilterChange,
   recoverContext: recoverMk1CatalogContext,
   recoverFilters: recoverMk1CatalogFilters,
+  restoreLastCatalog: restoreLastMk1BusinessCatalog,
+  saveLastCatalog: saveLastMk1BusinessCatalog,
   getContextOptions: getMk1CatalogContextOptions,
   selectCharacter: selectMk1CatalogCharacter,
   selectKameo: selectMk1CatalogKameo,

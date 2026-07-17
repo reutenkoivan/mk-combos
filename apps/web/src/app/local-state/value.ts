@@ -2,7 +2,9 @@ import { languageCodes } from "@mk-combos/contracts/settings/value";
 
 export const localStateStorageKey = "mk-combos:local-state";
 
-export const localStateStorageVersion = 1;
+export const legacyLocalStateStorageVersion = 1;
+
+export const localStateStorageVersion = 2;
 
 export const htmlLanguageByAppLanguage = {
   [languageCodes.EN]: "en",

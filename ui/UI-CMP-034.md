@@ -27,8 +27,8 @@ user data рівно однієї installed game.
   на target `gameId` конкретного instance;
 - ніколи не об'єднує slices кількох ігор.
 
-Plain Settings має всі items collapsed. Deprecated `/backup` redirect просить page
-auto-expand item resolved last/default installed game.
+`settings=interface` не монтує items. Вхід із `settings=backup` просить Settings
+auto-expand item resolved active/last/default/first installed game.
 
 ## Архітектурний контекст
 
@@ -66,6 +66,7 @@ Settings/page-level backup hook відповідає за:
 - `GameBackupEnvelope` construction/validation;
 - resolution matching game business;
 - singleton export/import dialogs;
+- nested/busy state, з якого Settings готує modal dismissal barrier;
 - replace тільки `state.games[targetGameId]` після confirmation.
 
 `UI-CMP-034` відповідає за:
@@ -110,7 +111,7 @@ Settings/page-level backup hook відповідає за:
 Page-owned sibling overlays:
 
 ```jsx
-<SettingsPage ui="UI-PAGE-008">
+<SettingsModal ui="UI-PAGE-008">
   <Show when={isExportDialogOpen}>
     <ExportDialog ui="UI-CMP-027" />
   </Show>
@@ -118,7 +119,7 @@ Page-owned sibling overlays:
   <Show when={isImportPreviewDialogOpen}>
     <ImportPreviewDialog ui="UI-CMP-028" />
   </Show>
-</SettingsPage>
+</SettingsModal>
 ```
 
 Правила розміщення:
@@ -128,6 +129,8 @@ Page-owned sibling overlays:
 - export/import є sibling action groups expanded panel;
 - validation/status стоїть поруч із target actions;
 - dialogs singleton і не дублюються всередині кожного item;
+- parent не дозволяє Settings-level dismissal, доки nested dialog має precedence
+  або `operationState` позначає busy backup lifecycle;
 - file picker не входить у public component event contract.
 
 ## Public Contract
@@ -209,7 +212,7 @@ type BackupCollapsibleBlockProps = {
     intent: ComponentActionIntent<BackupCollapsibleBlockAction>,
   ) => void
   operationState: BackupOperationState
-  redirectAutoExpand?: boolean
+  initialAutoExpand?: boolean
   sourceFocusTarget?: string
   sourceSurface: string
   title: string
@@ -230,7 +233,8 @@ version policy та game-specific diagnostics належать app/business owne
   target game slice для per-game flow.
 - `operationState`: public operation value; `exporting`, `importFilePicker`,
   `importValidating`, `importPreview`, `replaceConfirm` і `replaceBusy` lock disclosure.
-- `redirectAutoExpand`: optional redirect presentation marker.
+- `initialAutoExpand`: optional prepared one-time focus/presentation marker for the
+  item selected when the backup tab opens; component не читає query.
 - `sourceFocusTarget`, `sourceSurface`: semantic intent/focus context.
 - `title`: localized target-game heading.
 - `validationResult`: prepared validation/warning/error presentation.
@@ -254,7 +258,7 @@ raw file input і DOM nodes не передаються.
 Компонент не відповідає за:
 
 - registry iteration або single-open accordion invariant;
-- route redirect;
+- route/query parsing;
 - schema/version policy;
 - localStorage/session storage;
 - native file reading або JSON parsing;
@@ -328,11 +332,11 @@ Control inert, reason readable, enabled hover absent, state not color-only.
 
 ## UI Behavior
 
-### Default Settings Entry
+### Interface Entry
 
-1. Settings creates one item per installed game.
-2. Every item receives `collapsed`.
-3. No export/import control is a focus target until its item expands.
+1. Current working route має `settings=interface`.
+2. Backup tab/items не mounted.
+3. Жоден export/import control не є focus target.
 
 ### Accordion Toggle
 
@@ -341,10 +345,10 @@ Control inert, reason readable, enabled hover absent, state not color-only.
 3. Settings closes previous item and expands that target.
 4. Active operation may reject toggle through prepared locked state.
 
-### Deprecated Backup Redirect
+### Backup Query Entry
 
-1. `/backup` redirects to Settings backup section.
-2. Settings resolves last/default/first installed game.
+1. Current working route має `settings=backup`.
+2. Settings resolves active/last/default/first installed game.
 3. Matching item receives `expanded`; all others receive `collapsed`.
 4. Focus moves to target heading or first safe action.
 
@@ -414,20 +418,23 @@ visual axes. `className` може бути integration escape hatch, не primar
 - Collapsed content not focusable.
 - `Enter`/`Space` toggle item; locked item does not emit intent.
 - Focus order follows registry order and only active panel children.
-- Redirect focus lands in resolved target item.
+- `settings=backup` initial focus lands in resolved target item.
 - Actions name target game, including destructive replace.
 - File picker cancel restores target import focus.
 - Dialog focus traps/restores correctly; `Escape` never confirms replace.
 - Validation relates to target import action/status region and is not color-only.
 - Busy/error/success changes announced.
+- Component busy/nested model дає parent-у однозначно заблокувати Settings Close,
+  backdrop, `Escape`, browser/controller Back без обходу backup lifecycle.
 - Reduced motion shortens/removes disclosure transitions.
 
 ## Критерії приймання
 
 - Settings renders exactly one `UI-CMP-034` per installed game.
 - Parent enforces at most one expanded item.
-- Plain Settings starts all collapsed.
-- Deprecated `/backup` expands resolved last/default game item.
+- `settings=interface` не монтує items; `settings=backup` монтує їх і expands resolved
+  active/last/default game item.
+- `/backup` не має route або compatibility behavior.
 - Export creates one target `GameBackupEnvelope` without mutation.
 - File excludes global settings, other game slices and seeded data.
 - Import mismatch/uninstalled/unsupported/invalid candidate cannot open preview.
@@ -436,6 +443,7 @@ visual axes. `className` може бути integration escape hatch, не primar
 - Candidate ID and explicit destructive confirmation guard replace.
 - Replace updates only target `games[gameId]`.
 - Other settings/slices/seeded data remain unchanged.
+- Nested dialog receives dismissal before Settings; busy operation blocks Settings dismissal.
 - Component does not render settings/game-switcher/notation controls.
 
 ## Storybook і visual coverage
@@ -445,7 +453,7 @@ Required scenarios:
 - `CollapsedDefault`;
 - `ExpandedReady`;
 - `AccordionLocked`;
-- `RedirectAutoExpanded`;
+- `BackupQueryAutoExpanded`;
 - `Exporting`;
 - `ImportValidating`;
 - `ImportInvalidMismatch`;
@@ -468,7 +476,8 @@ validation/destructive states.
 - Opening the MK1 instance emits `expand`; its parent closure maps the intent to MK1
   and closes MKXL through parent state.
 - Locked accordion emits no toggle/action.
-- Redirect expands resolved target item and restores focus correctly.
+- `settings=backup` expands resolved target item and establishes safe initial focus.
+- `/backup` has no redirect or Settings behavior.
 - Export intent is component-local; the registry-backed parent closure maps it to the
   target `gameId`.
 - MK1 export does not include settings/MKXL slice and does not mutate state.
@@ -480,6 +489,8 @@ validation/destructive states.
 - Candidate mismatch cannot confirm replace.
 - Confirm replace changes only target slice.
 - Cancel picker/preview returns focus and performs no mutation.
+- Busy operation does not allow parent Settings dismissal; nested dialog consumes the
+  first Back/Escape without closing Settings.
 
 ## Канонічний Responsive і Controller-only Contract
 
@@ -494,7 +505,7 @@ focus graph із [UI.md](../UI.md).
 
 ## Flat Workspace Visual Contract
 
-- Item входить у flat Settings canvas і не створює card wrapper.
+- Item входить у flat Settings modal canvas і не створює card wrapper.
 - Peer items використовують separators/spacing.
 - Full border/radius/shadow належать only owning dialog overlay.
 - Text actions, validation and focus indicators retain semantic boundaries.

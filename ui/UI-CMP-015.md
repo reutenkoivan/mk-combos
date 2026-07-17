@@ -188,6 +188,8 @@ Parent surface вирішує density.
 Expected behavior:
 
 - `compact` або `list` density оптимізує notation для card/list scan;
+- `command` density використовує прозорий group layout без зовнішньої рамки або фону;
+- `strong` command emphasis ставить command-accent рамку навколо кожного валідного token, а не навколо group; invalid token зберігає destructive presentation;
 - `detail` density дозволяє більше простору для readable grouping;
 - `whiteboard` density може синхронізувати token ranges із focused step;
 - long notation переноситься без overlap;
@@ -271,6 +273,7 @@ Rules:
 - Renderer використовує той самий UI-owned SVG icon registry, що й [`UI-CMP-037`](./UI-CMP-037.md).
 - Зміна display mode у Settings оновлює renderer presentation без зміни `movePath` або `cachedNotation`.
 - Combo Card compact renderer не overlap-иться з metadata badges.
+- Command renderer не додає рамку/фон group container і застосовує strong accent до окремих валідних tokens.
 - Combo Detail renderer показує read-only notation для seeded combo.
 - Builder renderer показує current `cachedNotation` після accepted move.
 - Pending truncate або stale custom combo показує invalid/stale marker, якщо parent передав state.

@@ -17,19 +17,22 @@
 
 `UI-CMP-008 Variation Picker` є required game-specific context selector для `MKXL`.
 
-Компонент показується після selected `MKXL` character і дає вибрати variation у layout, який повторює in-game MKXL variation selection UI для цього character.
+Компонент показується після selected `MKXL` character і дає вибрати variation з
+prepared game-owned options. У Catalog `commandDeck` presentation відображає їх як
+compact centered portrait cards; standalone `standard` presentation зберігає
+наявний horizontal/authored layout.
 
-Picker не є generic dropdown або optional filter. Variation належить до required `contextRow` у `UI-CMP-012 Combo List Config Module` і визначає базову область combo list разом із selected character.
+Picker не є generic dropdown або optional filter. Variation є required context кроку `02 / Variation` у `UI-CMP-012 Combo List Config Module` і визначає базову область combo list разом із path character.
 
 ## Володіння
 
 `UI-PAGE-003 MKXL Catalog Variant` володіє selected character і selected variation. Available variation data, disabled reasons, layout descriptors і combo availability приходять із `mkxl/catalog` через `@mk-combos/mkxl-business`.
 
-`UI-CMP-012 Combo List Config Module` отримує placement picker-а у `contextRow` і controlled focus handoff після character selection від Catalog page model.
+`UI-CMP-012 Combo List Config Module` розміщує picker під locked character strip і отримує controlled focus handoff після pathname transition від Catalog page model.
 
 `UI-CMP-008` відповідає тільки за:
 
-- рендер variation layout для selected MKXL character;
+- рендер prepared variation layout для selected MKXL character;
 - рендер controlled selected, focused, disabled і placeholder state variation slots;
 - keyboard/controller navigation intent усередині variation layout;
 - semantic selection intent для parent variant flow.
@@ -65,35 +68,28 @@ type PickerSlot = {
 
 `optionId` є stable variation id для selected character. Реєстр розміщення має підтримувати per-character variation slots, якщо in-game placement або labels відрізняються між characters.
 
-### Широке розміщення
+### Presentation policy
 
-Wide layout застосовується для viewport/device class від `13.6-inch` і більше.
-
-Rules:
-
-- використовувати exact `row` і `column` для in-game MKXL variation selection UI;
-- не reflow-ити variation slots;
-- не сортувати variations alphabetically;
-- зберігати disabled або placeholder positions.
-
-### Компактне розміщення
-
-Для менших екранів variation layout може реорганізовуватись.
-
-Rules:
-
-- використовувати `responsiveOrder`, якщо він заданий;
-- якщо `responsiveOrder` відсутній, logical order виводиться з `row`, потім `column`;
-- selected/focused state зберігається під час переходу між layouts;
-- усі selectable і disabled variation slots лишаються reachable або readable.
+- `standard` зберігає наявний horizontal/authored layout і може застосовувати
+  `row`/`column` відповідно до standalone contract.
+- `commandDeck` на mobile, tablet і desktop ігнорує `row`/`column` для placement
+  та використовує `responsiveOrder ?? sourceIndex + 1` для visual і controller order.
+- Authored `row`/`column` не видаляються зі schema, types або prepared data: це
+  stable public compatibility facts для інших presentations і consumers.
+- Command Deck grid: `repeat(auto-fit, minmax(min(8rem, 100%), 10rem))`, `gap-4`,
+  centered placement і minimum card height `11rem`.
+- Disabled і placeholder slots не сортуються alphabetically; inert slots
+  пропускаються controller focus graph-ом.
 
 ## Анатомія
 
-Розміщення є picker surface після character picker: context label стоїть над variation slots, status region нижче layout.
+Розміщення є picker surface після locked character strip: `parentContextLabel`
+(`Selected fighter`) стоїть над variation cards. Catalog guidance існує тільки у
+step header; lower status region та inline return control не передаються.
 
 ```jsx
 <VariationPicker ui="UI-CMP-008">
-  <VariationPickerSurface slot="UI-CMP-012 contextRow">
+  <VariationPickerSurface slot="UI-CMP-012 specification step">
     <Stack name="VariationPickerLayout">
       <PickerLabel />
       <SelectedCharacterContextLabel />
@@ -101,11 +97,9 @@ Rules:
       <VariationLayout>
         <VariationSlot>
           <Stack name="VariationSlotContent">
+            <VariationIconOrFallback size="64×64" />
             <VariationLabel />
-
-            <Show when={hasShortDescriptionOrIcon}>
-              <ShortDescriptionOrIcon />
-            </Show>
+            <NumericCountBadge position="top corner" />
           </Stack>
 
           <Show when={isSelectedOrFocused}>
@@ -118,7 +112,7 @@ Rules:
         </VariationSlot>
       </VariationLayout>
 
-      <Show when={hasStatusLiveRegion}>
+      <Show when={isStandaloneConsumer && hasStatusLiveRegion}>
         <StatusLiveRegion />
       </Show>
     </Stack>
@@ -128,8 +122,10 @@ Rules:
 
 Правила розміщення:
 
-- У `UI-CMP-012` компонент стоїть поруч із `UI-CMP-007` на `desktop` або нижче нього на `mobile` і `tablet`.
-- Variation slots використовують prepared `MKXL.variation` layout і не додають власне сортування.
+- У `UI-CMP-012` component є єдиним picker-ом specification step; character grid
+  у цей момент не монтується.
+- Variation slots використовують prepared `MKXL.variation` data і не додають
+  alphabetical sorting.
 - Indicators і disabled state рендеряться всередині slot, не змінюючи геометрію сусідніх slots.
 
 ## Вхідні дані
@@ -147,21 +143,25 @@ Rules:
 - `responsiveMode`: `mobile`, `tablet` або `desktop`.
 - `focusedSlotId`: поточний focus target.
 - `activeLanguage`: `EN` або `UA`.
+- `presentation`: `standard | commandDeck`; `UI-CMP-012` примусово використовує
+  `commandDeck` без розширення public picker props.
+- `backLabel` і `message`: optional standalone copy; Catalog їх не передає.
 
 ## Вихідні події
 
 - `requestSelectVariation`: вибрати focused/selectable variation.
 - `requestFocusVariationSlot`: змінити focused variation slot.
-- `requestReturnToCharacterPicker`: optional focus handoff назад до `UI-CMP-007`.
+- `requestReturnToCharacterPicker`: optional standalone semantic back intent;
+  Catalog повертається через breadcrumb/drawer, browser або controller Back.
 - `requestClearVariation`: optional очистити selected variation, якщо parent flow дозволяє.
 
 ## Межі відповідальності
 
 Компонент відповідає за:
 
-- in-game MKXL variation layout для selected character;
-- exact wide `row`/`column` placement;
-- mobile і tablet adaptive order;
+- standard authored та Command Deck compact presentation для selected character;
+- Command Deck portrait placement і `responsiveOrder ?? sourceIndex + 1` на всіх
+  responsive modes;
 - disabled variation slots без combo data;
 - selected/focused/hover/active states;
 - keyboard/controller navigation;
@@ -222,11 +222,11 @@ Selected `character + variation` валідні.
 
 ### `disabledNoComboData`
 
-Variation існує в in-game layout, але для `character + variation` ще немає combo data.
+Variation існує в prepared layout, але для `character + variation` ще немає combo data.
 
 Очікуваний UI:
 
-- slot лишається видимим у correct in-game position;
+- slot лишається видимим у prepared order;
 - slot не емітить selection;
 - disabled reason readable і accessible.
 
@@ -250,19 +250,16 @@ Route або restored context містить variation, яка не належи
 5. `UI-CMP-008` емітить `requestSelectVariation`.
 6. Catalog переходить до valid `character + variation` context і оновлює combo list.
 
-### Wide And Compact Navigation
+### Presentation And Navigation
 
-На `desktop`:
+У Catalog `commandDeck` на mobile, tablet і desktop:
 
-- directional navigation рухається по `row`/`column`;
-- visual positions не reflow-яться;
-- disabled slots не selectable.
+- left/up переходить до попереднього, right/down — до наступного selectable slot
+  за `responsiveOrder ?? sourceIndex + 1`;
+- disabled і placeholder slots пропускаються, краї не цикляться;
+- wrapping не змінює logical order або selected/focused identity.
 
-На `mobile` і `tablet`:
-
-- navigation рухається за `responsiveOrder`;
-- wrapping не змінює logical order;
-- focus не губиться під час reflow.
+Standalone `standard` presentation зберігає authored placement contract.
 
 ### Clear Filters
 
@@ -290,8 +287,10 @@ Variation очищається тільки якщо:
 
 - `UI-CMP-008` має окрему повну специфікацію.
 - `MKXL.variation` є explicit layout key.
-- Variation layout після selected character повторює in-game MKXL variation selection UI на `desktop`.
-- Compact layout може реорганізовуватись тільки через stable logical order.
+- Command Deck після selected character використовує compact portrait grid на
+  mobile, tablet і desktop.
+- Visual і controller order на всіх viewport визначає
+  `responsiveOrder ?? sourceIndex + 1`.
 - Slot без combo data показується як `disabledNoComboData` і не selectable.
 - Selecting variation завершує required MKXL context.
 - `UI-CMP-008` не показується в `MK1` variant.
@@ -302,26 +301,44 @@ Variation очищається тільки якщо:
 
 - Без selected character picker перебуває у `waitingForCharacter`.
 - Вибір MKXL character показує `MKXL.variation` layout.
-- Wide layout збігається з in-game MKXL variation slot positions.
-- Compact layout не створює overlap і зберігає all non-placeholder slots.
+- Desktop, tablet і mobile Command Deck не створюють overlap або horizontal overflow
+  та зберігають усі non-placeholder slots.
 - Selectable variation емітить `requestSelectVariation`.
 - Disabled variation slot не емітить selection і має readable disabled reason.
 - Зміна character скидає incompatible selected variation.
 - `Clear filters` не очищає selected variation.
-- Controller navigation у wide layout рухається по `row`/`column`.
-- Controller navigation у mobile і tablet layout рухається по `responsiveOrder`.
+- Controller navigation на desktop, tablet і mobile рухається лінійно по prepared
+  order, пропускає inert slots і clamp-иться на краях.
 
 ## Відкриті уточнення
 
-- Exact `row`/`column` coordinates для `MKXL.variation` мають бути заведені в layout registry під час data implementation.
 - Точний copy disabled reasons має відповідати shared empty/error state style.
+
+## Step 26 Readability Contract
+
+- `PickerOption.description` і localized `countLabel` є видимими частинами variation option.
+- Long UA variation labels, descriptions, counts і disabled reasons wrap-ляться; fixed slot height не може обрізати текст.
+- Text label лишається primary affordance навіть коли option має icon або portrait.
+
+## Command Deck Presentation
+
+- `presentation = standard | commandDeck`; `commandDeck` є full-workspace кроком `02 / Variation` і ніколи не рендериться поруч із character grid.
+- Character context приходить як locked prepared model від `UI-CMP-012`; picker не читає route, game ID або persistence.
+- `focusedSlotId`, stable `slotId`, selected variation та unavailable state мають окреме visible/semantic wiring, і focus не підміняє selection.
+- Portrait variation cards показують `64×64px` authored icon або missing-asset
+  fallback, label під ним, numeric count badge, окремий selected/controller marker
+  і readable disabled reason; fixed-height truncation заборонена.
+- Catalog не передає `backLabel` або `message`; header description і selected-fighter
+  context збережені. Optional standalone `returnToCharacterPicker` лишається
+  semantic back intent, а `selectVariation` — confirm intent.
+- Reduced motion прибирає step-enter transition, не змінюючи focus order або content visibility.
 
 ## Канонічний Responsive і Controller-only Contract
 
 Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
 
-- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повну workstation composition і spatial row/column navigation;
+- `mobile`, `tablet` і `desktop` Command Deck використовують один compact portrait
+  grid та linear prepared order navigation;
+- left/up — previous, right/down — next; inert slots пропускаються, краї не цикляться;
 - `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
 - native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.

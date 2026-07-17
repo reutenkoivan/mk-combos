@@ -949,4 +949,29 @@ describe("MKXL seeded data", () => {
       true,
     );
   });
+
+  it("owns an explicit three-row character picker layout", () => {
+    const slotIds = new Set<string>();
+    const coordinates = new Set<string>();
+
+    expect(mkxlCharacters).toHaveLength(33);
+
+    for (const character of mkxlCharacters) {
+      const { pickerSlot } = character;
+      expect(pickerSlot.optionId).toBe(character.id);
+      expect(pickerSlot.compactOrder).toBe(character.rosterOrder);
+      expect(pickerSlot.status).toBe("selectable");
+      expect(pickerSlot.row).toBeGreaterThanOrEqual(1);
+      expect(pickerSlot.row).toBeLessThanOrEqual(3);
+      expect(pickerSlot.column).toBeGreaterThanOrEqual(1);
+      expect(pickerSlot.column).toBeLessThanOrEqual(11);
+      expect(slotIds.has(pickerSlot.slotId)).toBe(false);
+      expect(coordinates.has(`${pickerSlot.row}:${pickerSlot.column}`)).toBe(false);
+      slotIds.add(pickerSlot.slotId);
+      coordinates.add(`${pickerSlot.row}:${pickerSlot.column}`);
+    }
+
+    expect(slotIds.size).toBe(33);
+    expect(coordinates.size).toBe(33);
+  });
 });

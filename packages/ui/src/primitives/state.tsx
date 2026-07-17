@@ -24,9 +24,9 @@ export function Badge(props: BadgeProps) {
   return (
     <span
       {...badgeProps}
-      className={cx(indicatorRecipe({ density, shape, tone }), className)}
-      data-ui-badge
       ref={ref}
+      data-ui-badge
+      className={cx(indicatorRecipe({ density, shape, tone }), className)}
     >
       {children}
     </span>
@@ -54,10 +54,10 @@ export function StatusMessage(props: StatusMessageProps) {
   return (
     <div
       {...messageProps}
-      className={cx("text-[13px] leading-snug", statusToneClasses[tone], className)}
-      data-ui-status-message
       ref={ref}
       role={resolvedRole}
+      data-ui-status-message
+      className={cx("text-[13px] leading-snug", statusToneClasses[tone], className)}
     >
       {children}
     </div>
@@ -84,10 +84,10 @@ export function LoadingIndicator(props: LoadingIndicatorProps) {
   return (
     <span
       {...indicatorProps}
-      className={cx("inline-flex items-center justify-center", statusToneClasses[tone], className)}
-      data-ui-loading-indicator
       ref={ref}
       role={role}
+      data-ui-loading-indicator
+      className={cx("inline-flex items-center justify-center", statusToneClasses[tone], className)}
     >
       <span className="sr-only">{label}</span>
       <span

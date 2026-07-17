@@ -61,8 +61,67 @@ React-код максимально використовує stable API React 19
 - `useEffectEvent` використовується тільки для non-reactive callback, який
   викликається з Effect або іншого Effect Event. Він не є універсальною заміною
   event handler-а чи способом приховати Effect dependencies;
-- mutually exclusive UI states рендеряться одним state-driven exhaustive branch;
-  state token є авторитетним і не допускає одночасного показу суперечливих surfaces.
+- simple boolean UI branch використовує project-owned semantic conditional primitive з lazy
+  branch factories: готується лише обрана гілка, тому вкладені `map`, `filter`, `sort` та інша
+  робота неактивної гілки не виконується. Nullish presence використовує окремий semantic
+  primitive зі stable content component, обраний саме за семантикою `null | undefined`;
+- mutually exclusive multi-state UI рендериться одним state-driven exhaustive branch; state token
+  є авторитетним і не допускає одночасного показу суперечливих surfaces;
+- conditional expression використовується для вибору scalar value або як частина одного
+  state-driven exhaustive branch, а не замість semantic primitive для boolean/nullish JSX
+  presence. JSX-композиція лишається у природному `return` і не накопичується в локальному
+  mutable `ReactNode`-контейнері;
+- project-owned React component API та кожен його call site розміщують основну й суттєво більшу
+  локальну JSX-композицію в `children`. JSX-valued props і named render factories, зокрема
+  `fallback`, `header`, `footer`, `trigger` або `icon`, містять менші допоміжні чи альтернативні
+  фрагменти. Наприклад, `<Show fallback={() => <Small />}>{() => <Large />}</Show>` і
+  `<Layout header={<Small />}><Large /></Layout>` є правильними, а
+  `<Layout content={<Large />}><Small /></Layout>` — ні;
+- якщо JSX у prop суттєво більший за `children`, орієнтація композиції або умови змінюється чи
+  виправляється project-owned API. Для коротких або співмірних peer slots розміщення визначає
+  їхня семантика. Обсяг оцінюється за JSX, authored безпосередньо в call site, а не за
+  внутрішньою складністю імпортованих components. Scalar, data, callback і component-reference
+  props не підпадають під це правило;
+- якщо щонайменше два JSX props authored на різних рядках, кожна безперервна група props
+  сортується за зростанням довжини повної лексичної пари `key[=value]`: коротші пари
+  розміщуються вище, довші — нижче. Форматувальні відступи, переноси й comments не входять у
+  довжину; вміст string і template literals входить. Boolean shorthand має довжину свого key,
+  а multiline value — довжину всього свого лексичного вмісту. Props однакової довжини
+  зберігають authored порядок;
+- spread attributes і standalone comments є нерухомими semantic barriers: props сортуються
+  лише всередині кожної безперервної групи між ними. Comment, що пояснює конкретний prop,
+  переміщується разом із цим prop і не впливає на його довжину. Сортування не змінює
+  left-to-right evaluation semantics; order-dependent expressions спочатку готуються в
+  початковому порядку перед JSX;
+- велика branch виноситься у stable module-scope child component тільки коли child має власне
+  атомарне UI-значення, контракт або lifecycle, а не для механічного перенесення JSX. `let`
+  лишається для справжньої алгоритмічної мутації, зокрема loop cursor або accumulator, а не для
+  одноразового conditional assignment.
+
+```tsx
+// Правильно: коротші key-value пари розміщені вище.
+<Button
+  id={id}
+  disabled
+  aria-label={labels.save}
+/>
+
+// Неправильно: довша пара стоїть перед коротшими.
+<Button
+  aria-label={labels.save}
+  disabled
+  id={id}
+/>
+
+// Spread зберігає override semantics і розділяє незалежні sortable groups.
+<Field
+  id={id}
+  label={label}
+  {...inputProps}
+  disabled
+  aria-describedby={descriptionId}
+/>
+```
 
 React API викликаються безпосередньо в природному owner-і або всередині
 problem-specific hook із власним контрактом та lifecycle. Generic wrappers, які
@@ -81,6 +140,19 @@ enhancement; відсутність browser support не ламає navigation, 
 `space-y-*` і `margin*` не використовуються для позиціонування або відступів.
 Контейнер володіє розміщенням свого контенту через `flex` або `grid`, `gap-*`,
 `p-*`, `justify-*`, `items-*`, `content-*` і `self-*`.
+
+У project-owned стилях заборонено CSS `!important` і Tailwind important
+modifier у будь-якій формі (`!utility`, `utility!`, зокрема разом із variants).
+Конфлікти стилів розвʼязуються у правильному owner-і через semantic
+recipe/variant, API компонента, композицію класів і cascade/layers; consumer не
+перебиває стилі owner-а через `important`.
+
+Єдиний виняток — вузький override стилів зовнішньої бібліотеки в module, що
+володіє її інтеграцією, якщо бібліотека не надає підтримуваного API або контракту
+для потрібної зміни без `important`. Такий виняток локалізується на integration
+boundary і супроводжується коментарем із назвою бібліотеки та поясненням
+відсутнього API; він не застосовується до project-owned components або consumer
+classes.
 
 Інтерактивний UI зобовʼязаний візуально й семантично відображати кожен стан,
 який підтримує його контракт. Для відповідних controls та items це охоплює
@@ -596,32 +668,58 @@ Logical routes are generic and game-prefixed:
 
 ```text
 /:gameId/catalog
-/:gameId/combos/:source/:comboId
+/:gameId/catalog/:character/:specification/:comboId
 /:gameId/lists
 /:gameId/builder
-/settings
 ```
 
-The deprecated backup compatibility route is exactly logical `/backup` (public
-`/mk-combos/#/backup`). It performs a replace redirect to logical `/settings?section=backup`
-(public `/mk-combos/#/settings?section=backup`), so Settings can open the backup section without
-adding a second active page. There is no `/:gameId/backup` compatibility route.
+Settings is not a logical route and does not replace the current working page. `UI-PAGE-001 App
+Shell` mounts `UI-PAGE-008 Settings` as a modal over the current validated game-prefixed route and
+controls it through that route's search state:
+
+```text
+?settings=interface
+?settings=backup
+```
+
+Absence of `settings` means that the modal is closed. Opening Settings from the shell keeps the
+current path, params and unrelated validated search values, adds `settings=interface`, and creates a
+history entry. Switching the Settings tab replace-updates only this value. Close, `Escape`, backdrop
+interaction and semantic controller `Back` remove it; browser Back dismisses the modal through the
+same history contract. A nested Settings dialog owns the first dismissal attempt, while an active
+busy backup operation blocks dismissal until its lifecycle reaches a safe state.
+
+The working page remains mounted behind the modal but is inert and excluded from focus/controller
+navigation while Settings is open. Settings is full-screen in `mobile` and `tablet`; in `desktop` it
+is a tall, wide centered dialog over a backdrop. Closing restores focus to the opener or a declared safe
+shell target without reconstructing the working route state.
+
+Logical `/settings`, `/backup`, and `/:gameId/backup` are not declared and have no redirect or other
+compatibility behavior.
 
 Examples:
 
 ```text
 /mkxl/catalog
-/mkxl/combos/seeded/scorpion-bnb-001
+/mkxl/catalog/kotal-kahn/war-god/kotal-kahn-war-god-starter-001
 /mkxl/lists
 /mkxl/builder
+/mkxl/catalog?settings=interface
 
 /mk1/catalog
-/mk1/combos/custom/local-1729
+/mk1/catalog/scorpion/cyrax/scorpion-cyrax-seed-001
 /mk1/lists
 /mk1/builder
+/mk1/lists?settings=backup
 ```
 
 The route prefix is the source of truth for active game on deep links. Settings store the default or last active game, but route-prefixed links do not depend on previous local settings.
+
+Combo Detail URLs are source-neutral and carry their canonical Catalog context. The installed-game
+application boundary resolves the URL to exactly one domain `ComboRef`; `source` remains part of
+domain identity, named lists and backups, but is not exposed in the URL. A seeded/custom collision
+for the same game, context and `comboId` is treated as ambiguous rather than resolved by precedence.
+The removed `/:gameId/combos/:source/:comboId` shape is not a compatibility route.
 
 ## Local State
 
@@ -685,9 +783,12 @@ Replace changes only `LocalAppState.games[gameId]`. Global settings and all othe
 game slices remain unchanged. Seeded game data is never imported or replaced.
 
 Settings renders one controlled `UI-CMP-034 Backup Collapsible Block` for every
-installed game as a single-open accordion. Plain `/settings` starts with all items
-collapsed. Deprecated `/backup` redirects to Settings and expands the item for the
-resolved last/default installed game.
+installed game as a single-open accordion. Opening the modal with
+`settings=interface` starts with all items collapsed and does not mount backup controls.
+`settings=backup` opens the backup tab and expands the item for the resolved active,
+last/default, or first installed game according to the prepared Settings model. Nested
+backup dialogs take dismissal precedence over the Settings modal, and a busy backup
+operation prevents the modal from closing.
 
 ## Import Direction
 

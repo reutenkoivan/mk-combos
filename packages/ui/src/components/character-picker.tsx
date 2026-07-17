@@ -1,8 +1,16 @@
 import { Button } from "../primitives/button";
+import { Show } from "../primitives/conditional";
 import { Group } from "../primitives/layout";
+import { cx } from "../recipes/class-name";
 import { PickerGrid } from "./internal/picker-grid";
-import type { ComponentActionIntent, PickerOption, PickerSlot, UiResponsiveMode } from "./type";
-import { componentInteractionReasons } from "./value";
+import type {
+  ComponentActionIntent,
+  PickerOption,
+  PickerPresentationMode,
+  PickerSlot,
+  UiResponsiveMode,
+} from "./type";
+import { componentInteractionReasons, pickerPresentationModes } from "./value";
 
 export const characterPickerActions = {
   clearCharacter: "clearCharacter",
@@ -30,6 +38,7 @@ export type CharacterPickerProps = {
   nextLabel?: string;
   onRequestAction?: (intent: CharacterPickerIntent) => void;
   options: readonly PickerOption[];
+  presentation?: PickerPresentationMode;
   responsiveMode: UiResponsiveMode;
   selectedCharacterId?: string;
   slots: readonly PickerSlot[];
@@ -38,6 +47,7 @@ export type CharacterPickerProps = {
 };
 
 export function CharacterPicker(props: CharacterPickerProps) {
+  const commandDeck = props.presentation === pickerPresentationModes.commandDeck;
   const emit = (
     action: CharacterPickerAction,
     input: { characterId?: string; slotId?: string } = {},
@@ -55,14 +65,24 @@ export function CharacterPicker(props: CharacterPickerProps) {
     });
 
   return (
-    <section className="grid min-w-0 gap-2" data-ui-component="UI-CMP-007">
+    <section
+      data-ui-component="UI-CMP-007"
+      className={cx("grid min-w-0", commandDeck ? "gap-4" : "gap-2")}
+      data-picker-presentation={props.presentation ?? pickerPresentationModes.standard}
+    >
       <PickerGrid
         busy={props.busy}
-        disabled={props.disabled}
-        focusedSlotId={props.focusedSlotId}
         label={props.label}
-        layoutId={props.layoutId}
+        slots={props.slots}
         message={props.message}
+        options={props.options}
+        disabled={props.disabled}
+        layoutId={props.layoutId}
+        portraitLayout={commandDeck}
+        presentation={props.presentation}
+        focusedSlotId={props.focusedSlotId}
+        responsiveMode={props.responsiveMode}
+        selectedOptionId={props.selectedCharacterId}
         onRequestAction={(intent) =>
           emit(
             intent.type === "focus"
@@ -71,31 +91,35 @@ export function CharacterPicker(props: CharacterPickerProps) {
             { characterId: intent.optionId, slotId: intent.slotId },
           )
         }
-        options={props.options}
-        responsiveMode={props.responsiveMode}
-        selectedOptionId={props.selectedCharacterId}
-        slots={props.slots}
       />
-      {(props.clearLabel || props.nextLabel) && (
-        <Group>
-          {props.clearLabel && (
-            <Button
-              disabled={!props.selectedCharacterId || props.disabled || props.busy}
-              onRequestPress={() => emit(characterPickerActions.clearCharacter)}
-            >
-              {props.clearLabel}
-            </Button>
-          )}
-          {props.nextLabel && (
-            <Button
-              disabled={!props.selectedCharacterId || props.disabled || props.busy}
-              onRequestPress={() => emit(characterPickerActions.moveToGameSpecificPicker)}
-            >
-              {props.nextLabel}
-            </Button>
-          )}
-        </Group>
-      )}
+      <Show when={Boolean(props.clearLabel || props.nextLabel)}>
+        {() => (
+          <Group className={commandDeck ? "border-t border-(--ui-command-border) pt-3" : undefined}>
+            <Show when={Boolean(props.clearLabel)}>
+              {() => (
+                <Button
+                  className={commandDeck ? "rounded-none" : undefined}
+                  onRequestPress={() => emit(characterPickerActions.clearCharacter)}
+                  disabled={!props.selectedCharacterId || props.disabled || props.busy}
+                >
+                  {props.clearLabel}
+                </Button>
+              )}
+            </Show>
+            <Show when={Boolean(props.nextLabel)}>
+              {() => (
+                <Button
+                  className={commandDeck ? "rounded-none" : undefined}
+                  disabled={!props.selectedCharacterId || props.disabled || props.busy}
+                  onRequestPress={() => emit(characterPickerActions.moveToGameSpecificPicker)}
+                >
+                  {props.nextLabel}
+                </Button>
+              )}
+            </Show>
+          </Group>
+        )}
+      </Show>
     </section>
   );
 }

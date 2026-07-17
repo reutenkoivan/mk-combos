@@ -1,15 +1,20 @@
 import type { ComboRef } from "@mk-combos/contracts/identity/type";
 import type { NotationDisplayMode } from "@mk-combos/contracts/settings/type";
 
+import { Button } from "../primitives/button";
+import { Present, type PresentContentProps, Show } from "../primitives/conditional";
 import { LoadingIndicator, StatusMessage } from "../primitives/state";
 import {
   ComboCard,
   type ComboCardAction,
   type ComboCardIntent,
   type ComboCardModel,
+  comboCardActionKinds,
+  comboCardActions,
 } from "./combo-card";
 import { EmptyState, type EmptyStateIntent, type EmptyStateModel } from "./empty-state";
-import type { ComponentActionIntent } from "./type";
+import type { ComboPresentationMode, ComponentActionIntent } from "./type";
+import { comboPresentationModes, componentInteractionReasons } from "./value";
 
 export const comboListActions = {
   addToList: "addToList",
@@ -42,10 +47,12 @@ export type ComboListIntent = ComponentActionIntent<ComboListAction> & {
 
 export type ComboListProps = {
   accessibleLabel: string;
+  disabledReason?: string;
   emptyState?: EmptyStateModel;
   items: readonly ComboCardModel[];
   notationDisplayMode: NotationDisplayMode;
   onRequestAction?: (intent: ComboListIntent) => void;
+  presentation?: ComboPresentationMode;
   sourceFocusTarget?: string;
   sourceSurface: string;
   state: ComboListState;
@@ -61,6 +68,24 @@ const cardActionMap = {
   openDetail: comboListActions.openComboDetail,
   returnFocusToList: comboListActions.returnFocusToConfig,
 } as const satisfies Record<ComboCardAction, ComboListAction>;
+
+type ComboListEmptyStateValue = Readonly<{
+  model: EmptyStateModel;
+  onRequestAction: (intent: EmptyStateIntent) => void;
+  sourceFocusTarget: string | undefined;
+  sourceSurface: string;
+}>;
+
+function ComboListEmptyState({ value }: PresentContentProps<ComboListEmptyStateValue>) {
+  return (
+    <EmptyState
+      {...value.model}
+      sourceSurface={value.sourceSurface}
+      onRequestAction={value.onRequestAction}
+      sourceFocusTarget={value.sourceFocusTarget}
+    />
+  );
+}
 
 function resolveComboListPresentation(state: ComboListState) {
   switch (state) {
@@ -82,11 +107,13 @@ function resolveComboListPresentation(state: ComboListState) {
 
 export function ComboList(props: ComboListProps) {
   const loading = props.state === comboListStates.loadingCombos;
-  const presentation = resolveComboListPresentation(props.state);
-  const disabled =
-    loading ||
-    props.state === comboListStates.contextIncomplete ||
-    props.state === comboListStates.listDisabled;
+  const listDisabled = props.state === comboListStates.listDisabled;
+  const presentation = props.presentation ?? comboPresentationModes.standard;
+  const flat = presentation === comboPresentationModes.commandDeck;
+  const statePresentation = resolveComboListPresentation(props.state);
+  const disabled = loading || props.state === comboListStates.contextIncomplete || listDisabled;
+  const visibleStatusMessage =
+    props.statusMessage ?? (listDisabled ? props.disabledReason : undefined);
   const emitCardAction = (intent: ComboCardIntent) =>
     props.onRequestAction?.({
       action: cardActionMap[intent.action],
@@ -95,6 +122,22 @@ export function ComboList(props: ComboListProps) {
       reason: intent.reason,
       sourceFocusTarget: intent.sourceFocusTarget,
       sourceSurface: intent.sourceSurface,
+    });
+  const emitFlatRowAction = (
+    model: ComboCardModel,
+    action: typeof comboCardActions.focusCard | typeof comboCardActions.openDetail,
+    actionId?: string,
+  ) =>
+    emitCardAction({
+      action,
+      actionId,
+      comboRef: model.summary.ref,
+      reason:
+        action === comboCardActions.focusCard
+          ? componentInteractionReasons.triggerFocus
+          : componentInteractionReasons.press,
+      sourceFocusTarget: props.sourceFocusTarget,
+      sourceSurface: props.sourceSurface,
     });
   const emitEmptyAction = (intent: EmptyStateIntent) =>
     props.onRequestAction?.({
@@ -110,41 +153,111 @@ export function ComboList(props: ComboListProps) {
 
   return (
     <section
-      aria-busy={loading || undefined}
-      aria-label={props.accessibleLabel}
-      className="grid min-w-0 gap-3"
       data-list-state={props.state}
+      aria-busy={loading || undefined}
+      className="grid min-w-0 gap-3"
       data-ui-component="UI-CMP-010"
+      aria-label={props.accessibleLabel}
+      data-combo-presentation={presentation}
+      aria-disabled={listDisabled || undefined}
     >
-      {loading && <LoadingIndicator label={props.statusMessage ?? "Loading combos"} />}
-      {!loading && props.statusMessage && <StatusMessage>{props.statusMessage}</StatusMessage>}
-      {presentation.renderEmptyState && props.emptyState && (
-        <EmptyState
-          {...props.emptyState}
-          onRequestAction={emitEmptyAction}
-          sourceFocusTarget={props.sourceFocusTarget}
-          sourceSurface={props.sourceSurface}
-        />
-      )}
-      {presentation.renderItems && props.items.length > 0 && (
-        <ul className="grid min-w-0 list-none gap-3 p-0">
-          {props.items.map((model) => (
-            <li key={`${model.summary.ref.source}-${model.summary.ref.comboId}`}>
-              <ComboCard
-                {...model}
-                busy={loading}
-                disabledReason={
-                  model.disabledReason ?? (disabled ? props.statusMessage : undefined)
-                }
-                notationDisplayMode={props.notationDisplayMode}
-                onRequestAction={emitCardAction}
-                sourceFocusTarget={props.sourceFocusTarget}
-                sourceSurface={props.sourceSurface}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
+      <Show when={loading}>
+        {() => <LoadingIndicator label={props.statusMessage ?? "Loading combos"} />}
+      </Show>
+      <Show when={Boolean(!loading && visibleStatusMessage)}>
+        {() => <StatusMessage>{visibleStatusMessage}</StatusMessage>}
+      </Show>
+      <Present
+        value={
+          statePresentation.renderEmptyState && props.emptyState
+            ? {
+                model: props.emptyState,
+                onRequestAction: emitEmptyAction,
+                sourceFocusTarget: props.sourceFocusTarget,
+                sourceSurface: props.sourceSurface,
+              }
+            : undefined
+        }
+      >
+        {ComboListEmptyState}
+      </Present>
+      <Show when={statePresentation.renderItems && props.items.length > 0}>
+        {() => (
+          <ol
+            className={
+              presentation === comboPresentationModes.standard
+                ? "grid min-w-0 list-none gap-3 p-0"
+                : "grid min-w-0 list-none divide-y divide-(--ui-command-border) p-0"
+            }
+          >
+            {props.items.map((model, index) => {
+              const rowDetailAction = flat
+                ? model.actions.find(
+                    (descriptor) => descriptor.kind === comboCardActionKinds.openDetail,
+                  )
+                : undefined;
+              const rowDisabled = Boolean(
+                model.disabled || model.disabledReason || disabled || !rowDetailAction?.available,
+              );
+
+              return (
+                <li
+                  data-combo-index={index + 1}
+                  key={`${model.summary.ref.source}-${model.summary.ref.comboId}`}
+                  className={
+                    flat
+                      ? "relative grid min-w-0 grid-cols-[2.25rem_minmax(0,1fr)] bg-(--ui-command-row) focus-within:shadow-(--ui-focus-ring)"
+                      : "min-w-0"
+                  }
+                  onFocus={(event) => {
+                    if (
+                      event.target instanceof HTMLElement &&
+                      event.target.dataset.comboRowAction === "open-detail"
+                    ) {
+                      emitFlatRowAction(model, comboCardActions.focusCard);
+                    }
+                  }}
+                >
+                  <Show when={Boolean(rowDetailAction)}>
+                    {() => (
+                      <Button
+                        disabled={rowDisabled}
+                        data-combo-row-action="open-detail"
+                        aria-label={`${rowDetailAction?.label}: ${model.summary.accessibleLabel}`}
+                        onRequestPress={() =>
+                          emitFlatRowAction(model, comboCardActions.openDetail, rowDetailAction?.id)
+                        }
+                        className="peer absolute inset-0 z-0 h-auto min-w-0 rounded-none border-0 bg-transparent p-0 outline-none"
+                      />
+                    )}
+                  </Show>
+                  <Show when={flat}>
+                    {() => (
+                      <span
+                        aria-hidden="true"
+                        data-combo-visible-index
+                        className="pointer-events-none relative z-10 grid min-h-11 place-items-center border-e border-(--ui-command-border) bg-(--ui-command-chrome) font-mono text-xs font-semibold text-(--ui-command-chrome-text)"
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    )}
+                  </Show>
+                  <ComboCard
+                    {...model}
+                    busy={loading}
+                    onRequestAction={emitCardAction}
+                    disabled={model.disabled || disabled}
+                    sourceSurface={props.sourceSurface}
+                    sourceFocusTarget={props.sourceFocusTarget}
+                    notationDisplayMode={props.notationDisplayMode}
+                    presentation={model.presentation ?? presentation}
+                  />
+                </li>
+              );
+            })}
+          </ol>
+        )}
+      </Show>
     </section>
   );
 }

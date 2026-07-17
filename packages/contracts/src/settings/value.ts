@@ -8,3 +8,9 @@ export const notationDisplayModes = {
   PlayStation: "PlayStation",
   Xbox: "Xbox",
 } as const;
+
+export const themePreferences = {
+  dark: "dark",
+  light: "light",
+  system: "system",
+} as const;

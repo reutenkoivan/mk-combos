@@ -11,8 +11,11 @@ import type {
   BackupValidationMessageToneSchema,
   BackupValidationResultSchema,
   BackupValidationStatusSchema,
+  BreadcrumbItemIconSchema,
   BreadcrumbItemSchema,
   BreadcrumbTargetSchema,
+  ComboPresentationModeSchema,
+  ComboPresentationRouteStepSchema,
   ComboPresentationSummarySchema,
   ComponentActionDescriptorSchema,
   ComponentAvailabilitySchema,
@@ -26,8 +29,10 @@ import type {
   LanguageSwitcherOptionSchema,
   NamedListSummarySchema,
   PickerOptionSchema,
+  PickerPresentationModeSchema,
   PickerSlotSchema,
   PickerSlotStatusSchema,
+  ThemePreferenceSwitcherOptionSchema,
   UiResponsiveModeSchema,
 } from "./schema";
 
@@ -41,13 +46,18 @@ export type ComponentLabelValue = z.output<typeof ComponentLabelValueSchema>;
 export type PickerSlotStatus = z.output<typeof PickerSlotStatusSchema>;
 export type PickerSlot = z.output<typeof PickerSlotSchema>;
 export type PickerOption = z.output<typeof PickerOptionSchema>;
+export type PickerPresentationMode = z.output<typeof PickerPresentationModeSchema>;
 export type ComboPresentationSummary = z.output<typeof ComboPresentationSummarySchema>;
+export type ComboPresentationMode = z.output<typeof ComboPresentationModeSchema>;
+export type ComboPresentationRouteStep = z.output<typeof ComboPresentationRouteStepSchema>;
 export type NamedListSummary = z.output<typeof NamedListSummarySchema>;
 export type ComponentIntentBase = z.output<typeof ComponentIntentBaseSchema>;
 export type GameSwitcherOption = z.output<typeof GameSwitcherOptionSchema>;
 export type LanguageSwitcherOption = z.output<typeof LanguageSwitcherOptionSchema>;
 export type DisplayModeSwitcherOption = z.output<typeof DisplayModeSwitcherOptionSchema>;
+export type ThemePreferenceSwitcherOption = z.output<typeof ThemePreferenceSwitcherOptionSchema>;
 export type BreadcrumbTarget = z.output<typeof BreadcrumbTargetSchema>;
+export type BreadcrumbItemIcon = z.output<typeof BreadcrumbItemIconSchema>;
 export type BreadcrumbItem = z.output<typeof BreadcrumbItemSchema>;
 export type BackupDisclosureState = z.output<typeof BackupDisclosureStateSchema>;
 export type BackupPersistenceMode = z.output<typeof BackupPersistenceModeSchema>;

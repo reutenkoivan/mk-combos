@@ -1,5 +1,13 @@
-import type { LanguageCode, NotationDisplayMode } from "@mk-combos/contracts/settings/type";
-import { languageCodes, notationDisplayModes } from "@mk-combos/contracts/settings/value";
+import type {
+  LanguageCode,
+  NotationDisplayMode,
+  ThemePreference,
+} from "@mk-combos/contracts/settings/type";
+import {
+  languageCodes,
+  notationDisplayModes,
+  themePreferences,
+} from "@mk-combos/contracts/settings/value";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { type ReactNode, useState } from "react";
 
@@ -27,6 +35,7 @@ import {
   NotationLegendTable,
   notationLegendTableLayouts,
 } from "../components/notation-legend-table";
+import { ThemePreferenceSwitcher } from "../components/theme-preference-switcher";
 import { topBarDropdownMenuChangeActions } from "../components/top-bar-dropdown-menu";
 import type {
   BackupDisclosureState,
@@ -111,6 +120,25 @@ const displayModeOptions = [
     label: "Xbox",
     mode: notationDisplayModes.Xbox,
     shortLabel: "XB",
+    status: componentOptionStatuses.available,
+  },
+] as const;
+
+const themePreferenceOptions = [
+  {
+    label: "Follow system",
+    preference: themePreferences.system,
+    shortLabel: "System",
+    status: componentOptionStatuses.available,
+  },
+  {
+    label: "Dark",
+    preference: themePreferences.dark,
+    status: componentOptionStatuses.available,
+  },
+  {
+    label: "Light",
+    preference: themePreferences.light,
     status: componentOptionStatuses.available,
   },
 ] as const;
@@ -240,7 +268,7 @@ function ShellStoryHarness(props: {
   theme: UiThemeMode;
 }) {
   const mobile = props.layoutMode === uiResponsiveModes.mobile;
-  const responsiveOverflow = props.layoutMode !== uiResponsiveModes.desktop;
+  const mobileNavigation = props.layoutMode === uiResponsiveModes.mobile;
   const [activeBreadcrumbId, setActiveBreadcrumbId] = useState<string>(
     props.initialActiveBreadcrumbId,
   );
@@ -288,7 +316,7 @@ function ShellStoryHarness(props: {
     <Frame contrast={props.contrast} layoutMode={props.layoutMode} theme={props.theme}>
       <div
         className={
-          responsiveOverflow
+          mobileNavigation
             ? "w-full min-w-0 max-w-full"
             : props.layoutMode === uiResponsiveModes.tablet
               ? "w-full min-w-0 max-w-full"
@@ -296,6 +324,7 @@ function ShellStoryHarness(props: {
         }
       >
         <GlobalTopBar
+          layoutMode={props.layoutMode}
           breadcrumbs={{
             ariaLabel: "Breadcrumbs",
             gameSwitcher,
@@ -320,17 +349,16 @@ function ShellStoryHarness(props: {
             profileLabel: "Xbox Controller",
             sourceSurface: "storybook-shell",
           }}
-          layoutMode={props.layoutMode}
           menu={{
             actions: [
               { available: true, id: "lists", label: "Named Lists" },
               { available: true, id: "builder", label: "Builder" },
               { available: true, id: "settings", label: "Settings" },
             ],
-            breadcrumbs: responsiveOverflow ? items : undefined,
-            responsiveCloseLabel: responsiveOverflow ? "Close navigation" : undefined,
-            responsiveGameSwitcher: responsiveOverflow ? gameSwitcher : undefined,
-            responsiveNavigationLabel: responsiveOverflow ? "Navigation" : undefined,
+            breadcrumbs: mobileNavigation ? items : undefined,
+            responsiveCloseLabel: mobileNavigation ? "Close navigation" : undefined,
+            responsiveGameSwitcher: mobileNavigation ? gameSwitcher : undefined,
+            responsiveNavigationLabel: mobileNavigation ? "Navigation" : undefined,
             label: "Open global menu",
             layoutMode: props.layoutMode,
             onRequestAction: ({ action }) => {
@@ -372,6 +400,7 @@ function SettingsStoryHarness(props: {
   );
   const [displayMode, setDisplayMode] = useState<NotationDisplayMode>(props.initialDisplayMode);
   const [language, setLanguage] = useState<LanguageCode>(props.initialLanguage);
+  const [themePreference, setThemePreference] = useState<ThemePreference>(themePreferences.system);
   const [status, setStatus] = useState(props.initialStatus);
   const importCandidateSummary = {
     ...mkxlLocalStateSummary,
@@ -394,34 +423,44 @@ function SettingsStoryHarness(props: {
           </p>
         </header>
         <LanguageSwitcher
-          availableLanguages={languageOptions}
           label="Language"
+          selectedLanguage={language}
+          sourceSurface="storybook-settings"
+          availableLanguages={languageOptions}
           onRequestSelectLanguage={({ value }) => {
             setLanguage(value);
             setStatus(`Language selected: ${value}`);
           }}
-          selectedLanguage={language}
-          sourceSurface="storybook-settings"
         />
         <DisplayModeSwitcher
-          availableDisplayModes={displayModeOptions}
           label="Notation display mode"
+          selectedDisplayMode={displayMode}
+          sourceSurface="storybook-settings"
+          availableDisplayModes={displayModeOptions}
           onRequestSelectDisplayMode={({ value }) => {
             setDisplayMode(value);
             setStatus(`Display mode selected: ${value}`);
           }}
-          selectedDisplayMode={displayMode}
+        />
+        <ThemePreferenceSwitcher
+          label="Theme"
           sourceSurface="storybook-settings"
+          selectedThemePreference={themePreference}
+          availableThemePreferences={themePreferenceOptions}
+          onRequestSelectThemePreference={({ value }) => {
+            setThemePreference(value);
+            setStatus(`Theme preference selected: ${value}`);
+          }}
         />
         <NotationLegendTable
+          modeHeaderLabel="Mode"
           caption="Notation legend"
+          markersHeaderLabel="Markers"
           legendRows={createNotationLegendRows([
             notationDisplayModes.FGC,
             notationDisplayModes.PlayStation,
             notationDisplayModes.Xbox,
           ])}
-          markersHeaderLabel="Markers"
-          modeHeaderLabel="Mode"
           layout={
             props.layoutMode === uiResponsiveModes.mobile
               ? notationLegendTableLayouts.compact
@@ -431,8 +470,17 @@ function SettingsStoryHarness(props: {
           }
         />
         <BackupCollapsibleBlock
+          title="MKXL"
+          exportLabel="Create backup"
           disclosureState={disclosureState}
+          importLabel="Restore from backup"
+          sourceSurface="storybook-settings"
+          sourceFocusTarget="storybook-backup"
           exportAvailability={{ available: true }}
+          importAvailability={{ available: true }}
+          localStateSummary={mkxlLocalStateSummary}
+          operationState={props.initialBackupOperationState}
+          validationResult={{ status: backupValidationStatuses.none }}
           exportDialog={{
             cancelLabel: "Cancel",
             confirmLabel: "Download file",
@@ -452,9 +500,28 @@ function SettingsStoryHarness(props: {
             sourceSurface: "storybook-settings",
             title: "Create a MKXL backup",
           }}
-          exportLabel="Create backup"
-          importAvailability={{ available: true }}
-          importLabel="Restore from backup"
+          onRequestAction={({ action }) => {
+            if (
+              action === backupCollapsibleBlockActions.expand ||
+              action === backupCollapsibleBlockActions.collapse
+            ) {
+              const expanded = action === backupCollapsibleBlockActions.expand;
+              setDisclosureState(
+                expanded ? backupDisclosureStates.expanded : backupDisclosureStates.collapsed,
+              );
+              setStatus(
+                `Backup block ${
+                  expanded ? backupDisclosureStates.expanded : backupDisclosureStates.collapsed
+                }`,
+              );
+              return;
+            }
+            if (action === backupCollapsibleBlockActions.export) {
+              setActiveDialog("export");
+              return;
+            }
+            setActiveDialog("import");
+          }}
           importPreviewDialog={{
             backupCandidateId: "storybook-candidate",
             cancelLabel: "Cancel",
@@ -484,34 +551,6 @@ function SettingsStoryHarness(props: {
               status: backupValidationStatuses.valid,
             },
           }}
-          localStateSummary={mkxlLocalStateSummary}
-          onRequestAction={({ action }) => {
-            if (
-              action === backupCollapsibleBlockActions.expand ||
-              action === backupCollapsibleBlockActions.collapse
-            ) {
-              const expanded = action === backupCollapsibleBlockActions.expand;
-              setDisclosureState(
-                expanded ? backupDisclosureStates.expanded : backupDisclosureStates.collapsed,
-              );
-              setStatus(
-                `Backup block ${
-                  expanded ? backupDisclosureStates.expanded : backupDisclosureStates.collapsed
-                }`,
-              );
-              return;
-            }
-            if (action === backupCollapsibleBlockActions.export) {
-              setActiveDialog("export");
-              return;
-            }
-            setActiveDialog("import");
-          }}
-          operationState={props.initialBackupOperationState}
-          sourceFocusTarget="storybook-backup"
-          sourceSurface="storybook-settings"
-          title="MKXL"
-          validationResult={{ status: backupValidationStatuses.none }}
         />
         <div aria-live="polite">
           <StatusMessage>{status}</StatusMessage>
@@ -540,14 +579,33 @@ function FirstLaunchStoryHarness(props: {
       <main className="w-full max-w-3xl">
         <FirstLaunchSetupForm
           confirmAvailable
+          title="Your preferences"
           confirmLabel="Open catalog"
+          sourceSurface="storybook-first-launch"
           description="Choose a starting game, interface language, and button labels. You can change them later."
+          languageSwitcher={{
+            availableLanguages: languageOptions,
+            label: "Interface language",
+            onRequestSelectLanguage: ({ value }) => setLanguage(value),
+            selectedLanguage: language,
+            sourceSurface: "storybook-first-launch",
+          }}
           displayModeSwitcher={{
             availableDisplayModes: displayModeOptions,
             label: "Button labels",
             onRequestSelectDisplayMode: ({ value }) => setDisplayMode(value),
             selectedDisplayMode: displayMode,
             sourceSurface: "storybook-first-launch",
+          }}
+          notationLegend={{
+            caption: "Preview",
+            layout:
+              props.layoutMode === uiResponsiveModes.desktop
+                ? notationLegendTableLayouts.table
+                : notationLegendTableLayouts.stacked,
+            legendRows: createNotationLegendRows([displayMode]),
+            markersHeaderLabel: "Buttons",
+            modeHeaderLabel: "Format",
           }}
           gameSwitcher={{
             availableGames: games,
@@ -563,25 +621,6 @@ function FirstLaunchStoryHarness(props: {
             selectedGameId: gameId,
             sourceSurface: "storybook-first-launch",
           }}
-          languageSwitcher={{
-            availableLanguages: languageOptions,
-            label: "Interface language",
-            onRequestSelectLanguage: ({ value }) => setLanguage(value),
-            selectedLanguage: language,
-            sourceSurface: "storybook-first-launch",
-          }}
-          notationLegend={{
-            caption: "Preview",
-            layout:
-              props.layoutMode === uiResponsiveModes.desktop
-                ? notationLegendTableLayouts.table
-                : notationLegendTableLayouts.stacked,
-            legendRows: createNotationLegendRows([displayMode]),
-            markersHeaderLabel: "Buttons",
-            modeHeaderLabel: "Format",
-          }}
-          sourceSurface="storybook-first-launch"
-          title="Your preferences"
         />
       </main>
     </Frame>
@@ -783,15 +822,15 @@ export const ControllerActivation: Story = {
   render: (args) => (
     <Frame contrast={args.contrast} layoutMode={args.layoutMode} theme={args.theme}>
       <ControllerAccessGate
+        title="Controller required"
+        layoutMode={args.layoutMode}
+        statusLabel="Press any controller button"
+        state={controllerAccessStates.awaitingGesture}
         description="The first gesture activates Gamepad access. Release all controls before navigation begins."
         hints={[
           { inputLabel: "A / Cross", label: "Activate controller" },
           { inputLabel: "Menu", label: "Open global menu after activation" },
         ]}
-        layoutMode={args.layoutMode}
-        state={controllerAccessStates.awaitingGesture}
-        statusLabel="Press any controller button"
-        title="Controller required"
       />
     </Frame>
   ),

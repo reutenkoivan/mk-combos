@@ -119,6 +119,24 @@ describe("@mk-combos/mk1-builder runtime", () => {
 
     expect(replay.ok).toBe(true);
     expect(BuilderReplayResultSchema.parse(replay)).toEqual(replay);
+    if (!replay.ok) {
+      throw new Error("Seeded replay should be valid.");
+    }
+    expect(replay.originalPath.map((step) => step.label)).toEqual([
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    ]);
+    expect(replay.acceptedPath.map((step) => step.label)).toEqual([
+      "Scorpion Quick Strike",
+      "Scorpion Rising Launcher",
+      "Cyrax Kameo Assist",
+      "Scorpion Finisher",
+    ]);
+    expect(replay.transitions.map((transition) => transition.step.label)).toEqual(
+      replay.acceptedPath.map((step) => step.label),
+    );
   });
 
   it("converts invalid replay into stale or invalid combo state", () => {

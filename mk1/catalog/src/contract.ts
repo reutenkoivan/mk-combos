@@ -5,9 +5,11 @@ import {
 } from "./context/value";
 import {
   mk1CatalogFilterIds,
+  mk1CatalogFilterQueryKeys,
   mk1CatalogMultiSelectFilterIds,
-  mk1CatalogRangeFilterIds,
+  mk1CatalogSources,
 } from "./filters/value";
+import { mk1CatalogRouteStepEmphases, mk1CatalogRouteStepKinds } from "./summary/value";
 
 export const mk1CatalogContractGroups = {
   context: {
@@ -28,6 +30,7 @@ export const mk1CatalogContractGroups = {
   summary: {
     schema: "@mk-combos/mk1-catalog/summary/schema",
     type: "@mk-combos/mk1-catalog/summary/type",
+    value: "@mk-combos/mk1-catalog/summary/value",
   },
 } as const;
 
@@ -37,9 +40,12 @@ export const mkCombosMk1Catalog = {
   valueSets: {
     mk1CatalogContextStatuses,
     mk1CatalogFilterIds,
+    mk1CatalogFilterQueryKeys,
     mk1CatalogMultiSelectFilterIds,
     mk1CatalogOptionAvailabilities,
-    mk1CatalogRangeFilterIds,
     mk1CatalogRecoveryCodes,
+    mk1CatalogRouteStepEmphases,
+    mk1CatalogRouteStepKinds,
+    mk1CatalogSources,
   },
 } as const;

@@ -1,13 +1,42 @@
-import { act, render, screen } from "@mk-combos/contracts/test/unit/react";
+import { languageCodes, themePreferences } from "@mk-combos/contracts/settings/value";
+import { act, fireEvent, render, screen, waitFor } from "@mk-combos/contracts/test/unit/react";
 import { uiResponsiveModes } from "@mk-combos/ui/components/value";
 import { uiContrastModes, uiDensityModes, uiThemeModes } from "@mk-combos/ui/tokens/value";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { AppProviders, useAppResponsiveMode } from "./provider";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { useLocalStateObservableState, useLocalStateSource } from "../local-state/provider";
+import { createDefaultLocalAppState } from "../local-state/runtime";
+import { PersistedLocalStateSchema } from "../local-state/schema";
+import {
+  localStateHydrationStatuses,
+  localStateStorageKey,
+  localStateStorageVersion,
+} from "../local-state/value";
+import { systemDarkThemeMediaQuery } from "../theme/value";
+import { AppProviders, useAppResponsiveMode, useAppUiTheme } from "./provider";
 
 type MockMediaQuery = ReturnType<typeof createMockMediaQuery>;
 
 function ResponsiveModeConsumer() {
   return <span data-testid="app-responsive-mode">{useAppResponsiveMode()}</span>;
+}
+
+function UiThemeConsumer() {
+  return <span data-testid="app-ui-theme">{useAppUiTheme()}</span>;
+}
+
+function ThemePreferenceConsumer() {
+  const localState = useLocalStateObservableState();
+  const source = useLocalStateSource();
+
+  return (
+    <button
+      type="button"
+      disabled={localState.hydrationStatus !== localStateHydrationStatuses.ready}
+      onClick={() => source.updateSettings({ themePreference: themePreferences.light })}
+    >
+      Use light theme
+    </button>
+  );
 }
 
 function createMockMediaQuery(media: string, initialMatches: boolean) {
@@ -36,14 +65,23 @@ function createMockMediaQuery(media: string, initialMatches: boolean) {
 describe("AppProviders", () => {
   const originalMatchMedia = globalThis.window.matchMedia;
 
+  beforeEach(() => {
+    globalThis.window.localStorage.clear();
+  });
+
   afterEach(() => {
+    globalThis.window.localStorage.clear();
     Object.defineProperty(globalThis.window, "matchMedia", {
       configurable: true,
       value: originalMatchMedia,
     });
   });
 
-  const installMatchMedia = (desktop: MockMediaQuery, tablet: MockMediaQuery) => {
+  const installMatchMedia = (
+    desktop: MockMediaQuery,
+    tablet: MockMediaQuery,
+    systemDark = createMockMediaQuery(systemDarkThemeMediaQuery, true),
+  ) => {
     Object.defineProperty(globalThis.window, "matchMedia", {
       configurable: true,
       value: (query: string) => {
@@ -52,6 +90,9 @@ describe("AppProviders", () => {
         }
         if (query === "(min-width: 40rem)") {
           return tablet.query;
+        }
+        if (query === systemDarkThemeMediaQuery) {
+          return systemDark.query;
         }
         throw new Error(`Unexpected media query: ${query}`);
       },
@@ -98,6 +139,84 @@ describe("AppProviders", () => {
     view.unmount();
     expect(desktop.query.removeEventListener).toHaveBeenCalledTimes(1);
     expect(tablet.query.removeEventListener).toHaveBeenCalledTimes(1);
+  });
+
+  it("projects system color-scheme changes through the UI root", () => {
+    const desktop = createMockMediaQuery("(min-width: 70rem)", true);
+    const tablet = createMockMediaQuery("(min-width: 40rem)", true);
+    const systemDark = createMockMediaQuery(systemDarkThemeMediaQuery, false);
+    installMatchMedia(desktop, tablet, systemDark);
+
+    const view = render(
+      <AppProviders>
+        <UiThemeConsumer />
+      </AppProviders>,
+    );
+    const root = view.container.firstElementChild;
+
+    expect(root?.getAttribute("data-ui-theme")).toBe(uiThemeModes.light);
+    expect(screen.getByTestId("app-ui-theme").textContent).toBe(uiThemeModes.light);
+
+    act(() => systemDark.emit(true));
+    expect(root?.getAttribute("data-ui-theme")).toBe(uiThemeModes.dark);
+    expect(screen.getByTestId("app-ui-theme").textContent).toBe(uiThemeModes.dark);
+
+    view.unmount();
+    expect(systemDark.query.removeEventListener).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps an explicit persisted theme independent from system changes", async () => {
+    const state = createDefaultLocalAppState(languageCodes.EN).state;
+    globalThis.window.localStorage.setItem(
+      localStateStorageKey,
+      JSON.stringify(
+        PersistedLocalStateSchema.parse({
+          firstLaunchCompleted: true,
+          state: {
+            ...state,
+            settings: {
+              ...state.settings,
+              themePreference: themePreferences.light,
+            },
+          },
+          version: localStateStorageVersion,
+        }),
+      ),
+    );
+    const desktop = createMockMediaQuery("(min-width: 70rem)", true);
+    const tablet = createMockMediaQuery("(min-width: 40rem)", true);
+    const systemDark = createMockMediaQuery(systemDarkThemeMediaQuery, true);
+    installMatchMedia(desktop, tablet, systemDark);
+
+    const view = render(<AppProviders>Explicitly themed route</AppProviders>);
+    const root = view.container.firstElementChild;
+
+    await waitFor(() => expect(root?.getAttribute("data-ui-theme")).toBe(uiThemeModes.light));
+
+    act(() => systemDark.emit(false));
+    expect(root?.getAttribute("data-ui-theme")).toBe(uiThemeModes.light);
+  });
+
+  it("applies an explicit theme setting immediately", async () => {
+    const desktop = createMockMediaQuery("(min-width: 70rem)", true);
+    const tablet = createMockMediaQuery("(min-width: 40rem)", true);
+    const systemDark = createMockMediaQuery(systemDarkThemeMediaQuery, true);
+    installMatchMedia(desktop, tablet, systemDark);
+
+    const view = render(
+      <AppProviders>
+        <ThemePreferenceConsumer />
+      </AppProviders>,
+    );
+    const root = view.container.firstElementChild;
+    const button = screen.getByRole("button", { name: "Use light theme" });
+
+    await waitFor(() => expect(button).toHaveProperty("disabled", false));
+    expect(root?.getAttribute("data-ui-theme")).toBe(uiThemeModes.dark);
+
+    fireEvent.click(button);
+
+    expect(root?.getAttribute("data-ui-theme")).toBe(uiThemeModes.light);
   });
 
   it("shares the computed responsive mode with descendants without another subscription", () => {

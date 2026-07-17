@@ -1,16 +1,32 @@
+import { CatalogFilterChangeSchema } from "@mk-combos/contracts/catalog-filter/schema";
+import type { CatalogFilterChange } from "@mk-combos/contracts/catalog-filter/type";
+import { catalogFilterChangeKinds } from "@mk-combos/contracts/catalog-filter/value";
 import type { ValidationMessage } from "@mk-combos/contracts/result/type";
 import { validationSeverities } from "@mk-combos/contracts/result/value";
 import type { Mk1SeededCombo } from "@mk-combos/mk1-data/combos/type";
 
-import { Mk1CatalogFiltersSchema } from "./schema";
+import {
+  Mk1CatalogFilterIdSchema,
+  Mk1CatalogFilterQuerySchema,
+  Mk1CatalogFiltersSchema,
+  Mk1CatalogPlainFilterQuerySchema,
+} from "./schema";
 import type {
   Mk1CatalogFilterFacet,
+  Mk1CatalogFilterOption,
+  Mk1CatalogFilterQuery,
   Mk1CatalogFilters,
   Mk1CatalogMultiSelectFilterId,
+  Mk1CatalogSource,
 } from "./type";
-import { mk1CatalogMultiSelectFilterIds, mk1CatalogRangeFilterIds } from "./value";
+import { mk1CatalogMultiSelectFilterIds, mk1CatalogSources } from "./value";
 
-export const emptyMk1CatalogFilters = {} as const satisfies Mk1CatalogFilters;
+const emptyMk1CatalogFilters = {} as const satisfies Mk1CatalogFilters;
+
+type FilterRecovery = {
+  readonly filters: Mk1CatalogFilters;
+  readonly messages: readonly ValidationMessage[];
+};
 
 const toMessage = (code: string, message: string, path: readonly string[]): ValidationMessage => ({
   severity: validationSeverities.warning,
@@ -19,286 +35,358 @@ const toMessage = (code: string, message: string, path: readonly string[]): Vali
   path,
 });
 
-const uniqueValues = (values: readonly string[]): readonly string[] => {
+const toList = (value: string | readonly string[] | undefined): readonly string[] =>
+  value === undefined ? [] : typeof value === "string" ? [value] : value;
+
+const presentUnique = (value: string | readonly string[] | undefined): readonly string[] => {
+  const values: string[] = [];
   const seen = new Set<string>();
-  const unique: string[] = [];
 
-  for (const value of values) {
-    const trimmed = value.trim();
-
-    if (!trimmed || seen.has(trimmed)) {
-      continue;
+  for (const entry of toList(value)) {
+    const trimmed = entry.trim();
+    if (trimmed && !seen.has(trimmed)) {
+      seen.add(trimmed);
+      values.push(trimmed);
     }
-
-    seen.add(trimmed);
-    unique.push(trimmed);
   }
 
-  return unique;
+  return values;
 };
 
-const toList = (value: string | readonly string[] | undefined): readonly string[] => {
-  if (value === undefined) {
-    return [];
-  }
-
-  return typeof value === "string" ? [value] : value;
-};
-
-const numbersFromRoute = (
-  values: readonly string[],
-  path: string,
-  messages: ValidationMessage[],
-): readonly number[] => {
-  const parsedValues: number[] = [];
-
-  for (const value of values) {
-    const parsed = Number(value);
-
-    if (!Number.isFinite(parsed)) {
-      messages.push(
-        toMessage("mk1.catalog.invalid_filter", "Route filter number is invalid.", [path]),
-      );
-      continue;
-    }
-
-    parsedValues.push(parsed);
-  }
-
-  return [...new Set(parsedValues)];
-};
-
-const firstNumberFromRoute = (
+const parseNumbers = (
   value: string | readonly string[] | undefined,
   path: string,
   messages: ValidationMessage[],
-): number | undefined => {
-  const first = toList(value).find((entry) => entry.trim().length > 0);
+): readonly number[] => {
+  const numbers: number[] = [];
 
-  if (!first) {
-    return undefined;
+  for (const entry of presentUnique(value)) {
+    if (!/^\d+$/u.test(entry)) {
+      messages.push(toMessage("mk1.catalog.invalid_filter", `${path} must be an integer.`, [path]));
+      continue;
+    }
+    numbers.push(Number(entry));
   }
 
-  const parsed = Number(first);
-
-  if (!Number.isFinite(parsed)) {
-    messages.push(
-      toMessage("mk1.catalog.invalid_filter", "Route damage filter is invalid.", [path]),
-    );
-    return undefined;
-  }
-
-  return parsed;
+  return numbers;
 };
 
-export const recoverMk1CatalogFilters = (
-  input: unknown = {},
-): {
-  readonly filters: Mk1CatalogFilters;
-  readonly messages: readonly ValidationMessage[];
-} => {
-  const parsed = Mk1CatalogFiltersSchema.safeParse(input);
+const withoutPersonalSource = (filters: Mk1CatalogFilters): FilterRecovery => {
+  if (!filters.sources?.includes(mk1CatalogSources.personal)) {
+    return { filters, messages: [] };
+  }
 
-  if (parsed.success) {
+  const sources = filters.sources.filter((source) => source !== mk1CatalogSources.personal);
+  return {
+    filters: {
+      ...filters,
+      sources: sources.length > 0 ? sources : undefined,
+    },
+    messages: [
+      toMessage(
+        "mk1.catalog.personal_source_unavailable",
+        "Personal combos are not available in the catalog yet.",
+        [mk1CatalogMultiSelectFilterIds.source],
+      ),
+    ],
+  };
+};
+
+export const recoverMk1CatalogFilters = (input: unknown = {}): FilterRecovery => {
+  const parsed = Mk1CatalogFiltersSchema.safeParse(input);
+  if (!parsed.success) {
     return {
-      filters: parsed.data,
-      messages: [],
+      filters: emptyMk1CatalogFilters,
+      messages: parsed.error.issues.map((issue) =>
+        toMessage(
+          "mk1.catalog.invalid_filters",
+          issue.message,
+          issue.path.map((segment) => String(segment)),
+        ),
+      ),
     };
   }
 
-  return {
-    filters: emptyMk1CatalogFilters,
-    messages: parsed.error.issues.map((issue) =>
-      toMessage(
-        "mk1.catalog.invalid_filters",
-        issue.message,
-        issue.path.map((segment) => String(segment)),
+  return withoutPersonalSource(parsed.data);
+};
+
+export const parseMk1CatalogFilterQuery = (input: unknown): FilterRecovery => {
+  const query = Mk1CatalogPlainFilterQuerySchema.safeParse(input);
+  if (!query.success) {
+    return {
+      filters: emptyMk1CatalogFilters,
+      messages: query.error.issues.map((issue) =>
+        toMessage(
+          "mk1.catalog.invalid_filter_query",
+          issue.message,
+          issue.path.map((segment) => String(segment)),
+        ),
       ),
-    ),
-  };
-};
+    };
+  }
 
-export const parseMk1CatalogFiltersFromRouteQuery = (query: {
-  starter?: string | readonly string[];
-  position?: string | readonly string[];
-  meter?: string | readonly string[];
-  damageMin?: string | readonly string[];
-  damageMax?: string | readonly string[];
-  difficulty?: string | readonly string[];
-  routeType?: string | readonly string[];
-  tag?: string | readonly string[];
-}) => {
   const messages: ValidationMessage[] = [];
-  const filters = {
-    starter: uniqueValues(toList(query.starter)),
-    position: uniqueValues(toList(query.position)),
-    meter: numbersFromRoute(uniqueValues(toList(query.meter)), "meter", messages),
-    difficulty: uniqueValues(toList(query.difficulty)),
-    routeType: uniqueValues(toList(query.routeType)),
-    tags: uniqueValues(toList(query.tag)),
-    damage: {
-      min: firstNumberFromRoute(query.damageMin, "damageMin", messages),
-      max: firstNumberFromRoute(query.damageMax, "damageMax", messages),
-    },
+  const positions = presentUnique(query.data.position);
+  const meter = parseNumbers(query.data.meter, "meter", messages);
+  const difficulties = presentUnique(query.data.difficulty);
+  const routeClasses = presentUnique(query.data.routeClass);
+  const sources = presentUnique(query.data.source);
+  const candidate = {
+    ...(positions.length > 0 ? { positions } : {}),
+    ...(meter.length > 0 ? { meter } : {}),
+    ...(difficulties.length > 0 ? { difficulties } : {}),
+    ...(routeClasses.length > 0 ? { routeClasses } : {}),
+    ...(sources.length > 0 ? { sources } : {}),
   };
-  const compactFilters = {
-    ...(filters.starter.length > 0 ? { starter: filters.starter } : {}),
-    ...(filters.position.length > 0 ? { position: filters.position } : {}),
-    ...(filters.meter.length > 0 ? { meter: filters.meter } : {}),
-    ...(filters.difficulty.length > 0 ? { difficulty: filters.difficulty } : {}),
-    ...(filters.routeType.length > 0 ? { routeType: filters.routeType } : {}),
-    ...(filters.tags.length > 0 ? { tags: filters.tags } : {}),
-    ...(filters.damage.min !== undefined || filters.damage.max !== undefined
-      ? { damage: filters.damage }
-      : {}),
-  };
-  const recovered = recoverMk1CatalogFilters(compactFilters);
+  const recovered = recoverMk1CatalogFilters(candidate);
 
-  return {
-    filters: recovered.filters,
-    messages: [...messages, ...recovered.messages],
-  };
+  return { filters: recovered.filters, messages: [...messages, ...recovered.messages] };
 };
 
-export const serializeMk1CatalogFiltersToRouteQuery = (
+export const serializeMk1CatalogFilterQuery = (
   filters: Mk1CatalogFilters = {},
-): Record<string, string | readonly string[]> => {
+): Mk1CatalogFilterQuery => {
   const recovered = recoverMk1CatalogFilters(filters).filters;
-  const query: Record<string, string | readonly string[]> = {};
-
-  if (recovered.starter?.length) {
-    query.starter = recovered.starter;
-  }
-  if (recovered.position?.length) {
-    query.position = recovered.position;
-  }
-  if (recovered.meter?.length) {
-    query.meter = recovered.meter.map((value) => String(value));
-  }
-  if (recovered.difficulty?.length) {
-    query.difficulty = recovered.difficulty;
-  }
-  if (recovered.routeType?.length) {
-    query.routeType = recovered.routeType;
-  }
-  if (recovered.tags?.length) {
-    query.tag = recovered.tags;
-  }
-  if (recovered.damage?.min !== undefined) {
-    query.damageMin = String(recovered.damage.min);
-  }
-  if (recovered.damage?.max !== undefined) {
-    query.damageMax = String(recovered.damage.max);
-  }
-
-  return query;
+  return Mk1CatalogFilterQuerySchema.parse({
+    position: recovered.positions,
+    meter: recovered.meter?.map(String),
+    difficulty: recovered.difficulties,
+    routeClass: recovered.routeClasses,
+    source: recovered.sources,
+  });
 };
+
+const toggleDesiredValue = <T>(
+  values: readonly T[] | undefined,
+  value: T,
+  selected: boolean,
+): readonly T[] | undefined => {
+  const current = values ?? [];
+  const next = selected
+    ? current.includes(value)
+      ? current
+      : [...current, value]
+    : current.filter((entry) => entry !== value);
+  return next.length > 0 ? next : undefined;
+};
+
+const invalidChange = (
+  filters: Mk1CatalogFilters,
+  filterId: string | undefined,
+  message: string,
+): FilterRecovery => ({
+  filters,
+  messages: [
+    toMessage("mk1.catalog.invalid_filter_change", message, filterId ? [filterId] : ["filters"]),
+  ],
+});
+
+const clearFacet = (filters: Mk1CatalogFilters, filterId: string): FilterRecovery => {
+  const parsed = Mk1CatalogFilterIdSchema.safeParse(filterId);
+  if (!parsed.success) {
+    return invalidChange(filters, filterId, "MK1 catalog filter does not exist.");
+  }
+  switch (parsed.data) {
+    case mk1CatalogMultiSelectFilterIds.position:
+      return { filters: { ...filters, positions: undefined }, messages: [] };
+    case mk1CatalogMultiSelectFilterIds.meter:
+      return { filters: { ...filters, meter: undefined }, messages: [] };
+    case mk1CatalogMultiSelectFilterIds.difficulty:
+      return { filters: { ...filters, difficulties: undefined }, messages: [] };
+    case mk1CatalogMultiSelectFilterIds.routeClass:
+      return { filters: { ...filters, routeClasses: undefined }, messages: [] };
+    case mk1CatalogMultiSelectFilterIds.source:
+      return { filters: { ...filters, sources: undefined }, messages: [] };
+  }
+};
+
+const toggleOption = (
+  filters: Mk1CatalogFilters,
+  change: Extract<CatalogFilterChange, { kind: typeof catalogFilterChangeKinds.toggleOption }>,
+): FilterRecovery => {
+  const filterId = Mk1CatalogFilterIdSchema.safeParse(change.filterId);
+  if (!filterId.success) {
+    return invalidChange(filters, change.filterId, "MK1 catalog option filter does not exist.");
+  }
+
+  let candidate: unknown;
+  switch (filterId.data) {
+    case mk1CatalogMultiSelectFilterIds.position:
+      candidate = {
+        ...filters,
+        positions: toggleDesiredValue(filters.positions, change.value, change.selected),
+      };
+      break;
+    case mk1CatalogMultiSelectFilterIds.meter: {
+      if (!/^\d+$/u.test(change.value)) {
+        return invalidChange(filters, change.filterId, "Meter must be a non-negative integer.");
+      }
+      candidate = {
+        ...filters,
+        meter: toggleDesiredValue(filters.meter, Number(change.value), change.selected),
+      };
+      break;
+    }
+    case mk1CatalogMultiSelectFilterIds.difficulty:
+      candidate = {
+        ...filters,
+        difficulties: toggleDesiredValue(filters.difficulties, change.value, change.selected),
+      };
+      break;
+    case mk1CatalogMultiSelectFilterIds.routeClass:
+      candidate = {
+        ...filters,
+        routeClasses: toggleDesiredValue(filters.routeClasses, change.value, change.selected),
+      };
+      break;
+    case mk1CatalogMultiSelectFilterIds.source:
+      if (change.selected && change.value === mk1CatalogSources.personal) {
+        return invalidChange(filters, change.filterId, "Personal combos are not available yet.");
+      }
+      candidate = {
+        ...filters,
+        sources: toggleDesiredValue(filters.sources, change.value, change.selected),
+      };
+      break;
+  }
+
+  const parsed = Mk1CatalogFiltersSchema.safeParse(candidate);
+  return parsed.success
+    ? withoutPersonalSource(parsed.data)
+    : invalidChange(filters, change.filterId, parsed.error.issues[0]?.message ?? "Invalid option.");
+};
+
+export const applyMk1CatalogFilterChange = (
+  input: unknown,
+  change: CatalogFilterChange,
+): FilterRecovery => {
+  const recovered = recoverMk1CatalogFilters(input);
+  const parsedChange = CatalogFilterChangeSchema.safeParse(change);
+  if (!parsedChange.success) {
+    return {
+      filters: recovered.filters,
+      messages: [
+        ...recovered.messages,
+        ...invalidChange(recovered.filters, undefined, "Catalog filter change is invalid.")
+          .messages,
+      ],
+    };
+  }
+
+  const changed = (() => {
+    switch (parsedChange.data.kind) {
+      case catalogFilterChangeKinds.clearAll:
+        return { filters: emptyMk1CatalogFilters, messages: [] } satisfies FilterRecovery;
+      case catalogFilterChangeKinds.clearFacet:
+        return clearFacet(recovered.filters, parsedChange.data.filterId);
+      case catalogFilterChangeKinds.toggleOption:
+        return toggleOption(recovered.filters, parsedChange.data);
+    }
+  })();
+
+  return { filters: changed.filters, messages: [...recovered.messages, ...changed.messages] };
+};
+
+export const getMk1CatalogComboSource = (combo: Mk1SeededCombo): Mk1CatalogSource =>
+  combo.sourceIds.includes("community-combo-source")
+    ? mk1CatalogSources.community
+    : mk1CatalogSources.curated;
 
 const includesIfPresent = <T>(values: readonly T[] | undefined, value: T) =>
-  values === undefined || values.length === 0 || values.includes(value);
-
-const intersectsIfPresent = (
-  values: readonly string[] | undefined,
-  candidates: readonly string[],
-) =>
-  values === undefined ||
-  values.length === 0 ||
-  candidates.some((candidate) => values.includes(candidate));
+  values === undefined || values.includes(value);
 
 export const comboMatchesMk1CatalogFilters = (
   combo: Mk1SeededCombo,
   filters: Mk1CatalogFilters = {},
 ): boolean => {
   const recovered = recoverMk1CatalogFilters(filters).filters;
-  const damage = combo.metadata.damage;
-
-  if (!includesIfPresent(recovered.starter, combo.metadata.starter)) {
-    return false;
-  }
-  if (!includesIfPresent(recovered.position, combo.metadata.position)) {
-    return false;
-  }
-  if (!includesIfPresent(recovered.meter, combo.metadata.meter)) {
-    return false;
-  }
-  if (!includesIfPresent(recovered.difficulty, combo.metadata.difficulty)) {
-    return false;
-  }
-  if (!includesIfPresent(recovered.routeType, combo.metadata.routeType)) {
-    return false;
-  }
-  if (!intersectsIfPresent(recovered.tags, combo.metadata.tags)) {
-    return false;
-  }
-  if (recovered.damage?.min !== undefined && damage < recovered.damage.min) {
-    return false;
-  }
-  if (recovered.damage?.max !== undefined && damage > recovered.damage.max) {
-    return false;
-  }
-
-  return true;
+  return (
+    includesIfPresent(recovered.positions, combo.metadata.position) &&
+    includesIfPresent(recovered.meter, combo.metadata.meter) &&
+    includesIfPresent(recovered.difficulties, combo.metadata.difficulty) &&
+    includesIfPresent(recovered.routeClasses, combo.metadata.routeType) &&
+    includesIfPresent(recovered.sources, getMk1CatalogComboSource(combo))
+  );
 };
 
-const multiSelectFacet = (
-  combos: readonly Mk1SeededCombo[],
-  filters: Mk1CatalogFilters,
-  id: Mk1CatalogMultiSelectFilterId,
-): Mk1CatalogFilterFacet => {
+const localized = (label: string) => ({ default: label, fallback: label });
+
+const option = (
+  id: string,
+  count: number,
+  selected: boolean,
+  label = id,
+  disabled = count === 0 && !selected,
+  disabledReason?: string,
+): Mk1CatalogFilterOption => ({
+  id,
+  label: localized(label),
+  count,
+  selected,
+  disabled,
+  disabledReason: disabledReason ? localized(disabledReason) : undefined,
+});
+
+const countBy = (combos: readonly Mk1SeededCombo[], value: (combo: Mk1SeededCombo) => string) => {
   const counts = new Map<string, number>();
-  const selectedValues =
-    id === mk1CatalogMultiSelectFilterIds.tag
-      ? (filters.tags ?? [])
-      : id === mk1CatalogMultiSelectFilterIds.meter
-        ? (filters.meter ?? []).map((value) => String(value))
-        : (filters[id] ?? []).map((value) => String(value));
-
   for (const combo of combos) {
-    const values =
-      id === mk1CatalogMultiSelectFilterIds.tag
-        ? combo.metadata.tags
-        : id === mk1CatalogMultiSelectFilterIds.meter
-          ? [String(combo.metadata.meter)]
-          : [String(combo.metadata[id])];
-
-    for (const value of values) {
-      counts.set(value, (counts.get(value) ?? 0) + 1);
-    }
+    const id = value(combo);
+    counts.set(id, (counts.get(id) ?? 0) + 1);
   }
-
-  return {
-    kind: "multiSelect",
-    id,
-    options: [...counts.entries()].map(([value, count]) => ({
-      value,
-      label: value,
-      count,
-      selected: selectedValues.includes(value),
-    })),
-  };
+  return counts;
 };
+
+const facetFromCounts = (
+  id: Mk1CatalogMultiSelectFilterId,
+  counts: ReadonlyMap<string, number>,
+  selected: ReadonlySet<string>,
+): Mk1CatalogFilterFacet => ({
+  kind: "multiSelect",
+  id,
+  options: [...counts].map(([value, count]) => option(value, count, selected.has(value))),
+});
 
 export const createMk1CatalogFilterFacets = (
   combos: readonly Mk1SeededCombo[],
   filters: Mk1CatalogFilters = {},
 ): readonly Mk1CatalogFilterFacet[] => {
   const recovered = recoverMk1CatalogFilters(filters).filters;
-  const damageValues = combos.map((combo) => combo.metadata.damage);
-  const minDamage = damageValues.length > 0 ? Math.min(...damageValues) : 0;
-  const maxDamage = damageValues.length > 0 ? Math.max(...damageValues) : 0;
+  const sourceCounts = countBy(combos, getMk1CatalogComboSource);
 
   return [
-    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.starter),
-    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.position),
-    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.meter),
+    facetFromCounts(
+      mk1CatalogMultiSelectFilterIds.position,
+      countBy(combos, (combo) => combo.metadata.position),
+      new Set(recovered.positions),
+    ),
+    facetFromCounts(
+      mk1CatalogMultiSelectFilterIds.meter,
+      countBy(combos, (combo) => String(combo.metadata.meter)),
+      new Set(recovered.meter?.map(String)),
+    ),
+    facetFromCounts(
+      mk1CatalogMultiSelectFilterIds.difficulty,
+      countBy(combos, (combo) => combo.metadata.difficulty),
+      new Set(recovered.difficulties),
+    ),
+    facetFromCounts(
+      mk1CatalogMultiSelectFilterIds.routeClass,
+      countBy(combos, (combo) => combo.metadata.routeType),
+      new Set(recovered.routeClasses),
+    ),
     {
-      kind: "range",
-      id: mk1CatalogRangeFilterIds.damage,
-      min: minDamage,
-      max: maxDamage,
+      kind: "multiSelect",
+      id: mk1CatalogMultiSelectFilterIds.source,
+      options: Object.values(mk1CatalogSources).map((source) =>
+        source === mk1CatalogSources.personal
+          ? option(source, 0, false, "Personal", true, "Personal combos are coming later.")
+          : option(
+              source,
+              sourceCounts.get(source) ?? 0,
+              recovered.sources?.includes(source) ?? false,
+              source === mk1CatalogSources.curated ? "Curated" : "Community",
+            ),
+      ),
     },
-    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.difficulty),
-    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.routeType),
-    multiSelectFacet(combos, recovered, mk1CatalogMultiSelectFilterIds.tag),
   ];
 };

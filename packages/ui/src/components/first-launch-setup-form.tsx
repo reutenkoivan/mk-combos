@@ -1,7 +1,9 @@
 import type { SubmitEvent } from "react";
 
 import { useComponentActionEmitter } from "../hooks/intents";
+import { useUiRootContext } from "../internal/ui-root-context";
 import { Button } from "../primitives/button";
+import { Show } from "../primitives/conditional";
 import { StatusMessage } from "../primitives/state";
 import { uiEmphasisModes, uiToneModes } from "../tokens/value";
 import { DisplayModeSwitcher, type DisplayModeSwitcherProps } from "./display-mode-switcher";
@@ -22,6 +24,7 @@ export type FirstLaunchSetupFormProps = {
   confirmAvailable: boolean;
   confirmDisabledReason?: string;
   confirmLabel: string;
+  controllerFocusedAction?: FirstLaunchSetupFormAction;
   displayModeSwitcher: DisplayModeSwitcherProps;
   gameSwitcher: GameSwitcherProps;
   languageSwitcher: LanguageSwitcherProps;
@@ -38,6 +41,7 @@ export type FirstLaunchSetupFormProps = {
 };
 
 export function FirstLaunchSetupForm(props: FirstLaunchSetupFormProps) {
+  const { controllerFocusVisible } = useUiRootContext();
   const actionEmitter = useComponentActionEmitter<FirstLaunchSetupFormAction>({
     onRequest: props.onRequestAction,
     sourceFocusTarget: props.sourceFocusTarget,
@@ -59,43 +63,57 @@ export function FirstLaunchSetupForm(props: FirstLaunchSetupFormProps) {
 
   return (
     <form
-      aria-busy={props.saving || undefined}
+      onSubmit={handleSubmit}
       className="grid min-w-0 gap-4"
       data-ui-component="UI-CMP-006"
-      onSubmit={handleSubmit}
+      aria-busy={props.saving || undefined}
     >
-      {(props.title || props.description) && (
-        <header className="grid gap-1 pb-2">
-          {props.title && (
-            <h2 className="font-(--ui-font-display) text-xl font-semibold tracking-[-0.01em]">
-              {props.title}
-            </h2>
-          )}
-          {props.description && (
-            <p className="text-sm text-(--ui-muted-text)">{props.description}</p>
-          )}
-        </header>
-      )}
+      <Show when={Boolean(props.title || props.description)}>
+        {() => (
+          <header className="grid gap-1 pb-2">
+            <Show when={Boolean(props.title)}>
+              {() => (
+                <h2 className="font-(--ui-font-display) text-xl font-semibold tracking-[-0.01em]">
+                  {props.title}
+                </h2>
+              )}
+            </Show>
+            <Show when={Boolean(props.description)}>
+              {() => <p className="text-sm text-(--ui-muted-text)">{props.description}</p>}
+            </Show>
+          </header>
+        )}
+      </Show>
       <GameSwitcher {...props.gameSwitcher} context={gameSwitcherContexts.firstLaunch} />
       <LanguageSwitcher {...props.languageSwitcher} />
       <DisplayModeSwitcher {...props.displayModeSwitcher} />
       <NotationLegendTable {...props.notationLegend} />
-      {props.validationMessage && (
-        <StatusMessage tone={uiToneModes.destructive}>{props.validationMessage}</StatusMessage>
-      )}
-      {props.persistenceMessage && (
-        <StatusMessage tone={uiToneModes.warning}>{props.persistenceMessage}</StatusMessage>
-      )}
-      {!props.confirmAvailable && props.confirmDisabledReason && (
-        <StatusMessage tone={uiToneModes.neutral}>{props.confirmDisabledReason}</StatusMessage>
-      )}
+      <Show when={Boolean(props.validationMessage)}>
+        {() => (
+          <StatusMessage tone={uiToneModes.destructive}>{props.validationMessage}</StatusMessage>
+        )}
+      </Show>
+      <Show when={Boolean(props.persistenceMessage)}>
+        {() => <StatusMessage tone={uiToneModes.warning}>{props.persistenceMessage}</StatusMessage>}
+      </Show>
+      <Show when={!props.confirmAvailable && Boolean(props.confirmDisabledReason)}>
+        {() => (
+          <StatusMessage tone={uiToneModes.neutral}>{props.confirmDisabledReason}</StatusMessage>
+        )}
+      </Show>
       <Button
-        className="w-full sm:justify-self-end sm:w-auto"
-        disabled={!submitAvailable}
-        emphasis={uiEmphasisModes.prominent}
+        type="submit"
         loading={props.saving}
         tone={uiToneModes.accent}
-        type="submit"
+        disabled={!submitAvailable}
+        emphasis={uiEmphasisModes.prominent}
+        data-ui-focus-target={props.sourceFocusTarget}
+        className="w-full sm:justify-self-end sm:w-auto"
+        data-controller-focused={
+          controllerFocusVisible && props.controllerFocusedAction === submitAction
+            ? "true"
+            : undefined
+        }
       >
         {submitLabel}
       </Button>

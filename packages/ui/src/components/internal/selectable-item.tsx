@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode, Ref } from "react";
 
+import { useUiRootContext } from "../../internal/ui-root-context";
 import { cx } from "../../recipes/class-name";
 import { itemRecipe } from "../../recipes/item";
 import type { UiToneMode } from "../../tokens/type";
@@ -10,19 +11,24 @@ export type SelectableItemProps = {
   busy?: boolean;
   children: ReactNode;
   className?: string;
+  controllerFocused?: boolean;
   current?: boolean;
   disabled?: boolean;
+  id?: string;
   onRequestFocus?: () => void;
   onRequestPress?: () => void;
   ref?: Ref<HTMLButtonElement>;
   selected?: boolean;
   style?: CSSProperties;
+  tabIndex?: number;
   tone?: UiToneMode;
   value: string;
 };
 
 export function SelectableItem(props: SelectableItemProps) {
+  const { controllerFocusVisible } = useUiRootContext();
   const disabled = Boolean(props.disabled || props.busy);
+  const controllerFocused = controllerFocusVisible && props.controllerFocused;
   const selection = props.selected
     ? uiSelectionStates.selected
     : props.current
@@ -31,10 +37,22 @@ export function SelectableItem(props: SelectableItemProps) {
 
   return (
     <button
-      aria-busy={props.busy || undefined}
-      aria-current={props.current || undefined}
-      aria-label={props.accessibleLabel}
+      id={props.id}
+      type="button"
+      ref={props.ref}
+      disabled={disabled}
+      style={props.style}
+      tabIndex={props.tabIndex}
       aria-pressed={props.selected}
+      aria-busy={props.busy || undefined}
+      aria-label={props.accessibleLabel}
+      data-ui-selectable-item={props.value}
+      onClick={() => props.onRequestPress?.()}
+      onFocus={() => props.onRequestFocus?.()}
+      aria-current={props.current || undefined}
+      data-disabled={disabled ? "true" : undefined}
+      data-loading={props.busy ? "true" : undefined}
+      data-controller-focused={controllerFocused ? "true" : undefined}
       className={cx(
         itemRecipe({
           interactive: !disabled,
@@ -50,15 +68,6 @@ export function SelectableItem(props: SelectableItemProps) {
         }),
         props.className,
       )}
-      data-disabled={disabled ? "true" : undefined}
-      data-loading={props.busy ? "true" : undefined}
-      data-ui-selectable-item={props.value}
-      disabled={disabled}
-      onClick={() => props.onRequestPress?.()}
-      onFocus={() => props.onRequestFocus?.()}
-      ref={props.ref}
-      style={props.style}
-      type="button"
     >
       {props.children}
     </button>

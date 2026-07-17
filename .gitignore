@@ -49,6 +49,7 @@ storybook-static
 *.docx
 lefthook-local.yml
 mock/output/
+/discovery/
 
 # debug
 /dev.log

@@ -23,6 +23,16 @@ export const pickerSlotStatuses = {
   selectable: "selectable",
 } as const;
 
+export const pickerPresentationModes = {
+  commandDeck: "commandDeck",
+  standard: "standard",
+} as const;
+
+export const comboPresentationModes = {
+  commandDeck: "commandDeck",
+  standard: "standard",
+} as const;
+
 export const backupDisclosureStates = {
   collapsed: "collapsed",
   expanded: "expanded",

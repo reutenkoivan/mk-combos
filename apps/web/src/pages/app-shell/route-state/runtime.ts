@@ -1,14 +1,14 @@
-import { AppRouteSchema } from "@mk-combos/contracts/routes/schema";
-import type { AppRoute } from "@mk-combos/contracts/routes/type";
-import { appRouteKinds } from "@mk-combos/contracts/routes/value";
+import { GameRouteSchema } from "@mk-combos/contracts/routes/schema";
+import type { GameRoute } from "@mk-combos/contracts/routes/type";
+import { gameRouteKinds } from "@mk-combos/contracts/routes/value";
 import type { useMatchRoute } from "@tanstack/react-router";
 
 import { resolveInstalledGame } from "../../../game-business/installed-games/runtime";
-import type { AppShellRoute } from "./type";
+import type { AppShellCatalogRoute, AppShellRoute } from "./type";
 import { appShellOnlyRouteKinds } from "./value";
 
-function parseInstalledAppRoute(input: unknown): AppRoute | undefined {
-  const parsed = AppRouteSchema.safeParse(input);
+function parseInstalledGameRoute(input: unknown): GameRoute | undefined {
+  const parsed = GameRouteSchema.safeParse(input);
 
   if (!parsed.success) {
     return undefined;
@@ -21,10 +21,29 @@ function parseInstalledAppRoute(input: unknown): AppRoute | undefined {
   return parsed.data;
 }
 
+function parseInstalledCatalogRoute(
+  gameId: unknown,
+  characterSlug?: string,
+  specificationSlug?: string,
+): AppShellCatalogRoute | undefined {
+  const parsed = parseInstalledGameRoute({ gameId, kind: gameRouteKinds.catalog });
+
+  if (parsed?.kind !== gameRouteKinds.catalog) {
+    return undefined;
+  }
+
+  return {
+    ...parsed,
+    ...(characterSlug === undefined ? {} : { characterSlug }),
+    ...(specificationSlug === undefined ? {} : { specificationSlug }),
+  };
+}
+
 export function resolveAppShellRoute(
   matchRoute: ReturnType<typeof useMatchRoute>,
   leafRouteHasError: boolean,
   routeRevision: string,
+  routePathname = "",
 ): AppShellRoute {
   // `useMatchRoute` reads the router snapshot behind a stable callback. Keep
   // that snapshot in this resolver's data contract so React Compiler cannot
@@ -35,16 +54,50 @@ export function resolveAppShellRoute(
 
   const comboDetailParams = matchRoute({
     fuzzy: false,
-    to: "/$gameId/combos/$source/$comboId",
+    to: "/$gameId/catalog/$character/$specification/$comboId",
   });
 
   if (comboDetailParams !== false) {
-    const parsed = parseInstalledAppRoute({
+    const parsed = parseInstalledGameRoute({
+      characterSlug: comboDetailParams.character,
       comboId: comboDetailParams.comboId,
       gameId: comboDetailParams.gameId,
-      kind: appRouteKinds.comboDetail,
-      source: comboDetailParams.source,
+      kind: gameRouteKinds.comboDetail,
+      specificationSlug: comboDetailParams.specification,
     });
+
+    if (parsed !== undefined) {
+      return parsed;
+    }
+  }
+
+  const catalogResultParams = matchRoute({
+    fuzzy: false,
+    to: "/$gameId/catalog/$character/$specification",
+  });
+
+  if (catalogResultParams !== false) {
+    const parsed = parseInstalledCatalogRoute(
+      catalogResultParams.gameId,
+      catalogResultParams.character,
+      catalogResultParams.specification,
+    );
+
+    if (parsed !== undefined) {
+      return parsed;
+    }
+  }
+
+  const catalogSpecificationParams = matchRoute({
+    fuzzy: false,
+    to: "/$gameId/catalog/$character",
+  });
+
+  if (catalogSpecificationParams !== false) {
+    const parsed = parseInstalledCatalogRoute(
+      catalogSpecificationParams.gameId,
+      catalogSpecificationParams.character,
+    );
 
     if (parsed !== undefined) {
       return parsed;
@@ -54,10 +107,23 @@ export function resolveAppShellRoute(
   const catalogParams = matchRoute({ fuzzy: false, to: "/$gameId/catalog" });
 
   if (catalogParams !== false) {
-    const parsed = parseInstalledAppRoute({
-      gameId: catalogParams.gameId,
-      kind: appRouteKinds.catalog,
-    });
+    const parsed = parseInstalledCatalogRoute(catalogParams.gameId);
+
+    if (parsed !== undefined) {
+      return parsed;
+    }
+  }
+
+  const pathnameCatalogMatch = /^\/([^/]+)\/catalog(?:\/([^/]+)(?:\/([^/]+))?)?\/?$/.exec(
+    routePathname,
+  );
+
+  if (pathnameCatalogMatch?.[1]) {
+    const parsed = parseInstalledCatalogRoute(
+      pathnameCatalogMatch[1],
+      pathnameCatalogMatch[2],
+      pathnameCatalogMatch[3],
+    );
 
     if (parsed !== undefined) {
       return parsed;
@@ -67,9 +133,9 @@ export function resolveAppShellRoute(
   const listsParams = matchRoute({ fuzzy: false, to: "/$gameId/lists" });
 
   if (listsParams !== false) {
-    const parsed = parseInstalledAppRoute({
+    const parsed = parseInstalledGameRoute({
       gameId: listsParams.gameId,
-      kind: appRouteKinds.lists,
+      kind: gameRouteKinds.lists,
     });
 
     if (parsed !== undefined) {
@@ -80,22 +146,14 @@ export function resolveAppShellRoute(
   const builderParams = matchRoute({ fuzzy: false, to: "/$gameId/builder" });
 
   if (builderParams !== false) {
-    const parsed = parseInstalledAppRoute({
+    const parsed = parseInstalledGameRoute({
       gameId: builderParams.gameId,
-      kind: appRouteKinds.builder,
+      kind: gameRouteKinds.builder,
     });
 
     if (parsed !== undefined) {
       return parsed;
     }
-  }
-
-  if (matchRoute({ fuzzy: false, to: "/settings" }) !== false) {
-    return (
-      parseInstalledAppRoute({ kind: appRouteKinds.settings }) ?? {
-        kind: appShellOnlyRouteKinds.recovery,
-      }
-    );
   }
 
   if (matchRoute({ fuzzy: false, to: "/" }) !== false) {

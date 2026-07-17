@@ -20,6 +20,7 @@ export function useAppShellObservableState(source: AppShellSource): AppShellView
     const routeBreadcrumbs = getBreadcrumbs(
       source.state.route,
       source.state.activeBusiness.id,
+      source.state.language,
       copy,
     );
 
@@ -31,6 +32,7 @@ export function useAppShellObservableState(source: AppShellSource): AppShellView
   }, [
     copy,
     source.state.activeBusiness.id,
+    source.state.language,
     source.state.navigationAvailable,
     source.state.navigationPending,
     source.state.route,

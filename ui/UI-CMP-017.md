@@ -72,6 +72,13 @@
 - Long UA labels wrap без overlap.
 - Display-only mode не емітить persistence або route intents.
 
+## Step 26 Importance Presentation
+
+- Missing `importance` нормалізується до `normal` presentation.
+- `critical` row має warning border/background і stronger value typography; `normal` має стандартний divider; `secondary` використовує muted, compact typography.
+- Importance не покладається лише на color: weight, surface/border і text hierarchy змінюються разом.
+- Value, status badge й annotation wrap-ляться без fixed-height clipping.
+
 ## Канонічний Responsive і Controller-only Contract
 
 Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.

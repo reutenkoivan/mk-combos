@@ -16,6 +16,10 @@
 
 `UI-PAGE-005 Named Lists` є route-level сторінкою для локальної організації seeded і custom combos у власні тренувальні або тематичні списки.
 
+Поточна route implementation лишається placeholder. Опис списків нижче є target
+product contract; до його реалізації route не реєструє page controller scope і
+показує в connected App Shell ribbon лише global `Menu`.
+
 Named Lists підтримує:
 
 - перегляд списків для active `gameId`;
@@ -26,7 +30,7 @@ Named Lists підтримує:
 - зміну порядку combo items усередині list;
 - відкриття [`UI-PAGE-004 Combo Detail`](./UI-PAGE-004.md) зі source list context;
 - показ stale або invalid custom combo без автоматичного видалення;
-- controller navigation для index, detail, dialogs і reorder flow.
+- controller navigation для index, detail, dialogs і reorder flow після реалізації target surface.
 
 Named lists є локальними user data і scoped by active `gameId`.
 
@@ -739,37 +743,10 @@ UI-PAGE-005 Named Lists
 
 ## Поведінка controller
 
-App Shell передає semantic controller commands активній Named Lists сторінці.
-
-`UI-PAGE-005` підтримує:
-
-- `navUp`, `navDown`, `navLeft`, `navRight`: рух між header actions, list index rows, list detail items, item actions і dialog controls;
-- `confirm`: відкрити focused list, активувати focused combo item або submit focused dialog action;
-- `back`: закрити active dialog/reorder/contextual actions; якщо overlay немає, повернутися з detail layout до index або до previous safe route;
-- `openDetail`: відкрити [`UI-PAGE-004 Combo Detail`](./UI-PAGE-004.md), якщо focus на valid combo item;
-- `addToList`: відкрити page-level singleton `UI-CMP-021`, якщо focus на combo item і action available;
-- `removeFromList`: remove focused item from current list через page-level flow;
-- `openActions`: відкрити contextual actions для focused list або combo item;
-- `closePanel`: закрити `UI-CMP-021`, `UI-CMP-022`, contextual actions або reorder mode;
-- `nextTab` і `previousTab`: optional перемикання між index/detail zones, якщо layout має дві явні zones.
-
-Focus-zone rules:
-
-- list index є окремою focus zone;
-- list detail є окремою focus zone;
-- combo card actions не отримують background commands, поки dialog має focus;
-- reorder mode captures navigation до commit/cancel;
-- після dialog close focus повертається до source action або safe page target;
-- controller hints пояснюють active context, але не є єдиним способом зрозуміти доступні дії.
-
-Controller commands не мають:
-
-- змінювати global settings;
-- додавати combo у incompatible game list;
-- створювати duplicate membership;
-- видаляти combo data під час remove-from-list;
-- виконувати destructive list delete без confirmation;
-- читати Browser Gamepad API напряму.
+Поточний placeholder не має page focus graph або contextual command scope. App Shell
+обробляє лише `openGlobalMenu`, а connected ribbon містить одну команду
+`Menu`. Target list navigation, dialogs і reorder controller flows лишаються поза
+поточним implementation scope.
 
 ## Доступність і поведінка вводу
 
@@ -809,7 +786,7 @@ Controller commands не мають:
 - Display mode змінює тільки notation rendering.
 - Language змінює UI labels і localized combo summary без зміни membership/order.
 - Session-only persistence і recoverable save errors показуються через `UI-CMP-030` або equivalent system message.
-- Controller commands покривають navigation, open detail, add/remove from list, reorder, dialogs і back/close behavior.
+- Поточний placeholder не реєструє page controller scope; connected ribbon показує лише `Menu`.
 - Named Lists не читає Browser Gamepad API напряму.
 
 ## Тестові сценарії
@@ -840,10 +817,7 @@ Controller commands не мають:
 - Add-to-list dialog cancel не змінює membership.
 - Create/rename/delete dialogs повертають focus до source action.
 - `back` закриває active dialog перед navigation away.
-- Controller `openDetail` на focused combo item відкриває Combo Detail.
-- Controller `addToList` на focused combo item відкриває page-level singleton `UI-CMP-021`.
-- Controller `removeFromList` не видаляє combo data.
-- Controller reorder flow має commit і cancel paths.
+- Connected placeholder рендерить рівно одну shell-owned ribbon із `Menu`; disconnected state її приховує.
 - Session-only persistence message visible, якщо localStorage unavailable.
 
 ## Відкриті уточнення
@@ -855,10 +829,6 @@ Controller commands не мають:
 
 ## Канонічний Responsive і Controller-only Contract
 
-Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
-
-- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повну workstation composition і spatial row/column navigation;
-- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
-- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+Поточна placeholder surface рендерить responsive content, але не має
+page-owned controller targets. Її єдиний controller contract — shell `Menu`, що
+відкриває global menu без synthetic events.

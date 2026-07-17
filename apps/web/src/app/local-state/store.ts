@@ -2,7 +2,11 @@ import { GameIdSchema } from "@mk-combos/contracts/identity/schema";
 import type { GameId } from "@mk-combos/contracts/identity/type";
 import { AppSettingsSchema } from "@mk-combos/contracts/settings/schema";
 import type { AppSettings, LanguageCode } from "@mk-combos/contracts/settings/type";
-import { languageCodes, notationDisplayModes } from "@mk-combos/contracts/settings/value";
+import {
+  languageCodes,
+  notationDisplayModes,
+  themePreferences,
+} from "@mk-combos/contracts/settings/value";
 import { createStore, type StoreApi } from "zustand/vanilla";
 
 import { resolveInstalledGame } from "../../game-business/installed-games/runtime";
@@ -19,7 +23,6 @@ import {
   BrowserLocalePreferencesSchema,
   LocalStateSettingsUpdateSchema,
   PersistedLocalStateSchema,
-  SettingsReturnTargetSchema,
 } from "./schema";
 import type {
   LocalStateActionResult,
@@ -252,6 +255,7 @@ export function createLocalStateStore(options: CreateLocalStateStoreOptions = {}
           language: browserLanguage,
           lastActiveGameId: gameId,
           notationDisplayMode: notationDisplayModes.FGC,
+          themePreference: themePreferences.system,
         }),
         firstLaunchCompleted: true,
       });
@@ -336,49 +340,6 @@ export function createLocalStateStore(options: CreateLocalStateStoreOptions = {}
           [gameId]: replacement.state,
         },
       });
-    };
-
-    const setSettingsReturnTarget: LocalStateSource["setSettingsReturnTarget"] = (target) => {
-      const parsed = SettingsReturnTargetSchema.safeParse(target);
-
-      if (!parsed.success) {
-        return rejectedAction(
-          createLocalStateError(
-            localStateErrorCodes.invalidActionInput,
-            "The Settings return target is malformed.",
-          ),
-        );
-      }
-
-      const gameError = invalidInstalledGame(parsed.data.gameId);
-
-      if (gameError !== undefined) {
-        return rejectedAction(gameError);
-      }
-
-      const observable = get().observable;
-
-      set({
-        observable: {
-          ...observable,
-          settingsReturnTarget: parsed.data,
-        },
-      });
-
-      return successfulAction(observable.persistenceStatus);
-    };
-
-    const clearSettingsReturnTarget: LocalStateSource["clearSettingsReturnTarget"] = () => {
-      const observable = get().observable;
-
-      set({
-        observable: {
-          ...observable,
-          settingsReturnTarget: undefined,
-        },
-      });
-
-      return successfulAction(observable.persistenceStatus);
     };
 
     const hydrate = () => {
@@ -479,7 +440,7 @@ export function createLocalStateStore(options: CreateLocalStateStoreOptions = {}
         resolvedActiveGameId: resolveActiveGameId(prepared.state.settings),
       };
 
-      if (prepared.recoveredMissingSlices) {
+      if (parsed.migrationApplied || prepared.recoveredMissingSlices) {
         try {
           activeStorage.setItem(localStateStorageKey, serializedSnapshot(hydrated));
         } catch {
@@ -488,7 +449,9 @@ export function createLocalStateStore(options: CreateLocalStateStoreOptions = {}
             ...hydrated,
             error: createLocalStateError(
               localStateErrorCodes.storageWriteFailed,
-              "Missing game state was recovered for this session but could not be saved.",
+              parsed.migrationApplied
+                ? "Saved settings were upgraded for this session but could not be saved."
+                : "Missing game state was recovered for this session but could not be saved.",
             ),
             persistenceStatus: localStatePersistenceStatuses.sessionOnly,
           };
@@ -503,11 +466,9 @@ export function createLocalStateStore(options: CreateLocalStateStoreOptions = {}
       observable: initialObservable,
       source: {
         autoCompleteFromDeepLink,
-        clearSettingsReturnTarget,
         completeFirstLaunch,
         rememberLastActiveGame,
         replaceGameSlice,
-        setSettingsReturnTarget,
         updateSettings,
       },
     };

@@ -21,6 +21,7 @@ import {
   type UseResponsiveModeResult,
   useResponsiveMode,
 } from "@mk-combos/ui/hooks/responsive-mode";
+import { UiRoot } from "@mk-combos/ui/primitives/layout";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const requireHookResult = <Result,>(result: Result | undefined): Result => {
@@ -481,5 +482,36 @@ describe("useFocusNavigation", () => {
     expect(requireHookResult(hookResult).state.canMoveByDirection.right).toBe(false);
     act(() => requireHookResult(hookResult).methods.moveFocus(uiFocusDirections.right));
     expect(requireHookResult(hookResult).state.focusedTargetId).toBe("current");
+  });
+
+  it("keeps the logical navigation target while global controller focus is hidden", () => {
+    const scope = {
+      availableCommandIds: ["confirm"],
+      entryTargetId: "first",
+      fallbackTargetId: "first",
+      id: "hidden-controller-focus",
+      targets: [{ id: "first", neighbors: {} }],
+    } satisfies UiFocusNavigationScope;
+    let hookResult: UseFocusNavigationResult | undefined;
+
+    function Harness() {
+      hookResult = useFocusNavigation({ scope });
+      return <output>{hookResult.state.focusedTargetId}</output>;
+    }
+
+    render(
+      <UiRoot controllerFocusVisible={false}>
+        <Harness />
+      </UiRoot>,
+    );
+
+    const result = requireHookResult(hookResult);
+    expect(result.state.focusedTargetId).toBe("first");
+    expect(result.state.hasFocusedTarget).toBe(true);
+    expect(result.methods.isFocused("first")).toBe(false);
+    expect(result.methods.getTargetAttributes("first")).toEqual({
+      "data-controller-focused": undefined,
+      "data-ui-focus-target": "first",
+    });
   });
 });

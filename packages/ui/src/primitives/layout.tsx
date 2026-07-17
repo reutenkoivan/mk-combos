@@ -22,6 +22,7 @@ import {
   uiThemeModes,
   uiToneModes,
 } from "../tokens/value";
+import { Show } from "./conditional";
 import { alignClasses, densityGapClasses, justifyClasses, type UiPrimitiveProps } from "./internal";
 
 export const uiAlignments = {
@@ -61,6 +62,7 @@ export type SeparatorOrientation =
 
 export type UiRootProps = UiPrimitiveProps<HTMLDivElement> & {
   contrast?: UiContrastMode;
+  controllerFocusVisible?: boolean;
   density?: UiDensityMode;
   theme?: UiThemeMode;
   responsiveMode?: UiResponsiveMode;
@@ -71,6 +73,7 @@ export function UiRoot(props: UiRootProps) {
     children,
     className,
     contrast = uiContrastModes.standard,
+    controllerFocusVisible = true,
     density = uiDensityModes.small,
     ref,
     responsiveMode = uiResponsiveModes.desktop,
@@ -79,15 +82,16 @@ export function UiRoot(props: UiRootProps) {
   } = props;
 
   return (
-    <UiRootContext value={{ contrast, density, responsiveMode, theme }}>
+    <UiRootContext value={{ contrast, controllerFocusVisible, density, responsiveMode, theme }}>
       <div
         {...rootProps}
-        className={cx("mk-combos-ui-root min-h-full text-(--ui-text)", className)}
-        data-ui-contrast={contrast}
-        data-ui-density={density}
-        data-ui-responsive={responsiveMode}
-        data-ui-theme={theme}
         ref={ref}
+        data-ui-theme={theme}
+        data-ui-density={density}
+        data-ui-contrast={contrast}
+        data-ui-responsive={responsiveMode}
+        data-ui-controller-focus-visible={controllerFocusVisible ? "true" : "false"}
+        className={cx("mk-combos-ui-root min-h-full text-(--ui-text)", className)}
       >
         {children}
       </div>
@@ -117,6 +121,8 @@ export function Stack(props: StackProps) {
   return (
     <div
       {...stackProps}
+      ref={ref}
+      data-ui-layout="stack"
       className={cx(
         "flex min-w-0 flex-col",
         densityGapClasses[density],
@@ -124,8 +130,6 @@ export function Stack(props: StackProps) {
         justifyClasses[justify],
         className,
       )}
-      data-ui-layout="stack"
-      ref={ref}
     >
       {children}
     </div>
@@ -156,6 +160,8 @@ export function Group(props: GroupProps) {
   return (
     <div
       {...groupProps}
+      ref={ref}
+      data-ui-layout="group"
       className={cx(
         "flex min-w-0",
         wrap ? "flex-wrap" : "flex-nowrap",
@@ -164,8 +170,6 @@ export function Group(props: GroupProps) {
         justifyClasses[justify],
         className,
       )}
-      data-ui-layout="group"
-      ref={ref}
     >
       {children}
     </div>
@@ -201,6 +205,8 @@ export function Grid(props: GridProps) {
   return (
     <div
       {...gridProps}
+      ref={ref}
+      data-ui-layout="grid"
       className={cx(
         "grid min-w-0",
         gridColumnClasses[columns],
@@ -208,8 +214,6 @@ export function Grid(props: GridProps) {
         alignClasses[align],
         className,
       )}
-      data-ui-layout="grid"
-      ref={ref}
     >
       {children}
     </div>
@@ -242,9 +246,9 @@ export function Surface(props: SurfaceProps) {
   return (
     <div
       {...surfaceProps}
-      className={cx(surfaceRecipe({ density, material, placement, shape, tone }), className)}
-      data-ui-surface
       ref={ref}
+      data-ui-surface
+      className={cx(surfaceRecipe({ density, material, placement, shape, tone }), className)}
     >
       {children}
     </div>
@@ -274,14 +278,14 @@ export function Panel(props: PanelProps) {
   return (
     <div
       {...panelProps}
+      ref={ref}
+      data-ui-panel
       className={cx(
         surfaceRecipe({ density, material, placement, shape, tone }),
         "grid min-w-0",
         densityGapClasses[gap],
         className,
       )}
-      data-ui-panel
-      ref={ref}
     >
       {children}
     </div>
@@ -312,6 +316,8 @@ export function WorkstationSection(props: WorkstationSectionProps) {
   return (
     <section
       {...sectionProps}
+      ref={ref}
+      data-ui-workstation-section
       className={cx(
         surfaceRecipe({
           density: uiDensityModes.medium,
@@ -321,17 +327,17 @@ export function WorkstationSection(props: WorkstationSectionProps) {
         "grid min-w-0 gap-4 border-t border-(--ui-separator) p-0 pt-5 first:border-t-0 first:pt-0",
         className,
       )}
-      data-ui-workstation-section
-      ref={ref}
     >
       <header className="grid gap-1">
-        {eyebrow && (
-          <span className="text-xs font-medium text-(--ui-accent-strong)">{eyebrow}</span>
-        )}
+        <Show when={Boolean(eyebrow)}>
+          {() => <span className="text-xs font-medium text-(--ui-accent-strong)">{eyebrow}</span>}
+        </Show>
         <h2 className="font-(--ui-font-display) text-base font-semibold tracking-[-0.01em]">
           {title}
         </h2>
-        {description && <p className="text-sm text-(--ui-muted-text)">{description}</p>}
+        <Show when={Boolean(description)}>
+          {() => <p className="text-sm text-(--ui-muted-text)">{description}</p>}
+        </Show>
       </header>
       <div className="grid min-w-0 gap-4">{children}</div>
     </section>
@@ -359,10 +365,10 @@ export function Separator(props: SeparatorProps) {
   return (
     <hr
       {...separatorProps}
+      ref={ref}
+      data-ui-separator
       aria-orientation={orientation}
       className={cx(separatorRecipe({ density, orientation, tone }), className)}
-      data-ui-separator
-      ref={ref}
     />
   );
 }

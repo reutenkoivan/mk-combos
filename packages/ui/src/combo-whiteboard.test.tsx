@@ -34,6 +34,7 @@ import {
 } from "@mk-combos/ui/components/combo-whiteboard";
 import { uiResponsiveModes } from "@mk-combos/ui/components/value";
 import { uiFocusDirections } from "@mk-combos/ui/focus-navigation/value";
+import { UiRoot } from "@mk-combos/ui/primitives/layout";
 import { uiToneModes } from "@mk-combos/ui/tokens/value";
 import type { ComponentProps } from "react";
 import { useState } from "react";
@@ -442,10 +443,10 @@ function WhiteboardHarness(props: WhiteboardHarnessProps) {
   return (
     <ComboWhiteboard
       model={model}
-      notationDisplayMode={notationDisplayModes.FGC}
-      onRequestAction={props.onRequestAction}
       source={props.source}
       sourceSurface="builder"
+      onRequestAction={props.onRequestAction}
+      notationDisplayMode={notationDisplayModes.FGC}
     />
   );
 }
@@ -912,6 +913,13 @@ describe("ComboWhiteboard", () => {
     expect(document.querySelector('[data-meta-status="unavailable"]')?.className).toContain(
       "border-dashed",
     );
+    const contextSummaryBadge = screen
+      .getByText("Test fighter")
+      .closest<HTMLElement>("[data-ui-badge]");
+    expect(contextSummaryBadge?.className).toContain("h-auto");
+    expect(contextSummaryBadge?.className).toContain("gap-1");
+    expect(contextSummaryBadge?.className).toContain("whitespace-normal");
+    expect(contextSummaryBadge?.className).toContain("break-words");
   });
 
   it("keeps a focused step on the same 176px flow geometry with an inset-only ring", () => {
@@ -935,6 +943,29 @@ describe("ComboWhiteboard", () => {
     expect(focusedStep?.className).not.toContain("shadow-(--ui-focus-ring)");
     expect(flowNode?.style.width).toBe("176px");
     expect(flowNode?.getAttribute("style")).toBe(initialGeometry);
+  });
+
+  it("retains Whiteboard logical focus without controller presentation when globally hidden", () => {
+    const onRequestAction = vi.fn();
+    const view = render(
+      <UiRoot controllerFocusVisible={false}>
+        <WhiteboardHarness onRequestAction={onRequestAction} source={makeSource()} />
+      </UiRoot>,
+    );
+    const step = view.container.querySelector<HTMLElement>(
+      '[data-ui-combo-whiteboard-step="step-1"]',
+    );
+    const stepControl = step?.querySelector<HTMLButtonElement>("button");
+
+    expect(stepControl).toBeTruthy();
+    if (stepControl) fireEvent.focus(stepControl);
+
+    expect(onRequestAction).toHaveBeenCalledWith(
+      expect.objectContaining({ action: comboWhiteboardActions.focusStep, stepId: "step-1" }),
+    );
+    expect(step?.getAttribute("data-controller-focused")).toBeNull();
+    expect(step?.getAttribute("data-focused")).toBeNull();
+    expect(step?.className).not.toContain("inset_0_0_0_4px_var(--ui-accent)");
   });
 
   it("renders all seven modes with the internal picker closed by default", () => {
@@ -1201,11 +1232,11 @@ describe("ComboWhiteboard", () => {
     const onRequestAction = vi.fn();
     render(
       <WhiteboardHarness
+        source={makeSource()}
+        onRequestAction={onRequestAction}
         initialPresentation={{
           editTarget: { gapId: "gap-1", operation: comboWhiteboardEditOperations.insert },
         }}
-        onRequestAction={onRequestAction}
-        source={makeSource()}
       />,
     );
 
@@ -1269,13 +1300,13 @@ describe("ComboWhiteboard", () => {
     const focusSpy = vi.spyOn(HTMLElement.prototype, "focus");
     render(
       <WhiteboardHarness
+        source={makeSource()}
         initialPresentation={{
           localMenu: {
             state: comboWhiteboardLocalMenuStates.open,
             target: { kind: comboWhiteboardFocusTargetKinds.step, stepId: "step-1" },
           },
         }}
-        source={makeSource()}
       />,
     );
 
@@ -1367,13 +1398,13 @@ describe("ComboWhiteboard", () => {
     });
     render(
       <WhiteboardHarness
+        source={source}
         initialPresentation={{
           localMenu: {
             state: comboWhiteboardLocalMenuStates.open,
             target: { kind: comboWhiteboardFocusTargetKinds.step, stepId: "step-1" },
           },
         }}
-        source={source}
       />,
     );
 
@@ -1409,14 +1440,14 @@ describe("ComboWhiteboard", () => {
     });
     render(
       <WhiteboardHarness
+        source={source}
+        onRequestAction={onRequestAction}
         initialPresentation={{
           localMenu: {
             state: comboWhiteboardLocalMenuStates.open,
             target: { kind: comboWhiteboardFocusTargetKinds.step, stepId: "step-1" },
           },
         }}
-        onRequestAction={onRequestAction}
-        source={source}
       />,
     );
 
@@ -1443,11 +1474,11 @@ describe("ComboWhiteboard", () => {
     const source = makeSource(comboWhiteboardModes.savingFrozen);
     const view = render(
       <WhiteboardHarness
+        source={source}
+        onRequestAction={onRequestAction}
         initialPresentation={{
           pickUp: { state: comboWhiteboardPickUpStates.pickedUp, stepId: "step-1" },
         }}
-        onRequestAction={onRequestAction}
-        source={source}
       />,
     );
 
@@ -1633,7 +1664,8 @@ describe("ComboWhiteboard", () => {
 
 describe("comboWhiteboardTargetRecipe", () => {
   it("keeps the Whiteboard controller ring inset without changing the global focus ring", () => {
-    const globalSelector = '.mk-combos-ui-root [data-controller-focused="true"]';
+    const globalSelector =
+      '.mk-combos-ui-root[data-ui-controller-focus-visible="true"] [data-controller-focused="true"]';
     const whiteboardStepSelector =
       '[data-ui-combo-whiteboard-step][data-controller-focused="true"]';
     const whiteboardConnectorSelector =
@@ -1795,7 +1827,9 @@ describe("Whiteboard and Frame Meter parent mediation", () => {
                 : whiteboardFocus.kind}
           </output>
           <ComboWhiteboard
+            source={source}
             model={whiteboardModel}
+            sourceSurface="parent-builder"
             notationDisplayMode={notationDisplayModes.FGC}
             onRequestAction={(intent) => {
               if (intent.action === comboWhiteboardActions.focusStep) {
@@ -1805,22 +1839,20 @@ describe("Whiteboard and Frame Meter parent mediation", () => {
                 });
               }
             }}
-            source={source}
-            sourceSurface="parent-builder"
           />
           <ComboFrameMeter
-            labels={frameLabels}
-            lifecycle={comboFrameMeterLifecycles.ready}
             model={frameModel}
+            labels={frameLabels}
+            snapshot={frameSnapshot}
+            sourceSurface="parent-builder"
+            sourceFocusTarget="frame-meter"
+            responsiveMode={uiResponsiveModes.desktop}
+            lifecycle={comboFrameMeterLifecycles.ready}
             onRequestAction={(intent) => {
               if (intent.action === comboFrameMeterActions.focusMatchingWhiteboardStep) {
                 whiteboardModel.methods.focusStep(intent.whiteboardStepId);
               }
             }}
-            responsiveMode={uiResponsiveModes.desktop}
-            snapshot={frameSnapshot}
-            sourceFocusTarget="frame-meter"
-            sourceSurface="parent-builder"
           />
         </>
       );

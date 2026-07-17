@@ -1,4 +1,4 @@
-import { languageCodes } from "@mk-combos/contracts/settings/value";
+import { languageCodes, themePreferences } from "@mk-combos/contracts/settings/value";
 import { fireEvent, render, screen, waitFor } from "@mk-combos/contracts/test/unit/react";
 import { describe, expect, it, vi } from "vitest";
 
@@ -14,8 +14,15 @@ function LocalStateConsumer() {
     <div>
       <span data-testid="hydration">{observable.hydrationStatus}</span>
       <span data-testid="language">{observable.appliedSettings.language}</span>
+      <span data-testid="theme">{observable.appliedSettings.themePreference}</span>
       <button type="button" onClick={() => source.updateSettings({ language: languageCodes.EN })}>
         Use English
+      </button>
+      <button
+        type="button"
+        onClick={() => source.updateSettings({ themePreference: themePreferences.light })}
+      >
+        Use light theme
       </button>
     </div>
   );
@@ -58,6 +65,7 @@ describe("LocalStateProvider", () => {
       expect(screen.getByTestId("hydration").textContent).toBe(localStateHydrationStatuses.ready),
     );
     expect(screen.getByTestId("language").textContent).toBe(languageCodes.UA);
+    expect(screen.getByTestId("theme").textContent).toBe(themePreferences.system);
     expect(document.documentElement.lang).toBe("uk");
 
     fireEvent.click(screen.getByRole("button", { name: "Use English" }));
@@ -66,6 +74,11 @@ describe("LocalStateProvider", () => {
     expect(document.documentElement.lang).toBe("en");
     expect(storage.setItem).toHaveBeenCalledTimes(1);
     expect(storedValue).not.toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Use light theme" }));
+
+    expect(screen.getByTestId("theme").textContent).toBe(themePreferences.light);
+    expect(storage.setItem).toHaveBeenCalledTimes(2);
   });
 
   it("fails clearly when either hook is read outside its provider", () => {

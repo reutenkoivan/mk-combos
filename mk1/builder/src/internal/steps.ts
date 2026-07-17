@@ -13,7 +13,7 @@ export const createMk1BuilderPathStepFromInput = (input: {
     moveId: input.moveId,
     edgeId: input.edgeId,
     nodeId: input.nodeId,
-    label: input.label ?? input.moveId,
+    label: input.label,
   });
 
 export const createMk1BuilderMovePathFromIds = (moveIds: readonly string[]): BuilderMovePath =>
@@ -22,4 +22,16 @@ export const createMk1BuilderMovePathFromIds = (moveIds: readonly string[]): Bui
 export const mergeMk1BuilderStep = (
   step: BuilderPathStep | undefined,
   fallbackStep: BuilderPathStep,
-): BuilderPathStep => BuilderPathStepSchema.parse(step ?? fallbackStep);
+): BuilderPathStep => {
+  if (!step) {
+    return BuilderPathStepSchema.parse(fallbackStep);
+  }
+
+  return BuilderPathStepSchema.parse({
+    ...fallbackStep,
+    ...step,
+    edgeId: step.edgeId ?? fallbackStep.edgeId,
+    nodeId: step.nodeId ?? fallbackStep.nodeId,
+    label: step.label === undefined || step.label === step.moveId ? fallbackStep.label : step.label,
+  });
+};

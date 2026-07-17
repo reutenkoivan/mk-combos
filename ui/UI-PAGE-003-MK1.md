@@ -2,434 +2,86 @@
 
 ## Метадані
 
-- Код: `UI-PAGE-003`
-- Варіант: `MK1`
-- Назва: `Catalog / MK1`
-- Тип: `сторінка / variant`
-- Статус деталізації: `Описано`
-- Батьківська специфікація: [UI-PAGE-003 Catalog](./UI-PAGE-003.md)
-- Батьківська мапа: [UI.md](../UI.md)
-- Батьківська сторінка: `UI-PAGE-001 App Shell`
-- Game-specific component: [`UI-CMP-009 Kameo Picker`](./UI-CMP-009.md)
-- Shared components: [`UI-CMP-007`](./UI-CMP-007.md), [`UI-CMP-010`](./UI-CMP-010.md), [`UI-CMP-011`](./UI-CMP-011.md), `UI-CMP-012`, `UI-CMP-013`, [`UI-CMP-015`](./UI-CMP-015.md), `UI-CMP-021`, `UI-CMP-029`, `UI-CMP-030`
-- Page-level singleton component: `UI-CMP-021 Add-To-List Dialog`
-- Пов'язані UX сценарії: `US-002`, `US-003`, `US-005`, `US-006`, `US-007`, `US-012`, `US-014`, `US-019`, `US-023`, `US-024`
+- Базова сторінка: [UI-PAGE-003 Catalog](./UI-PAGE-003.md)
+- Active game: `mk1`
+- Required context: `main character + kameo`
+- Game-specific picker: [`UI-CMP-009 Kameo Picker`](./UI-CMP-009.md)
 
-## Призначення
-
-`UI-PAGE-003 MK1 Catalog Variant` описує behavior Catalog, коли active game дорівнює `MK1`.
-
-Архітектурно цей variant є UI contract для behavior, який надає `mk1/catalog` через `@mk-combos/mk1-business`. Shared Catalog page не імпортує MK1 data напряму.
-
-MK1 variant веде користувача через flow:
+## Маршрути
 
 ```text
-Main character -> Kameo -> Combo list
+/mk1/catalog/
+/mk1/catalog/:character
+/mk1/catalog/:character/:kameo
 ```
 
-Variant відповідає за:
-
-- показ main character picker для `MK1` через `MK1.character` layout;
-- показ `UI-CMP-009 Kameo Picker` через `MK1.kameo` layout після вибору main character;
-- отримання combo list model для selected `character + kameo`;
-- підтримку kameo як required context selector у `UI-CMP-012 Combo List Config Module`;
-- передачу MK1 context у detail, page-level add-to-list і duplicate-to-builder flows.
-
-MK1 variant не рендерить `UI-CMP-008 Variation Picker` і не використовує `variation` як filter facet або combo context field.
-
-## Контракт Стану Variant На Рівні Сторінки
-
-Стан у власності сторінки:
-
-- selected MK1 main character, selected kameo і optional MK1 filters;
-- kameo picker focus target і filter focus target;
-- MK1 route context recovery state;
-- page-level add-to-list і duplicate source context.
-
-Підготовлені UI models для дочірніх компонентів:
-
-- `UI-CMP-007` character picker model для `MK1.character`;
-- `UI-CMP-009` kameo picker model для `MK1.kameo`;
-- `UI-CMP-012` config model із MK1 required context і optional facets;
-- combo card context із `character` і `kameo`.
-
-Сторінкові handlers / intents:
-
-- `requestSelectCharacter(payload)`, `requestSelectKameo(payload)`;
-- `requestUpdateMk1Filter(payload)`, `requestClearMk1Filters(payload)`;
-- `requestOpenMk1Detail(payload)`, `requestOpenMk1AddToList(payload)`, `requestDuplicateMk1Combo(payload)`.
-
-Бізнес-залежності:
-
-- `@mk-combos/mk1-business` catalog capabilities для options, route parsing, filtering і summaries.
-
-Не відповідає за:
-
-- direct `mk1/data` import у shared Catalog page;
-- variation або stage fields у MK1 page model;
-- browser event payloads у kameo/filter callbacks.
-
-## Дані та контекст
-
-MK1 combo data contract належить `mk1/data`. `mk1/catalog` готує summary/context для UI variant із такими полями:
-
-- `id`;
-- `game = MK1`;
-- `character`;
-- `kameo`;
-- `movePath`;
-- `cachedNotation`;
-- `damage`;
-- `meter`;
-- `position`;
-- `starter`;
-- `routeType`;
-- `difficulty`;
-- `tags`;
-- `notes.en`;
-- `notes.uk`;
-- `gameVersion`;
-- `source`.
-
-MK1 Catalog context вважається валідним, коли:
-
-- active game дорівнює `MK1`;
-- selected main character існує у MK1 seeded data;
-- selected kameo існує у MK1 kameo options;
-- visible combo list побудований тільки із combo, які відповідають selected `character + kameo`.
-
-## Анатомія
-
-Розміщення читається згори вниз як MK1 specialization загальної Catalog сторінки: required selectors стоять над filters, results ідуть нижче, add-to-list dialog відкривається поверх page content.
-
-```jsx
-<CatalogMk1VariantPage ui="UI-PAGE-003">
-  <Mk1CatalogSurface slot="UI-PAGE-001 active route">
-    <Stack name="Mk1CatalogLayout">
-      <ComboListConfigModule ui="UI-CMP-012">
-        <CharacterPicker ui="UI-CMP-007" />
-        <KameoPicker ui="UI-CMP-009" />
-
-        <FilterControlGroup ui="UI-CMP-013">
-          <FilterHeader />
-
-          <Show when={filterGroupExpanded}>
-            <FilterBody>
-              <SharedOptionalFilterFacets />
-            </FilterBody>
-          </Show>
-        </FilterControlGroup>
-      </ComboListConfigModule>
-
-      <ComboList ui="UI-CMP-010">
-        <ComboCard ui="UI-CMP-011">
-          <NotationRenderer ui="UI-CMP-015" />
-        </ComboCard>
-      </ComboList>
-
-      <Show when={hasSystemState}>
-        <SystemStateArea>
-          <EmptyState ui="UI-CMP-029" />
-          <ErrorState ui="UI-CMP-030" />
-        </SystemStateArea>
-      </Show>
-
-      <Show when={isAddToListDialogOpen}>
-        <AddToListDialog ui="UI-CMP-021" />
-      </Show>
-    </Stack>
-  </Mk1CatalogSurface>
-</CatalogMk1VariantPage>
-```
-
-Правила розміщення:
-
-- `UI-CMP-009` стоїть після selected main character context і не дублюється як optional filter.
-- На `desktop` `UI-CMP-007` і `UI-CMP-009` можуть бути сусідніми у `contextRow`; на `mobile` і `tablet` вони stack-яться згори вниз.
-- `UI-CMP-021` монтується як singleton overlay для focused card, а не як child кожної card.
-
-### MK1 Combo List Config Module
-
-`UI-CMP-012 Combo List Config Module` у MK1 variant має:
-
-- показувати `UI-CMP-007 Character Picker` для main character;
-- показувати `UI-CMP-009 Kameo Picker` після selected main character;
-- не показувати `UI-CMP-008 Variation Picker`;
-- передавати picker layout data для `MK1.character` і `MK1.kameo`;
-- скидати selected kameo, якщо route або data робить pair несумісним;
-- показувати `UI-CMP-013 Filter Control Group` із `filterHeader`, active optional-filter chips і shared optional filters;
-- показувати active config summary, якщо shared optional filters застосовані;
-- рендерити `UI-CMP-013` expanded за замовчуванням без втрати live configuration після collapse.
-
-### UI-CMP-009 Kameo Picker
-
-Детальна специфікація: [UI-CMP-009.md](./UI-CMP-009.md).
-
-`UI-CMP-009 Kameo Picker` є required game-specific picker для MK1.
-
-Picker має:
-
-- бути доступним після вибору main character;
-- показувати available MK1 kameos;
-- використовувати `MK1.kameo` layout;
-- на viewport/device class від `13.6-inch` повторювати in-game MK1 kameo select `row`/`column` positions;
-- на менших екранах дозволяти mobile і tablet reflow через `responsiveOrder`;
-- позначати selected kameo;
-- показувати slots без combo data як disabled і не selectable;
-- показувати disabled/loading state, якщо kameo options ще готуються;
-- оновлювати combo list після вибору kameo;
-- емітити kameo selection у page-level variant flow.
-
-Picker не має:
-
-- змінювати active game;
-- показувати variation options;
-- мутувати combo data;
-- відкривати combo detail напряму.
-
-### MK1 config facets
-
-`UI-CMP-012` у MK1 variant розділяє required context selectors і optional filters.
-
-Required context selectors:
-
-- character;
-- kameo;
-
-Optional filter facets:
-
-- starter;
-- position;
-- meter;
-- damage;
-- difficulty;
-- route type;
-- tags.
-
-Config module не має показувати `variation` facet або picker у MK1 variant.
-
-Kameo не дублюється як optional filter facet у `UI-CMP-013`; він належить `contextRow`.
-
-### MK1 Combo Card
-
-[`UI-CMP-011 Combo Card`](./UI-CMP-011.md) у MK1 variant має показувати:
-
-- notation через [`UI-CMP-015 Notation Renderer`](./UI-CMP-015.md);
-- main character;
-- kameo;
-- damage;
-- meter;
-- position;
-- starter;
-- route type;
-- difficulty;
-- tags;
-- localized notes snippet, якщо він потрібний для list UX.
-
-Card actions лишаються shared:
-
-- open detail;
-- request page-level add-to-list dialog;
-- duplicate seeded combo to custom combo.
-
-Page-level singleton `UI-CMP-021` отримує MK1 `character + kameo` context від Catalog після request із focused card і повертає add-to-list intent у page/app-level persistence flow.
-
-## Контракти variant flow
-
-### Page inputs
-
-- active game `MK1`;
-- available MK1 main characters;
-- available MK1 kameos;
-- seeded MK1 combos;
-- selected character;
-- selected kameo;
-- shared optional filters;
-- active language;
-- notation display mode;
-- named list availability;
-- controller command stream від App Shell.
-
-### Page events
-
-- select main character;
-- select kameo;
-- update shared optional filters;
-- remove active filter chip;
-- clear filters;
-- open combo detail;
-- request page-level add-to-list dialog from [`UI-CMP-011 Combo Card`](./UI-CMP-011.md);
-- duplicate seeded combo into builder;
-- request route fallback або not-found recovery.
-
-### Межі відповідальності
-
-MK1 variant:
-
-- не створює новий stable page code;
-- не змінює active game;
-- не рендерить variation picker;
-- не використовує `variation` у combo context;
-- не змінює seeded combo data;
-- не зберігає named lists напряму;
-- не виконує builder logic.
-
-## Мапа станів
-
-### `kameoSelection`
-
-Main character вибраний, а kameo ще потрібний або редагується.
-
-Очікуваний UI:
-
-- `UI-CMP-009 Kameo Picker` активний;
-- variation picker не показується;
-- combo list disabled або показує guidance до вибору kameo;
-- controller navigation може перейти від character picker до kameo picker.
-
-### `mk1ComboList`
-
-Selected `character + kameo` валідні, і MK1 combo list готовий.
-
-Очікуваний UI:
-
-- combo list показує тільки `MK1` combos selected main character і kameo;
-- combo cards показують kameo label;
-- shared optional filters можуть звузити list;
-- open detail, add-to-list і duplicate actions доступні відповідно до combo state.
-
-### `mk1NoKameoCombos`
-
-Selected `character + kameo` відновлені з route/deep link або stale context, але visible seeded combos для pair відсутні. У звичайному picker flow kameo без combo data має бути `disabledNoComboData` і не selectable.
-
-Очікуваний UI:
-
-- `UI-CMP-029 Empty State` пояснює, що combo для цієї kameo-пари не знайдені;
-- користувач може змінити kameo або main character;
-- clear filters доступний, якщо empty state спричинений optional filters;
-- state не виглядає як fatal error.
-
-## Навігація і потік даних
-
-### MK1 catalog flow
-
-1. Catalog отримує active game `MK1`.
-2. MK1 variant показує `UI-CMP-007 Character Picker` для main character.
-3. Користувач вибирає main character.
-4. MK1 variant показує `UI-CMP-009 Kameo Picker`.
-5. Користувач вибирає kameo.
-6. Variant переходить у `mk1ComboList`.
-7. Користувач може live-фільтрувати list, відкрити detail, add-to-list або duplicate.
-
-### MK1 configuration flow
-
-1. Користувач редагує `UI-CMP-012 Combo List Config Module`.
-2. Module показує main character, kameo, result count, active chips і shared optional filters.
-3. Користувач змінює main character, kameo або shared optional filters.
-4. Variant live-застосовує configuration до MK1 combo list.
-5. Якщо result порожній через selected kameo pair, variant показує `mk1NoKameoCombos` або shared `noFilterResults` залежно від причини.
-
-### MK1 duplicate flow
-
-1. Користувач обирає duplicate seeded combo action.
-2. Variant передає source combo id, character і kameo у app-level routing.
-3. App Shell відкриває `UI-PAGE-006 Custom Combo Builder`.
-4. Builder отримує source `movePath`, `cachedNotation` і MK1 context.
-5. Seeded combo лишається read-only.
-
-### Data flow
+Приклад canonical flow:
 
 ```text
-UI-PAGE-003 MK1 Variant
-  -> active game MK1
-  -> selected main character
-  -> selected kameo
-  -> MK1 seeded combos
-  -> combo list configuration
-  -> visible MK1 combo list
-  -> UI-PAGE-004 Combo Detail або page-level singleton UI-CMP-021
-  -> optional UI-PAGE-006 Custom Combo Builder duplicate flow
+/mk1/catalog/
+/mk1/catalog/scorpion
+/mk1/catalog/scorpion/sektor
 ```
 
-## Поведінка controller
+Character і kameo мають стабільні короткі slugs. Query не є джерелом context.
 
-MK1 variant використовує shared controller commands із `UI-PAGE-003 Catalog`.
+## Character selector
 
-Variant-specific behavior:
+- MK1 roster options і authored slots приходять із `mk1/catalog`.
+- Mobile, tablet і desktop використовують game-owned
+  `responsiveOrder ?? sourceIndex + 1` у fluid character grid; web не сортує roster
+  alphabetically і не синтезує layout.
+- Authored character `row/column` лишаються в prepared slot contract, але не
+  застосовуються як inline placement у character presentation.
+- Last MK1 character лише preselected/focused.
+- Disabled option видимий із pair-independent reason.
 
-- `navUp`, `navDown`, `navLeft`, `navRight` рухають focus між config controls і combo cards;
-- `confirm` на kameo option вибирає kameo;
-- `back` із combo list може повернути focus до kameo picker, якщо page-level UX підтримує stepped navigation;
-- `openFilters` фокусує `UI-CMP-013`, лишає або переводить його в expanded state і landing на shared optional filter, якщо це доречно;
-- `openDetail` доступний тільки для focused combo;
-- `addToList` просить focused [`UI-CMP-011 Combo Card`](./UI-CMP-011.md) відкрити page-level singleton `UI-CMP-021` з MK1 `character + kameo` context;
-- `closePanel` або `back` закриває page-level `UI-CMP-021` і повертає focus до source card focus target.
+## Kameo selector
 
-Controller commands не мають вибирати kameo, якого немає у MK1 kameo options.
+- Path character є locked main fighter.
+- `mk1/catalog` готує kameo availability та combo counts для конкретної pair.
+- Недоступна pair видима disabled і не selectable.
+- Mobile, tablet і desktop показують kameo як compact centered portrait cards;
+  visual і linear controller order визначає game-owned
+  `responsiveOrder ?? sourceIndex + 1`.
+- Authored kameo `row/column` лишаються стабільними data/public compatibility
+  facts, але Command Deck не використовує їх для visual placement або focus graph.
+- Catalog не передає picker inline return action чи нижній status hint: guidance
+  лишається у header, а locked strip продовжує показувати selected fighter.
+- Last kameo preselected тільки для того самого main character.
+- Confirm замінює route на `/mk1/catalog/:character/:kameo` без search.
 
-## Доступність і поведінка вводу
+## Result і filters
 
-- `UI-CMP-009 Kameo Picker` має visible label або accessible name.
-- Kameo options мають visible selected і focus states.
-- Kameo slots без combo data мають readable disabled reason.
-- Keyboard order іде від heading до `UI-CMP-012 Combo List Config Module`, combo list і dialogs.
-- Empty state для missing kameo-pair combos має пояснювати recovery без покладання тільки на колір.
-- Kameo picker у config module має readable label.
-- Controller hints мають називати kameo selection тільки у MK1 context.
-- MK1 variant не має показувати variation labels або variation-only hints.
+MK1 використовує спільну taxonomy:
 
-## Критерії приймання
+- Position;
+- Meter;
+- Difficulty;
+- Route class;
+- Source.
 
-- MK1 variant описаний як variant `UI-PAGE-003`, не як новий page code.
-- Active game `MK1` відкриває flow `Main character -> Kameo -> Combo list`.
-- `UI-CMP-009 Kameo Picker` є required picker після selected main character.
-- `UI-CMP-007` використовує `MK1.character` layout.
-- `UI-CMP-009` використовує `MK1.kameo` layout.
-- Wide picker layouts від `13.6-inch` зберігають in-game slot positions.
-- Compact picker layouts можуть reflow-итись через stable logical order.
-- `UI-CMP-008 Variation Picker` не рендериться у MK1 variant.
-- Combo list показує тільки MK1 combos selected main character і kameo.
-- Config module містить main character, kameo і `UI-CMP-013` з result count, active optional-filter chips і optional filters.
-- Config module не містить `variation` facet або picker.
-- MK1 combo cards показують kameo context.
-- Empty state для stale або deep-linked kameo pair без visible combos не є fatal error.
-- Detail, page-level add-to-list і duplicate flows отримують MK1 `character + kameo` context.
-- Duplicate flow не змінює seeded combo data.
+Arena, Interactables і Variation у MK1 не рендеряться. Kameo є required pathname
+context, а не facet.
 
-## Тестові сценарії
+Prepared MK1 summary містить pair context, provenance, source IDs і semantic route
+steps. Web page не має MK1-specific summary/filter branching.
 
-- Active game `MK1` відкриває MK1 variant.
-- Fresh MK1 Catalog показує character picker і не показує variation picker.
-- Вибір main character показує `UI-CMP-009 Kameo Picker`.
-- `MK1.character` wide layout відповідає in-game MK1 main fighter select positions.
-- `MK1.kameo` wide layout відповідає in-game MK1 kameo select positions.
-- Compact picker layouts не створюють overlap і не втрачають non-placeholder slots.
-- Вибір kameo показує combo list для selected main character і kameo.
-- Зміна route або data context скидає incompatible selected kameo.
-- Config module показує kameo picker як required context selector.
-- `UI-CMP-013` expanded за замовчуванням.
-- Config module не показує `variation` facet або picker.
-- Kameo picker визначає required MK1 context.
-- Disabled kameo slot без combo data не selectable і має readable disabled reason.
-- Stale або deep-linked kameo context без visible combos показує recoverable `mk1NoKameoCombos`.
-- Combo card відкриває `UI-PAGE-004 Combo Detail` із MK1 context.
-- Add-to-list action із MK1 [`UI-CMP-011 Combo Card`](./UI-CMP-011.md) відкриває page-level singleton `UI-CMP-021 Add-To-List Dialog`.
-- Duplicate action відкриває `UI-PAGE-006 Custom Combo Builder` із source MK1 combo.
-- Controller `confirm` на kameo option вибирає kameo.
-- Controller `openFilters` фокусує `UI-CMP-013` із shared optional filter.
+## Recovery
 
-## Відкриті уточнення
+- Unknown character → root selector action.
+- Unknown або incompatible kameo при valid character → kameo selector цього character.
+- Invalid pair не зберігається як last catalog.
+- Query `character`/`kameo` ігнорується без migration або redirect.
 
-- Точний default kameo behavior після вибору main character буде визначено під час route/state implementation.
-- Exact `row`/`column` coordinates для `MK1.character` і `MK1.kameo` мають бути заведені в layout registry.
-- Точний copy для `mk1NoKameoCombos` має відповідати shared empty state styles.
+## Acceptance
 
-## Канонічний Responsive і Controller-only Contract
-
-Ця surface використовує `UiResponsiveMode = mobile | tablet | desktop` і prepared focus graph із [UI.md](../UI.md). Наведені вище responsive деталі трактуються через цей канонічний контракт.
-
-- `mobile` використовує vertical-first navigation, edge-safe overlays і controller targets не менші за `44×44px`;
-- `tablet` використовує hybrid composition і explicit directional neighbors для portrait/landscape;
-- `desktop` використовує повну workstation composition і spatial row/column navigation;
-- `confirm`, `back`, overlay focus recovery, global menu/help і responsive fallback працюють без synthetic click або keyboard events;
-- native backup file picker є єдиним external-input винятком; усі внутрішні actions мають бути controller-only.
+- `scorpion/sektor` резолвиться тільки коли pair підтримується data/business scope.
+- Result trail показує `Catalog / Scorpion / Sektor` з Kameo як current crumb.
+- Character і Kameo crumbs резервують icon slots та використовують fallback glyph до появи authored MK1 assets.
+- Pair counts відповідають selected main character.
+- Character і kameo `responsiveOrder`, authored kameo coordinates та stable slot IDs
+  унікальні; coordinates зберігаються для compatibility, не presentation.
+- Catalog breadcrumb/mobile drawer, browser Back і Controller Back повертають із
+  kameo selector до `/mk1/catalog/` без inline `Back to fighters` control.
+- Optional `Apply filters` змінює лише search result route.

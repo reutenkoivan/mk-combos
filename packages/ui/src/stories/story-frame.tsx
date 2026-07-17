@@ -26,13 +26,13 @@ export function StoryFrame(props: StoryFrameProps) {
 
   return (
     <UiRoot
+      responsiveMode={responsiveMode}
+      theme={props.theme ?? uiThemeModes.dark}
+      contrast={props.contrast ?? uiContrastModes.standard}
       className={cx(
         "grid min-h-screen content-start justify-items-center bg-(--ui-window)",
         storyFramePaddingClasses[responsiveMode],
       )}
-      contrast={props.contrast ?? uiContrastModes.standard}
-      responsiveMode={responsiveMode}
-      theme={props.theme ?? uiThemeModes.dark}
     >
       <main className={cx("grid w-full max-w-6xl gap-6", props.contentClassName)}>
         {props.children}

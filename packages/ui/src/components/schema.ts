@@ -2,6 +2,7 @@ import { ComboRefSchema } from "@mk-combos/contracts/identity/schema";
 import {
   LanguageCodeSchema,
   NotationDisplayModeSchema,
+  ThemePreferenceSchema,
 } from "@mk-combos/contracts/settings/schema";
 import { z } from "zod/v4";
 
@@ -14,9 +15,11 @@ import {
   backupSliceStatuses,
   backupValidationMessageTones,
   backupValidationStatuses,
+  comboPresentationModes,
   componentInteractionReasons,
   componentOptionStatuses,
   controllerAccessStates,
+  pickerPresentationModes,
   pickerSlotStatuses,
   uiResponsiveModes,
 } from "./value";
@@ -26,6 +29,8 @@ export const UiResponsiveModeSchema = z.enum(uiResponsiveModes);
 export const ComponentOptionStatusSchema = z.enum(componentOptionStatuses);
 export const ControllerAccessStateSchema = z.enum(controllerAccessStates);
 export const PickerSlotStatusSchema = z.enum(pickerSlotStatuses);
+export const PickerPresentationModeSchema = z.enum(pickerPresentationModes);
+export const ComboPresentationModeSchema = z.enum(comboPresentationModes);
 
 export const ComponentAvailabilitySchema = z
   .object({
@@ -67,6 +72,7 @@ export const PickerSlotSchema = z
 export const PickerOptionSchema = z
   .object({
     count: z.number().int().nonnegative().optional(),
+    countLabel: z.string().min(1).optional(),
     description: z.string().min(1).optional(),
     disabledReason: z.string().min(1).optional(),
     id: z.string().min(1),
@@ -74,6 +80,15 @@ export const PickerOptionSchema = z
     imageSrc: z.string().min(1).optional(),
     label: z.string().min(1),
     shortLabel: z.string().min(1).optional(),
+  })
+  .strict();
+
+export const ComboPresentationRouteStepSchema = z
+  .object({
+    emphasis: z.string().min(1),
+    kind: z.string().min(1),
+    notation: z.array(z.string().min(1)).min(1).readonly(),
+    repetitionCount: z.number().int().positive(),
   })
   .strict();
 
@@ -86,6 +101,7 @@ export const ComboPresentationSummarySchema = z
     notation: z.array(z.array(z.string().min(1)).readonly()).readonly(),
     notesSnippet: z.string().min(1).optional(),
     ref: ComboRefSchema,
+    routeSteps: z.array(ComboPresentationRouteStepSchema).readonly().optional(),
     title: z.string().min(1),
   })
   .strict();
@@ -140,6 +156,15 @@ export const DisplayModeSwitcherOptionSchema = z
   })
   .strict();
 
+export const ThemePreferenceSwitcherOptionSchema = z
+  .object({
+    label: z.string().min(1),
+    preference: ThemePreferenceSchema,
+    shortLabel: z.string().min(1).optional(),
+    status: ComponentOptionStatusSchema,
+  })
+  .strict();
+
 export const BreadcrumbTargetSchema = z
   .object({
     params: z.record(z.string(), z.string()).optional(),
@@ -148,11 +173,19 @@ export const BreadcrumbTargetSchema = z
   })
   .strict();
 
+export const BreadcrumbItemIconSchema = z
+  .object({
+    fallbackLabel: z.string().min(1).max(3),
+    src: z.string().min(1).optional(),
+  })
+  .strict();
+
 export const BreadcrumbItemSchema = z
   .object({
     current: z.boolean(),
     disabled: z.boolean(),
     disabledReason: z.string().min(1).optional(),
+    icon: BreadcrumbItemIconSchema.optional(),
     id: z.string().min(1),
     kind: z.string().min(1),
     label: z.string().min(1),

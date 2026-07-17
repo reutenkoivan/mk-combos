@@ -45,11 +45,11 @@ export function Button(props: ButtonProps) {
   return (
     <InternalButton
       {...buttonProps}
-      data-ui-button
-      disabled={disabled}
-      loading={loading}
-      onClick={() => onRequestPress?.({ reason: "press", sourceFocusTarget })}
       type={type}
+      data-ui-button
+      loading={loading}
+      disabled={disabled}
+      onClick={() => onRequestPress?.({ reason: "press", sourceFocusTarget })}
     >
       {children}
     </InternalButton>
@@ -69,9 +69,9 @@ export function IconButton(props: IconButtonProps) {
   return (
     <Button
       {...buttonProps}
-      appearance={uiControlPresentationModes.icon}
       aria-label={label}
       data-ui-icon-button
+      appearance={uiControlPresentationModes.icon}
     >
       {children}
     </Button>

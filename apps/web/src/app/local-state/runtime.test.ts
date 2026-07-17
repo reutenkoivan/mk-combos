@@ -1,4 +1,8 @@
-import { languageCodes, notationDisplayModes } from "@mk-combos/contracts/settings/value";
+import {
+  languageCodes,
+  notationDisplayModes,
+  themePreferences,
+} from "@mk-combos/contracts/settings/value";
 import { describe, expect, it } from "vitest";
 
 import { installedGames } from "../../game-business/installed-games/value";
@@ -9,8 +13,13 @@ import {
   resolveActiveGameId,
   resolveBrowserLanguage,
 } from "./runtime";
-import { PersistedLocalStateSchema } from "./schema";
-import { localGameSliceStatuses, localStateErrorCodes } from "./value";
+import { PersistedLocalStateSchema, PersistedLocalStateV1Schema } from "./schema";
+import {
+  legacyLocalStateStorageVersion,
+  localGameSliceStatuses,
+  localStateErrorCodes,
+  localStateStorageVersion,
+} from "./value";
 
 describe("local-state runtime", () => {
   it("normalizes exact Ukrainian browser locales", () => {
@@ -36,6 +45,7 @@ describe("local-state runtime", () => {
       defaultGameId: installedGames[0].id,
       language: languageCodes.UA,
       notationDisplayMode: notationDisplayModes.FGC,
+      themePreference: themePreferences.system,
     });
     expect(Object.keys(prepared.state.games)).toEqual(installedGames.map((game) => game.id));
 
@@ -58,9 +68,10 @@ describe("local-state runtime", () => {
           defaultGameId: "future-game",
           language: languageCodes.EN,
           notationDisplayMode: notationDisplayModes.PlayStation,
+          themePreference: themePreferences.light,
         },
       },
-      version: 1,
+      version: localStateStorageVersion,
     });
 
     const prepared = preparePersistedLocalAppState(persisted);
@@ -88,9 +99,10 @@ describe("local-state runtime", () => {
           defaultGameId: "mkxl",
           language: languageCodes.EN,
           notationDisplayMode: notationDisplayModes.FGC,
+          themePreference: themePreferences.dark,
         },
       },
-      version: 1,
+      version: localStateStorageVersion,
     });
 
     const prepared = preparePersistedLocalAppState(persisted);
@@ -110,7 +122,7 @@ describe("local-state runtime", () => {
         extra: true,
         firstLaunchCompleted: false,
         state: createDefaultLocalAppState(languageCodes.EN).state,
-        version: 1,
+        version: localStateStorageVersion,
       }),
     );
 
@@ -121,5 +133,41 @@ describe("local-state runtime", () => {
       expect(malformedJson.error.code).toBe(localStateErrorCodes.malformedStorage);
       expect(extraWrapperKey.error.code).toBe(localStateErrorCodes.malformedStorage);
     }
+  });
+
+  it("migrates a strict v1 payload to v2 without changing existing settings or game data", () => {
+    const legacy = PersistedLocalStateV1Schema.parse({
+      firstLaunchCompleted: true,
+      state: {
+        games: {
+          "future-game": { opaque: { retained: true } },
+          mk1: installedGames[1].backup.createEmptySlice(),
+          mkxl: installedGames[0].backup.createEmptySlice(),
+        },
+        settings: {
+          defaultGameId: "mk1",
+          language: languageCodes.UA,
+          lastActiveGameId: "mk1",
+          notationDisplayMode: notationDisplayModes.Xbox,
+        },
+      },
+      version: legacyLocalStateStorageVersion,
+    });
+
+    const parsed = parsePersistedLocalStateText(JSON.stringify(legacy));
+
+    expect(parsed.ok).toBe(true);
+    if (!parsed.ok) {
+      return;
+    }
+
+    expect(parsed.migrationApplied).toBe(true);
+    expect(parsed.value.version).toBe(localStateStorageVersion);
+    expect(parsed.value.firstLaunchCompleted).toBe(true);
+    expect(parsed.value.state.games).toEqual(legacy.state.games);
+    expect(parsed.value.state.settings).toEqual({
+      ...legacy.state.settings,
+      themePreference: themePreferences.system,
+    });
   });
 });

@@ -1,11 +1,11 @@
 import type { GameId } from "@mk-combos/contracts/identity/type";
 import type { ValidationMessage } from "@mk-combos/contracts/result/type";
-import type { GameRoute } from "@mk-combos/contracts/routes/type";
 import type {
   AppSettings,
   GameUserState,
   LanguageCode,
   NotationDisplayMode,
+  ThemePreference,
 } from "@mk-combos/contracts/settings/type";
 import type { ReactNode } from "react";
 import type { z } from "zod/v4";
@@ -63,19 +63,17 @@ export type LocalStateObservableState = Readonly<{
   installedGameSlices: Readonly<Record<GameId, LocalStateInstalledGameSlice>>;
   persistenceStatus: LocalStatePersistenceStatus;
   resolvedActiveGameId: GameId;
-  settingsReturnTarget?: GameRoute;
 }>;
 
 export type LocalStateSource = Readonly<{
   autoCompleteFromDeepLink: (gameId: GameId) => LocalStateActionResult;
-  clearSettingsReturnTarget: () => LocalStateActionResult;
   completeFirstLaunch: (settings: AppSettings) => LocalStateActionResult;
   rememberLastActiveGame: (gameId: GameId) => LocalStateActionResult;
   replaceGameSlice: (gameId: GameId, slice: unknown) => LocalStateActionResult;
-  setSettingsReturnTarget: (target: GameRoute) => LocalStateActionResult;
   updateSettings: (update: {
     language?: LanguageCode;
     notationDisplayMode?: NotationDisplayMode;
+    themePreference?: ThemePreference;
   }) => LocalStateActionResult;
 }>;
 

@@ -9,19 +9,6 @@ export const mk1CatalogRecoveryCodes = {
   invalidKameo: "invalidKameo",
 } as const;
 
-export const mk1CatalogRouteQueryKeys = {
-  character: "character",
-  damageMax: "damageMax",
-  damageMin: "damageMin",
-  difficulty: "difficulty",
-  kameo: "kameo",
-  meter: "meter",
-  position: "position",
-  routeType: "routeType",
-  starter: "starter",
-  tag: "tag",
-} as const;
-
 export const mk1CatalogOptionAvailabilities = {
   available: "available",
   disabledNoComboData: "disabledNoComboData",

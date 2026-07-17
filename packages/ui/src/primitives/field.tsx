@@ -16,9 +16,9 @@ export function Field(props: FieldProps) {
   return (
     <div
       {...fieldProps}
-      className={cx("grid min-w-0", densityGapClasses[density], className)}
-      data-ui-field
       ref={ref}
+      data-ui-field
+      className={cx("grid min-w-0", densityGapClasses[density], className)}
     >
       {children}
     </div>
@@ -37,10 +37,10 @@ export function FieldLabel(props: FieldLabelProps) {
   return (
     <label
       {...labelProps}
-      htmlFor={htmlFor}
-      className={cx("text-xs font-medium text-(--ui-muted-text)", className)}
-      data-ui-field-label
       ref={ref}
+      htmlFor={htmlFor}
+      data-ui-field-label
+      className={cx("text-xs font-medium text-(--ui-muted-text)", className)}
     >
       {children}
     </label>
@@ -93,7 +93,14 @@ export function TextInput(props: TextInputProps) {
   return (
     <input
       {...inputProps}
+      ref={ref}
+      type={type}
+      data-ui-text-input
+      disabled={disabled}
+      readOnly={readOnly}
+      onChange={handleChange}
       aria-invalid={invalid || undefined}
+      data-disabled={disabled ? "true" : undefined}
       className={cx(
         fieldRecipe({
           editable: !disabled && !readOnly,
@@ -107,13 +114,6 @@ export function TextInput(props: TextInputProps) {
         }),
         className,
       )}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-text-input
-      disabled={disabled}
-      onChange={handleChange}
-      readOnly={readOnly}
-      ref={ref}
-      type={type}
     />
   );
 }
@@ -148,10 +148,10 @@ export function FieldMessage(props: FieldMessageProps) {
   return (
     <div
       {...messageProps}
-      className={cx("text-xs leading-snug", fieldMessageToneClasses[resolvedTone], className)}
-      data-ui-field-message
       ref={ref}
+      data-ui-field-message
       role={role ?? (invalid ? "alert" : undefined)}
+      className={cx("text-xs leading-snug", fieldMessageToneClasses[resolvedTone], className)}
     >
       {children}
     </div>

@@ -29,6 +29,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@mk-combos/contracts": "workspace:*",
+        "@mk-combos/controller-bridge": "workspace:*",
         "@mk-combos/mk1-business": "workspace:*",
         "@mk-combos/mkxl-business": "workspace:*",
         "@mk-combos/ui": "workspace:*",

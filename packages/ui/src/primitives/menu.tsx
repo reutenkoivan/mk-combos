@@ -60,12 +60,12 @@ export function MenuRoot(props: MenuRootProps) {
 
   return (
     <BaseMenu.Root
-      defaultOpen={defaultOpen}
+      open={open}
+      modal={modal}
       disabled={disabled}
       loopFocus={loopFocus}
-      modal={modal}
+      defaultOpen={defaultOpen}
       onOpenChange={handleOpenChange}
-      open={open}
     >
       {children}
     </BaseMenu.Root>
@@ -102,12 +102,12 @@ export function MenuTrigger(props: MenuTriggerProps) {
   return (
     <BaseMenu.Trigger
       {...triggerProps}
-      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-menu-trigger
-      disabled={disabled}
       ref={ref}
       type={type}
+      disabled={disabled}
+      data-ui-menu-trigger
+      data-disabled={disabled ? "true" : undefined}
+      className={cx(controlRecipe({ appearance, density, emphasis, shape, tone }), className)}
     >
       {children}
     </BaseMenu.Trigger>
@@ -120,22 +120,23 @@ export type MenuPortalProps = ComponentPropsWithRef<typeof BaseMenu.Portal>;
 
 export function MenuPortal(props: MenuPortalProps) {
   const { className, ...portalProps } = props;
-  const { contrast, density, responsiveMode, theme } = useUiRootContext();
+  const { contrast, controllerFocusVisible, density, responsiveMode, theme } = useUiRootContext();
 
   return (
     <BaseMenu.Portal
       {...portalProps}
+      data-ui-portal="menu"
+      data-ui-theme={theme}
+      data-ui-density={density}
+      data-ui-contrast={contrast}
+      data-ui-responsive={responsiveMode}
+      data-ui-controller-focus-visible={controllerFocusVisible ? "true" : "false"}
       className={(state) =>
         cx(
           "mk-combos-ui-root mk-combos-ui-portal-root",
           typeof className === "function" ? className(state) : className,
         )
       }
-      data-ui-contrast={contrast}
-      data-ui-density={density}
-      data-ui-portal="menu"
-      data-ui-responsive={responsiveMode}
-      data-ui-theme={theme}
     />
   );
 }
@@ -162,12 +163,12 @@ export function MenuPositioner(props: MenuPositionerProps) {
   return (
     <BaseMenu.Positioner
       {...positionerProps}
-      align={align}
-      className={cx("z-50", className)}
-      data-ui-menu-positioner
       ref={ref}
       side={side}
+      align={align}
+      data-ui-menu-positioner
       sideOffset={sideOffset}
+      className={cx("z-50", className)}
     >
       {children}
     </BaseMenu.Positioner>
@@ -196,9 +197,9 @@ export function MenuPopup(props: MenuPopupProps) {
   return (
     <BaseMenu.Popup
       {...popupProps}
-      className={cx("min-w-44", popupRecipe({ density, material, shape }), className)}
-      data-ui-menu-popup
       ref={ref}
+      data-ui-menu-popup
+      className={cx("min-w-44", popupRecipe({ density, material, shape }), className)}
     >
       {children}
     </BaseMenu.Popup>
@@ -215,9 +216,9 @@ export function MenuGroup(props: MenuGroupProps) {
   return (
     <BaseMenu.Group
       {...groupProps}
-      className={cx("grid gap-1", className)}
-      data-ui-menu-group
       ref={ref}
+      data-ui-menu-group
+      className={cx("grid gap-1", className)}
     >
       {children}
     </BaseMenu.Group>
@@ -234,9 +235,9 @@ export function MenuGroupLabel(props: MenuGroupLabelProps) {
   return (
     <BaseMenu.GroupLabel
       {...labelProps}
-      className={cx("px-2 text-xs font-semibold text-(--ui-muted-text)", className)}
-      data-ui-menu-group-label
       ref={ref}
+      data-ui-menu-group-label
+      className={cx("px-2 text-xs font-semibold text-(--ui-muted-text)", className)}
     >
       {children}
     </BaseMenu.GroupLabel>
@@ -282,6 +283,13 @@ export function MenuItem<Value extends string = string>(props: MenuItemProps<Val
   return (
     <BaseMenu.Item
       {...itemProps}
+      ref={ref}
+      label={label}
+      disabled={disabled}
+      data-ui-menu-item={value}
+      closeOnClick={closeOnClick}
+      data-disabled={disabled ? "true" : undefined}
+      onClick={() => onRequestSelect?.({ reason: "itemPress", value })}
       className={cx(
         itemRecipe({
           density,
@@ -297,13 +305,6 @@ export function MenuItem<Value extends string = string>(props: MenuItemProps<Val
         }),
         className,
       )}
-      closeOnClick={closeOnClick}
-      data-disabled={disabled ? "true" : undefined}
-      data-ui-menu-item={value}
-      disabled={disabled}
-      label={label}
-      onClick={() => onRequestSelect?.({ reason: "itemPress", value })}
-      ref={ref}
     >
       {children}
     </BaseMenu.Item>

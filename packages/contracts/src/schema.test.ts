@@ -2,9 +2,12 @@ import {
   createGameBackupEnvelopeSchema,
   GameBackupEnvelopeSchema,
 } from "@mk-combos/contracts/backup/schema";
+import { CatalogFilterChangeSchema } from "@mk-combos/contracts/catalog-filter/schema";
+import { catalogFilterChangeKinds } from "@mk-combos/contracts/catalog-filter/value";
 import { ComboRefSchema, ComboSourceSchema } from "@mk-combos/contracts/identity/schema";
 import { AppErrorSchema, ValidationMessageSchema } from "@mk-combos/contracts/result/schema";
-import { ComboDetailRouteParamsSchema } from "@mk-combos/contracts/routes/schema";
+import { ComboDetailRouteParamsSchema, GameRouteSchema } from "@mk-combos/contracts/routes/schema";
+import { gameRouteKinds } from "@mk-combos/contracts/routes/value";
 import { AppSettingsSchema } from "@mk-combos/contracts/settings/schema";
 import { describe, expect, it } from "vitest";
 import { z } from "zod/v4";
@@ -13,9 +16,52 @@ const validSettings = {
   language: "EN",
   defaultGameId: "future-game",
   notationDisplayMode: "FGC",
+  themePreference: "system",
 } as const;
 
 describe("@mk-combos/contracts schemas", () => {
+  it("validates strict semantic catalog filter changes", () => {
+    expect(
+      CatalogFilterChangeSchema.parse({
+        kind: catalogFilterChangeKinds.clearAll,
+      }),
+    ).toEqual({ kind: catalogFilterChangeKinds.clearAll });
+    expect(
+      CatalogFilterChangeSchema.parse({
+        kind: catalogFilterChangeKinds.clearFacet,
+        filterId: "  tag  ",
+      }),
+    ).toEqual({ kind: catalogFilterChangeKinds.clearFacet, filterId: "tag" });
+    expect(
+      CatalogFilterChangeSchema.parse({
+        kind: catalogFilterChangeKinds.toggleOption,
+        filterId: "meter",
+        value: "  1  ",
+        selected: true,
+      }),
+    ).toEqual({
+      kind: catalogFilterChangeKinds.toggleOption,
+      filterId: "meter",
+      value: "1",
+      selected: true,
+    });
+    expect(
+      CatalogFilterChangeSchema.safeParse({
+        kind: catalogFilterChangeKinds.clearFacet,
+        filterId: " ",
+      }).success,
+    ).toBe(false);
+    expect(
+      CatalogFilterChangeSchema.safeParse({
+        kind: catalogFilterChangeKinds.toggleOption,
+        filterId: "tag",
+        value: "practice",
+        selected: true,
+        extra: true,
+      }).success,
+    ).toBe(false);
+  });
+
   it("validates combo sources and combo refs", () => {
     expect(ComboSourceSchema.parse("seeded")).toBe("seeded");
     expect(ComboSourceSchema.safeParse("dlc").success).toBe(false);
@@ -48,20 +94,31 @@ describe("@mk-combos/contracts schemas", () => {
     ).toBe(false);
   });
 
-  it("keeps route detail params aligned with combo refs", () => {
-    const comboRef = ComboRefSchema.parse({
-      gameId: "future-game",
-      source: "seeded",
+  it("keeps game routes source-neutral, catalog-contextual, and game-scoped", () => {
+    const routeParams = {
+      characterSlug: "fighter",
       comboId: "starter-001",
-    });
+      gameId: "future-game",
+      specificationSlug: "context",
+    };
 
-    expect(ComboDetailRouteParamsSchema.parse(comboRef)).toEqual(comboRef);
+    expect(ComboDetailRouteParamsSchema.parse(routeParams)).toEqual(routeParams);
     expect(
       ComboDetailRouteParamsSchema.safeParse({
-        ...comboRef,
-        source: "dlc",
+        ...routeParams,
+        source: "seeded",
       }).success,
     ).toBe(false);
+    expect(
+      GameRouteSchema.parse({
+        gameId: "another-future-game",
+        kind: gameRouteKinds.catalog,
+      }),
+    ).toEqual({
+      gameId: "another-future-game",
+      kind: gameRouteKinds.catalog,
+    });
+    expect(GameRouteSchema.safeParse({ kind: "settings" }).success).toBe(false);
   });
 
   it("validates app settings with strict shared options", () => {
@@ -70,6 +127,12 @@ describe("@mk-combos/contracts schemas", () => {
       AppSettingsSchema.safeParse({
         ...validSettings,
         language: "PL",
+      }).success,
+    ).toBe(false);
+    expect(
+      AppSettingsSchema.safeParse({
+        ...validSettings,
+        themePreference: "sepia",
       }).success,
     ).toBe(false);
     expect(
